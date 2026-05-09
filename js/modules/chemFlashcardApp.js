@@ -1,4 +1,7 @@
 // Chemistry flashcards — embedded app (chem_flashcard.zip), scoped to #flashcards-page
+import { elements, finallyData } from "../data/elementsData.js";
+import { mountAtom3DInline, unmountAtom3DInline } from "./uiController.js";
+
 export function initChemFlashcard() {
   if (window.__chemFlashcardInited) return;
   window.__chemFlashcardInited = true;
@@ -53,11 +56,11 @@ export function initChemFlashcard() {
     },
     zh: {
       appTitle: "中三化學 — 閃卡",
-      appSubtitle: "五套 · 符號正面 · 電子層操練",
+      appSubtitle: "五套 · 符號正面 · 電子排佈操練",
       deckS1: "套裝 4 · 粒子、電荷與電中性",
       deckS3: "套裝 2 · 同位素定義與分離",
       deckS4: "套裝 3 · 原子序、質量數與中子",
-      deckS5: "套裝 5 · 符號與波爾電子層",
+      deckS5: "套裝 5 · 符號與電子排佈",
       deckS5s: "套裝 1 · 限時電子排布操練",
       question: "問題",
       answer: "答案",
@@ -78,7 +81,7 @@ export function initChemFlashcard() {
       speedCorrect: "正確！",
       speedWrong: "正確答案：",
       nucleus: "原子核（+）",
-      filling: "波爾模型 — 各層電子（動畫）",
+      filling: "電子排佈 — 各層電子（動畫）",
       graphRelMass: "質量比較（電子與質子／中子）",
       photoCreditRelMass: "圖片：維基共享資源 — Electron size comparison（CC0）。比喻：硬幣與保齡球 ≈ 電子與核子質量。",
       graphHIso: "質量數 — 氫的同位素",
@@ -193,26 +196,26 @@ export function initChemFlashcard() {
 
   /** Symbol + shells data (first 20 elements): shells deck = Set 5 in dropdown; speed mode = Set 1 in dropdown */
   const set5 = [
-    { notn: "<span class='notn'><sup>1</sup><sub>1</sub>H</span>", en: "Hydrogen", zh: "氫", shells: [1] },
-    { notn: "<span class='notn'><sup>4</sup><sub>2</sub>He</span>", en: "Helium", zh: "氦", shells: [2] },
-    { notn: "<span class='notn'><sup>7</sup><sub>3</sub>Li</span>", en: "Lithium", zh: "鋰", shells: [2, 1] },
-    { notn: "<span class='notn'><sup>9</sup><sub>4</sub>Be</span>", en: "Beryllium", zh: "鈹", shells: [2, 2] },
-    { notn: "<span class='notn'><sup>11</sup><sub>5</sub>B</span>", en: "Boron", zh: "硼", shells: [2, 3] },
-    { notn: "<span class='notn'><sup>12</sup><sub>6</sub>C</span>", en: "Carbon", zh: "碳", shells: [2, 4] },
-    { notn: "<span class='notn'><sup>14</sup><sub>7</sub>N</span>", en: "Nitrogen", zh: "氮", shells: [2, 5] },
-    { notn: "<span class='notn'><sup>16</sup><sub>8</sub>O</span>", en: "Oxygen", zh: "氧", shells: [2, 6] },
-    { notn: "<span class='notn'><sup>19</sup><sub>9</sub>F</span>", en: "Fluorine", zh: "氟", shells: [2, 7] },
-    { notn: "<span class='notn'><sup>20</sup><sub>10</sub>Ne</span>", en: "Neon", zh: "氖", shells: [2, 8] },
-    { notn: "<span class='notn'><sup>23</sup><sub>11</sub>Na</span>", en: "Sodium", zh: "鈉", shells: [2, 8, 1] },
-    { notn: "<span class='notn'><sup>24</sup><sub>12</sub>Mg</span>", en: "Magnesium", zh: "鎂", shells: [2, 8, 2] },
-    { notn: "<span class='notn'><sup>27</sup><sub>13</sub>Al</span>", en: "Aluminium", zh: "鋁", shells: [2, 8, 3] },
-    { notn: "<span class='notn'><sup>28</sup><sub>14</sub>Si</span>", en: "Silicon", zh: "硅", shells: [2, 8, 4] },
-    { notn: "<span class='notn'><sup>31</sup><sub>15</sub>P</span>", en: "Phosphorus", zh: "磷", shells: [2, 8, 5] },
-    { notn: "<span class='notn'><sup>32</sup><sub>16</sub>S</span>", en: "Sulfur", zh: "硫", shells: [2, 8, 6] },
-    { notn: "<span class='notn'><sup>35</sup><sub>17</sub>Cl</span>", en: "Chlorine", zh: "氯", shells: [2, 8, 7] },
-    { notn: "<span class='notn'><sup>40</sup><sub>18</sub>Ar</span>", en: "Argon", zh: "氬", shells: [2, 8, 8] },
-    { notn: "<span class='notn'><sup>39</sup><sub>19</sub>K</span>", en: "Potassium", zh: "鉀", shells: [2, 8, 8, 1] },
-    { notn: "<span class='notn'><sup>40</sup><sub>20</sub>Ca</span>", en: "Calcium", zh: "鈣", shells: [2, 8, 8, 2] },
+    { z: 1, symbol: "H", notn: "<span class='notn'><sup>1</sup><sub>1</sub>H</span>", en: "Hydrogen", zh: "氫", shells: [1] },
+    { z: 2, symbol: "He", notn: "<span class='notn'><sup>4</sup><sub>2</sub>He</span>", en: "Helium", zh: "氦", shells: [2] },
+    { z: 3, symbol: "Li", notn: "<span class='notn'><sup>7</sup><sub>3</sub>Li</span>", en: "Lithium", zh: "鋰", shells: [2, 1] },
+    { z: 4, symbol: "Be", notn: "<span class='notn'><sup>9</sup><sub>4</sub>Be</span>", en: "Beryllium", zh: "鈹", shells: [2, 2] },
+    { z: 5, symbol: "B", notn: "<span class='notn'><sup>11</sup><sub>5</sub>B</span>", en: "Boron", zh: "硼", shells: [2, 3] },
+    { z: 6, symbol: "C", notn: "<span class='notn'><sup>12</sup><sub>6</sub>C</span>", en: "Carbon", zh: "碳", shells: [2, 4] },
+    { z: 7, symbol: "N", notn: "<span class='notn'><sup>14</sup><sub>7</sub>N</span>", en: "Nitrogen", zh: "氮", shells: [2, 5] },
+    { z: 8, symbol: "O", notn: "<span class='notn'><sup>16</sup><sub>8</sub>O</span>", en: "Oxygen", zh: "氧", shells: [2, 6] },
+    { z: 9, symbol: "F", notn: "<span class='notn'><sup>19</sup><sub>9</sub>F</span>", en: "Fluorine", zh: "氟", shells: [2, 7] },
+    { z: 10, symbol: "Ne", notn: "<span class='notn'><sup>20</sup><sub>10</sub>Ne</span>", en: "Neon", zh: "氖", shells: [2, 8] },
+    { z: 11, symbol: "Na", notn: "<span class='notn'><sup>23</sup><sub>11</sub>Na</span>", en: "Sodium", zh: "鈉", shells: [2, 8, 1] },
+    { z: 12, symbol: "Mg", notn: "<span class='notn'><sup>24</sup><sub>12</sub>Mg</span>", en: "Magnesium", zh: "鎂", shells: [2, 8, 2] },
+    { z: 13, symbol: "Al", notn: "<span class='notn'><sup>27</sup><sub>13</sub>Al</span>", en: "Aluminium", zh: "鋁", shells: [2, 8, 3] },
+    { z: 14, symbol: "Si", notn: "<span class='notn'><sup>28</sup><sub>14</sub>Si</span>", en: "Silicon", zh: "硅", shells: [2, 8, 4] },
+    { z: 15, symbol: "P", notn: "<span class='notn'><sup>31</sup><sub>15</sub>P</span>", en: "Phosphorus", zh: "磷", shells: [2, 8, 5] },
+    { z: 16, symbol: "S", notn: "<span class='notn'><sup>32</sup><sub>16</sub>S</span>", en: "Sulfur", zh: "硫", shells: [2, 8, 6] },
+    { z: 17, symbol: "Cl", notn: "<span class='notn'><sup>35</sup><sub>17</sub>Cl</span>", en: "Chlorine", zh: "氯", shells: [2, 8, 7] },
+    { z: 18, symbol: "Ar", notn: "<span class='notn'><sup>40</sup><sub>18</sub>Ar</span>", en: "Argon", zh: "氬", shells: [2, 8, 8] },
+    { z: 19, symbol: "K", notn: "<span class='notn'><sup>39</sup><sub>19</sub>K</span>", en: "Potassium", zh: "鉀", shells: [2, 8, 8, 1] },
+    { z: 20, symbol: "Ca", notn: "<span class='notn'><sup>40</sup><sub>20</sub>Ca</span>", en: "Calcium", zh: "鈣", shells: [2, 8, 8, 2] },
   ];
 
   const DECKS = {
@@ -368,10 +371,35 @@ export function initChemFlashcard() {
       const front = flip.querySelector(".card-front");
       const back = flip.querySelector(".card-back");
       if (!front || !back) return;
-      const raw = Math.max(front.scrollHeight, back.scrollHeight);
+      // Important: `.card-face` is absolutely positioned (inset:0), so its `scrollHeight`
+      // tends to mirror whatever min-height we previously applied. Measure *content* instead,
+      // after temporarily clearing minHeight so we don't ratchet taller/shorter on each flip.
+      const prevFlipMin = flip.style.minHeight;
+      const prevSceneMin = scene.style.minHeight;
+      flip.style.minHeight = "";
+      scene.style.minHeight = "";
+
+      const frontMain = front.querySelector(".card-main");
+      const backMain = back.querySelector(".card-main");
+      const frontSub = front.querySelector(".card-sub");
+      const backSub = back.querySelector(".card-sub");
+      const frontHint = front.querySelector(".card-hint");
+      const backHint = back.querySelector(".card-hint");
+
+      const boxH = (el) => (el && el.getBoundingClientRect ? el.getBoundingClientRect().height : 0);
+      const innerFront = boxH(frontMain) + boxH(frontSub) + boxH(frontHint);
+      const innerBack = boxH(backMain) + boxH(backSub) + boxH(backHint);
+
+      // Pad for `.card-face` vertical padding (~1.35rem top + bottom) + border/rounding slack.
+      const pad = 56;
+      const raw = Math.max(innerFront, innerBack) + pad;
+
+      // Restore previous minHeight before applying the new one, to avoid flicker.
+      flip.style.minHeight = prevFlipMin;
+      scene.style.minHeight = prevSceneMin;
       const vh = window.innerHeight;
       const minPx = Math.round(Math.max(22 * 16, vh * 0.3));
-      const target = Math.max(minPx, raw + 24);
+      const target = Math.max(minPx, raw);
       scene.style.minHeight = target + "px";
       flip.style.minHeight = target + "px";
     };
@@ -948,6 +976,8 @@ export function initChemFlashcard() {
   function renderCard() {
     const d = currentDeck();
     if (!d) return;
+    // If the previous card embedded the 3D atom pane, always restore first.
+    unmountAtom3DInline();
     const i = order[index];
     flipped = false;
     syncFlipClass();
@@ -986,15 +1016,135 @@ export function initChemFlashcard() {
       $("frontMain").innerHTML = row.notn;
       $("frontSub").hidden = true;
       $("backMain").innerHTML = "";
-      $("backMain").textContent =
-        (lang === LANG.EN ? "Electron arrangement: " : "電子排布：") + row.shells.join(", ");
+      $("backMain").textContent = "";
       $("backSub").textContent = "";
       const ex = $("backExtra");
       ex.innerHTML = "";
-      const wrap = document.createElement("div");
-      wrap.className = "shell-diagram";
-      ex.appendChild(wrap);
-      renderShellDiagram(wrap, row.shells, index + "-" + i, { firstShellNoPair: true });
+
+      const element =
+        (typeof row.z === "number" && elements.find((e) => e.number === row.z)) ||
+        (row.symbol && elements.find((e) => e.symbol === row.symbol)) ||
+        null;
+      if (element) {
+        const wrap = document.createElement("div");
+        wrap.className = "fc-set5-back";
+        ex.appendChild(wrap);
+
+        const info = document.createElement("div");
+        info.className = "fc-set5-info";
+        wrap.appendChild(info);
+
+        const atom = document.createElement("div");
+        atom.className = "fc-set5-atom";
+        wrap.appendChild(atom);
+
+        const name = lang === LANG.EN ? element.name : row.zh || element.name;
+        const fd = finallyData?.[String(element.number)] || finallyData?.[element.number] || {};
+        const basic = fd.level1_basic || {};
+        const atomic = fd.level2_atomic || {};
+
+        const localizeTypeZh = (raw) => {
+          const s = String(raw || "").trim();
+          const norm = s
+            .replace(/\s+/g, " ")
+            .replace(/\bOther Nonmetal\b/i, "Other nonmetal")
+            .replace(/\bNoble Gas\b/i, "Noble gas");
+          const map = {
+            "Alkali Metal": "鹼金屬",
+            "Alkaline Earth Metal": "鹼土金屬",
+            "Transition Metal": "過渡金屬",
+            "Post-transition Metal": "後過渡金屬",
+            Metalloid: "半金屬",
+            Halogen: "鹵素",
+            "Noble gas": "貴氣體",
+            Lanthanide: "鑭系",
+            Actinide: "錒系",
+            "Other nonmetal": "其他非金屬",
+            Metal: "金屬",
+            Nonmetal: "非金屬",
+            Unknown: "未知",
+          };
+          return map[norm] || (norm || "未知");
+        };
+
+        const localizePhaseZh = (raw) => {
+          const s = String(raw || "").trim();
+          if (!s || s === "Unknown" || s === "N/A") return "未知";
+          const map = { Solid: "固態", Liquid: "液態", Gas: "氣態" };
+          return map[s] || s;
+        };
+
+        const dseGroupLabel = () => {
+          const col = element.column;
+          if (!Number.isInteger(col)) return "—";
+          // HKDSE/DSE: only groups I–VII and 0; transition metals have no group number.
+          if (col >= 3 && col <= 12) return "—";
+          if (col === 18) return "0";
+          const map = { 1: "I", 2: "II", 13: "III", 14: "IV", 15: "V", 16: "VI", 17: "VII" };
+          return map[col] || "—";
+        };
+
+        const formatCommonIons = (raw) => {
+          const s = String(raw || "").trim();
+          if (!s) return "";
+          if (lang === LANG.EN) return s;
+          // In zh mode: show symbols only to avoid mixed-language ion names.
+          const ions = s
+            .split(",")
+            .map((p) => p.trim())
+            .filter(Boolean)
+            .map((p) => {
+              const m = p.match(/([A-Za-z]+[₀₁₂₃₄₅₆₇₈₉]*[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)/);
+              return m ? m[1] : "";
+            })
+            .filter(Boolean);
+          return ions.join("、");
+        };
+
+        const header = document.createElement("div");
+        header.className = "fc-set5-info__header";
+        header.innerHTML = `<div class="fc-set5-info__sym">${element.symbol}</div>
+<div class="fc-set5-info__name">${name}</div>
+<div class="fc-set5-info__z">Z=${element.number}</div>`;
+        info.appendChild(header);
+
+        const grid = document.createElement("div");
+        grid.className = "fc-set5-info__grid";
+        info.appendChild(grid);
+
+        const addRow = (k, v) => {
+          if (!v || v === "N/A") return;
+          const r = document.createElement("div");
+          r.className = "fc-set5-info__row";
+          r.innerHTML = `<div class="fc-set5-info__k">${k}</div><div class="fc-set5-info__v">${v}</div>`;
+          grid.appendChild(r);
+        };
+
+        const rawType = basic.type || element.category || "";
+        addRow(lang === LANG.EN ? "Type" : "類型", lang === LANG.EN ? rawType : localizeTypeZh(rawType));
+        addRow(
+          lang === LANG.EN ? "Group / Period" : "族 / 週期",
+          `${dseGroupLabel()} / ${element.row || "—"}`,
+        );
+        const rawPhase = basic.phaseAtSTP || element.phase || "";
+        addRow(lang === LANG.EN ? "Phase @ STP" : "狀態(STP)", lang === LANG.EN ? rawPhase : localizePhaseZh(rawPhase));
+
+        const mass = atomic.mass?.highSchool || "";
+        if (mass) addRow(lang === LANG.EN ? "Relative atomic mass" : "相對原子質量", mass);
+
+        addRow(lang === LANG.EN ? "Electron arrangement" : "電子排布", row.shells.join(", "));
+
+        const ions = formatCommonIons(basic.commonIons || "");
+        if (ions) {
+          const ionsBox = document.createElement("div");
+          ionsBox.className = "fc-set5-info__ions";
+          ionsBox.innerHTML = `<div class="fc-set5-info__k">${lang === LANG.EN ? "Common ions" : "常見離子"}</div>
+<div class="fc-set5-info__v">${ions}</div>`;
+          info.appendChild(ionsBox);
+        }
+
+        mountAtom3DInline(atom, element).finally(() => syncCardStageHeight());
+      }
       $("frontHint").textContent = t("tapToFlip");
       $("backHint").textContent = "";
     }
@@ -1042,6 +1192,7 @@ export function initChemFlashcard() {
     $("kbdHint").style.display = isFlashMode() ? "" : "none";
 
     if (d.type === "speed") {
+      unmountAtom3DInline();
       clearCardStageInlineSize();
       showView("speed");
       $("progress").textContent = "";

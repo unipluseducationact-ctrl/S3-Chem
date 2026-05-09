@@ -1,0 +1,547 @@
+/* Mobile / narrow EIT wizard — only applies when body.eit-mobile is set (JS + viewport). */
+@media (pointer: coarse), (max-width: 1024px) {
+  /* Keep numeric adjustment bar under the main hotbar on mobile/tablet.
+     Property selection stays in the "View by" sheet, so we hide the desktop trigger/panel. */
+  body.eit-mobile #eit-controller.eit-controller {
+    position: fixed;
+    top: calc(76px + env(safe-area-inset-top, 0px));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 12035;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    padding: 4px 8px;
+    border-radius: 999px;
+    /* Fade out at the bottom so it doesn't visually "block" the table behind */
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.88) 60%,
+      rgba(255, 255, 255, 0.00) 100%
+    );
+    border: none;
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow:
+      inset 0 0 0 1px rgba(17, 24, 39, 0.10),
+      0 10px 30px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.04);
+    width: calc(100vw - 32px);
+    max-width: 760px;
+    justify-content: center;
+  }
+
+  body.eit-mobile #eit-controller .eit-property-trigger,
+  body.eit-mobile #eit-controller .eit-property-panel,
+  body.eit-mobile #eit-controller #eit-property-select {
+    display: none !important;
+  }
+
+  /* Collapse button: shown on mobile only */
+  body.eit-mobile #eit-controller #eit-bar-collapse-btn {
+    width: 30px;
+    min-width: 30px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  body.eit-mobile #eit-controller #eit-style-toggle-btn,
+  body.eit-mobile #eit-controller #eit-reset-btn,
+  body.eit-mobile #eit-controller #eit-first20-btn,
+  body.eit-mobile #eit-controller #eit-s3mode-btn {
+    height: 28px;
+    padding: 0 10px;
+    font-size: 0.78rem;
+  }
+
+  /* React-like press feedback for all bar buttons */
+  body.eit-mobile #eit-controller button:active {
+    transform: scale(0.94);
+    transition-duration: 0.08s;
+  }
+
+  /* Collapsed state: turn bar into a tiny pill */
+  body.eit-mobile #eit-controller.eit-bar-collapsed {
+    width: auto;
+    max-width: none;
+    padding: 4px 6px;
+    gap: 6px;
+  }
+
+  body.eit-mobile #eit-controller.eit-bar-collapsed .eit-slider-section,
+  body.eit-mobile #eit-controller.eit-bar-collapsed .eit-mode-group,
+  body.eit-mobile #eit-controller.eit-bar-collapsed #eit-reset-btn,
+  body.eit-mobile #eit-controller.eit-bar-collapsed #eit-first20-btn,
+  body.eit-mobile #eit-controller.eit-bar-collapsed #eit-style-toggle-btn,
+  body.eit-mobile #eit-controller.eit-bar-collapsed #eit-s3mode-btn {
+    display: none !important;
+  }
+
+  body.eit-mobile #eit-controller.eit-bar-collapsed #eit-bar-collapse-btn {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  body.eit-mobile #eit-controller #eit-bar-collapse-btn {
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  body.eit-mobile #eit-controller.eit-bar-collapsed #eit-bar-collapse-btn {
+    transform: rotate(0deg);
+  }
+
+  body.eit-mobile #eit-controller:not(.eit-bar-collapsed) #eit-bar-collapse-btn {
+    transform: rotate(0deg);
+  }
+
+  body.eit-mobile #eit-controller .eit-slider-section {
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+    width: auto;
+  }
+
+  body.eit-mobile #eit-controller .eit-mode-group {
+    flex-shrink: 0;
+  }
+
+  /* Ensure the sheet sits below the fixed slider bar. */
+  body.eit-mobile .eit-mobile-sheet {
+    max-height: min(82vh, calc(100dvh - 110px));
+  }
+
+  body.eit-mobile .eit-mobile-root {
+    /* Allow zoombar / launcher to receive taps */
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  body.eit-mobile .eit-mobile-launcher,
+  body.eit-mobile .eit-mobile-sheet,
+  body.eit-mobile .eit-mobile-backdrop {
+    pointer-events: auto;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body.eit-mobile .eit-mobile-launcher {
+    position: fixed;
+    left: max(12px, env(safe-area-inset-left, 0px));
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    z-index: 12050;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    max-width: min(240px, calc(100vw - 24px));
+    padding: 10px 14px;
+    border-radius: 20px;
+    border: none;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+    color: #1d1d1f;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.25;
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    will-change: transform;
+  }
+
+  @keyframes eit-mobile-launcher-ping {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+    38% {
+      transform: scale(1.04);
+      box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.28),
+        0 10px 28px rgba(0, 0, 0, 0.14),
+        0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  body.eit-mobile .eit-mobile-launcher.eit-mobile-launcher--ping {
+    animation: eit-mobile-launcher-ping 0.58s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes eit-mobile-launcher-value-in {
+    from {
+      transform: translateY(6px);
+      opacity: 0.25;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  body.eit-mobile .eit-mobile-launcher--ping .eit-mobile-launcher-value-text {
+    display: inline-block;
+    animation: eit-mobile-launcher-value-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Zoom controls stacked above "View by" */
+  body.eit-mobile .eit-mobile-zoombar {
+    position: fixed;
+    left: max(12px, env(safe-area-inset-left, 0px));
+    bottom: calc(max(12px, env(safe-area-inset-bottom, 0px)) + 56px);
+    z-index: 12055;
+    display: inline-flex;
+    gap: 8px;
+    pointer-events: auto;
+  }
+
+  body.eit-mobile .eit-mobile-zoom-btn {
+    width: 40px;
+    height: 32px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+    color: #1d1d1f;
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  body.eit-mobile .eit-mobile-zoom-btn:active {
+    transform: scale(0.95);
+  }
+
+  body.eit-mobile .eit-mobile-zoom-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+    transform: none;
+  }
+
+  body.eit-mobile .eit-mobile-launcher-prefix {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    opacity: 0.55;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  body.eit-mobile .eit-mobile-launcher-value {
+    display: block;
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  /* Mini launcher (shown after collapsing Step 2 list) */
+  body.eit-mobile .eit-mobile-launcher.eit-mobile-launcher-mini {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 999px;
+    align-items: center;
+    justify-content: center;
+    max-width: none;
+  }
+
+  body.eit-mobile .eit-mobile-launcher.eit-mobile-launcher-mini .eit-mobile-launcher-prefix,
+  body.eit-mobile .eit-mobile-launcher.eit-mobile-launcher-mini .eit-mobile-launcher-value {
+    display: none !important;
+  }
+
+  body.eit-mobile .eit-mobile-launcher-mini-icon {
+    font-size: 1.05rem;
+    font-weight: 800;
+    opacity: 0.8;
+    line-height: 1;
+  }
+
+  body.eit-mobile .eit-mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 12040;
+    background: rgba(15, 23, 42, 0.38);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.24s ease-out;
+  }
+
+  body.eit-mobile .eit-mobile-backdrop.eit-mobile-backdrop--open {
+    opacity: 1;
+  }
+
+  body.eit-mobile .eit-mobile-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 12045;
+    max-height: min(88vh, 100dvh);
+    background: #fafafa;
+    border-radius: 18px 18px 0 0;
+    box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  body.eit-mobile .eit-mobile-sheet--enter {
+    animation: eit-mobile-sheet-spring 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes eit-mobile-sheet-spring {
+    0% {
+      transform: translateY(28px);
+      opacity: 0;
+    }
+    68% {
+      transform: translateY(-6px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  body.eit-mobile .eit-mobile-sheet-header {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 8px calc(10px + env(safe-area-inset-top, 0px));
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  body.eit-mobile .eit-mobile-sheet-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  body.eit-mobile .eit-mobile-sheet-title {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    color: #111827;
+  }
+
+  body.eit-mobile .eit-mobile-back,
+  body.eit-mobile .eit-mobile-collapse,
+  body.eit-mobile .eit-mobile-close {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    font-size: 1.35rem;
+    line-height: 1;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+  }
+
+  body.eit-mobile .eit-mobile-collapse {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  body.eit-mobile .eit-mobile-close {
+    font-size: 1.6rem;
+    font-weight: 400;
+    padding-bottom: 2px;
+  }
+
+  body.eit-mobile .eit-mobile-sheet.eit-mobile-list-hidden .eit-mobile-sheet-body {
+    overflow: hidden;
+    flex: 0 0 auto;
+  }
+
+  /* When list is hidden, collapse control becomes a tiny expand button */
+  body.eit-mobile .eit-mobile-sheet.eit-mobile-list-hidden .eit-mobile-collapse {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    border-radius: 8px !important;
+    font-size: 0.95rem !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    background: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  body.eit-mobile .eit-mobile-sheet.eit-mobile-list-hidden .eit-mobile-sheet-actions {
+    gap: 6px;
+  }
+
+  /* Collapse the whole sheet when list is hidden (avoid blank white space). */
+  body.eit-mobile .eit-mobile-sheet.eit-mobile-list-hidden {
+    max-height: min(220px, 40vh);
+  }
+
+  body.eit-mobile .eit-mobile-sheet.eit-mobile-list-hidden .eit-mobile-step2 {
+    min-height: 0;
+  }
+
+  /* If list is hidden on non-Property branches, collapse to header-only */
+  body.eit-mobile .eit-mobile-sheet.eit-mobile-compact {
+    max-height: 76px !important;
+  }
+
+  body.eit-mobile .eit-mobile-sheet.eit-mobile-compact .eit-mobile-sheet-body {
+    display: none !important;
+  }
+
+  body.eit-mobile .eit-mobile-sheet-body {
+    flex: 1;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: env(safe-area-inset-bottom, 12px);
+  }
+
+  body.eit-mobile .eit-mobile-step1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  body.eit-mobile .eit-mobile-tile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 64px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111827;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  body.eit-mobile .eit-mobile-tile-icon {
+    font-size: 1.5rem;
+    opacity: 0.85;
+    width: 36px;
+    text-align: center;
+  }
+
+  body.eit-mobile .eit-mobile-step2 {
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+  }
+
+  body.eit-mobile .eit-mobile-numeric-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px 8px;
+    background: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  body.eit-mobile .eit-mobile-numeric-slot .eit-mode-group {
+    position: relative;
+    align-self: center;
+    margin: 4px 0;
+  }
+
+  body.eit-mobile .eit-mobile-numeric-slot .eit-slider-section {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  body.eit-mobile .eit-mobile-numeric-slot .eit-slider-section[hidden] {
+    display: none !important;
+  }
+
+  body.eit-mobile .eit-mobile-list {
+    padding: 8px 0 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body.eit-mobile .eit-mobile-list-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 56px;
+    padding: 12px 18px;
+    margin: 0 12px 8px;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    background: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  body.eit-mobile .eit-mobile-row-label .eit-chip-unit {
+    font-weight: 700;
+    opacity: 0.65;
+    margin-left: 4px;
+  }
+
+  body.eit-mobile .eit-mobile-row-check {
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    color: #2563eb;
+    width: 28px;
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body.eit-mobile .eit-mobile-backdrop {
+      transition: none !important;
+    }
+
+    body.eit-mobile .eit-mobile-sheet--enter {
+      animation: none !important;
+    }
+
+    body.eit-mobile .eit-mobile-launcher.eit-mobile-launcher--ping {
+      animation: none !important;
+    }
+
+    body.eit-mobile .eit-mobile-launcher--ping .eit-mobile-launcher-value-text {
+      animation: none !important;
+    }
+  }
+}

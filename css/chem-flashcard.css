@@ -149,6 +149,7 @@
     .card-back {
       background: linear-gradient(145deg, #eef2ff, #f8fafc);
       transform: rotateY(180deg);
+      overflow: hidden;
     }
 
     .card-label {
@@ -175,6 +176,77 @@
       font-size: 0.88rem;
       color: var(--muted);
       white-space: pre-line;
+    }
+
+    .fc-element-panel {
+      margin-top: 0.9rem;
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(220px, 1.15fr);
+      gap: 0.9rem;
+      align-items: stretch;
+    }
+
+    .fc-element-atom {
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      background: radial-gradient(80% 65% at 50% 40%, rgba(255,255,255,0.95), rgba(226,232,240,0.55));
+      min-height: 220px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fc-element-atom canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+      touch-action: none;
+    }
+
+    .fc-element-info {
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      background: rgba(255,255,255,0.72);
+      padding: 0.85rem 0.95rem;
+      overflow: auto;
+      max-height: 320px;
+    }
+
+    .fc-element-info__title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(30, 41, 59, 0.8);
+      font-weight: 700;
+      margin-bottom: 0.55rem;
+    }
+
+    .fc-info-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0.6rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+    }
+
+    .fc-info-row:last-child { border-bottom: none; }
+
+    .fc-info-k {
+      font-size: 0.78rem;
+      color: rgba(30, 41, 59, 0.7);
+      font-weight: 600;
+    }
+
+    .fc-info-v {
+      font-size: 0.86rem;
+      color: rgba(15, 23, 42, 0.92);
+      word-break: break-word;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 720px) {
+      .fc-element-panel { grid-template-columns: 1fr; }
+      .fc-element-info { max-height: 280px; }
+      .fc-info-row { grid-template-columns: 120px 1fr; }
     }
 
     .card-hint {
@@ -398,6 +470,189 @@
     /* Inline graphs (Q&A + symbol backs) */
     #cf-frontExtra:empty { display: none; }
     #cf-frontExtra:not(:empty) { display: block; margin-top: 0.5rem; }
+
+    /* Embedded element details (Set 5 back) */
+    #cf-backExtra {
+      margin-top: 0.8rem;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    .fc-set5-back {
+      height: 100%;
+      max-height: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: 0.75rem;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    .fc-set5-info {
+      min-height: 0;
+      height: 100%;
+      margin: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .fc-set5-info__header {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      align-items: baseline;
+      min-width: 0;
+    }
+
+    .fc-set5-info__sym {
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    .fc-set5-info__name {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fc-set5-info__z {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .fc-set5-info__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .fc-set5-info__row {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      min-width: 0;
+    }
+
+    .fc-set5-info__k {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .fc-set5-info__v {
+      font-size: 0.72rem;
+      font-weight: 650;
+      color: var(--text);
+      word-break: break-word;
+      min-width: 0;
+    }
+
+    .fc-set5-info__ions {
+      margin-top: 2px;
+      padding: 8px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .fc-set5-info__ions .fc-set5-info__k {
+      margin-bottom: 4px;
+    }
+
+    /* Clamp long values so the card never needs scrolling. */
+    .fc-set5-info__v {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+    }
+
+    .fc-set5-info__ions .fc-set5-info__v {
+      -webkit-line-clamp: 3;
+      font-weight: 600;
+    }
+
+    .fc-set5-atom {
+      margin: 6px;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      overflow: hidden;
+      min-height: 220px;
+      height: 100%;
+      min-width: 0;
+    }
+
+    .cf-embedded-atom-only {
+      height: 100%;
+      width: 100%;
+      min-height: 0;
+      position: relative;
+    }
+
+    .cf-embedded-atom-only .modal-visual-pane {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cf-atom-pause-btn {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      z-index: 50;
+      pointer-events: auto;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.86);
+      color: rgba(17, 24, 39, 0.92);
+      font-weight: 800;
+      font-size: 0.74rem;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+      user-select: none;
+    }
+
+    .cf-atom-pause-btn.is-paused {
+      background: rgba(17, 24, 39, 0.82);
+      color: #fff;
+      border-color: rgba(0, 0, 0, 0.18);
+    }
+
+    @media (max-width: 720px) {
+      .fc-set5-back {
+        grid-template-columns: 1fr;
+      }
+      .fc-set5-atom {
+        min-height: 240px;
+      }
+    }
 
     .fc-graph-wrap {
       margin-top: 0.6rem;

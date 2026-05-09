@@ -18,6 +18,7 @@ const TOOL_LISTENER_MAP = {
   empirical: attachEmpiricalListeners,
   solubility: attachSolubilityListeners,
   "atomic-arcade": () => {},
+  "chem-catch": () => {},
 };
 
 export function attachToolEventListeners(toolType) {

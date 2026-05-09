@@ -1215,6 +1215,5 @@ function formatEquationForPDF(reaction, showAnswers) {
     return html;
 }
 
-// Invoked by `ensureWorksheetReady()` after `import()` (bundled in prod; classic <script> tag would 404 on Vite `dist/`).
+// Invoked by `ensureWorksheetReady()` after lazy load (avoids onload vs DOMContentLoaded races).
 window.initWorksheetGenerator = initWorksheetGenerator;
-export { initWorksheetGenerator };

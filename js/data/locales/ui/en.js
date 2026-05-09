@@ -202,7 +202,9 @@ export const enUI = {
     "virtualLabName": "Virtual Lab",
     "virtualLabDesc": "Tilt a beaker and play with particle water inside a simple lab scene.",
     "atomNinjaName": "Atom Ninja",
-    "atomNinjaDesc": "Build atoms in the lab and play Atom Ninja — slower movement, longer time, and correct targets appear more often."
+    "atomNinjaDesc": "Build atoms in the lab and play Atom Ninja — slower movement, longer time, and correct targets appear more often.",
+    "chemCatchName": "Chem Catch",
+    "chemCatchDesc": "Read the ionic question and shoot the fish with the correct formula — a fast ionic-formula practice game."
   },
   "worksheet": {
     "title": "Worksheet Generator",

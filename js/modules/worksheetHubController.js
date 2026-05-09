@@ -44,26 +44,6 @@ export function applyWorksheetEmbedIframesLang() {
   });
 }
 
-/** Embedded HTML/iframes: layout inside the shell can collapse; pin panel size via JS + CSS. */
-const EMBED_SUBTYPES = new Set(["atomic-structure", "isotope-ram", "cursor-chem"]);
-
-const NAV_TOP_OFFSET_PX = 60;
-
-const EMBED_PANEL_INLINE_PROPS = [
-  "position",
-  "top",
-  "bottom",
-  "left",
-  "right",
-  "width",
-  "height",
-  "min-height",
-  "max-height",
-  "max-width",
-  "z-index",
-  "inset",
-];
-
 const PANEL_ID_BY_SUBTYPE = {
   equation: "worksheet-panel-equation",
   "atomic-structure": "worksheet-panel-atomic-structure",
@@ -73,26 +53,6 @@ const PANEL_ID_BY_SUBTYPE = {
 
 function getShell() {
   return document.getElementById("worksheet-shell");
-}
-
-function clearEmbedFullscreenStyles() {
-  document.querySelectorAll(".worksheet-panel--embed-full").forEach((el) => {
-    EMBED_PANEL_INLINE_PROPS.forEach((prop) => el.style.removeProperty(prop));
-  });
-}
-
-function applyEmbedFullscreen(panel) {
-  if (!panel || !panel.classList.contains("worksheet-panel--embed-full")) return;
-  const h = `calc(100dvh - ${NAV_TOP_OFFSET_PX}px)`;
-  panel.style.setProperty("position", "fixed", "important");
-  panel.style.setProperty("top", `${NAV_TOP_OFFSET_PX}px`, "important");
-  panel.style.setProperty("left", "0", "important");
-  panel.style.setProperty("width", "100vw", "important");
-  panel.style.setProperty("max-width", "100vw", "important");
-  panel.style.setProperty("height", h, "important");
-  panel.style.setProperty("min-height", h, "important");
-  panel.style.setProperty("max-height", h, "important");
-  panel.style.setProperty("z-index", "5000", "important");
 }
 
 function hideAllPanels() {
@@ -116,7 +76,6 @@ function showHub() {
     hub.removeAttribute("hidden");
   }
   hideAllPanels();
-  clearEmbedFullscreenStyles();
 }
 
 function showDetail(subtype) {
@@ -139,9 +98,15 @@ function showDetail(subtype) {
   if (panel) {
     panel.removeAttribute("hidden");
     panel.setAttribute("aria-hidden", "false");
-    if (EMBED_SUBTYPES.has(subtype)) {
-      applyEmbedFullscreen(panel);
-    }
+  }
+
+  if (subtype === "equation" && typeof window.ensureWorksheetReady === "function") {
+    void window
+      .ensureWorksheetReady()
+      .then(() => {
+        requestAnimationFrame(() => window.initWorksheetGenerator?.());
+      })
+      .catch((err) => console.error("Worksheet lazy init error:", err));
   }
 
   requestAnimationFrame(() => {

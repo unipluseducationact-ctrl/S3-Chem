@@ -126,7 +126,8 @@ uniplus/
 │   └── worksheet-styles.css
 ├── js/
 │   ├── ion-animations.js   # Ion animation logic
-│   ├── worksheet-generator.js
+│   ├── worksheet-generator-desktop.js   # CHEM_CH02 framework (fine pointer / wide)
+│   ├── worksheet-generator-touch.js     # coarse / ≤1024px (iPad, phone)
 │   ├── data/
 │   │   ├── elementsData.js # Element database
 │   │   └── ionsData.js     # Ion database

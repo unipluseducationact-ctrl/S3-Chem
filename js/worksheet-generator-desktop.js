@@ -290,82 +290,18 @@ const WORKSHEET_PHRASE_MAP = {
         fa: 'تولید شده توسط Uni+',
         ur: 'Uni+ کی جانب سے تیار کردہ',
         tl: 'Nabuo ng Uni+'
-    },
-    'Uni+ — Balancing Chemical Equations Worksheet': {
-        'zh-Hant': 'Uni+ — 化學方程式配平練習',
-        fr: 'Uni+ — Feuille d\'equations chimiques a equilibrer',
-        ru: 'Uni+ — Рабочий лист: балансировка уравнений',
-        fa: 'Uni+ — برگه تعادل معادلات شیمیایی',
-        ur: 'Uni+ — کیمیائی مساوات بیلنس ورک شیٹ',
-        tl: 'Uni+ — Balancing Chemical Equations Worksheet'
-    },
-    'Answer Key (Teacher Use Only)': {
-        'zh-Hant': '答案頁（僅供教師使用）',
-        fr: 'Corrige (enseignants uniquement)',
-        ru: 'Ответы (только для преподавателя)',
-        fa: 'پاسخنامه (فقط برای معلم)',
-        ur: 'جوابی کلید (صرف اساتذہ)',
-        tl: 'Answer Key (Teacher Use Only)'
-    },
-    'Name:': {
-        'zh-Hant': '姓名：',
-        fr: 'Nom :',
-        ru: 'Имя:',
-        fa: 'نام:',
-        ur: 'نام:',
-        tl: 'Pangalan:'
-    },
-    'Date:': {
-        'zh-Hant': '日期：',
-        fr: 'Date :',
-        ru: 'Дата:',
-        fa: 'تاریخ:',
-        ur: 'تاریخ:',
-        tl: 'Petsa:'
-    },
-    'Balance the following chemical equations by filling in the correct coefficients.': {
-        'zh-Hant': '在橫線上填入正確的係數以配平方程式。',
-        fr: 'Equilibrez les equations suivantes en indiquant les bons coefficients.',
-        ru: 'Сбалансируйте уравнения, вписав правильные коэффициенты.',
-        fa: 'معادلات زیر را با نوشتن ضرایب درست موازنه کنید.',
-        ur: 'درست ضرایب بھر کر مساوات کو متوازن کریں۔',
-        tl: 'I-balance ang mga sumusunod na ekwasyon sa pamamagitan ng paglalagay ng tamang coefficients.'
     }
 };
 
-/**
- * Worksheet copy: second arg is Simplified Chinese (zh-CN). Traditional (zh-Hant, zh-TW, …)
- * uses WORKSHEET_PHRASE_MAP['zh-Hant']. Do not return zhSc for every `zh*` language.
- */
-function tr(en, zhSc) {
-    const raw = (document.documentElement.getAttribute('lang') || 'en').trim();
-    const langLower = raw.toLowerCase();
-
-    const entry = WORKSHEET_PHRASE_MAP[en];
-    if (entry) {
-        for (const [code, text] of Object.entries(entry)) {
-            if (code.toLowerCase() === langLower) return text;
-        }
-        if (
-            langLower === 'zh-tw' || langLower.startsWith('zh-tw-') ||
-            langLower === 'zh-hk' || langLower.startsWith('zh-hk-') ||
-            langLower === 'zh-mo'
-        ) {
-            const hKey = Object.keys(entry).find(c => c.toLowerCase() === 'zh-hant');
-            if (hKey) return entry[hKey];
-        }
-        const base = langLower.split('-')[0];
-        for (const [code, text] of Object.entries(entry)) {
-            if (code.toLowerCase() === base) return text;
-        }
-    }
-
-    if (langLower.startsWith('zh')) return zhSc;
-
-    return en;
+// Translation helper
+function tr(en, zh) {
+    const lang = (document.documentElement.lang || 'en').toLowerCase();
+    if (lang.startsWith('zh')) return zh;
+    const translated = WORKSHEET_PHRASE_MAP[en]?.[lang] || WORKSHEET_PHRASE_MAP[en]?.[lang.split('-')[0]];
+    return translated || en;
 }
 
-/** Measured max-height so preview scrolls even when nested % / flex heights collapse (Safari, absolute panels). */
+/** Preview scroll region inside embedded equation panel (shared layout with touch bundle). */
 let worksheetPreviewResizeObs = null;
 
 function syncWorksheetPreviewScrollArea() {
@@ -417,110 +353,54 @@ function setupWorksheetPreviewScrollSync() {
     }
 }
 
-// ── Initialize Worksheet Generator (lazy-loaded from script.js) ──────────────────
-// Use capture-phase delegation on the equation panel so controls stay wired even when:
-// - lazy script runs after DOMContentLoaded (desktop timing vs iPad),
-// - users race Worksheets → Equation before the first ensureWorksheetReady tick settles.
-
-let worksheetGenMountAttempts = 0;
-const WORKSHEET_GEN_MOUNT_ATTEMPTS_MAX = 80;
-
-/**
- * Bind equation UI with capture-phase listeners on each control.
- * Bubble-phase delegation can miss clicks when another handler stops propagation
- * or stacking is odd on desktop; capture runs on the way down to the target.
- */
-function attachEquationPanelControls(panel) {
-    if (!panel || panel.dataset.uniplusEqBound === "1") return;
-
-    const gen = document.getElementById("generate-worksheet-btn");
-    if (!gen) return;
-
-    panel.dataset.uniplusEqBound = "1";
-
-    gen.addEventListener(
-        "click",
-        (e) => {
-            e.preventDefault();
-            generateWorksheet();
-        },
-        true,
-    );
-
-    panel.querySelectorAll(".worksheet-controls .button-group .option-btn").forEach((btn) => {
-        btn.addEventListener(
-            "click",
-            (e) => {
-                e.preventDefault();
-                const group = btn.closest(".button-group");
-                if (!group || !panel.contains(group)) return;
-                group.querySelectorAll(".option-btn").forEach((b) => b.classList.remove("active"));
-                btn.classList.add("active");
-            },
-            true,
-        );
-    });
-
-    panel.querySelectorAll(".preview-tab").forEach((tab) => {
-        tab.addEventListener(
-            "click",
-            (e) => {
-                e.preventDefault();
-                panel.querySelectorAll(".preview-tab").forEach((t) => t.classList.remove("active"));
-                tab.classList.add("active");
-                currentViewMode = tab.dataset.mode || "student";
-                if (currentWorksheet) {
-                    renderWorksheet(currentWorksheet, currentViewMode);
-                }
-            },
-            true,
-        );
-    });
-
-    const exportPdfBtn = document.getElementById("export-pdf-btn");
-    if (exportPdfBtn) {
-        exportPdfBtn.addEventListener(
-            "click",
-            (e) => {
-                if (exportPdfBtn.disabled) return;
-                e.preventDefault();
-                exportToPDF();
-            },
-            true,
-        );
-    }
-
-    const fillDateBtn = document.getElementById("fill-date-btn");
-    if (fillDateBtn) {
-        fillDateBtn.addEventListener(
-            "click",
-            (e) => {
-                if (fillDateBtn.disabled) return;
-                e.preventDefault();
-                fillTodayDate();
-            },
-            true,
-        );
-    }
-}
+// CHEM_CH02,06,12_framwork equation generator — desktop bundle (init via script.js lazy load)
+let worksheetGeneratorListenersBound = false;
 
 function initWorksheetGenerator() {
-    const panel = document.getElementById("worksheet-panel-equation");
-    const generateBtnReady = document.getElementById("generate-worksheet-btn");
+    if (worksheetGeneratorListenersBound) return;
 
-    if (!panel || !generateBtnReady) {
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", initWorksheetGenerator, { once: true });
-        } else if (worksheetGenMountAttempts < WORKSHEET_GEN_MOUNT_ATTEMPTS_MAX) {
-            worksheetGenMountAttempts += 1;
-            requestAnimationFrame(initWorksheetGenerator);
+    const generateBtn = document.getElementById('generate-worksheet-btn');
+    if (!generateBtn) {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initWorksheetGenerator, { once: true });
         }
         return;
     }
 
-    worksheetGenMountAttempts = 0;
+    worksheetGeneratorListenersBound = true;
 
-    attachEquationPanelControls(panel);
+    document.querySelectorAll('.worksheet-controls .button-group').forEach(group => {
+        group.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    });
+
+    document.querySelectorAll('.preview-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentViewMode = tab.dataset.mode;
+            if (currentWorksheet) {
+                renderWorksheet(currentWorksheet, currentViewMode);
+            }
+        });
+    });
+
+    generateBtn.addEventListener('click', generateWorksheet);
+
+    const fillDateBtn = document.getElementById('fill-date-btn');
+    if (fillDateBtn) {
+        fillDateBtn.addEventListener('click', fillTodayDate);
+    }
+
+    const exportPdfBtn = document.getElementById('export-pdf-btn');
+    if (exportPdfBtn) {
+        exportPdfBtn.addEventListener('click', exportToPDF);
+    }
+
     setupWorksheetPreviewScrollSync();
     syncWorksheetPreviewScrollArea();
 }
@@ -887,12 +767,6 @@ function renderWorksheet(worksheet, mode) {
             });
         }
     }
-
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            syncWorksheetPreviewScrollArea();
-        });
-    });
 }
 
 function checkSingleAnswer(questionIndex) {
@@ -1215,6 +1089,5 @@ function formatEquationForPDF(reaction, showAnswers) {
     return html;
 }
 
-// Invoked by `ensureWorksheetReady()` after `import()` (bundled in prod; classic <script> tag would 404 on Vite `dist/`).
+// Lazy-loaded by S3 CH05 script.js (desktop only); host calls init after load.
 window.initWorksheetGenerator = initWorksheetGenerator;
-export { initWorksheetGenerator };

@@ -8,6 +8,7 @@ const TOOL_CONTENT_FACTORIES = {
   empirical: generateEmpiricalToolContent,
   solubility: generateSolubilityToolContent,
   "atomic-arcade": generateAtomicArcadeToolContent,
+  "chem-catch": generateChemCatchToolContent,
 };
 
 export function getChemToolContent(toolType) {
@@ -2053,6 +2054,20 @@ function generateAtomicArcadeToolContent() {
         <div class="tool-modal-content atomic-arcade-wrap">
             <iframe class="atomic-arcade-iframe"
                 src="tools/atomic-structure-arcade.html?lang=${lang}"
+                title="${title.replace(/"/g, "&quot;")}"></iframe>
+        </div>
+    `;
+}
+
+function generateChemCatchToolContent() {
+  const title = t("tools.chemCatchName");
+  const rawLang = getLang();
+  const gameLang = rawLang === "en" ? "en" : "zh";
+  const lang = encodeURIComponent(gameLang);
+  return `
+        <div class="tool-modal-content chem-catch-wrap">
+            <iframe class="chem-catch-iframe"
+                src="tools/chem-catch/index.html?lang=${lang}"
                 title="${title.replace(/"/g, "&quot;")}"></iframe>
         </div>
     `;

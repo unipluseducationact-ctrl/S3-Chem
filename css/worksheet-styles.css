@@ -22,6 +22,8 @@
     max-height: 100%;
     /* Grid items default min-height:auto — can block shrinking; children also get min-height:0 below */
     align-items: stretch;
+    position: relative;
+    isolation: isolate;
 }
 
 .worksheet-container > .worksheet-controls,
@@ -40,6 +42,8 @@
     gap: 10px;
     align-self: start;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 2;
 }
 
 .controls-header h2 {
@@ -183,6 +187,8 @@
     height: 100%;
     max-height: 100%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 1;
 }
 
 .preview-header {
@@ -1011,6 +1017,9 @@
 /* Equation overlay: harden flex chain so the preview column cannot grow past the shell */
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="equation"] #worksheet-panel-equation {
     min-height: 0;
+    isolation: isolate;
+    /* Sit above sibling embed panels (z-index: 4) if layout overlap creates dead hit targets on desktop */
+    z-index: 5;
 }
 
 /* Embedded HTML/React worksheets: back bar + iframe only (no nested generator card) */
@@ -1038,6 +1047,9 @@
     border: 0;
     display: block;
     background: var(--bg-color);
+    /* iPad Safari: nested position:fixed under another fixed overlay broke iframe hit-testing; stay absolute like equation panel */
+    touch-action: manipulation;
+    -webkit-transform: translateZ(0);
 }
 
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="atomic-structure"] #worksheet-panel-atomic-structure,
@@ -1046,24 +1058,10 @@
     min-height: 0;
 }
 
-/*
- * Embedded worksheets: pin to the viewport (below global nav offset).
- * Absolute/in-flow sizing inside #worksheet-shell was still collapsing to ~0 in some layouts;
- * fixed + explicit dimensions guarantees a full usable rectangle for the iframe.
- */
+/* Embedded worksheets: same stacking/sizing path as equation panel (absolute inset inside #worksheet-shell). */
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="atomic-structure"] #worksheet-panel-atomic-structure.worksheet-panel--embed-full,
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="isotope-ram"] #worksheet-panel-isotope-ram.worksheet-panel--embed-full,
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="cursor-chem"] #worksheet-panel-cursor-chem.worksheet-panel--embed-full {
-    position: fixed !important;
-    top: 60px !important;
-    left: 0 !important;
-    right: auto !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
-    height: calc(100dvh - 60px) !important;
-    min-height: calc(100dvh - 60px) !important;
-    max-height: calc(100dvh - 60px) !important;
-    inset: unset !important;
-    z-index: 5000 !important;
-    overflow: hidden !important;
+    isolation: isolate;
+    z-index: 4;
 }

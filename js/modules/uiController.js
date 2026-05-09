@@ -797,13 +797,18 @@ function getDisplayGroupHKDSE(element) {
   const col = element.column;
   if (!Number.isInteger(col)) return null;
   if (col >= 3 && col <= 12) return null;
-  if (col === 18) return 0;
-  if (col === 13) return 3;
-  if (col === 14) return 4;
-  if (col === 15) return 5;
-  if (col === 16) return 6;
-  if (col === 17) return 7;
-  if (col === 1 || col === 2) return col;
+  const toRoman = (n) => {
+    const map = { 1: "I", 2: "II", 3: "III", 4: "IV", 5: "V", 6: "VI", 7: "VII" };
+    return map[n] || null;
+  };
+  if (col === 18) return "0";
+  if (col === 13) return toRoman(3);
+  if (col === 14) return toRoman(4);
+  if (col === 15) return toRoman(5);
+  if (col === 16) return toRoman(6);
+  if (col === 17) return toRoman(7);
+  if (col === 1) return toRoman(1);
+  if (col === 2) return toRoman(2);
   return null;
 }
 
@@ -943,7 +948,7 @@ function clearHighlights(container) {
   highlighted.forEach((el) => el.classList.remove("highlighted"));
 }
 
-const eitController = createEITController({
+export const eitController = createEITController({
   normalizeCategoryClass,
   onLegendReset: (container) => {
     activeLegendCategory = null;
@@ -1976,7 +1981,39 @@ function populateSimplifiedView(element) {
       phaseDisplay = v2Data.level1_basic.phaseAtSTP || phaseDisplay;
     }
 
-    setText("#l1-type-value", localizeSimpleStatusText(typeDisplay, t("elementL1.unknown")));
+    const localizeType = (rawType) => {
+      if (!rawType) return t("elementL1.unknown");
+      const s = String(rawType).trim();
+      if (!s || s === "Unknown") return t("elementL1.unknown");
+      // Normalize some legacy strings
+      const norm = s
+        .replace(/\s+/g, " ")
+        .replace(/\bOther Nonmetal\b/i, "Other nonmetal")
+        .replace(/\bNoble Gas\b/i, "Noble gas");
+      const keyMap = {
+        "Alkali Metal": "alkaliMetal",
+        "Alkaline Earth Metal": "alkalineEarth",
+        "Transition Metal": "transitionMetal",
+        "Post-transition Metal": "postTransition",
+        Metalloid: "metalloid",
+        Halogen: "halogen",
+        "Noble gas": "nobleGas",
+        Lanthanide: "lanthanide",
+        Actinide: "actinide",
+        "Other nonmetal": "otherNonmetal",
+        Metal: null,
+        Nonmetal: null,
+      };
+      const k = keyMap[norm];
+      if (k) return t(`tableLegend.${k}`);
+      if (norm === "Metal" || norm === "Nonmetal" || norm === "Metalloid") {
+        const vv = t(`eit.propertyVal.${norm}`);
+        return vv && vv !== `eit.propertyVal.${norm}` ? vv : norm;
+      }
+      return norm;
+    };
+
+    setText("#l1-type-value", localizeType(typeDisplay));
     let displayRow = element.row;
     let displayCol = getDisplayGroupHKDSE(element);
     if (element.series === "lanthanide") {
@@ -2050,7 +2087,9 @@ function populateSimplifiedView(element) {
             const name = end > 0 ? afterSymbol.substring(1, end) : afterSymbol.substring(1);
             return { symbol, name };
           }
-          return { symbol, name: `${localizeElementName(element)} ion` };
+          const lang = getLang();
+          const baseName = localizeElementName(element);
+          return { symbol, name: lang === "zh-Hant" || lang === "zh" ? `${baseName}離子` : `${baseName} ion` };
         };
         if (normalizedCommonIonsText.includes(",")) {
           splitEntriesOutsideParentheses(normalizedCommonIonsText)
@@ -3326,6 +3365,247 @@ export function initModalUI() {
       reRenderCurrentAtomModal();
     }
   });
+}
+
+// =============================================================================
+// Flashcards embed: reuse modal UI inline (no overlay)
+// =============================================================================
+
+let _inlineMountState = null;
+
+/**
+ * Move the existing element modal panes into a target container and render the
+ * same simplified info UI + 3D atom, without opening the modal overlay.
+ *
+ * This avoids duplicating element mapping logic: it reuses `populateSimplifiedView`
+ * and the same Three.js initialization path as `showModal`.
+ */
+export async function mountElementDetailsInline(targetContainer, element) {
+  if (!targetContainer || !element) return;
+
+  // If something is already mounted, restore first (safe no-op otherwise).
+  unmountElementDetailsInline();
+
+  const elementModal = document.getElementById("element-modal");
+  if (!elementModal) return;
+
+  const simplifiedBox = elementModal.querySelector(".modal-info-pane .simplified-element-box");
+  const visualPane = elementModal.querySelector(".modal-visual-pane");
+  const atomHost = elementModal.querySelector("#atom-container");
+
+  if (!simplifiedBox || !visualPane || !atomHost) return;
+
+  _inlineMountState = {
+    simplifiedBox,
+    visualPane,
+    simplifiedBoxParent: simplifiedBox.parentNode,
+    simplifiedBoxNext: simplifiedBox.nextSibling,
+    visualPaneParent: visualPane.parentNode,
+    visualPaneNext: visualPane.nextSibling,
+    wrapper: null,
+  };
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "cf-embedded-element-modal";
+  _inlineMountState.wrapper = wrapper;
+  targetContainer.innerHTML = "";
+  targetContainer.appendChild(wrapper);
+
+  // Ensure the simplified box is visible when embedded.
+  simplifiedBox.style.display = "grid";
+
+  // Move the existing nodes (no cloning → no duplicate IDs).
+  wrapper.appendChild(simplifiedBox);
+  wrapper.appendChild(visualPane);
+
+  // Populate the same simplified UI (fills IDs inside the moved subtree).
+  populateSimplifiedView(element);
+
+  // Flashcards embed only shows the first simplified "page".
+  // If the user previously swiped to another page in the modal, the slider can
+  // remain scrolled — but embedded mode hides non-first slides, making the pane
+  // look blank. Force the slider back to the first slide.
+  try {
+    const slider = simplifiedBox.querySelector(".cards-slider");
+    if (slider) {
+      // Use both direct assignment + scrollTo for maximum browser coverage.
+      slider.scrollLeft = 0;
+      slider.scrollTo?.({ left: 0, behavior: "auto" });
+      requestAnimationFrame(() => {
+        slider.scrollLeft = 0;
+        slider.scrollTo?.({ left: 0, behavior: "auto" });
+      });
+    }
+  } catch {
+    /* ignore */
+  }
+
+  // Init 3D atom inside embedded visual pane.
+  try {
+    await ensureThreeLibLoaded();
+    cleanup3D(true);
+    clearCurrentAtom();
+    renderScene();
+
+    // Give the embedded pane a deterministic size so init3DScene can measure.
+    visualPane.style.height = "100%";
+    atomHost.style.height = "100%";
+    atomHost.style.opacity = "1";
+
+    init3DScene(atomHost);
+    updateAtomStructure(element);
+    onWindowResize();
+    reset3DView();
+    animateAtom();
+  } catch (e) {
+    console.error("Inline element 3D init failed:", e);
+  }
+}
+
+export function unmountElementDetailsInline() {
+  const st = _inlineMountState;
+  if (!st) return;
+
+  try {
+    cleanup3D(true);
+  } catch {
+    /* ignore */
+  }
+
+  // Remove wrapper first (it only contains moved nodes).
+  if (st.wrapper && st.wrapper.parentNode) {
+    st.wrapper.parentNode.removeChild(st.wrapper);
+  }
+
+  // Restore nodes to their original positions in the modal DOM.
+  try {
+    if (st.simplifiedBoxParent) {
+      st.simplifiedBoxParent.insertBefore(st.simplifiedBox, st.simplifiedBoxNext);
+    }
+    if (st.visualPaneParent) {
+      st.visualPaneParent.insertBefore(st.visualPane, st.visualPaneNext);
+    }
+  } catch (e) {
+    console.error("Inline element UI restore failed:", e);
+  } finally {
+    _inlineMountState = null;
+  }
+}
+
+// =============================================================================
+// Flashcards embed: 3D atom only (custom info pane rendered elsewhere)
+// =============================================================================
+
+let _inlineAtomOnlyState = null;
+
+export async function mountAtom3DInline(targetContainer, element) {
+  if (!targetContainer || !element) return;
+
+  unmountAtom3DInline();
+
+  const elementModal = document.getElementById("element-modal");
+  if (!elementModal) return;
+
+  const visualPane = elementModal.querySelector(".modal-visual-pane");
+  const atomHost = elementModal.querySelector("#atom-container");
+  if (!visualPane || !atomHost) return;
+
+  _inlineAtomOnlyState = {
+    visualPane,
+    visualPaneParent: visualPane.parentNode,
+    visualPaneNext: visualPane.nextSibling,
+    wrapper: null,
+    pauseBtn: null,
+  };
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "cf-embedded-atom-only";
+  _inlineAtomOnlyState.wrapper = wrapper;
+  targetContainer.innerHTML = "";
+  targetContainer.appendChild(wrapper);
+
+  wrapper.appendChild(visualPane);
+
+  // Inline pause button (flashcards/back-side embed).
+  const pauseBtn = document.createElement("button");
+  pauseBtn.type = "button";
+  pauseBtn.className = "cf-atom-pause-btn";
+  const renderPauseBtn = () => {
+    const paused = !!window._uniplusAnimPaused;
+    pauseBtn.textContent = paused ? "Resume" : "Stop";
+    pauseBtn.classList.toggle("is-paused", paused);
+    pauseBtn.setAttribute("aria-label", paused ? "Resume 3D animation" : "Pause 3D animation");
+  };
+  renderPauseBtn();
+  // Prevent flashcard flip on touch/pointer down and click bubbling.
+  const stopEvt = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  pauseBtn.addEventListener("pointerdown", stopEvt, { passive: false });
+  pauseBtn.addEventListener("touchstart", stopEvt, { passive: false });
+  pauseBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window._uniplusAnimPaused = !window._uniplusAnimPaused;
+    try {
+      localStorage.setItem("uniplus_anim_paused", String(window._uniplusAnimPaused));
+    } catch {
+      /* ignore */
+    }
+    renderPauseBtn();
+  });
+  // Keep label in sync if settings page toggles it
+  window.addEventListener("storage", (e) => {
+    if (e && e.key === "uniplus_anim_paused") renderPauseBtn();
+  });
+  wrapper.appendChild(pauseBtn);
+  _inlineAtomOnlyState.pauseBtn = pauseBtn;
+  _inlineAtomOnlyState.renderPauseBtn = renderPauseBtn;
+
+  try {
+    await ensureThreeLibLoaded();
+    cleanup3D(true);
+    clearCurrentAtom();
+    renderScene();
+
+    visualPane.style.height = "100%";
+    atomHost.style.height = "100%";
+    atomHost.style.opacity = "1";
+
+    init3DScene(atomHost);
+    updateAtomStructure(element);
+    onWindowResize();
+    reset3DView();
+    animateAtom();
+  } catch (e) {
+    console.error("Inline atom-only 3D init failed:", e);
+  }
+}
+
+export function unmountAtom3DInline() {
+  const st = _inlineAtomOnlyState;
+  if (!st) return;
+
+  try {
+    cleanup3D(true);
+  } catch {
+    /* ignore */
+  }
+
+  if (st.wrapper && st.wrapper.parentNode) {
+    st.wrapper.parentNode.removeChild(st.wrapper);
+  }
+
+  try {
+    if (st.visualPaneParent) {
+      st.visualPaneParent.insertBefore(st.visualPane, st.visualPaneNext);
+    }
+  } catch (e) {
+    console.error("Inline atom-only UI restore failed:", e);
+  } finally {
+    _inlineAtomOnlyState = null;
+  }
 }
 
 // Texture Toggle Logic

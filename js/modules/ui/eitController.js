@@ -108,6 +108,8 @@ let eitState = {
 let first20OverlayActive = false;
 let tableElectronStyleActive = false;
 let s3ModeActive = false;
+/** Last container passed to ensureEITController — used by mobile wizard public API */
+let activeTableContainer = null;
 
 const TABLE_STYLE_STORAGE_KEY = "uniplus_table_style";
 const TABLE_STYLE_ELECTRONS_VALUE = "electrons";
@@ -150,9 +152,21 @@ function applyS3Mode(tableContainer) {
     if (!(node instanceof HTMLElement)) return;
 
     const restore = () => {
-      node.style.display = node.dataset.s3OrigDisplay || "";
-      node.style.gridColumn = node.dataset.s3OrigGridColumn || "";
-      node.style.gridRow = node.dataset.s3OrigGridRow || "";
+      if (Object.prototype.hasOwnProperty.call(node.dataset, "s3OrigDisplay")) {
+        node.style.display = node.dataset.s3OrigDisplay || "";
+      } else {
+        node.style.removeProperty("display");
+      }
+      if (Object.prototype.hasOwnProperty.call(node.dataset, "s3OrigGridColumn")) {
+        node.style.gridColumn = node.dataset.s3OrigGridColumn || "";
+      } else {
+        node.style.removeProperty("grid-column");
+      }
+      if (Object.prototype.hasOwnProperty.call(node.dataset, "s3OrigGridRow")) {
+        node.style.gridRow = node.dataset.s3OrigGridRow || "";
+      } else {
+        node.style.removeProperty("grid-row");
+      }
       node.classList.remove("s3-in", "s3-hidden");
     };
 
@@ -229,6 +243,11 @@ function applyS3Mode(tableContainer) {
       if (!keep) node.classList.add("s3-hidden");
     }
   });
+
+  // After toggling S3 off, force a re-layout pass so iPad Safari reliably reflows the grid.
+  if (!active && typeof window !== "undefined" && typeof window._scalePeriodicTable === "function") {
+    requestAnimationFrame(() => window._scalePeriodicTable(true));
+  }
 }
 
 function applyFirst20Overlay(tableContainer) {
@@ -969,6 +988,11 @@ function applyEIT(tableContainer) {
 
 function ensureEITController(tableContainer) {
   if (!tableContainer) return;
+  activeTableContainer = tableContainer;
+
+  const isMobileEit = typeof window !== "undefined"
+    && typeof window.matchMedia === "function"
+    && window.matchMedia("(pointer: coarse), (max-width: 1024px)").matches;
 
   let root = document.getElementById("eit-controller");
   if (!root) {
@@ -1023,6 +1047,7 @@ function ensureEITController(tableContainer) {
         <button type="button" class="eit-mode-btn active" data-mode="color" aria-pressed="true">${t("eit.color")}</button>
         <button type="button" class="eit-mode-btn" data-mode="filter" aria-pressed="false">${t("eit.filter")}</button>
       </div>
+      <button type="button" class="eit-reset-btn eit-collapse-btn" id="eit-bar-collapse-btn" aria-pressed="false" aria-label="Collapse controls">▾</button>
       <button type="button" class="eit-reset-btn" id="eit-reset-btn">${t("eit.reset")}</button>
       <button type="button" class="eit-reset-btn" id="eit-first20-btn" aria-pressed="false">${t("eit.first20")}</button>
       <button type="button" class="eit-reset-btn" id="eit-style-toggle-btn" aria-pressed="false">${t("eit.style.electrons")}</button>
@@ -1042,8 +1067,12 @@ function ensureEITController(tableContainer) {
     root.appendChild(hiddenSelect);
   }
 
-  if (root.parentElement !== tableContainer) {
-    tableContainer.appendChild(root);
+  // IMPORTANT: On iPad Safari, `position: fixed` elements inside a transformed ancestor
+  // (the periodic table uses transform scale) can "drift" during zoom/scale.
+  // Mount the EIT bar on document.body in mobile mode so it's not affected by table transforms.
+  const desiredParent = isMobileEit ? document.body : tableContainer;
+  if (root.parentElement !== desiredParent) {
+    desiredParent.appendChild(root);
   }
   tableContainer.classList.add("has-eit");
 
@@ -1069,6 +1098,7 @@ function ensureEITController(tableContainer) {
     first20Button: root.querySelector("#eit-first20-btn"),
     styleToggleButton: root.querySelector("#eit-style-toggle-btn"),
     s3ModeButton: root.querySelector("#eit-s3mode-btn"),
+    collapseBarButton: root.querySelector("#eit-bar-collapse-btn"),
     closeButton: root.querySelector("#eit-panel-close"),
     legend: root.querySelector("#eit-legend"),
     legendTitle: root.querySelector("#eit-legend-title"),
@@ -1136,9 +1166,11 @@ function ensureEITController(tableContainer) {
       el.addEventListener("click", (e) => {
         if (lastTouchUpAt && (performance.now() - lastTouchUpAt) < 650) {
           e.preventDefault();
+          e.stopImmediatePropagation?.();
           e.stopPropagation();
           return;
         }
+        e.stopImmediatePropagation?.();
         e.stopPropagation();
         handler(e);
       });
@@ -1146,6 +1178,7 @@ function ensureEITController(tableContainer) {
         if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
         if (window._uniplusIsDragging) return;
         e.preventDefault();
+        e.stopImmediatePropagation?.();
         e.stopPropagation();
         lastTouchUpAt = performance.now();
         handler(e);
@@ -1270,11 +1303,51 @@ function ensureEITController(tableContainer) {
     bindTap(eitUI.resetButton, () => {
       first20OverlayActive = false;
       applyFirst20Overlay(tableContainer);
+      // Reset electron layout style as part of a true "reset"
+      tableElectronStyleActive = false;
+      try {
+        localStorage.setItem(TABLE_STYLE_STORAGE_KEY, "");
+      } catch (e) {
+        // ignore storage failures
+      }
+      eitUI.styleToggleButton?.setAttribute("aria-pressed", "false");
+      applyTableStyleClass(tableContainer);
       s3ModeActive = false;
       eitUI.s3ModeButton?.setAttribute("aria-pressed", "false");
       applyS3Mode(tableContainer);
       resetEITState();
       applyEIT(tableContainer);
+      setEITPanelOpen(false);
+    });
+
+    // Collapse / expand top bar (mobile only UI)
+    const BAR_COLLAPSE_KEY = "uniplus_eit_bar_collapsed";
+    const setBarCollapsed = (collapsed) => {
+      const on = !!collapsed;
+      root.classList.toggle("eit-bar-collapsed", on);
+      eitUI.collapseBarButton?.setAttribute("aria-pressed", on ? "true" : "false");
+      if (eitUI.collapseBarButton) eitUI.collapseBarButton.textContent = on ? "▸" : "▾";
+      try {
+        localStorage.setItem(BAR_COLLAPSE_KEY, on ? "1" : "0");
+      } catch (e) {
+        // ignore storage failures
+      }
+      if (typeof window._scalePeriodicTable === "function") {
+        requestAnimationFrame(() => window._scalePeriodicTable(true));
+      }
+    };
+
+    // Restore persisted state on load
+    try {
+      const stored = localStorage.getItem(BAR_COLLAPSE_KEY);
+      if (stored === "1") setBarCollapsed(true);
+    } catch (e) {
+      // ignore
+    }
+
+    bindTap(eitUI.collapseBarButton, () => {
+      const collapsed = root.classList.contains("eit-bar-collapsed");
+      setBarCollapsed(!collapsed);
     });
 
     // First 20 toggle
@@ -1373,6 +1446,90 @@ function ensureEITController(tableContainer) {
   }
 }
 
+  function getEitSnapshot() {
+    return {
+      property: eitState.property,
+      mode: eitState.mode,
+      first20: first20OverlayActive,
+      electronLayout: tableElectronStyleActive,
+      s3: s3ModeActive,
+    };
+  }
+
+  function setEitProperty(key) {
+    if (!activeTableContainer || !EIT_PROPERTY_MAP.has(key)) return;
+    eitState.property = key;
+    applyEIT(activeTableContainer);
+  }
+
+  function setEitMode(mode) {
+    if (!activeTableContainer) return;
+    if (mode !== "color" && mode !== "filter") return;
+    const cfg = EIT_PROPERTY_MAP.get(eitState.property);
+    if (cfg?.type === "category" && mode === "filter") return;
+    eitState.mode = mode;
+    applyEIT(activeTableContainer);
+  }
+
+  /** Re-click active numeric chip: cycle unit (matches desktop EIT chips). */
+  function cycleEitPropertyUnit(propertyKey) {
+    if (!activeTableContainer) return;
+    const cfg = EIT_PROPERTY_MAP.get(propertyKey);
+    if (!cfg?.units || cfg.units.length <= 1) return;
+    cycleUnit(cfg);
+    applyEIT(activeTableContainer);
+  }
+
+  function toggleFirst20() {
+    if (!activeTableContainer || !eitUI) return;
+    first20OverlayActive = !first20OverlayActive;
+    eitUI.first20Button?.setAttribute("aria-pressed", first20OverlayActive ? "true" : "false");
+    applyFirst20Overlay(activeTableContainer);
+  }
+
+  function toggleElectronLayout() {
+    if (!activeTableContainer || !eitUI) return;
+    tableElectronStyleActive = !tableElectronStyleActive;
+    try {
+      localStorage.setItem(
+        TABLE_STYLE_STORAGE_KEY,
+        tableElectronStyleActive ? TABLE_STYLE_ELECTRONS_VALUE : "",
+      );
+    } catch (e) {
+      // ignore storage failures
+    }
+    eitUI.styleToggleButton?.setAttribute("aria-pressed", tableElectronStyleActive ? "true" : "false");
+    applyTableStyleClass(activeTableContainer);
+  }
+
+  function toggleS3Mode() {
+    if (!activeTableContainer || !eitUI) return;
+    s3ModeActive = !s3ModeActive;
+    eitUI.s3ModeButton?.setAttribute("aria-pressed", s3ModeActive ? "true" : "false");
+    applyS3Mode(activeTableContainer);
+    if (s3ModeActive) setEITPanelOpen(false);
+  }
+
+  function eitReset() {
+    if (!activeTableContainer || !eitUI) return;
+    first20OverlayActive = false;
+    applyFirst20Overlay(activeTableContainer);
+    tableElectronStyleActive = false;
+    try {
+      localStorage.setItem(TABLE_STYLE_STORAGE_KEY, "");
+    } catch (e) {
+      // ignore storage failures
+    }
+    eitUI.styleToggleButton?.setAttribute("aria-pressed", "false");
+    applyTableStyleClass(activeTableContainer);
+    s3ModeActive = false;
+    eitUI.s3ModeButton?.setAttribute("aria-pressed", "false");
+    applyS3Mode(activeTableContainer);
+    resetEITState();
+    applyEIT(activeTableContainer);
+    setEITPanelOpen(false);
+  }
+
   return {
     EIT_PROPERTY_CONFIG,
     registerEITElementCell,
@@ -1381,5 +1538,13 @@ function ensureEITController(tableContainer) {
     ensureEITController,
     isLegendLocked: () => lockLegendInteractions,
     getRegistry: () => eitRegistry,
+    getEitSnapshot,
+    setEitProperty,
+    setEitMode,
+    cycleEitPropertyUnit,
+    toggleFirst20,
+    toggleElectronLayout,
+    toggleS3Mode,
+    eitReset,
   };
 }

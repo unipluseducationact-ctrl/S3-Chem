@@ -589,3 +589,191 @@ html[lang="zh"] .summary-lang--zh-hant {
   line-height: 1.5;
   color: var(--text-secondary, #475569);
 }
+
+/* =============================================================================
+   Chapter draw overlay (Notes + Summary)
+   ============================================================================= */
+
+.chapter-draw-mount {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+#notes-page.blank-page.active.chapter-draw-active .chapter-scroll,
+#settings-page.blank-page.active.chapter-draw-active .chapter-scroll {
+  overflow: hidden;
+}
+
+.blank-page.chapter-draw-active {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.chapter-draw-canvas {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 60px);
+  z-index: 2050;
+  pointer-events: none;
+  touch-action: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.chapter-draw-canvas.chapter-draw-canvas--on {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+.chapter-draw-fab {
+  display: none;
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  z-index: 2060;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: rgba(255, 255, 255, 0.96);
+  color: #0f172a;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+  pointer-events: auto;
+}
+
+#notes-page.blank-page.active .chapter-draw-fab,
+#settings-page.blank-page.active .chapter-draw-fab {
+  display: flex;
+}
+
+.chapter-draw-fab[aria-pressed="true"] {
+  background: #0f172a;
+  color: #f8fafc;
+  border-color: #0f172a;
+}
+
+.chapter-draw-toolbar {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(84px, calc(20px + env(safe-area-inset-bottom, 0px) + 52px));
+  z-index: 2060;
+  min-width: 200px;
+  max-width: min(300px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.94);
+  color: #f1f5f9;
+  font-size: 0.8125rem;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.25);
+  pointer-events: auto;
+}
+
+.chapter-draw-toolbar[hidden] {
+  display: none !important;
+}
+
+.chapter-draw-toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.chapter-draw-toolbar-row:last-child {
+  margin-bottom: 0;
+}
+
+.chapter-draw-tool {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(30, 41, 59, 0.85);
+  color: #e2e8f0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chapter-draw-tool.is-active {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #f8fafc;
+}
+
+.chapter-draw-width-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.chapter-draw-width {
+  width: 100%;
+  accent-color: #38bdf8;
+}
+
+.chapter-draw-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.chapter-draw-color-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(248, 250, 252, 0.35);
+  background: var(--dot, #0f172a);
+  cursor: pointer;
+  padding: 0;
+}
+
+.chapter-draw-color-dot.active {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.chapter-draw-toolbar-actions {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.chapter-draw-clear,
+.chapter-draw-done {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.chapter-draw-clear {
+  background: rgba(248, 113, 113, 0.2);
+  color: #fecaca;
+}
+
+.chapter-draw-done {
+  background: #38bdf8;
+  color: #0f172a;
+}

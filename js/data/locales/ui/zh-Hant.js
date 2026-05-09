@@ -201,7 +201,9 @@ export const zhHantUI = {
     "virtualLabName": "虛擬實驗室",
     "virtualLabDesc": "傾斜燒杯，並在一個簡潔的實驗場景裡玩顆粒水。",
     "atomNinjaName": "原子忍者",
-    "atomNinjaDesc": "拼砌原子並玩「原子忍者」— 節奏較慢、時間較長，正確答案目標出現更頻密。"
+    "atomNinjaDesc": "拼砌原子並玩「原子忍者」— 節奏較慢、時間較長，正確答案目標出現更頻密。",
+    "chemCatchName": "化學捉魚",
+    "chemCatchDesc": "先看離子題目，射中顯示正確化學式的魚——快速練習離子化學式。"
   },
   "worksheet": {
     "title": "練習單生成器",

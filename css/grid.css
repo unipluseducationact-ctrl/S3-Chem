@@ -187,6 +187,11 @@
    Design-matched to Uni+'s pill-nav language.
    ============================================== */
 
+/* Mobile wizard uses "View by" for property selection, but keep numeric slider under the hotbar. */
+body.eit-mobile #eit-controller.eit-controller {
+  display: flex !important;
+}
+
 .eit-controller {
   grid-column: 3 / 19;
   grid-row: 2;
@@ -201,6 +206,39 @@
   padding: 0 4px;
   position: relative;
   min-height: 0;
+}
+
+/*
+ * Body-mounted EIT (`ensureEITController` uses `document.body` when coarse/narrow).
+ * When `body.eit-mobile` is off, that stray shell stacks above `.blank-page` (~2k) and steals taps.
+ * Desktop periodic table keeps `#eit-controller` inside `#periodic-table`, so `body > #eit-controller`
+ * does not apply there.
+ */
+body:not(.eit-mobile) > #eit-controller {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Orphan mobile wizard layers if destroy races or fails */
+body:not(.eit-mobile) #eit-mobile-root {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/*
+ * Body-mounted EIT (`ensureEITController` uses `document.body` on coarse/narrow viewports) uses z-index ~11k.
+ * `.blank-page` overlays sit at ~2k, so any frame where the mobile wizard tear-down lags can leave an invisible
+ * bar above Worksheets / Notes / Tools and swallow taps (Generate in embedded iframes appears “dead” on iPad).
+ * Hard-stop hits whenever any full-screen blank overlay is active — EIT only belongs on the periodic table page.
+ */
+body:has(.blank-page.active) > #eit-controller.eit-controller {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body:has(.blank-page.active) #eit-mobile-root {
+  display: none !important;
+  pointer-events: none !important;
 }
 
 /* Ensure dropdown panel and chips are reliably tappable on iPad Safari */
@@ -923,6 +961,7 @@ html[lang="ar"] .eit-mode-btn {
 }
 
 #table-legend {
+  --legend-shift-x: 0px;
   grid-column: 3 / 13;
   grid-row: 2 / 5;
   display: grid;
@@ -936,6 +975,13 @@ html[lang="ar"] .eit-mode-btn {
   align-self: center;
   justify-self: center;
   align-content: center;
+}
+
+/* iPad / touch layouts: shift the legend right to avoid overlapping Group I/II elements */
+@media (pointer: coarse) {
+  #table-legend {
+    --legend-shift-x: 72px;
+  }
 }
 
 /* Compact mode: 2 columns × 5 rows — toggled by JS */
@@ -1354,6 +1400,11 @@ html[lang="ar"] .eit-mode-btn {
   gap: 0.05vmin;
   margin-top: 0;
   max-width: 100%;
+}
+
+/* S3 mode enlarges the Bohr diagram; ensure the graph row matches so period 3+ shells don't get cut. */
+#periodic-table.s3-mode.table-style-electrons .element.electron-arrangement-has-graph .electron-arrangement {
+  grid-template-rows: min-content 74px;
 }
 
 #periodic-table.table-style-electrons .element.electron-arrangement-has-graph .electron-arrangement-text {

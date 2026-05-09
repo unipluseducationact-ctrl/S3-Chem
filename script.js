@@ -2,11 +2,13 @@ import { getChemToolContent } from "./js/modules/chemToolContent.js";
 import { attachToolEventListeners } from "./js/modules/chemToolInteractions.js";
 import {
   buildPeriodicTable,
+  eitController,
   initModalUI,
   reRenderCurrentAtomModal,
   setGlobalUnit,
   l3UnitState
 } from "./js/modules/uiController.js";
+import { syncEitMobileMount } from "./js/modules/ui/eitMobileController.js";
 import { initPageController } from "./js/modules/pageController.js";
 import { initChemFlashcard } from "./js/modules/chemFlashcardApp.js";
 import { createToolsModalController } from "./js/modules/toolsModalController.js";
@@ -27,6 +29,7 @@ import {
   initWorksheetHub,
   applyWorksheetEmbedIframesLang,
 } from "./js/modules/worksheetHubController.js";
+import { initChapterDrawOverlays } from "./js/modules/chapterDrawOverlay.js";
 
 function isRealMobileDevice() {
   // Wide viewports (> 1024px) get the full desktop app, even on touch devices like iPad.
@@ -102,32 +105,21 @@ window._uniplusAnimPaused = savedAnimationState.paused;
 window._uniplusAnimSpeed = savedAnimationState.speed;
 
 // ========================================
-// Lazy Script/Module Loaders (performance)
+// Lazy module loaders (performance)
 // ========================================
-const lazyScriptPromises = new Map();
-let worksheetReady = false;
+/** Vite-bundled worksheet chunk — do NOT use a raw <script src="js/worksheet-generator.js">; that file is not emitted in `dist/`. */
+let worksheetModulePromise = null;
 let heroAtomModulePromise = null;
 
-function loadClassicScriptOnce(src) {
-  if (lazyScriptPromises.has(src)) return lazyScriptPromises.get(src);
-  const promise = new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.async = true;
-    script.dataset.lazySrc = src;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
-    document.body.appendChild(script);
-  });
-  lazyScriptPromises.set(src, promise);
-  return promise;
+async function ensureWorksheetReady() {
+  if (!worksheetModulePromise) {
+    worksheetModulePromise = import("./js/worksheet-generator.js");
+  }
+  await worksheetModulePromise;
+  window.initWorksheetGenerator?.();
 }
 
-async function ensureWorksheetReady() {
-  if (worksheetReady) return;
-  await loadClassicScriptOnce("js/worksheet-generator.js");
-  worksheetReady = true;
-}
+window.ensureWorksheetReady = ensureWorksheetReady;
 
 function loadHeroAtomModule() {
   if (heroAtomModulePromise) return heroAtomModulePromise;
@@ -154,6 +146,17 @@ function initPeriodicTableScale() {
   let lastScaleSignature = "";
   let legendEl = null;
 
+  // User-controlled zoom multiplier (separate from auto-fit scale).
+  const USER_SCALE_KEY = "uniplus_user_scale";
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  let userScale = 1;
+  try {
+    const raw = parseFloat(localStorage.getItem(USER_SCALE_KEY) || "1");
+    userScale = Number.isFinite(raw) ? clamp(raw, 0.7, 1.35) : 1;
+  } catch (e) {
+    userScale = 1;
+  }
+
   function computeTvmin(tableW) {
     // Scale tvmin with table width to keep text proportional in cells
     const effectiveH = Math.max(window.innerHeight, 500);
@@ -171,23 +174,27 @@ function initPeriodicTableScale() {
   function applyLayout(gap, scale, marginTop) {
     table.style.setProperty("--series-gap", `${gap}px`);
     table.style.transformOrigin = "top center";
-    table.style.transform = scale < 0.999 ? `scale(${scale})` : "none";
+    const finalScale = (scale < 0.999 ? scale : 1) * userScale;
+    table.style.transform = Math.abs(finalScale - 1) > 0.001 ? `scale(${finalScale})` : "none";
     table.style.marginTop = `${marginTop}px`;
 
     const legend = document.getElementById("table-legend");
     if (legend) {
-      legend.style.transform = "translateY(10px)";
+      // Allow CSS to control horizontal legend shift (e.g., on iPad) without
+      // fighting this JS-driven layout pass.
+      legend.style.transform = "translate(var(--legend-shift-x, 0px), 10px)";
       legend.style.transformOrigin = "top center";
     }
   }
 
-  function scaleTable(force = false) {
+  function scaleTable(force = false, opts = {}) {
+    const { allowWhenViewportZoomed = false } = opts || {};
     if (isScaling) return;
     if (getComputedStyle(container).display === "none") return;
     if (table.children.length === 0) return;
     // On iPad/iOS, pinch-zoom changes viewport metrics and can trigger resize.
     // Do not override user zoom by re-scaling the table while visualViewport is zoomed.
-    if (window.visualViewport && typeof window.visualViewport.scale === "number" && window.visualViewport.scale !== 1) {
+    if (!allowWhenViewportZoomed && window.visualViewport && typeof window.visualViewport.scale === "number" && window.visualViewport.scale !== 1) {
       return;
     }
 
@@ -316,6 +323,20 @@ function initPeriodicTableScale() {
   }
 
   window._scalePeriodicTable = (force = false) => scaleTable(force);
+  // Called by mobile "View by" zoom buttons.
+  window._uniplusAdjustUserScale = (delta) => {
+    const step = 0.06;
+    const next = clamp((userScale || 1) + (delta > 0 ? step : -step), 0.7, 1.35);
+    userScale = next;
+    try {
+      localStorage.setItem(USER_SCALE_KEY, String(userScale));
+    } catch (e) {
+      // ignore storage failures
+    }
+    scaleTable(true, { allowWhenViewportZoomed: true });
+    return userScale;
+  };
+  window._uniplusGetUserScale = () => userScale;
   let resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
@@ -398,7 +419,17 @@ function initMainApp() {
   initNavResponsive();
 
   const tableContainer = document.getElementById("periodic-table");
-  if (tableContainer) buildPeriodicTable(tableContainer);
+  if (tableContainer) {
+    buildPeriodicTable(tableContainer);
+    syncEitMobileMount(tableContainer, eitController);
+    let eitMobileResizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(eitMobileResizeTimer);
+      eitMobileResizeTimer = setTimeout(() => {
+        syncEitMobileMount(tableContainer, eitController);
+      }, 150);
+    });
+  }
   initModalUI();
 
   const toolsModalController = createToolsModalController({
@@ -417,9 +448,11 @@ function initMainApp() {
   const pageCtrl = initPageController({
     onTablePageShown: () => {
       if (window._scalePeriodicTable) window._scalePeriodicTable(true);
+      if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onToolsPageShown: () => {
       setTimeout(() => toolsModalController.initChemToolCards(), 100);
+      if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onWorksheetPageShown: () => {
       void ensureWorksheetReady()
@@ -428,14 +461,17 @@ function initMainApp() {
           applyWorksheetEmbedIframesLang();
         })
         .catch((e) => console.error("Worksheet lazy init error:", e));
+      if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onSettingsPageShown: () => {
       requestAnimationFrame(() => {
          if (window._syncGlobalUnitButtons) window._syncGlobalUnitButtons(true);
       });
+      if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onFlashcardsPageShown: () => {
       requestAnimationFrame(() => initChemFlashcard());
+      if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
   });
 
@@ -463,6 +499,8 @@ function initMainApp() {
 
   // Initialize mascot chemistry assistant
   initMascotController();
+
+  initChapterDrawOverlays();
 }
 
 function bootstrapApp() {

@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HKDSE Chem Catch — Ionic Formulas</title>
+    <style>
+      :root{
+        --bg-page:#f6f7f9;
+        --surface:#ffffff;
+        --surface-muted:#eef0f4;
+        --text:#2d3436;
+        --text-muted:#6b7280;
+        --border:rgba(45,52,54,.1);
+        --shadow:0 2px 10px rgba(0,0,0,.06);
+        --shadow-lg:0 12px 40px rgba(0,0,0,.08);
+        --accent-fill:#dce6f7;
+        --accent-border:#b8c8e8;
+        --good:#2d9d6c;
+        --bad:#d96666;
+      }
+      *{box-sizing:border-box;font-family:"Inter",ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans TC","PingFang TC","Microsoft JhengHei"}
+      body{margin:0;color:var(--text);background:var(--bg-page);min-height:100vh;display:grid;place-items:center;padding:22px}
+      .wrap{width:min(980px,100%);display:grid;grid-template-rows:auto 1fr;gap:16px}
+      .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:16px 18px;border-radius:14px;background:var(--surface-muted);border:1px solid var(--border);box-shadow:var(--shadow)}
+      .title{display:grid;gap:4px}
+      .title strong{font-size:16px;font-weight:700;letter-spacing:.02em;color:var(--text)}
+      .title span{font-size:13px;line-height:1.35;color:var(--text-muted)}
+      .stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+      .pill{display:inline-flex;align-items:baseline;gap:8px;padding:8px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+      .pill b{font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+      .pill code{font-size:14px;color:var(--text);font-weight:800;font-variant-numeric:tabular-nums}
+      .lang{display:inline-flex;gap:8px;align-items:center;padding:6px 8px;border-radius:10px;background:var(--surface);border:1px solid var(--border)}
+      .lang button{appearance:none;border:1px solid var(--border);background:var(--surface-muted);color:var(--text);border-radius:8px;padding:7px 11px;font-weight:700;cursor:pointer;font-size:12px}
+      .lang button.active{background:var(--surface);border-color:var(--accent-border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+      .gamecard{position:relative;border-radius:16px;overflow:hidden;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg)}
+      canvas{display:block;width:100%;height:auto;aspect-ratio:3/2;background:linear-gradient(165deg,#eef8f4 0%,#f0f4fb 45%,#e8f4f8 100%)}
+      .hint{
+        position:absolute;
+        left:10px;
+        bottom:10px;
+        padding:6px 8px;
+        border-radius:8px;
+        background:rgba(255,255,255,.92);
+        border:1px solid var(--border);
+        font-size:10px;
+        line-height:1.35;
+        color:var(--text);
+        box-shadow:var(--shadow);
+        max-width:min(220px,calc(38% - 12px));
+        pointer-events:none;
+      }
+      .hint div{margin:0 0 .35em}
+      .hint div:last-child{margin-bottom:0}
+      .hint b{color:var(--text);font-size:inherit;font-weight:700}
+      .overlay{position:absolute;inset:0;display:none;place-items:center;padding:18px;background:rgba(246,247,249,.72);backdrop-filter:blur(8px)}
+      .overlay.open{display:grid}
+      .panel{width:min(720px,100%);border-radius:16px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg);overflow:hidden}
+      .panelHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--surface-muted)}
+      .tag{font-size:11px;font-weight:600;letter-spacing:.04em;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);text-transform:uppercase}
+      .panelBody{padding:18px;display:grid;gap:12px}
+      .panelBody .big{font-size:16px;line-height:1.4;font-weight:600;color:var(--text)}
+      .panelBody .small{color:var(--text-muted);font-size:14px;line-height:1.45}
+      .panelFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-top:1px solid var(--border);background:var(--surface-muted)}
+      button.main{appearance:none;border:1px solid var(--border);background:var(--surface-muted);color:var(--text);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+      button.main:hover{background:var(--accent-fill);border-color:var(--accent-border)}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="title">
+          <strong id="titleMain">HKDSE Chem Catch</strong>
+          <span id="titleSub">Read the ionic question → shoot the fish with the correct formula.</span>
+        </div>
+        <div class="stats">
+          <div class="lang" aria-label="Language">
+            <span style="color:var(--text-muted);font-size:12px;font-weight:600" id="langLabel">Lang</span>
+            <button id="langEn" class="active">EN</button>
+            <button id="langZh">繁</button>
+          </div>
+          <div class="pill"><b id="lblScore">Score</b><code id="score">0</code></div>
+          <div class="pill"><b id="lblStreak">Streak</b><code id="streak">0</code></div>
+          <div class="pill"><b id="lblTime">Time</b><code id="time">120</code></div>
+        </div>
+      </div>
+
+      <div class="gamecard">
+        <canvas id="game" width="900" height="600"></canvas>
+        <div class="hint" id="hintBox"></div>
+
+        <div class="overlay" id="overlay" aria-hidden="true">
+          <div class="panel" role="dialog" aria-modal="true">
+            <div class="panelHeader">
+              <div class="tag" id="fbTag">Result</div>
+              <button class="main" id="continueBtn">Continue</button>
+            </div>
+            <div class="panelBody">
+              <div class="big" id="fbTitle">...</div>
+              <div class="small" id="fbExplain">...</div>
+            </div>
+            <div class="panelFooter">
+              <div style="font-size:12px;color:var(--text-muted)" id="fbMini">Shoot the fish that shows the correct formula.</div>
+              <button class="main" id="restartBtn">Restart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ---------- i18n ----------
+      const I18N = {
+        en: {
+          titleMain: 'HKDSE Chem Catch',
+          titleSub: 'Read the ionic question → shoot the fish with the correct formula.',
+          langLabel: 'Lang',
+          score: 'Score',
+          streak: 'Streak',
+          time: 'Time',
+          hint: [
+            '<b>How to play</b>: each round starts with the <b>question at the top</b>. Answers are on the fish.',
+            '<b>Goal</b>: shoot the fish showing the <b>correct formula</b> (numbers as subscripts). Press <b>R</b> to restart.',
+            '<b>Ionic only</b>: named salts or charge-ratio patterns (M = cation, X = anion).'
+          ],
+          result: 'Result',
+          continue: 'Continue',
+          restart: 'Restart',
+          streakReset: 'Streak reset',
+          streakNow: (n) => `Streak: ${n}`,
+          correctPts: (tag, pts) => `${tag}: Correct. +${pts} points`,
+          wrongPts: (tag) => `${tag}: Incorrect. −5 points`,
+          correctAnswer: (f) => `Correct answer: ${f}.`,
+          qPrompt: (tag) => `${tag} question`,
+          whichFormulaOf: (name) => `Which is the formula of ${name}?`,
+          abstractStem: (cat, anMag) => {
+            const cs = cat === 1 ? '+1' : cat === 2 ? '+2' : '+3';
+            const xs = anMag === 1 ? '\u22121' : anMag === 2 ? '\u22122' : '\u22123';
+            return `M (${cs}) and X (${xs}).\nWhich empirical formula is correct for the ionic compound?`;
+          },
+          fbMiniHint: 'Shoot the fish that shows the correct formula.',
+        },
+        zh: {
+          titleMain: 'HKDSE 化學捉魚',
+          titleSub: '先看離子題目 → 射中有正確化學式的魚。',
+          langLabel: '語言',
+          score: '分數',
+          streak: '連中',
+          time: '時間',
+          hint: [
+            '<b>玩法</b>：每題開始時<b>題目在上方</b>，選項在魚身上。',
+            '<b>目標</b>：射中顯示<b>正確化學式</b>的魚（數字為<b>下標</b>）。按 <b>R</b> 重新開始。',
+            '<b>只做離子題</b>：化合物命名或電荷比例（M＝陽離子，X＝陰離子）。'
+          ],
+          result: '結果',
+          continue: '繼續',
+          restart: '重新開始',
+          streakReset: '連中歸零',
+          streakNow: (n) => `連中：${n}`,
+          correctPts: (tag, pts) => `${tag}：正確，+${pts} 分`,
+          wrongPts: (tag) => `${tag}：錯誤，−5 分`,
+          correctAnswer: (f) => `正確答案：${f}。`,
+          qPrompt: (tag) => `${tag}題目`,
+          whichFormulaOf: (name) => `${name} 的化學式是？`,
+          abstractStem: (cat, anMag) =>
+            `陽離子 M（+${cat}）、陰離子 X（−${anMag}）。\n離子化合物的經驗式／化學式是哪一個？`,
+          fbMiniHint: '射中顯示正確化學式的魚。',
+        }
+      };
+
+      let lang = 'en';
+      const t = () => I18N[lang];
+
+      function setLang(next){
+        lang = next;
+        document.getElementById('langEn').classList.toggle('active', lang==='en');
+        document.getElementById('langZh').classList.toggle('active', lang==='zh');
+        document.getElementById('titleMain').textContent = t().titleMain;
+        document.getElementById('titleSub').textContent = t().titleSub;
+        document.getElementById('langLabel').textContent = t().langLabel;
+        document.getElementById('lblScore').textContent = t().score;
+        document.getElementById('lblStreak').textContent = t().streak;
+        document.getElementById('lblTime').textContent = t().time;
+        document.getElementById('fbTag').textContent = t().result;
+        document.getElementById('continueBtn').textContent = t().continue;
+        document.getElementById('restartBtn').textContent = t().restart;
+        document.getElementById('fbMini').textContent = t().fbMiniHint;
+        const hintBox = document.getElementById('hintBox');
+        hintBox.innerHTML = t().hint.map(s=>`<div>${s}</div>`).join('');
+      }
+
+      document.getElementById('langEn').addEventListener('click',()=>{setLang('en')});
+      document.getElementById('langZh').addEventListener('click',()=>{setLang('zh')});
+
+      function getInitialLangFromQuery() {
+        try {
+          const params = new URLSearchParams(window.location.search || "");
+          const q = (params.get("lang") || "").trim().toLowerCase();
+          if (!q) return null;
+          if (q === "en") return "en";
+          if (q === "zh" || q === "zh-hant" || q === "zh-hk" || q.startsWith("zh")) return "zh";
+          return null;
+        } catch {
+          return null;
+        }
+      }
+
+      // ---------- Utils ----------
+      const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+      const choice=(arr)=>arr[randInt(0,arr.length-1)];
+      const shuffle=(arr)=>{for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr};
+      const gcd=(a,b)=>(b===0?Math.abs(a):gcd(b,a%b));
+      const lcm=(a,b)=>Math.abs((a/gcd(a,b))*b);
+
+      /** Choices per question (4-12). */
+      const NUM_MCQ_OPTIONS = 6;
+
+      const subDigit = (ch) => ({'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉'}[ch] ?? ch);
+      const displayFormula = (f) => String(f).replace(/[0-9]/g, (d) => subDigit(d));
+
+      // ---------- Ionic question generation ----------
+      const IONS={
+        cations:[
+          {symbol:"Na",en:"sodium",zh:"鈉",charge:+1,poly:false},
+          {symbol:"K",en:"potassium",zh:"鉀",charge:+1,poly:false},
+          {symbol:"Mg",en:"magnesium",zh:"鎂",charge:+2,poly:false},
+          {symbol:"Ca",en:"calcium",zh:"鈣",charge:+2,poly:false},
+          {symbol:"Al",en:"aluminium",zh:"鋁",charge:+3,poly:false},
+          {symbol:"NH4",en:"ammonium",zh:"銨",charge:+1,poly:true},
+          {symbol:"Zn",en:"zinc",zh:"鋅",charge:+2,poly:false},
+          {symbol:"Ag",en:"silver",zh:"銀",charge:+1,poly:false},
+        ],
+        // Traditional Chinese naming convention for ionic compounds:
+        // anion part first (氯化 / 硝酸 / 氫氧化 ...), then cation (銀 / 鋅 ...)
+        anions:[
+          {symbol:"Cl",en:"chloride",zhPrefix:"氯化",charge:-1,poly:false},
+          {symbol:"Br",en:"bromide",zhPrefix:"溴化",charge:-1,poly:false},
+          {symbol:"O",en:"oxide",zhPrefix:"氧化",charge:-2,poly:false},
+          {symbol:"S",en:"sulfide",zhPrefix:"硫化",charge:-2,poly:false},
+          {symbol:"NO3",en:"nitrate",zhPrefix:"硝酸",charge:-1,poly:true},
+          {symbol:"SO4",en:"sulfate",zhPrefix:"硫酸",charge:-2,poly:true},
+          {symbol:"CO3",en:"carbonate",zhPrefix:"碳酸",charge:-2,poly:true},
+          {symbol:"OH",en:"hydroxide",zhPrefix:"氫氧化",charge:-1,poly:true},
+        ]
+      };
+
+      function formatIonSymbol(sym,sub,isPoly){
+        if(sub===1) return sym;
+        if(isPoly) return `(${sym})${sub}`;
+        return `${sym}${sub}`;
+      }
+
+      function ionicFormula(cat,an){
+        const L=lcm(Math.abs(cat.charge),Math.abs(an.charge));
+        const nCat=L/Math.abs(cat.charge);
+        const nAn=L/Math.abs(an.charge);
+        return formatIonSymbol(cat.symbol,nCat,cat.poly)+formatIonSymbol(an.symbol,nAn,an.poly);
+      }
+
+      function ionicExplain(cat,an){
+        const L=lcm(Math.abs(cat.charge),Math.abs(an.charge));
+        const nCat=L/Math.abs(cat.charge);
+        const nAn=L/Math.abs(an.charge);
+        if(lang==='zh'){
+          return `配平電荷：LCM=${L}，下標分別為 ${nCat} 及 ${nAn}。多原子離子下標>1 時要加括號。`;
+        }
+        return `Balance charges. LCM=${L}, subscripts ${nCat} and ${nAn}. Brackets needed for polyatomic ions when subscript > 1.`;
+      }
+
+      function ionicCompoundNameZh(cat, an){
+        return `${an.zhPrefix}${cat.zh}`;
+      }
+
+      function buildIonicMCQ(){
+        const cat=choice(IONS.cations);
+        const an=choice(IONS.anions);
+        const correct=ionicFormula(cat,an);
+        const promptText = (lang==='zh') ? ionicCompoundNameZh(cat, an) : `${cat.en} ${an.en}`;
+        const explain=ionicExplain(cat,an);
+
+        const wrong1=(()=>{const L=lcm(Math.abs(cat.charge),Math.abs(an.charge));const nCat=L/Math.abs(cat.charge);const nAn=L/Math.abs(an.charge);return formatIonSymbol(cat.symbol,nAn,cat.poly)+formatIonSymbol(an.symbol,nCat,an.poly)})();
+        const wrong2=(()=>{const L=lcm(Math.abs(cat.charge),Math.abs(an.charge));const nCat=L/Math.abs(cat.charge);const nAn=L/Math.abs(an.charge);const catS=nCat===1?cat.symbol:`${cat.symbol}${nCat}`;const anS=nAn===1?an.symbol:`${an.symbol}${nAn}`;return catS+anS})();
+        const wrong3=formatIonSymbol(cat.symbol,1,false)+formatIonSymbol(an.symbol,1,false);
+
+        const options=[correct,wrong1,wrong2,wrong3].filter((v,i,a)=>a.indexOf(v)===i).slice(0,NUM_MCQ_OPTIONS);
+        while(options.length<NUM_MCQ_OPTIONS){
+          const c2=choice(IONS.cations);const a2=choice(IONS.anions);
+          const extra=ionicFormula(c2,a2);
+          if(!options.includes(extra)) options.push(extra);
+        }
+        shuffle(options);
+        return {tag:(lang==='zh'?'離子':'Ionic'),promptKind:'named',promptText,options,correct,explain};
+      }
+
+      const CHARGE_SCENARIOS = [
+        { catCharge: 2, anChargeMag: 1, correct: 'MX2', wrongPool: ['M2X', 'MX', 'MX3', 'M3X2', 'M2X3', 'M3X', 'M2X2', 'MX4', 'M4X2', 'M3X3', 'M2X4', 'MX5'] },
+        { catCharge: 1, anChargeMag: 2, correct: 'M2X', wrongPool: ['MX', 'MX2', 'M3X', 'M2X2', 'MX4', 'M3X2', 'MX3', 'M4X2', 'M2X3', 'M3X3', 'MX5', 'M5X2', 'M4X'] },
+        { catCharge: 3, anChargeMag: 2, correct: 'M2X3', wrongPool: ['MX2', 'M3X2', 'MX', 'M2X', 'M3X', 'MX3', 'M2X2', 'M3X3', 'M4X3', 'M2X4', 'MX4', 'M3X4', 'M4X2'] },
+      ];
+
+      function abstractExplain(catCharge, anChargeMag, pattern){
+        const L=lcm(catCharge, anChargeMag);
+        const nM=L/catCharge;
+        const nX=L/anChargeMag;
+        const disp = displayFormula(pattern);
+        if(lang==='zh'){
+          return `總電荷為零：LCM=${L} → M 下標 ${nM}、X 下標 ${nX} → ${disp}。`;
+        }
+        return `Neutral compound: LCM=${L} → M subscript ${nM}, X subscript ${nX} → ${disp}.`;
+      }
+
+      function buildAbstractRatioMCQ(){
+        const sc = choice(CHARGE_SCENARIOS);
+        const correct = sc.correct;
+        const pool = sc.wrongPool.filter(w => w !== correct);
+        const need = Math.max(1, NUM_MCQ_OPTIONS - 1);
+        const picks = [];
+        const poolShuf = shuffle([...pool]);
+        for (const w of poolShuf) {
+          if (picks.length >= need) break;
+          if (!picks.includes(w)) picks.push(w);
+        }
+        let guard = 0;
+        while (picks.length < need && guard < 4000) {
+          guard++;
+          const w = choice(pool);
+          if (!picks.includes(w)) picks.push(w);
+        }
+        const options = shuffle([correct, ...picks]);
+        const explain = abstractExplain(sc.catCharge, sc.anChargeMag, correct);
+        return {
+          tag:(lang==='zh'?'離子':'Ionic'),
+          promptKind:'abstract',
+          catCharge: sc.catCharge,
+          anChargeMag: sc.anChargeMag,
+          options,
+          correct,
+          explain
+        };
+      }
+
+      function nextQuestion(){
+        return Math.random() < 0.5 ? buildIonicMCQ() : buildAbstractRatioMCQ();
+      }
+
+      // ---------- Game ----------
+      const canvas=document.getElementById('game');
+      const ctx=canvas.getContext('2d');
+      const ui={
+        score:document.getElementById('score'),
+        streak:document.getElementById('streak'),
+        time:document.getElementById('time'),
+        overlay:document.getElementById('overlay'),
+        fbTitle:document.getElementById('fbTitle'),
+        fbExplain:document.getElementById('fbExplain'),
+        fbMini:document.getElementById('fbMini'),
+      };
+
+      const state={
+        running:true,
+        mode:'question',
+        score:0,
+        streak:0,
+        timeLeft:120,
+        lastShotAt:0,
+        shotCooldownMs:260,
+        fish:[],
+        projectiles:[],
+        ripples:[],
+        q:null,
+      };
+
+      const ANSWER_FISH_LANES=[
+        {body:'#e8f4ef',tail:'#cfe8df',letterBg:'#9fd4ba'},
+        {body:'#eef2fb',tail:'#dfe6f7',letterBg:'#b8c8eb'},
+        {body:'#fdf6ee',tail:'#f9eadc',letterBg:'#f0b896'},
+        {body:'#f6f0fb',tail:'#ebe3f5',letterBg:'#cbb8e8'},
+        {body:'#f0f7fb',tail:'#dceef7',letterBg:'#8ec4e0'},
+        {body:'#fdf0f3',tail:'#f5dce4',letterBg:'#e89ab0'},
+        {body:'#f5fbf0',tail:'#e5efd9',letterBg:'#a8c97a'},
+        {body:'#fff8e8',tail:'#f5ecd0',letterBg:'#e8c96a'},
+        {body:'#f4f2ff',tail:'#e2ddfa',letterBg:'#a894f2'},
+        {body:'#effaf8',tail:'#d8f2ed',letterBg:'#5ec4b4'},
+      ];
+
+      function syncHud(){
+        ui.score.textContent=String(state.score);
+        ui.streak.textContent=String(state.streak);
+        ui.time.textContent=String(state.timeLeft);
+      }
+
+      function closeFeedback(){
+        document.getElementById('overlay').classList.remove('open');
+        document.getElementById('overlay').setAttribute('aria-hidden','true');
+      }
+
+      function resetGame(){
+        state.running=true;
+        state.score=0;
+        state.streak=0;
+        state.timeLeft=120;
+        state.lastShotAt=0;
+        state.projectiles=[];
+        state.ripples=[];
+        state.q=null;
+        closeFeedback();
+        syncHud();
+        startQuestion();
+      }
+
+      function spawnAnswerFish(q){
+        const nOpt = q.options.length;
+        const laneTop = 150;
+        const laneBot = 460;
+        const laneY = Array.from({length: nOpt}, (_, i) =>
+          nOpt <= 1 ? (laneTop + laneBot) / 2 : laneTop + (i * (laneBot - laneTop)) / (nOpt - 1)
+        );
+        const half = (nOpt - 1) / 2;
+        const baseSize = nOpt > 8 ? 24 : 28;
+        state.fish=q.options.map((opt,idx)=>{
+          const pal = ANSWER_FISH_LANES[idx % ANSWER_FISH_LANES.length];
+          const label = idx < 26 ? String.fromCharCode(65 + idx) : String(idx + 1);
+
+          // Each answer fish gets its own direction + starting side
+          const dir = Math.random() < 0.5 ? 1 : -1;
+          const startX = dir === 1 ? -60 : canvas.width + 60;
+          const speed = dir * randInt(70, 125);
+
+          // Small size variation, keep text readable
+          const size = Math.max(20, baseSize + randInt(-5, 6));
+
+          return{
+            x:startX,
+            y:laneY[idx],
+            vx:speed + (idx-half)*6,
+            vy:(Math.random()-0.5)*2*randInt(35,95),
+            size,
+            body:pal.body,
+            tail:pal.tail,
+            letterBg:pal.letterBg,
+            alive:true,
+            isAnswer:true,
+            label,
+            option:opt
+          };
+        });
+      }
+
+      function shootAt(x,y){
+        const now=performance.now();
+        if(!state.running) return;
+        if(state.mode==='feedback') return;
+        if(now-state.lastShotAt<state.shotCooldownMs) return;
+        state.lastShotAt=now;
+
+        const sx=canvas.width/2;
+        const sy=canvas.height-80;
+        const dx=x-sx;
+        const dy=y-sy;
+        const len=Math.hypot(dx,dy)||1;
+        const vx=(dx/len)*520;
+        const vy=(dy/len)*520;
+        state.projectiles.push({x:sx,y:sy,vx,vy,life:1.1});
+        state.ripples.push({x,y,t:0});
+      }
+
+      function startQuestion(){
+        state.mode='question';
+        state.q=nextQuestion();
+        state.projectiles=[];state.ripples=[];
+        spawnAnswerFish(state.q);
+      }
+
+      function openFeedback(title,explain,mini){
+        document.getElementById('fbTag').textContent = t().result;
+        ui.fbTitle.textContent = title;
+        ui.fbExplain.textContent = explain;
+        ui.fbMini.textContent = mini || t().fbMiniHint;
+        document.getElementById('overlay').classList.add('open');
+        document.getElementById('overlay').setAttribute('aria-hidden','false');
+      }
+
+      function continueAfterFeedback(){
+        closeFeedback();
+        startQuestion();
+      }
+
+      function resolveAnswer(chosenOption){
+        const q=state.q; if(!q) return;
+        const correct=chosenOption===q.correct;
+        const dispCorrect = displayFormula(q.correct);
+
+        if(correct){
+          const bonus=Math.min(12,state.streak);
+          const pts = 10+bonus;
+          state.score+=pts;
+          state.streak+=1;
+          openFeedback(t().correctPts(q.tag, pts), `${t().correctAnswer(dispCorrect)} ${q.explain}`, t().streakNow(state.streak));
+        } else {
+          state.score=Math.max(0,state.score-5);
+          state.streak=0;
+          openFeedback(t().wrongPts(q.tag), `${t().correctAnswer(dispCorrect)} ${q.explain}`, t().streakReset);
+        }
+        syncHud();
+        state.mode='feedback';
+      }
+
+      document.getElementById('continueBtn').addEventListener('click',()=>continueAfterFeedback());
+      document.getElementById('restartBtn').addEventListener('click',()=>resetGame());
+
+      // ---------- Drawing ----------
+      function drawBackground(tNow){
+        const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+        const s=0.5+0.5*Math.sin(tNow*0.00035);
+        g.addColorStop(0,`rgba(238,248,244,${0.92+0.05*s})`);
+        g.addColorStop(0.45,'rgba(240,244,251,0.96)');
+        g.addColorStop(1,'rgba(228,241,246,0.98)');
+        ctx.fillStyle=g;
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle='rgba(213,228,236,0.35)';
+        ctx.fillRect(0,canvas.height-110,canvas.width,110);
+      }
+
+      function drawCannon(){
+        const x=canvas.width/2, y=canvas.height-80;
+        ctx.save();ctx.translate(x,y);
+        ctx.fillStyle='rgba(235,240,248,0.92)';
+        ctx.strokeStyle='rgba(45,52,54,0.08)';
+        ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.ellipse(0,52,62,20,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+        ctx.fillStyle='rgba(206,222,242,0.95)';
+        ctx.strokeStyle='rgba(45,52,54,0.1)';
+        ctx.beginPath();ctx.roundRect(-18,-28,36,64,14);ctx.fill();ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawFish(f){
+        const body=f.body ?? '#ccd9f2';
+        const tail=f.tail ?? '#b8c8eb';
+        ctx.save();ctx.translate(f.x,f.y);
+        const flip=f.vx<0?-1:1;
+        ctx.scale(flip,1);
+
+        ctx.fillStyle=body;
+        ctx.strokeStyle='rgba(45,52,54,0.11)';
+        ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.ellipse(0,0,f.size*1.55,f.size,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+
+        ctx.fillStyle=tail;
+        ctx.strokeStyle='rgba(45,52,54,0.09)';
+        ctx.beginPath();ctx.moveTo(-f.size*1.55,0);ctx.lineTo(-f.size*2.25,-f.size*0.8);ctx.lineTo(-f.size*2.25,f.size*0.8);ctx.closePath();ctx.fill();ctx.stroke();
+
+        ctx.fillStyle='#ffffff';
+        ctx.strokeStyle='rgba(45,52,54,0.12)';
+        ctx.lineWidth=1;
+        ctx.beginPath();ctx.arc(f.size*0.8,-f.size*0.15,f.size*0.18,0,Math.PI*2);ctx.fill();ctx.stroke();
+        ctx.fillStyle='#374151';
+        ctx.beginPath();ctx.arc(f.size*0.86,-f.size*0.15,f.size*0.09,0,Math.PI*2);ctx.fill();
+
+        if(f.isAnswer){
+          const txt = displayFormula(f.option);
+          ctx.save();
+          ctx.scale(flip,1);
+          ctx.globalAlpha=1;
+          ctx.font='700 14px ui-sans-serif, system-ui';
+          const w=Math.max(78,ctx.measureText(txt).width+42);
+          const h=28;
+          const px=-w/2, py=-h/2;
+          ctx.fillStyle='#ffffff';
+          ctx.strokeStyle='rgba(45,52,54,0.1)';
+          ctx.lineWidth=1.5;
+          ctx.beginPath();ctx.roundRect(px,py,w,h,10);ctx.fill();ctx.stroke();
+
+          ctx.fillStyle=f.letterBg ?? '#b8c8eb';
+          ctx.strokeStyle='rgba(45,52,54,0.08)';
+          ctx.beginPath();ctx.arc(px+15,0,11,0,Math.PI*2);ctx.fill();ctx.stroke();
+          ctx.fillStyle='#2d3436';
+          ctx.font='800 12px ui-sans-serif, system-ui';
+          ctx.textAlign='center';ctx.textBaseline='middle';
+          ctx.fillText(f.label,px+15,0.5);
+
+          ctx.fillStyle='#2d3436';
+          ctx.font='800 14px ui-sans-serif, system-ui';
+          ctx.textAlign='left';
+          ctx.fillText(txt,px+32,0.5);
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+
+      function drawProjectile(p){
+        ctx.save();ctx.translate(p.x,p.y);
+        ctx.fillStyle='rgba(232,244,252,0.98)';
+        ctx.strokeStyle='rgba(136,168,212,0.55)';
+        ctx.lineWidth=2;
+        ctx.beginPath();ctx.arc(0,0,6,0,Math.PI*2);ctx.fill();ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawRipple(r){
+        const a=Math.max(0,1-r.t/0.5);
+        const rad=12+r.t*110;
+        ctx.save();ctx.globalAlpha=0.38*a;
+        ctx.strokeStyle='rgba(130,170,200,0.55)';
+        ctx.lineWidth=2;
+        ctx.beginPath();ctx.arc(r.x,r.y,rad,0,Math.PI*2);ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawQuestionHud(){
+        if(state.mode!=='question' || !state.q) return;
+        const q = state.q;
+        const pad = 14;
+        const x0 = pad;
+        const wbox = canvas.width - 28;
+        const tagLine = t().qPrompt(q.tag);
+        let bodyLines;
+        if(q.promptKind === 'abstract') {
+          bodyLines = t().abstractStem(q.catCharge, q.anChargeMag).split('\n');
+        } else {
+          bodyLines = [t().whichFormulaOf(q.promptText)];
+        }
+        ctx.font='600 12px ui-sans-serif, system-ui';
+        const tagH = 16;
+        ctx.font='800 15px ui-sans-serif, system-ui';
+        const lineHeight = 20;
+        const innerPadBottom = 10;
+        const hbox = Math.max(72, tagH + bodyLines.length * lineHeight + innerPadBottom);
+        ctx.save();
+        ctx.fillStyle='rgba(255,255,255,0.94)';
+        ctx.strokeStyle='rgba(45,52,54,0.1)';
+        ctx.lineWidth=1.5;
+        ctx.shadowColor='rgba(0,0,0,0.06)';
+        ctx.shadowBlur=8;
+        ctx.shadowOffsetY=2;
+        ctx.beginPath();ctx.roundRect(x0,pad,wbox,hbox,12);ctx.fill();ctx.stroke();
+        ctx.shadowColor='transparent';
+        ctx.fillStyle='#6b7280';
+        ctx.font='600 12px ui-sans-serif, system-ui';
+        ctx.textAlign='left';
+        ctx.textBaseline='middle';
+        ctx.fillText(tagLine,26,pad+tagH*0.55);
+        ctx.fillStyle='#2d3436';
+        ctx.font='800 15px ui-sans-serif, system-ui';
+        let y = pad + tagH + 6;
+        for(const line of bodyLines){
+          ctx.fillText(line,26,y);
+          y += lineHeight;
+        }
+        ctx.restore();
+      }
+
+      function collideProjectileFish(p,f){
+        const dx=p.x-f.x, dy=p.y-f.y;
+        const rr=(6+f.size*1.55)**2;
+        return dx*dx+dy*dy<rr;
+      }
+
+      // ---------- Loop ----------
+      let lastT=performance.now();
+      let timerAcc=0;
+
+      function loop(tNow){
+        const dt=Math.min(0.035,(tNow-lastT)/1000);
+        lastT=tNow;
+
+        drawBackground(tNow);
+
+        if(state.running && state.mode!=='feedback'){
+          timerAcc+=dt;
+          if(timerAcc>=1){
+            timerAcc-=1;
+            state.timeLeft=Math.max(0,state.timeLeft-1);
+            if(state.timeLeft===0){state.running=false;state.streak=0}
+            syncHud();
+          }
+        }
+
+        if(state.running && state.mode==='question'){
+          for(const f of state.fish){
+            const swimR = f.vx >= 0 ? 1 : -1;
+            let mag = Math.abs(f.vx) + (Math.random()-0.5)*34*dt;
+            mag = Math.max(52, Math.min(132, mag));
+            f.vx = swimR * mag;
+            f.x+=f.vx*dt;
+            f.y+=f.vy*dt;
+            f.vy+=(Math.random()-0.5)*180*dt;
+            f.vy=Math.max(-150,Math.min(150,f.vy));
+            const yTop=90,yBot=canvas.height-50;
+            if(f.y<yTop){f.y=yTop;f.vy=randInt(20,85);}
+            if(f.y>yBot){f.y=yBot;f.vy=-randInt(20,85);}
+            if(f.vx>0 && f.x>canvas.width+60) f.x=-60;
+            if(f.vx<0 && f.x<-60) f.x=canvas.width+60;
+          }
+
+          for(const p of state.projectiles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt}
+          state.projectiles=state.projectiles.filter(p=>p.life>0 && p.x>-40 && p.x<canvas.width+40 && p.y>-40 && p.y<canvas.height+40);
+
+          for(const r of state.ripples) r.t+=dt;
+          state.ripples=state.ripples.filter(r=>r.t<0.5);
+
+          outerQ: for(const p of state.projectiles){
+            for(const f of state.fish){
+              if(!f.alive) continue;
+              if(collideProjectileFish(p,f)){
+                f.alive=false; p.life=0;
+                resolveAnswer(f.option);
+                break outerQ;
+              }
+            }
+          }
+        }
+
+        if(!state.running){
+          ctx.save();
+          ctx.fillStyle='rgba(246,247,249,0.82)';
+          ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.fillStyle='#2d3436';
+          ctx.font='800 28px ui-sans-serif, system-ui';
+          ctx.textAlign='center';
+          ctx.fillText(lang==='zh'?'時間到！':'Time!',canvas.width/2,canvas.height/2-10);
+          ctx.fillStyle='#6b7280';
+          ctx.font='600 14px ui-sans-serif, system-ui';
+          ctx.fillText(lang==='zh'?'按 R 重新開始':'Press R to restart',canvas.width/2,canvas.height/2+22);
+          ctx.restore();
+        }
+
+        drawQuestionHud();
+        for(const f of state.fish) if(f.alive) drawFish(f);
+        for(const p of state.projectiles) drawProjectile(p);
+        for(const r of state.ripples) drawRipple(r);
+        drawCannon();
+
+        requestAnimationFrame(loop);
+      }
+
+      // Input
+      function canvasPoint(ev){
+        const rect=canvas.getBoundingClientRect();
+        const x=((ev.clientX-rect.left)/rect.width)*canvas.width;
+        const y=((ev.clientY-rect.top)/rect.height)*canvas.height;
+        return {x,y};
+      }
+
+      canvas.addEventListener('pointerdown',(ev)=>{
+        ev.preventDefault();
+        if(!state.running) return;
+        const {x,y}=canvasPoint(ev);
+        shootAt(x,y);
+      });
+
+      window.addEventListener('keydown',(ev)=>{
+        if(ev.key.toLowerCase()==='r') resetGame();
+        if(ev.key==='Escape' && state.mode==='feedback') continueAfterFeedback();
+      });
+
+      // Start
+      setLang(getInitialLangFromQuery() || 'en');
+      resetGame();
+      requestAnimationFrame(loop);
+    </script>
+  </body>
+</html>
