@@ -100,17 +100,20 @@
     .chem-fc-view { display: none; }
     .chem-fc-view.is-active { display: block; }
 
-    /* Tall stage so typical Q/A + diagrams fit without in-card scroll (page may still scroll) */
+    /* Square flip card (first 20 elements — four compact decks) */
     .card-scene {
       perspective: 1000px;
-      margin-bottom: 1rem;
-      min-height: max(22rem, min(68vh, 44rem));
+      margin: 0 auto 1rem;
+      width: min(92vw, 400px);
+      aspect-ratio: 1 / 1;
+      max-width: 100%;
     }
 
     .card-flip {
       position: relative;
       width: 100%;
-      min-height: max(22rem, min(68vh, 44rem));
+      height: 100%;
+      min-height: 0;
       cursor: pointer;
       border: none;
       padding: 0;
@@ -139,7 +142,7 @@
       justify-content: flex-start;
       border: 1px solid var(--border-color, #e2e8f0);
       box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
-      overflow: visible;
+      overflow: auto;
     }
 
     .card-front {
@@ -149,7 +152,7 @@
     .card-back {
       background: linear-gradient(145deg, #eef2ff, #f8fafc);
       transform: rotateY(180deg);
-      overflow: hidden;
+      overflow: auto;
     }
 
     .card-label {
@@ -173,7 +176,7 @@
 
     .card-sub {
       margin-top: 0.55rem;
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       color: var(--muted);
       white-space: pre-line;
     }
@@ -316,107 +319,7 @@
       border: 0;
     }
 
-    /* Speed round */
-    .speed-box {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 1rem;
-      border: 1px solid var(--border-color, #e2e8f0);
-      margin-bottom: 1rem;
-    }
-
-    .speed-prompt {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
-
-    .speed-prompt .notn { font-size: 1.2rem; }
-
-    .speed-timer-wrap {
-      height: 6px;
-      background: var(--surface2);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 0.75rem;
-    }
-
-    .speed-timer-bar {
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, var(--accent), #60c4ff);
-      transform-origin: left;
-      transition: transform linear;
-    }
-
-    .speed-input-row {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .speed-input-row input {
-      flex: 1;
-      min-width: 140px;
-      padding: 0.55rem 0.65rem;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: #f8fafc;
-      color: var(--text);
-      font-size: 0.95rem;
-      font-family: ui-monospace, monospace;
-    }
-
-    .speed-input-row input:focus-visible { outline: 2px solid var(--accent); }
-
-    .speed-feedback {
-      margin-top: 0.65rem;
-      text-align: center;
-      font-size: 0.88rem;
-      min-height: 1.4em;
-    }
-
-    .speed-feedback.ok { color: var(--success); }
-    .speed-feedback.bad { color: var(--danger); }
-
-    .speed-time-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem 0.75rem;
-      margin-bottom: 0.65rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .speed-time-row label {
-      margin: 0;
-      cursor: pointer;
-    }
-
-    .speed-time-control {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-    }
-
-    .speed-time-control input[type="range"] {
-      width: min(200px, 55vw);
-      accent-color: var(--accent);
-    }
-
-    .speed-time-val {
-      min-width: 1.5ch;
-      font-variant-numeric: tabular-nums;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    /* Bohr diagram (Set 4) */
+    /* Bohr diagram */
     .shell-diagram {
       margin-top: 0.5rem;
       padding: 0.75rem;

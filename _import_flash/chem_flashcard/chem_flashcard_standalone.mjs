@@ -1,10 +1,9 @@
-// Chemistry flashcards — embedded app, scoped to #flashcards-page
-import { finallyData } from "../data/elementsData.js";
+import { finallyData } from "../../js/data/elementsData.js";
 
-export function initChemFlashcard() {
-  if (window.__chemFlashcardInited) return;
-  window.__chemFlashcardInited = true;
-  const flashPage = () => document.getElementById("flashcards-page");
+if (window.__chemFlashcardStandaloneInited) {
+  /* allow re-init only when explicitly cleared */
+} else {
+  window.__chemFlashcardStandaloneInited = true;
 
   const LANG = { EN: "en", ZH: "zh" };
 
@@ -189,7 +188,7 @@ export function initChemFlashcard() {
   let index = 0;
   let flipped = false;
 
-  const $ = (id) => document.getElementById("cf-" + id);
+  const $ = (id) => document.getElementById(id);
 
   function t(key) {
     const m = UI[lang === LANG.EN ? "en" : "zh"];
@@ -206,9 +205,7 @@ export function initChemFlashcard() {
   }
 
   function showView(name) {
-    const fp = flashPage();
-    if (!fp) return;
-    fp.querySelectorAll(".chem-fc-view").forEach((v) => {
+    document.querySelectorAll(".view").forEach((v) => {
       v.classList.toggle("is-active", v.dataset.view === name);
     });
   }
@@ -392,8 +389,7 @@ export function initChemFlashcard() {
       $("frontSub").textContent = elementName(row);
       $("backMain").innerHTML = "";
       $("backMain").textContent = "";
-      const cat =
-        lang === LANG.EN ? row.categoryEn : localizeTypeZh(row.categoryEn);
+      const cat = lang === LANG.EN ? row.categoryEn : localizeTypeZh(row.categoryEn);
       const phase = lang === LANG.EN ? row.phaseEn : localizePhaseZh(row.phaseEn);
       const mk = lang === LANG.EN ? row.metalKindEn : row.metalKindZh;
       $("backSub").textContent =
@@ -441,7 +437,8 @@ export function initChemFlashcard() {
 
   function setLang(next) {
     lang = next;
-    flashPage().classList.toggle("chem-fc-lang-zh", lang === LANG.ZH);
+    document.documentElement.lang = lang === LANG.ZH ? "zh-Hant" : "en";
+    document.body.classList.toggle("lang-zh", lang === LANG.ZH);
     $("langEn").setAttribute("aria-pressed", lang === LANG.EN ? "true" : "false");
     $("langZh").setAttribute("aria-pressed", lang === LANG.ZH ? "true" : "false");
     $("appTitle").textContent = t("appTitle");
@@ -451,17 +448,13 @@ export function initChemFlashcard() {
   }
 
   function applyDeckUI() {
-    $("btnPrev").style.display = "";
-    $("btnNext").style.display = "";
-    $("btnShuffle").style.display = "";
-    $("kbdHint").style.display = "";
     showView("flash");
     buildOrder();
     index = 0;
     $("kbdHint").innerHTML =
       lang === LANG.EN
-        ? "<kbd>Space</kbd> flip · <kbd>←</kbd> <kbd>→</kbd> navigate"
-        : "<kbd>空白鍵</kbd> 翻卡 · <kbd>←</kbd> <kbd>→</kbd> 換卡";
+        ? " Space flip · ← → navigate"
+        : " 空白鍵 翻卡 · ← → 換卡";
     renderCard();
     updateProgress();
   }
@@ -488,8 +481,6 @@ export function initChemFlashcard() {
   });
 
   document.addEventListener("keydown", (e) => {
-    const fp = flashPage();
-    if (!fp || !fp.classList.contains("active")) return;
     if (!isFlashMode()) return;
     const tag = e.target && e.target.tagName;
     if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
@@ -501,7 +492,7 @@ export function initChemFlashcard() {
       go(-1);
     } else if (e.code === "ArrowRight") {
       e.preventDefault();
-      go(+1);
+      go(1);
     }
   });
 
