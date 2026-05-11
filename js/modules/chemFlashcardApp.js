@@ -157,9 +157,11 @@ export function initChemFlashcard() {
       const atomic = fd.level2_atomic || {};
       const rawType = String(basic.type || "").trim();
       const mk = metalKindFromType(rawType);
+      const cfgRaw = String(elec.configuration || "").trim();
+      const configuration = cfgRaw || "—";
       return {
         ...row,
-        configuration: String(elec.configuration || "").trim() || "—",
+        configuration,
         meltingPoint: physicalString(phy.meltingPoint),
         boilingPoint: physicalString(phy.boilingPoint),
         density: physicalString(phy.density),
@@ -366,17 +368,24 @@ export function initChemFlashcard() {
       $("frontSub").hidden = false;
       $("frontSub").textContent = elementName(row);
       $("backMain").innerHTML = "";
+      $("backMain").className = "card-main chem-fc-config-main";
       $("backMain").textContent = row.configuration;
-      $("backSub").textContent = t("lblShellArr") + ": " + row.shells.join(", ");
+      $("backSub").textContent = "";
+      $("backSub").hidden = true;
       const wrap = document.createElement("div");
       wrap.className = "shell-diagram";
       $("backExtra").appendChild(wrap);
       renderShellDiagram(wrap, row.shells, index + "-" + i, { firstShellNoPair: true });
+      const foot = document.createElement("div");
+      foot.className = "fc-shell-footnote";
+      foot.textContent = t("lblShellArr") + ": " + row.shells.join(", ");
+      $("backExtra").appendChild(foot);
     } else if (d.type === "properties") {
       $("frontMain").innerHTML = row.notn;
       $("frontSub").hidden = false;
       $("frontSub").textContent = elementName(row);
       $("backMain").innerHTML = "";
+      $("backMain").className = "card-main";
       $("backMain").textContent = "";
       const lines = [
         t("lblMelting") + ": " + row.meltingPoint,
@@ -385,17 +394,20 @@ export function initChemFlashcard() {
         t("lblEn") + ": " + row.electronegativity,
         t("lblRadius") + ": " + row.atomicRadius,
       ];
+      $("backSub").hidden = false;
       $("backSub").textContent = lines.join("\n");
     } else if (d.type === "classify") {
       $("frontMain").innerHTML = row.notn;
       $("frontSub").hidden = false;
       $("frontSub").textContent = elementName(row);
       $("backMain").innerHTML = "";
+      $("backMain").className = "card-main";
       $("backMain").textContent = "";
       const cat =
         lang === LANG.EN ? row.categoryEn : localizeTypeZh(row.categoryEn);
       const phase = lang === LANG.EN ? row.phaseEn : localizePhaseZh(row.phaseEn);
       const mk = lang === LANG.EN ? row.metalKindEn : row.metalKindZh;
+      $("backSub").hidden = false;
       $("backSub").textContent =
         t("lblCategory") + ": " + cat + "\n" + t("lblMetalType") + ": " + mk + "\n" + t("lblState") + ": " + phase;
     } else if (d.type === "isotopes") {
@@ -403,7 +415,9 @@ export function initChemFlashcard() {
       $("frontSub").hidden = false;
       $("frontSub").textContent = elementName(row);
       $("backMain").innerHTML = "";
+      $("backMain").className = "card-main";
       $("backMain").textContent = t("lblIsotopes");
+      $("backSub").hidden = false;
       if (!row.isotopes.length) {
         $("backSub").textContent = t("noneIsotopes");
       } else {

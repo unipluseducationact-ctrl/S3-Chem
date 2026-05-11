@@ -147,6 +147,35 @@
 
     .card-front {
       background: linear-gradient(145deg, var(--surface2), var(--surface));
+      text-align: center;
+    }
+
+    .card-front .card-label {
+      align-self: center;
+    }
+
+    .card-front .card-main {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      font-size: clamp(1.05rem, 4.2vw, 1.42rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      word-break: break-word;
+    }
+
+    .card-front .card-main .notn {
+      font-size: clamp(1.7rem, 6.8vw, 2.85rem);
+      line-height: 1.18;
+    }
+
+    .card-front .card-sub {
+      margin-top: 0.35rem;
+      flex-shrink: 0;
+      font-size: clamp(0.78rem, 2.9vw, 0.92rem);
     }
 
     .card-back {
@@ -263,7 +292,8 @@
     #flashcards-page.chem-fc-lang-zh .chem-fc-app .card-main,
     #flashcards-page.chem-fc-lang-zh .chem-fc-app .card-sub,
     #flashcards-page.chem-fc-lang-zh .chem-fc-app .card-hint,
-    #flashcards-page.chem-fc-lang-zh .chem-fc-app .shell-caption {
+    #flashcards-page.chem-fc-lang-zh .chem-fc-app .shell-caption,
+    #flashcards-page.chem-fc-lang-zh .chem-fc-app .fc-shell-footnote {
       font-family: var(--font-zh);
     }
 
@@ -332,6 +362,22 @@
       font-size: 0.8rem;
       color: var(--muted);
       margin-bottom: 0.5rem;
+    }
+
+    .chem-fc-config-main {
+      white-space: normal;
+      font-weight: 650;
+      font-size: clamp(0.76rem, 2.55vw, 1.02rem);
+      line-height: 1.38;
+      word-break: break-word;
+    }
+
+    .fc-shell-footnote {
+      margin-top: 0.5rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.4;
+      text-align: center;
     }
 
     .nucleus-label {
