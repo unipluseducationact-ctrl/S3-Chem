@@ -9,6 +9,7 @@ const TOOL_CONTENT_FACTORIES = {
   solubility: generateSolubilityToolContent,
   "atomic-arcade": generateAtomicArcadeToolContent,
   "chem-catch": generateChemCatchToolContent,
+  "lab-hazard-match": generateLabHazardMatchToolContent,
 };
 
 export function getChemToolContent(toolType) {
@@ -2068,6 +2069,17 @@ function generateChemCatchToolContent() {
         <div class="tool-modal-content chem-catch-wrap">
             <iframe class="chem-catch-iframe"
                 src="tools/chem-catch/index.html?lang=${lang}"
+                title="${title.replace(/"/g, "&quot;")}"></iframe>
+        </div>
+    `;
+}
+
+function generateLabHazardMatchToolContent() {
+  const title = t("tools.labMatchName");
+  return `
+        <div class="tool-modal-content lab-hazard-match-wrap">
+            <iframe class="lab-hazard-match-iframe"
+                src="tools/lab-hazard-match/index.html"
                 title="${title.replace(/"/g, "&quot;")}"></iframe>
         </div>
     `;

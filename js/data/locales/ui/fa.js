@@ -202,7 +202,11 @@ export const faUI = {
     "virtualLabName": "آزمایشگاه مجازی",
     "virtualLabDesc": "بشر را کج کنید و با آب ذره ای در یک صحنه ساده آزمایشگاهی بازی کنید.",
     "atomNinjaName": "Atom Ninja",
-    "atomNinjaDesc": "اتم بسازید و Atom Ninja بازی کنید — آهسته تر، زمان بیشتر، اهداف درست مکررتر."
+    "atomNinjaDesc": "اتم بسازید و Atom Ninja بازی کنید — آهسته تر، زمان بیشتر، اهداف درست مکررتر.",
+    "chemCatchName": "Chem Catch",
+    "chemCatchDesc": "Read the ionic question and shoot the fish with the correct formula.",
+    "labMatchName": "Lab & Hazard Match",
+    "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels."
   },
   "worksheet": {
     "title": "سازنده برگه تمرین",

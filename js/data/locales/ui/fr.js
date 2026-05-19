@@ -202,7 +202,11 @@ export const frUI = {
     "virtualLabName": "Labo virtuel",
     "virtualLabDesc": "Inclinez un becher et jouez avec une eau en particules dans une scene de labo simple.",
     "atomNinjaName": "Atom Ninja",
-    "atomNinjaDesc": "Construisez des atomes et jouez \u00e0 Atom Ninja — rythme plus lent, plus de cibles correctes."
+    "atomNinjaDesc": "Construisez des atomes et jouez \u00e0 Atom Ninja — rythme plus lent, plus de cibles correctes.",
+    "chemCatchName": "Chem Catch",
+    "chemCatchDesc": "Read the ionic question and shoot the fish with the correct formula.",
+    "labMatchName": "Lab & Hazard Match",
+    "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels."
   },
   "worksheet": {
     "title": "Generateur d'exercices",

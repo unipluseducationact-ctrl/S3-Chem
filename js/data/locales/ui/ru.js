@@ -202,7 +202,11 @@ export const ruUI = {
     "virtualLabName": "Виртуальная лаборатория",
     "virtualLabDesc": "Наклоняйте стакан и играйте с водой из частиц в простой лабораторной сцене.",
     "atomNinjaName": "Atom Ninja",
-    "atomNinjaDesc": "Собирайте атомы и играйте в Atom Ninja — медленнее, дольше, чаще правильные цели."
+    "atomNinjaDesc": "Собирайте атомы и играйте в Atom Ninja — медленнее, дольше, чаще правильные цели.",
+    "chemCatchName": "Chem Catch",
+    "chemCatchDesc": "Read the ionic question and shoot the fish with the correct formula.",
+    "labMatchName": "Lab & Hazard Match",
+    "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels."
   },
   "worksheet": {
     "title": "Генератор листов заданий",

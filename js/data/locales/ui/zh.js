@@ -204,7 +204,9 @@ export const zhUI = {
     "atomNinjaName": "原子忍者",
     "atomNinjaDesc": "拼砌原子并玩「原子忍者」— 节奏更慢、时间更长，正确目标出现更频繁。",
     "chemCatchName": "化学捉鱼",
-    "chemCatchDesc": "看离子题目并射中正确化学式的鱼——快速练习离子化学式。"
+    "chemCatchDesc": "看离子题目并射中正确化学式的鱼——快速练习离子化学式。",
+    "labMatchName": "实验器皿与危险标示配对",
+    "labMatchDesc": "配对游戏：中英实验器皿名称与图片，以及职安处化学品危险标签。"
   },
   "worksheet": {
     "title": "练习单生成器",

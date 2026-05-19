@@ -19,6 +19,7 @@ const TOOL_LISTENER_MAP = {
   solubility: attachSolubilityListeners,
   "atomic-arcade": () => {},
   "chem-catch": () => {},
+  "lab-hazard-match": () => {},
 };
 
 export function attachToolEventListeners(toolType) {

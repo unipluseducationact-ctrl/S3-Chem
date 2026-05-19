@@ -202,7 +202,11 @@ export const urUI = {
     "virtualLabName": "ورچوئل لیب",
     "virtualLabDesc": "بیکر کو جھکائیں اور ایک سادہ لیب منظر میں ذراتی پانی کے ساتھ کھیلیں۔",
     "atomNinjaName": "Atom Ninja",
-    "atomNinjaDesc": "ایٹم بنائیں اور Atom Ninja کھیلیں — آہستہ، لمبا وقت، صحیح ہدف زیادہ بار۔"
+    "atomNinjaDesc": "ایٹم بنائیں اور Atom Ninja کھیلیں — آہستہ، لمبا وقت، صحیح ہدف زیادہ بار۔",
+    "chemCatchName": "Chem Catch",
+    "chemCatchDesc": "Read the ionic question and shoot the fish with the correct formula.",
+    "labMatchName": "Lab & Hazard Match",
+    "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels."
   },
   "worksheet": {
     "title": "ورقۂ مشق ساز",

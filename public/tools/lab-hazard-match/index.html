@@ -1,0 +1,1164 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HKDSE Chemistry — Lab &amp; hazard match</title>
+<style>
+  :root {
+    --bg-1: #eef4ff;
+    --bg-2: #f7f1ff;
+    --panel: #ffffffd9;
+    --ink: #1b2240;
+    --muted: #5b6585;
+    --accent: #5b6cff;
+    --accent-2: #21c498;
+    --warn: #ff8a3d;
+    --bad: #ff5b6a;
+    --card-front-1: #6a7bff;
+    --card-front-2: #8a5bff;
+    --card-back: #ffffff;
+    --card-border: #d6dcf2;
+    --shadow: 0 10px 30px rgba(60, 70, 130, 0.14);
+    --radius: 14px;
+    --ring: 0 0 0 3px rgba(91, 108, 255, 0.35);
+  }
+  [data-theme="dark"] {
+    --bg-1: #0f1428;
+    --bg-2: #1a1230;
+    --panel: #181f3acc;
+    --ink: #eaeefb;
+    --muted: #9aa3c4;
+    --accent: #8ea0ff;
+    --accent-2: #4ddbab;
+    --warn: #ffb070;
+    --bad: #ff7c89;
+    --card-front-1: #5867e6;
+    --card-front-2: #7a4ff0;
+    --card-back: #232a48;
+    --card-border: #2c355a;
+    --shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+    --ring: 0 0 0 3px rgba(142, 160, 255, 0.4);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", "Microsoft JhengHei", Arial, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--bg-2), transparent 60%),
+      radial-gradient(1000px 600px at 110% 10%, var(--bg-1), transparent 55%),
+      var(--bg-1);
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 22px 22px 80px;
+  }
+
+  header.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--card-front-1), var(--card-front-2));
+    display: grid; place-items: center;
+    box-shadow: var(--shadow);
+  }
+  .brand-icon svg { width: 26px; height: 26px; }
+  h1 {
+    font-size: 20px;
+    margin: 0;
+    letter-spacing: 0.2px;
+  }
+  h1 small {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .top-actions { display: flex; gap: 8px; }
+
+  .panel {
+    background: var(--panel);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .controls {
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .group { display: flex; align-items: center; gap: 8px; }
+  .group label { font-size: 13px; color: var(--muted); }
+  select, button {
+    font: inherit;
+    color: var(--ink);
+    background: var(--card-back);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: transform 0.05s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  select:focus, button:focus { outline: none; box-shadow: var(--ring); }
+  button.primary {
+    background: linear-gradient(135deg, var(--card-front-1), var(--card-front-2));
+    color: white;
+    border-color: transparent;
+    font-weight: 600;
+  }
+  button.ghost { background: transparent; }
+  button:hover { transform: translateY(-1px); }
+  button:active { transform: translateY(0); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .hud {
+    padding: 12px 14px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 4px;
+  }
+  .stat .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; }
+  .stat .v { font-size: 20px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+  #board {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+  }
+
+  .card {
+    aspect-ratio: 4 / 3;
+    perspective: 1000px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.55s cubic-bezier(.2,.8,.2,1);
+    transform-style: preserve-3d;
+  }
+  .card.flipped .card-inner { transform: rotateY(180deg); }
+  .face {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--card-border);
+    overflow: hidden;
+  }
+  .face.front {
+    background: linear-gradient(135deg, var(--card-front-1), var(--card-front-2));
+    color: white;
+  }
+  .face.front .pattern {
+    position: absolute;
+    inset: -10%;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.18) 0 6px, transparent 7px),
+      radial-gradient(circle at 75% 70%, rgba(255,255,255,0.14) 0 5px, transparent 6px),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.10) 0 38%, transparent 40%);
+    opacity: 0.7;
+  }
+  .face.front .deck-icon { width: 40%; max-width: 72px; opacity: 0.95; }
+  .face.back {
+    background: var(--card-back);
+    transform: rotateY(180deg);
+    flex-direction: column;
+    gap: 4px;
+    color: var(--ink);
+  }
+  .card-tag {
+    position: absolute;
+    top: 6px; left: 8px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--muted);
+  }
+  .card-tag.tag-measurement { color: var(--accent); font-weight: 700; }
+  .card-tag.tag-container { color: var(--accent-2); font-weight: 700; }
+  .card-tag.tag-separation { color: var(--warn); font-weight: 700; }
+  .card-tag.tag-hazard { color: var(--bad); font-weight: 700; }
+  .card-content {
+    font-size: clamp(13px, 1.85vw, 20px);
+    font-weight: 700;
+    line-height: 1.25;
+    word-break: break-word;
+    padding: 18px 6px 10px;
+    width: 100%;
+  }
+  .label-bilingual {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+  }
+  .label-en { font-weight: 700; }
+  .label-zh { font-weight: 600; font-size: 0.92em; color: var(--muted); }
+  .card-picture {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 10px 4px 6px;
+  }
+  .gw-img {
+    width: min(72%, 130px);
+    height: auto;
+    max-height: 82%;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+  }
+  .hazard-img {
+    width: min(72%, 130px);
+    height: auto;
+    max-height: 82%;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+  }
+  .hazard-mini-img { width: 52px; height: auto; max-height: none; flex-shrink: 0; object-fit: contain; }
+  .hazard-label-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0 4px 4px;
+    gap: 6px;
+  }
+  .hazard-label-stripe {
+    width: 100%;
+    height: 5px;
+    border-radius: 3px;
+    margin-top: -2px;
+  }
+  .hazard-label-card[data-hue="yellow"] .hazard-label-stripe { background: linear-gradient(90deg, #f5d020, #e6b800); }
+  .hazard-label-card[data-hue="red"] .hazard-label-stripe { background: linear-gradient(90deg, #ef5350, #c62828); }
+  .hazard-label-card[data-hue="white"] .hazard-label-stripe { background: linear-gradient(90deg, #e8e8e8, #bdbdbd); border: 1px solid #999; }
+  [data-theme="dark"] .hazard-label-card[data-hue="white"] .hazard-label-stripe {
+    background: linear-gradient(90deg, #5a5a6a, #888);
+    border-color: #aaa;
+  }
+  .hazard-label-body { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .hazard-label-card .label-en { font-size: clamp(14px, 2vw, 19px); letter-spacing: 0.02em; }
+  .hazard-label-card .label-zh { font-size: clamp(13px, 1.8vw, 17px); color: var(--ink); font-weight: 700; }
+  .hazard-keyword {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.3;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(91, 108, 255, 0.12);
+    color: var(--ink);
+    max-width: 100%;
+  }
+  [data-theme="dark"] .hazard-keyword { background: rgba(142, 160, 255, 0.18); }
+  .hazard-example {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.25;
+    font-style: italic;
+    max-width: 95%;
+  }
+  .card.card-hazard .face.back { padding-top: 4px; }
+  .card.card-hazard-pic .card-picture { padding: 6px 2px 2px; }
+  .toast.toast-hazard { display: flex; flex-direction: column; gap: 6px; }
+  .toast-hazard-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toast-hazard-head .hazard-mini-img { width: 44px; }
+  .toast-hazard-head h4 { margin: 0; flex: 1; font-size: 14px; line-height: 1.3; }
+  .toast.toast-hue-yellow { border-left-color: #e6b800; }
+  .toast.toast-hue-red { border-left-color: #c62828; }
+  .toast.toast-hue-white { border-left-color: #757575; }
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 12px 0 0;
+  }
+  .guide-item {
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    background: var(--card-back);
+  }
+  .guide-item .hazard-mini-img { width: 56px; margin: 0 auto 6px; display: block; }
+  .guide-item strong { display: block; font-size: 12px; }
+  .guide-item span { font-size: 11px; color: var(--muted); }
+  .guide-item em { display: block; font-size: 10px; color: var(--muted); margin-top: 4px; font-style: normal; }
+  .guide-item[data-hue="yellow"] { border-top: 3px solid #e6b800; }
+  .guide-item[data-hue="red"] { border-top: 3px solid #c62828; }
+  .guide-item[data-hue="white"] { border-top: 3px solid #9e9e9e; }
+  @media (max-width: 720px) {
+    .hazard-keyword { font-size: 9px; padding: 2px 6px; }
+    .hazard-example { display: none; }
+    .hazard-mini-img { width: 44px; }
+  }
+  .card.matched .face.back {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 0 2px var(--accent-2) inset, var(--shadow);
+  }
+  .card.hint .face.front {
+    animation: hintPulse 0.9s ease 2;
+  }
+  @keyframes hintPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255, 200, 60, 0.0), var(--shadow); }
+    50%  { box-shadow: 0 0 0 6px rgba(255, 200, 60, 0.55), var(--shadow); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 200, 60, 0.0), var(--shadow); }
+  }
+  .card.shake .card-inner { animation: shake 0.35s ease; }
+  @keyframes shake {
+    0%, 100% { transform: rotateY(180deg) translateX(0); }
+    25% { transform: rotateY(180deg) translateX(-6px); }
+    75% { transform: rotateY(180deg) translateX(6px); }
+  }
+
+  .toast-wrap {
+    position: fixed;
+    top: 16px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex; flex-direction: column; gap: 8px;
+    pointer-events: none;
+  }
+  .toast {
+    pointer-events: auto;
+    min-width: 280px;
+    max-width: 480px;
+    padding: 12px 14px;
+    background: var(--panel);
+    border: 1px solid var(--card-border);
+    border-left: 4px solid var(--accent-2);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    animation: toastIn 0.25s ease;
+  }
+  .toast.warn { border-left-color: var(--warn); }
+  .toast.bad  { border-left-color: var(--bad); }
+  .toast h4 { margin: 0 0 4px; font-size: 14px; }
+  .toast .body { font-size: 13px; color: var(--muted); line-height: 1.45; }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(15, 18, 36, 0.55);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 60;
+    padding: 16px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: min(560px, 100%);
+    padding: 20px 22px;
+  }
+  .modal h2 { margin: 0 0 8px; font-size: 18px; }
+  .modal p, .modal li { color: var(--muted); font-size: 14px; line-height: 1.45; }
+  .modal ul { padding-left: 18px; }
+  .modal .actions {
+    display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    color: white;
+    background: var(--accent);
+    margin-right: 4px;
+  }
+  .badge.cont { background: var(--accent-2); }
+  .badge.sep { background: var(--warn); }
+  .badge.haz { background: var(--bad); }
+
+  footer.foot {
+    margin-top: 18px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  @media (max-width: 720px) {
+    .hud { grid-template-columns: repeat(2, 1fr); }
+    .controls { gap: 8px; }
+    h1 { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">
+        <svg class="deck-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 6h8v4l6 18H10l6-18V6z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M10 28h12" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1>
+        HKDSE Chemistry — Lab &amp; hazard match
+        <small>Match bilingual labels to lab apparatus or OSHC HK chemical-label images</small>
+      </h1>
+    </div>
+    <div class="top-actions">
+      <button id="btn-help" class="ghost" title="How to play">How to play</button>
+      <button id="btn-guide" class="ghost" title="All hazard symbols">Symbol guide</button>
+      <button id="btn-theme" class="ghost" title="Toggle theme">Theme</button>
+    </div>
+  </header>
+
+  <div class="panel controls">
+    <div class="group">
+      <label for="sel-cat">Category</label>
+      <select id="sel-cat">
+        <option value="mixed">Mixed — glassware + hazard symbols</option>
+        <option value="measurement">量度 / Measurement</option>
+        <option value="container">容器與反應 / Containers</option>
+        <option value="separation">分離與其他 / Separation</option>
+        <option value="hazard">危險標示 / Hazard (OSHC poster)</option>
+      </select>
+    </div>
+    <div class="group">
+      <label for="sel-diff">Difficulty</label>
+      <select id="sel-diff">
+        <option value="easy">Easy — 6 pairs</option>
+        <option value="medium" selected>Medium — 10 pairs</option>
+        <option value="hard">Hard — 15 pairs</option>
+      </select>
+    </div>
+    <div class="group" style="margin-left:auto">
+      <button id="btn-hint" title="Reveal one matching pair (+5 moves)">Hint (+5)</button>
+      <button id="btn-new" class="primary">New Game</button>
+    </div>
+  </div>
+
+  <div class="panel hud" aria-label="Game stats">
+    <div class="stat"><span class="k">Time</span><span class="v" id="st-time">00:00</span></div>
+    <div class="stat"><span class="k">Moves</span><span class="v" id="st-moves">0</span></div>
+    <div class="stat"><span class="k">Pairs</span><span class="v" id="st-pairs">0 / 0</span></div>
+    <div class="stat"><span class="k">Best</span><span class="v" id="st-best">-</span></div>
+  </div>
+
+  <div id="board" aria-label="Game board"></div>
+
+  <footer class="foot">
+    HKDSE lab revision: fourteen laboratory apparatus images plus seven OSHC «化學品標籤» hazard labels. On real chemicals follow the container label and your school rules.
+  </footer>
+</div>
+
+<div class="toast-wrap" id="toasts" aria-live="polite" aria-atomic="true"></div>
+
+<div class="modal-backdrop" id="modal-help">
+  <div class="modal" role="dialog" aria-labelledby="help-title">
+    <h2 id="help-title">How to play</h2>
+    <p>Flip two cards each turn. One card shows the <strong>name in English and 中文</strong>; the other shows a <strong>picture</strong> of the same item — either a <strong>laboratory apparatus</strong> image or one of the <strong>seven hazard labels</strong> from the Hong Kong OSHC «化學品標籤 CHEMICAL LABELS» poster. Match every label to its picture in as few moves and as little time as you can.</p>
+    <ul>
+      <li><span class="badge">量度</span><strong>Measurement</strong> — measuring cylinder, volumetric flask, burette, pipette (4 pairs).</li>
+      <li><span class="badge cont">容器</span><strong>Containers &amp; reaction</strong> — beaker, conical flask, test tube, test tube rack, round-bottom flask, Bunsen burner, stirring rod (7 pairs).</li>
+      <li><span class="badge sep">分離</span><strong>Separation</strong> — funnel, evaporating dish, watch glass (3 pairs).</li>
+      <li><span class="badge haz">危險</span><strong>Hazard (OSHC poster)</strong> — seven classes: 爆炸性、助燃、易燃、腐蝕性、刺激性、有毒、有害. Label cards show a <strong>colour band</strong>, a <strong>mini label image</strong>, and a <strong>recognition hint</strong>. Picture cards show the full poster label. Use <strong>Symbol guide</strong> before you play.</li>
+      <li><strong>Mixed</strong> shuffles <strong>glassware + hazard</strong> pairs together for a longer deck.</li>
+      <li><strong>Hint (+5)</strong> briefly highlights one full pair still face-down; it adds 5 to your move count.</li>
+      <li>After each correct match, read the <strong>bilingual note</strong> — that is the learning moment for DSE practical language.</li>
+    </ul>
+    <div class="actions">
+      <button class="primary" id="btn-help-close">Got it</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-guide">
+  <div class="modal" role="dialog" aria-labelledby="guide-title">
+    <h2 id="guide-title">Hazard symbol guide (OSHC poster)</h2>
+    <p style="margin:0;font-size:13px;color:var(--muted)">Match the <strong>colour band</strong> and <strong>black pictogram</strong> to the English / 中文 name. Yellow = explosion or oxidizing; red = flammable; white = health / corrosion risks.</p>
+    <div class="guide-grid" id="guide-grid"></div>
+    <div class="actions">
+      <button class="primary" id="btn-guide-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-win">
+  <div class="modal" role="dialog" aria-labelledby="win-title">
+    <h2 id="win-title">Well done!</h2>
+    <p id="win-body">You found all the pairs.</p>
+    <div class="actions">
+      <button class="ghost" id="btn-win-close">Close</button>
+      <button class="primary" id="btn-win-again">Play again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+//#region Glassware bank (bilingual labels + apparatus PNGs)
+const GLASSWARE = [
+  {
+    tag: "container",
+    nameEn: "Beaker",
+    nameZh: "燒杯",
+    image: "assets/apparatus/beaker.png",
+    noteEn: "Rough volumes and mixing; not for preparing standard solutions to high precision.",
+    noteZh: "粗略量度與攪拌；不宜作高精度標準溶液配製。"
+  },
+  {
+    tag: "container",
+    nameEn: "Bunsen burner",
+    nameZh: "本生燈",
+    image: "assets/apparatus/bunsen-burner.png",
+    noteEn: "Controlled flame for heating; check gas tap and air hole; light with striker, not loose paper near solvents.",
+    noteZh: "控制火焰加熱；檢查氣掣及進氣孔；用打火器點燃，易燃溶劑附近勿用紙點火。"
+  },
+  {
+    tag: "measurement",
+    nameEn: "Burette",
+    nameZh: "滴定管",
+    image: "assets/apparatus/burette.png",
+    noteEn: "Titrant delivery with tap; read meniscus between graduations; rinse with solution, not just water, before use.",
+    noteZh: "以活栓控制滴定劑；讀凹液面。使用前以待裝溶液潤洗，不可只用水。"
+  },
+  {
+    tag: "container",
+    nameEn: "Conical flask",
+    nameZh: "錐形瓶",
+    image: "assets/apparatus/conical-flask.png",
+    noteEn: "Swirling and titrations; narrow neck reduces splashes. Often used with indicator in the flask.",
+    noteZh: "搖晃與滴定；窄頸減少濺出。常配合指示劑於瓶內終點。"
+  },
+  {
+    tag: "separation",
+    nameEn: "Evaporating dish",
+    nameZh: "蒸發皿",
+    image: "assets/apparatus/evaporating-dish.png",
+    noteEn: "Shallow dish to evaporate solvent from a solution; direct gentle heating.",
+    noteZh: "淺皿，用於蒸發濃縮；可直接溫和加熱。"
+  },
+  {
+    tag: "separation",
+    nameEn: "Funnel",
+    nameZh: "漏斗",
+    image: "assets/apparatus/funnel.png",
+    noteEn: "Transferring liquids into narrow vessels; filter paper can be used for gravity filtration.",
+    noteZh: "轉移液體入窄口容器；可配合濾紙作重力過濾。"
+  },
+  {
+    tag: "measurement",
+    nameEn: "Measuring cylinder",
+    nameZh: "量筒",
+    image: "assets/apparatus/measuring-cylinder.png",
+    noteEn: "Read the bottom of the meniscus at eye level; less accurate than a pipette or burette.",
+    noteZh: "視線與凹液面最低處水平；精確度低於移液管與滴定管。"
+  },
+  {
+    tag: "measurement",
+    nameEn: "Pipette",
+    nameZh: "移液管",
+    image: "assets/apparatus/pipette.png",
+    noteEn: "Transfers a measured volume; rinse with the solution to be used; for graduated types, read the meniscus at eye level.",
+    noteZh: "移取量度體積；使用前以待裝溶液潤洗；刻度管讀數時視線與凹液面水平。"
+  },
+  {
+    tag: "container",
+    nameEn: "Round-bottom flask",
+    nameZh: "圓底燒瓶",
+    image: "assets/apparatus/round-bottom-flask.png",
+    noteEn: "Even heating on wire gauze or in heating mantle; often used with reflux or distillation setups.",
+    noteZh: "於石棉網或電熱套均勻受熱；常用於回流或蒸餾裝置。"
+  },
+  {
+    tag: "container",
+    nameEn: "Test tube",
+    nameZh: "試管",
+    image: "assets/apparatus/test-tube.png",
+    noteEn: "Small-scale reactions and heating in a water bath or gently inclined over a flame with care.",
+    noteZh: "小規模反應；可水浴或小心傾斜加熱，避免對準人。"
+  },
+  {
+    tag: "container",
+    nameEn: "Test tube rack",
+    nameZh: "試管架",
+    image: "assets/apparatus/test-tube-rack.png",
+    noteEn: "Holds test tubes upright for reactions, heating, or drying; keeps them stable and spaced.",
+    noteZh: "承托試管直立，方便反應、加熱或晾乾；保持穩定及間距。"
+  },
+  {
+    tag: "container",
+    nameEn: "Stirring rod",
+    nameZh: "玻璃棒",
+    image: "assets/apparatus/stirring-rod.png",
+    noteEn: "Mixes solutions gently; do not use to scrape solids from glass (may scratch or weaken glassware).",
+    noteZh: "輕力攪拌溶液；勿用來刮取玻璃壁上的固體（可能刮花或損壞器皿）。"
+  },
+  {
+    tag: "measurement",
+    nameEn: "Volumetric flask",
+    nameZh: "容量瓶",
+    image: "assets/apparatus/volumetric-flask.png",
+    noteEn: "One graduation only — for preparing a fixed total volume after filling to the mark and inverting to mix.",
+    noteZh: "只有一條刻度線；定容後倒轉搖勻，用於配製固定總體積溶液。"
+  },
+  {
+    tag: "separation",
+    nameEn: "Watch glass",
+    nameZh: "表面皿",
+    image: "assets/apparatus/watch-glass.png",
+    noteEn: "Covers beakers to reduce dust loss; also used as a small weighing or drying surface.",
+    noteZh: "蓋在燒杯上減少揮發與塵埃；亦作少量稱量或晾乾。"
+  }
+];
+
+function glasswareImg(entry, className = "gw-img") {
+  const alt = `${entry.nameEn} / ${entry.nameZh}`;
+  return `<img class="${className}" src="${escHTML(entry.image)}" alt="${escHTML(alt)}" loading="lazy" decoding="async"/>`;
+}
+
+//#region Hazard labels (OSHC poster — PNG labels + recognition cues)
+const HAZARD_LABELS = [
+  {
+    tag: "hazard", hue: "yellow", icon: "explosive", image: "assets/hazards/explosive.png",
+    nameEn: "Explosive", nameZh: "爆炸性",
+    keywordEn: "Yellow diamond · bursting bomb", keywordZh: "黃色菱形 · 爆炸圖案",
+    exampleEn: "Unstable compounds; firework-type hazards in theory",
+    exampleZh: "不穩定化合物；與煙花類爆炸風險概念相關",
+    noteEn: "May explode if heated, shocked, or rubbed. Store away from fire and impact.",
+    noteZh: "受熱、撞擊或摩擦可爆炸。遠離火源與撞擊。"
+  },
+  {
+    tag: "hazard", hue: "yellow", icon: "oxidizing", image: "assets/hazards/oxidizing.png",
+    nameEn: "Oxidizing", nameZh: "助燃",
+    keywordEn: "Yellow diamond · circle + flame (O)", keywordZh: "黃色菱形 · 圓圈加火焰（助燃）",
+    exampleEn: "e.g. concentrated H₂O₂, KMnO₄ (oxidisers in school labs)",
+    exampleZh: "例如濃過氧化氫、高錳酸鉀等氧化劑",
+    noteEn: "Poster word 助燃 — makes fires burn faster. Keep away from flammables.",
+    noteZh: "海報「助燃」：助長燃燒。勿與易燃物混放。"
+  },
+  {
+    tag: "hazard", hue: "red", icon: "flammable", image: "assets/hazards/flammable.png",
+    nameEn: "Flammable", nameZh: "易燃",
+    keywordEn: "Red diamond · flame only", keywordZh: "紅色菱形 · 火焰圖案",
+    exampleEn: "e.g. ethanol, petrol vapour, turpentine",
+    exampleZh: "例如乙醇、汽油蒸氣、松節油",
+    noteEn: "Catches fire easily. No flames, sparks, or hot surfaces nearby.",
+    noteZh: "易著火。遠離明火、火花及高溫。"
+  },
+  {
+    tag: "hazard", hue: "white", icon: "corrosive", image: "assets/hazards/corrosive.png",
+    nameEn: "Corrosive", nameZh: "腐蝕性",
+    keywordEn: "White diamond · liquid on hand & metal", keywordZh: "白色菱形 · 腐蝕手及金屬",
+    exampleEn: "e.g. concentrated acids and alkalis",
+    exampleZh: "例如濃酸、濃鹼",
+    noteEn: "Burns skin/eyes and attacks metal. Gloves + goggles; add acid to water.",
+    noteZh: "腐蝕皮膚／眼睛及金屬。戴手套護眼；酸入水。"
+  },
+  {
+    tag: "hazard", hue: "white", icon: "irritant", image: "assets/hazards/irritant.png",
+    nameEn: "Irritant", nameZh: "刺激性",
+    keywordEn: "White diamond · bold X (no extra mark)", keywordZh: "白色菱形 · 粗交叉（無附加記號）",
+    exampleEn: "e.g. some cleaning agents, dusts that sting eyes",
+    exampleZh: "例如部分清潔劑、刺激眼睛的粉塵",
+    noteEn: "Irritates eyes, skin, or breathing. Use PPE; read risk phrases on the bottle.",
+    noteZh: "刺激眼、皮膚或呼吸道。佩戴防護；閱讀瓶上警告。"
+  },
+  {
+    tag: "hazard", hue: "white", icon: "toxic", image: "assets/hazards/toxic.png",
+    nameEn: "Toxic", nameZh: "有毒",
+    keywordEn: "White diamond · skull & crossbones", keywordZh: "白色菱形 · 骷髏頭",
+    exampleEn: "e.g. cyanide salts (awareness), lead compounds",
+    exampleZh: "例如氰化物（認知）、鉛化合物",
+    noteEn: "Poisonous if swallowed, inhaled, or on skin. Fume cupboard when told; never taste.",
+    noteZh: "吞食、吸入或經皮可中毒。按指示用通風櫃；切勿嚐試。"
+  },
+  {
+    tag: "hazard", hue: "white", icon: "harmful", image: "assets/hazards/harmful.png",
+    nameEn: "Harmful", nameZh: "有害",
+    keywordEn: "White diamond · X with ! underneath", keywordZh: "白色菱形 · 交叉下加「！」",
+    exampleEn: "e.g. turpentine (poster example) — less severe than “toxic”",
+    exampleZh: "例如松節油（海報例子）— 毒性一般較「有毒」為輕",
+    noteEn: "Can harm health over exposure. In this game “!” under the X distinguishes Harmful from Irritant (cross only).",
+    noteZh: "長期或多次接觸可損害健康。本遊戲以交叉下的「！」區分「有害」與「刺激性」。"
+  }
+];
+
+function isHazardEntry(e) { return e && e.tag === "hazard"; }
+
+function hazardImg(entry, className = "hazard-img") {
+  const alt = `${entry.nameEn} / ${entry.nameZh}`;
+  return `<img class="${className}" src="${escHTML(entry.image)}" alt="${escHTML(alt)}" loading="lazy" decoding="async"/>`;
+}
+
+function renderHazardLabel(entry) {
+  const sym = hazardImg(entry, "hazard-img hazard-mini-img");
+  return `<div class="hazard-label-card" data-hue="${escHTML(entry.hue)}">
+    <div class="hazard-label-stripe" aria-hidden="true"></div>
+    <div class="hazard-label-body">
+      ${sym}
+      <div class="label-bilingual">
+        <span class="label-en">${escHTML(entry.nameEn)}</span>
+        <span class="label-zh">${escHTML(entry.nameZh)}</span>
+      </div>
+      <span class="hazard-keyword">${escHTML(entry.keywordEn)}<br/>${escHTML(entry.keywordZh)}</span>
+      <span class="hazard-example">${escHTML(entry.exampleEn)}</span>
+    </div>
+  </div>`;
+}
+
+function attachHazardImages() {
+  for (const h of HAZARD_LABELS) h.imgHtml = hazardImg(h);
+}
+attachHazardImages();
+//#endregion
+
+//#region Utilities
+function escHTML(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function pickN(pool, n) { return shuffle(pool).slice(0, n); }
+function fmtTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, "0");
+  const s = (sec % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
+//#endregion
+
+//#region State
+const DIFFICULTY = {
+  easy:   { pairs: 6,  cols: 4 },
+  medium: { pairs: 10, cols: 5 },
+  hard:   { pairs: 15, cols: 6 }
+};
+
+const state = {
+  category: "mixed",
+  difficulty: "medium",
+  cards: [],
+  firstPick: null,
+  secondPick: null,
+  busy: false,
+  moves: 0,
+  matches: 0,
+  totalPairs: 0,
+  startedAt: null,
+  timerId: null,
+  hintCooldown: false
+};
+
+const $ = sel => document.querySelector(sel);
+const board = $("#board");
+const stTime = $("#st-time");
+const stMoves = $("#st-moves");
+const stPairs = $("#st-pairs");
+const stBest = $("#st-best");
+const selCat = $("#sel-cat");
+const selDiff = $("#sel-diff");
+const btnNew = $("#btn-new");
+const btnHint = $("#btn-hint");
+const btnHelp = $("#btn-help");
+const btnHelpClose = $("#btn-help-close");
+const modalHelp = $("#modal-help");
+const modalWin = $("#modal-win");
+const winBody = $("#win-body");
+const btnWinAgain = $("#btn-win-again");
+const btnWinClose = $("#btn-win-close");
+const btnTheme = $("#btn-theme");
+const toasts = $("#toasts");
+//#endregion
+
+//#region Best score (localStorage)
+function bestKey() {
+  const cat = state.category === "mixed" ? "mixed_combined" : state.category;
+  return `glasswarematch.best.${cat}.${state.difficulty}`;
+}
+function loadBest() {
+  try {
+    const raw = localStorage.getItem(bestKey());
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+function saveBestIfRecord(elapsed, moves) {
+  const cur = loadBest();
+  const score = elapsed + moves * 2;
+  if (!cur || score < cur.score) {
+    const rec = { score, elapsed, moves, ts: Date.now() };
+    localStorage.setItem(bestKey(), JSON.stringify(rec));
+    return true;
+  }
+  return false;
+}
+function renderBest() {
+  const b = loadBest();
+  if (!b) { stBest.textContent = "-"; return; }
+  stBest.textContent = `${fmtTime(b.elapsed)} / ${b.moves}m`;
+}
+//#endregion
+
+//#region Pool building
+function buildPool() {
+  if (state.category === "measurement") return GLASSWARE.filter(g => g.tag === "measurement");
+  if (state.category === "container") return GLASSWARE.filter(g => g.tag === "container");
+  if (state.category === "separation") return GLASSWARE.filter(g => g.tag === "separation");
+  if (state.category === "hazard") return HAZARD_LABELS.slice();
+  return [...GLASSWARE, ...HAZARD_LABELS];
+}
+function tagClassFor(entry) {
+  const t = entry.tag;
+  if (t === "measurement") return "tag-measurement";
+  if (t === "container") return "tag-container";
+  if (t === "separation") return "tag-separation";
+  if (t === "hazard") return "tag-hazard";
+  return "";
+}
+//#endregion
+
+//#region Game flow
+function newGame() {
+  clearInterval(state.timerId);
+  state.timerId = null;
+  state.startedAt = null;
+  state.moves = 0;
+  state.matches = 0;
+  state.firstPick = null;
+  state.secondPick = null;
+  state.busy = false;
+  state.category = selCat.value;
+  state.difficulty = selDiff.value;
+  const cfg = DIFFICULTY[state.difficulty];
+  const pool = buildPool();
+  const nPairs = Math.min(cfg.pairs, pool.length);
+  state.totalPairs = nPairs;
+
+  const picks = pickN(pool, nPairs);
+  const cards = [];
+  let id = 0;
+  for (const e of picks) {
+    const pairId = ++id;
+    cards.push({ id: `l${pairId}`, pairId, kind: "label", entry: e, flipped: false, matched: false });
+    cards.push({ id: `p${pairId}`, pairId, kind: "picture", entry: e, flipped: false, matched: false });
+  }
+  state.cards = shuffle(cards);
+
+  board.style.setProperty("--cols", cfg.cols);
+  renderBoard();
+  updateHud();
+  renderBest();
+  closeModal(modalWin);
+}
+
+function renderBoard() {
+  board.innerHTML = "";
+  for (const c of state.cards) {
+    const el = document.createElement("div");
+    el.className = "card";
+    if (isHazardEntry(c.entry)) {
+      el.classList.add(c.kind === "label" ? "card-hazard" : "card-hazard-pic");
+    }
+    el.dataset.id = c.id;
+    if (c.flipped) el.classList.add("flipped");
+    if (c.matched) el.classList.add("flipped", "matched");
+
+    const kindLabel = c.kind === "label" ? "Label" : (isHazardEntry(c.entry) ? "Symbol" : "Apparatus");
+    const tagCls = tagClassFor(c.entry);
+
+    let content;
+    if (c.kind === "label" && isHazardEntry(c.entry)) {
+      content = renderHazardLabel(c.entry);
+    } else if (c.kind === "label") {
+      content = `<div class="label-bilingual"><span class="label-en">${escHTML(c.entry.nameEn)}</span><span class="label-zh">${escHTML(c.entry.nameZh)}</span></div>`;
+    } else {
+      content = `<div class="card-picture">${isHazardEntry(c.entry) ? hazardImg(c.entry) : glasswareImg(c.entry)}</div>`;
+    }
+
+    el.innerHTML = `
+      <div class="card-inner">
+        <div class="face front">
+          <div class="pattern"></div>
+          <svg class="deck-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 6h8v4l6 18H10l6-18V6z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M10 28h12" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="face back">
+          <span class="card-tag ${tagCls}">${kindLabel}</span>
+          <div class="card-content">${content}</div>
+        </div>
+      </div>
+    `;
+    el.addEventListener("click", () => onCardClick(c.id));
+    board.appendChild(el);
+  }
+}
+
+function getCardEl(id) { return board.querySelector(`[data-id="${id}"]`); }
+function getCard(id) { return state.cards.find(c => c.id === id); }
+
+function onCardClick(id) {
+  if (state.busy) return;
+  const c = getCard(id);
+  if (!c || c.matched || c.flipped) return;
+
+  if (!state.startedAt) startTimer();
+
+  c.flipped = true;
+  getCardEl(id).classList.add("flipped");
+
+  if (!state.firstPick) {
+    state.firstPick = c;
+    return;
+  }
+  if (state.firstPick.id === c.id) return;
+
+  state.secondPick = c;
+  state.moves++;
+  updateHud();
+
+  const a = state.firstPick, b = state.secondPick;
+  state.firstPick = state.secondPick = null;
+
+  const samePair = a.pairId === b.pairId;
+  const oneLabelOnePic =
+    (a.kind === "label" && b.kind === "picture") || (a.kind === "picture" && b.kind === "label");
+
+  if (samePair && oneLabelOnePic) {
+    a.matched = b.matched = true;
+    state.matches++;
+    setTimeout(() => {
+      getCardEl(a.id).classList.add("matched");
+      getCardEl(b.id).classList.add("matched");
+      showLearnToast(a.entry);
+      updateHud();
+      if (state.matches === state.totalPairs) onWin();
+    }, 250);
+  } else {
+    state.busy = true;
+    setTimeout(() => {
+      a.flipped = b.flipped = false;
+      const ea = getCardEl(a.id), eb = getCardEl(b.id);
+      ea.classList.add("shake"); eb.classList.add("shake");
+      setTimeout(() => {
+        ea.classList.remove("flipped", "shake");
+        eb.classList.remove("flipped", "shake");
+      }, 320);
+      state.busy = false;
+    }, 850);
+  }
+}
+
+function startTimer() {
+  state.startedAt = Date.now();
+  state.timerId = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - state.startedAt) / 1000);
+    stTime.textContent = fmtTime(elapsed);
+  }, 250);
+}
+
+function updateHud() {
+  stMoves.textContent = state.moves;
+  stPairs.textContent = `${state.matches} / ${state.totalPairs}`;
+}
+
+function elapsedSeconds() {
+  if (!state.startedAt) return 0;
+  return Math.floor((Date.now() - state.startedAt) / 1000);
+}
+
+function categoryWinLabel() {
+  switch (state.category) {
+    case "measurement": return "量度 / Measurement";
+    case "container": return "容器與反應 / Containers";
+    case "separation": return "分離與其他 / Separation";
+    case "hazard": return "危險標示 / Hazard (OSHC poster)";
+    default: return "Mixed — glassware + hazard symbols";
+  }
+}
+
+function onWin() {
+  clearInterval(state.timerId);
+  state.timerId = null;
+  const elapsed = elapsedSeconds();
+  const isRecord = saveBestIfRecord(elapsed, state.moves);
+  renderBest();
+  const catLabel = categoryWinLabel();
+  winBody.innerHTML = `
+    <strong>${escHTML(catLabel)} — ${escHTML(state.difficulty)}</strong><br/>
+    Time: <b>${fmtTime(elapsed)}</b> &middot; Moves: <b>${state.moves}</b><br/>
+    ${isRecord ? "<span style=\"color:var(--accent-2)\"><b>New best score!</b></span>" : "Try again to beat your best."}
+  `;
+  openModal(modalWin);
+}
+
+function useHint() {
+  if (state.hintCooldown) return;
+  const unmatched = state.cards.filter(c => !c.matched && !c.flipped);
+  if (unmatched.length < 2) return;
+  const byPair = {};
+  for (const c of unmatched) {
+    (byPair[c.pairId] ||= []).push(c);
+  }
+  const candidates = Object.values(byPair).filter(g => g.length === 2);
+  if (!candidates.length) return;
+  const pair = candidates[Math.floor(Math.random() * candidates.length)];
+  for (const c of pair) {
+    const el = getCardEl(c.id);
+    el.classList.add("hint");
+    setTimeout(() => el.classList.remove("hint"), 1800);
+  }
+  state.moves += 5;
+  updateHud();
+  state.hintCooldown = true;
+  btnHint.disabled = true;
+  setTimeout(() => { state.hintCooldown = false; btnHint.disabled = false; }, 2200);
+}
+//#endregion
+
+//#region Toasts
+function showLearnToast(entry) {
+  const t = document.createElement("div");
+  if (isHazardEntry(entry)) {
+    t.className = `toast toast-hazard toast-hue-${entry.hue}`;
+    const sym = hazardImg(entry, "hazard-img hazard-mini-img");
+    t.innerHTML = `
+      <div class="toast-hazard-head">${sym}<h4>${escHTML(entry.nameEn)} / ${escHTML(entry.nameZh)}</h4></div>
+      <div class="hazard-keyword" style="margin:0">${escHTML(entry.keywordEn)} · ${escHTML(entry.keywordZh)}</div>
+      <div class="body">${escHTML(entry.noteEn)}<br/>${escHTML(entry.noteZh)}<br/><em>${escHTML(entry.exampleEn)} / ${escHTML(entry.exampleZh)}</em></div>`;
+    setTimeout(removeToast, 5500);
+  } else {
+    t.className = "toast";
+    const heading = `${escHTML(entry.nameEn)} / ${escHTML(entry.nameZh)}`;
+    const body = `${escHTML(entry.noteEn)}<br/><span style="opacity:0.95">${escHTML(entry.noteZh)}</span>`;
+    t.innerHTML = `<h4>${heading}</h4><div class="body">${body}</div>`;
+    setTimeout(removeToast, 4200);
+  }
+  function removeToast() { if (t.parentNode) t.parentNode.removeChild(t); }
+  toasts.appendChild(t);
+  t.addEventListener("click", removeToast);
+}
+
+function fillGuideGrid() {
+  const grid = $("#guide-grid");
+  if (!grid) return;
+  grid.innerHTML = HAZARD_LABELS.map(h => `
+    <div class="guide-item" data-hue="${escHTML(h.hue)}">
+      ${hazardImg(h, "hazard-img hazard-mini-img")}
+      <strong>${escHTML(h.nameEn)}</strong>
+      <span>${escHTML(h.nameZh)}</span>
+      <em>${escHTML(h.keywordEn)}</em>
+    </div>
+  `).join("");
+}
+
+function openGuide() {
+  fillGuideGrid();
+  openModal($("#modal-guide"));
+}
+//#endregion
+
+//#region Modal helpers
+function openModal(m) { m.classList.add("show"); }
+function closeModal(m) { m.classList.remove("show"); }
+//#endregion
+
+//#region Theme
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("glasswarematch.theme", theme);
+}
+function initTheme() {
+  const saved = localStorage.getItem("glasswarematch.theme");
+  if (saved) applyTheme(saved);
+  else {
+    const prefDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    applyTheme(prefDark ? "dark" : "light");
+  }
+}
+btnTheme.addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme") || "light";
+  applyTheme(cur === "light" ? "dark" : "light");
+});
+//#endregion
+
+//#region Wire-up
+btnNew.addEventListener("click", newGame);
+btnHint.addEventListener("click", useHint);
+btnHelp.addEventListener("click", () => openModal(modalHelp));
+btnHelpClose.addEventListener("click", () => closeModal(modalHelp));
+const btnGuide = $("#btn-guide");
+const btnGuideClose = $("#btn-guide-close");
+const modalGuide = $("#modal-guide");
+if (btnGuide) btnGuide.addEventListener("click", openGuide);
+if (btnGuideClose) btnGuideClose.addEventListener("click", () => closeModal(modalGuide));
+if (modalGuide) modalGuide.addEventListener("click", e => { if (e.target === modalGuide) closeModal(modalGuide); });
+btnWinClose.addEventListener("click", () => closeModal(modalWin));
+btnWinAgain.addEventListener("click", () => { closeModal(modalWin); newGame(); });
+selCat.addEventListener("change", () => { renderBest(); });
+selDiff.addEventListener("change", () => { renderBest(); });
+modalHelp.addEventListener("click", e => { if (e.target === modalHelp) closeModal(modalHelp); });
+modalWin.addEventListener("click", e => { if (e.target === modalWin) closeModal(modalWin); });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { closeModal(modalHelp); closeModal(modalWin); closeModal(modalGuide); }
+});
+
+initTheme();
+newGame();
+//#endregion
+</script>
+</body>
+</html>

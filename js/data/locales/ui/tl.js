@@ -202,7 +202,11 @@ export const tlUI = {
     "virtualLabName": "Virtual Lab",
     "virtualLabDesc": "Ikiling ang beaker at paglaruan ang particle water sa isang simpleng eksena ng lab.",
     "atomNinjaName": "Atom Ninja",
-    "atomNinjaDesc": "Bumuo ng atom at maglaro ng Atom Ninja — mas mabagal, mas matagal, mas madalas ang tamang target."
+    "atomNinjaDesc": "Bumuo ng atom at maglaro ng Atom Ninja — mas mabagal, mas matagal, mas madalas ang tamang target.",
+    "chemCatchName": "Chem Catch",
+    "chemCatchDesc": "Read the ionic question and shoot the fish with the correct formula.",
+    "labMatchName": "Lab & Hazard Match",
+    "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels."
   },
   "worksheet": {
     "title": "Generator ng Worksheet",
