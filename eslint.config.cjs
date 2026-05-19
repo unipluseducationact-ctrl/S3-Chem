@@ -9,6 +9,7 @@ module.exports = [
       "node_modules/**",
       ".continue/**",
       "public/**",
+      "_import_flash/**",
       "js/vendor/**",
       "three.min.js",
       "generate_*.js",
