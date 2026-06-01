@@ -6,6 +6,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Re-run after repo rename so Pages serves the latest dist/, not a stale deployment.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -33,6 +35,12 @@ jobs:
         run: |
           npm ci
           npm run build
+
+      - name: Verify build includes current app shell
+        run: |
+          grep -q 'flashcards-page' dist/index.html
+          grep -q 'worksheet-hub' dist/index.html
+          grep -q 'data-page="flashcards"' dist/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
