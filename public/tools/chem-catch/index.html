@@ -3,25 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HKDSE Chem Catch — Ionic Formulas</title>
+    <title>HKDSE Chem Catch — Chemical Formulas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <style>
       :root{
-        --bg-page:#f6f7f9;
-        --surface:#ffffff;
-        --surface-muted:#eef0f4;
-        --text:#2d3436;
-        --text-muted:#6b7280;
-        --border:rgba(45,52,54,.1);
-        --shadow:0 2px 10px rgba(0,0,0,.06);
-        --shadow-lg:0 12px 40px rgba(0,0,0,.08);
-        --accent-fill:#dce6f7;
-        --accent-border:#b8c8e8;
-        --good:#2d9d6c;
-        --bad:#d96666;
+        --bg-page:#030712;
+        --surface:#0b0f19;
+        --surface-muted:#111827;
+        --text:#f9fafb;
+        --text-muted:#9ca3af;
+        --border:rgba(255,255,255,.08);
+        --shadow:0 4px 20px rgba(0,0,0,.5);
+        --shadow-lg:0 20px 50px rgba(0,0,0,.7);
+        --accent-fill:rgba(59,130,246,.2);
+        --accent-border:#3b82f6;
+        --good:#10b981;
+        --bad:#ef4444;
       }
       *{box-sizing:border-box;font-family:"Inter",ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans TC","PingFang TC","Microsoft JhengHei"}
       body{margin:0;color:var(--text);background:var(--bg-page);min-height:100vh;display:grid;place-items:center;padding:22px}
-      .wrap{width:min(980px,100%);display:grid;grid-template-rows:auto 1fr;gap:16px}
+      .wrap{width:min(1200px,100%);display:grid;grid-template-rows:auto 1fr;gap:16px}
       .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:16px 18px;border-radius:14px;background:var(--surface-muted);border:1px solid var(--border);box-shadow:var(--shadow)}
       .title{display:grid;gap:4px}
       .title strong{font-size:16px;font-weight:700;letter-spacing:.02em;color:var(--text)}
@@ -30,40 +32,56 @@
       .pill{display:inline-flex;align-items:baseline;gap:8px;padding:8px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,.04)}
       .pill b{font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
       .pill code{font-size:14px;color:var(--text);font-weight:800;font-variant-numeric:tabular-nums}
-      .lang{display:inline-flex;gap:8px;align-items:center;padding:6px 8px;border-radius:10px;background:var(--surface);border:1px solid var(--border)}
-      .lang button{appearance:none;border:1px solid var(--border);background:var(--surface-muted);color:var(--text);border-radius:8px;padding:7px 11px;font-weight:700;cursor:pointer;font-size:12px}
-      .lang button.active{background:var(--surface);border-color:var(--accent-border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+      .lang{display:inline-flex;gap:4px;align-items:center;padding:4px 6px;border-radius:10px;background:var(--surface);border:1px solid var(--border)}
+      .lang button{appearance:none;border:1px solid transparent;background:transparent;color:var(--text-muted);border-radius:8px;padding:5px 9px;font-weight:700;cursor:pointer;font-size:12px;transition:all 0.2s ease}
+      .lang button:hover{color:var(--text);background:var(--surface-muted)}
+      .lang button.active{background:var(--accent-fill);color:var(--text);border-color:var(--accent-border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+
+      .mode-select{display:inline-flex;gap:4px;align-items:center;padding:4px 6px;border-radius:10px;background:var(--surface);border:1px solid var(--border)}
+      .mode-select button{appearance:none;border:1px solid transparent;background:transparent;color:var(--text-muted);border-radius:8px;padding:5px 9px;font-weight:700;cursor:pointer;font-size:12px;transition:all 0.2s ease}
+      .mode-select button:hover{color:var(--text);background:var(--surface-muted)}
+      .mode-select button.active{background:var(--accent-fill);color:var(--text);border-color:var(--accent-border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+
+      .duration-select{display:inline-flex;gap:4px;align-items:center;padding:4px 6px;border-radius:10px;background:var(--surface);border:1px solid var(--border)}
+      .duration-select button{appearance:none;border:1px solid transparent;background:transparent;color:var(--text-muted);border-radius:8px;padding:5px 9px;font-weight:700;cursor:pointer;font-size:12px;transition:all 0.2s ease}
+      .duration-select button:hover{color:var(--text);background:var(--surface-muted)}
+      .duration-select button.active{background:var(--accent-fill);color:var(--text);border-color:var(--accent-border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
       .gamecard{position:relative;border-radius:16px;overflow:hidden;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg)}
-      canvas{display:block;width:100%;height:auto;aspect-ratio:3/2;background:linear-gradient(165deg,#eef8f4 0%,#f0f4fb 45%,#e8f4f8 100%)}
+      canvas{display:block;width:100%;height:auto;aspect-ratio:3/2;background:linear-gradient(180deg,#040814 0%,#091124 60%,#051811 100%);border-radius:16px}
       .hint{
         position:absolute;
         left:10px;
         bottom:10px;
-        padding:6px 8px;
+        padding:8px 12px;
         border-radius:8px;
-        background:rgba(255,255,255,.92);
+        background:rgba(11, 15, 25, 0.9);
         border:1px solid var(--border);
-        font-size:10px;
-        line-height:1.35;
+        font-size:11px;
+        line-height:1.4;
         color:var(--text);
         box-shadow:var(--shadow);
-        max-width:min(220px,calc(38% - 12px));
+        max-width:min(240px,calc(38% - 12px));
         pointer-events:none;
+        backdrop-filter:blur(4px);
       }
-      .hint div{margin:0 0 .35em}
+      .hint div{margin:0 0 .4em}
       .hint div:last-child{margin-bottom:0}
-      .hint b{color:var(--text);font-size:inherit;font-weight:700}
-      .overlay{position:absolute;inset:0;display:none;place-items:center;padding:18px;background:rgba(246,247,249,.72);backdrop-filter:blur(8px)}
+      .hint b{color:#60a5fa;font-size:inherit;font-weight:700}
+      .overlay{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(3, 7, 18, 0.85);backdrop-filter:blur(12px);z-index:9999;overflow-y:auto}
       .overlay.open{display:grid}
-      .panel{width:min(720px,100%);border-radius:16px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg);overflow:hidden}
-      .panelHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--surface-muted)}
+      .panel{width:min(640px,100%);max-height:calc(100vh - 40px);border-radius:16px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg);overflow:hidden;display:flex;flex-direction:column}
+      .panelHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--surface-muted);flex-shrink:0}
       .tag{font-size:11px;font-weight:600;letter-spacing:.04em;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);text-transform:uppercase}
-      .panelBody{padding:18px;display:grid;gap:12px}
+      .panelBody{padding:18px;display:grid;gap:12px;overflow-y:auto}
       .panelBody .big{font-size:16px;line-height:1.4;font-weight:600;color:var(--text)}
       .panelBody .small{color:var(--text-muted);font-size:14px;line-height:1.45}
-      .panelFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-top:1px solid var(--border);background:var(--surface-muted)}
+      .panelFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-top:1px solid var(--border);background:var(--surface-muted);flex-shrink:0}
       button.main{appearance:none;border:1px solid var(--border);background:var(--surface-muted);color:var(--text);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.04)}
       button.main:hover{background:var(--accent-fill);border-color:var(--accent-border)}
+
+      .step-btn{appearance:none;border:1px solid var(--border);background:var(--surface-muted);color:var(--text-muted);border-radius:8px;padding:6px 12px;font-weight:600;cursor:pointer;font-size:12px;transition:all 0.2s ease}
+      .step-btn:hover{color:var(--text);background:var(--accent-fill)}
+      .step-btn.active{background:var(--accent-fill);color:var(--text);border-color:var(--accent-border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
     </style>
   </head>
   <body>
@@ -71,9 +89,21 @@
       <div class="topbar">
         <div class="title">
           <strong id="titleMain">HKDSE Chem Catch</strong>
-          <span id="titleSub">Read the ionic question → shoot the fish with the correct formula.</span>
+          <span id="titleSub">Read the chemistry question → shoot the fish with the correct formula.</span>
         </div>
         <div class="stats">
+          <div class="mode-select" aria-label="Game Mode">
+            <span style="color:var(--text-muted);font-size:12px;font-weight:600" id="modeLabel">Mode</span>
+            <button id="modeIonic">Ionic</button>
+            <button id="modeCovalent">Covalent</button>
+            <button id="modeMixed" class="active">Mixed</button>
+          </div>
+          <div class="duration-select" aria-label="Game Duration">
+            <span style="color:var(--text-muted);font-size:12px;font-weight:600" id="durationLabel">Timer</span>
+            <button id="time30">30s</button>
+            <button id="time60" class="active">60s</button>
+            <button id="time90">90s</button>
+          </div>
           <div class="lang" aria-label="Language">
             <span style="color:var(--text-muted);font-size:12px;font-weight:600" id="langLabel">Lang</span>
             <button id="langEn" class="active">EN</button>
@@ -96,8 +126,43 @@
               <button class="main" id="continueBtn">Continue</button>
             </div>
             <div class="panelBody">
-              <div class="big" id="fbTitle">...</div>
-              <div class="small" id="fbExplain">...</div>
+              <!-- Regular Feedback Content -->
+              <div id="regularFeedback">
+                <div class="big" id="fbTitle">...</div>
+                <div id="fbFormula" style="font-size: 24px; text-align: center; margin: 10px 0; color: #60a5fa; font-weight: 800;"></div>
+                
+                <!-- Interactive 3-Step SVG Diagram Container -->
+                <div id="fbDiagramContainer" style="display: flex; justify-content: center; align-items: center; margin: 15px 0; background: #050814; border: 1px solid var(--border); border-radius: 12px; padding: 15px; height: 220px; position: relative; overflow: hidden; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);"></div>
+                
+                <!-- 3-Step Interactive Navigation -->
+                <div id="fbSteps" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 10px;">
+                  <button class="step-btn active" data-step="1" id="stepBtn1">Step 1: Atoms</button>
+                  <button class="step-btn" data-step="2" id="stepBtn2">Step 2: Bonding</button>
+                  <button class="step-btn" data-step="3" id="stepBtn3">Step 3: Octet Check</button>
+                </div>
+                <div id="fbStepExplain" style="font-size: 13.5px; color: var(--text-muted); text-align: center; min-height: 45px; padding: 0 15px; line-height: 1.4;"></div>
+
+                <div class="small" id="fbExplain">...</div>
+              </div>
+
+              <!-- Leaderboard / Game Over Content -->
+              <div id="leaderboardFeedback" style="display: none; text-align: center; padding: 10px 0;">
+                <h2 style="color: #ef4444; font-size: 26px; font-weight: 800; margin: 0 0 10px; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);" id="lbTitle">Time Up! / 時間到！</h2>
+                <div style="font-size: 18px; margin-bottom: 20px; color: var(--text);">
+                  <span id="lbScoreLabel">Your Score:</span> <strong style="color: #10b981; font-size: 24px;" id="lbFinalScore">0</strong>
+                </div>
+                
+                <!-- Leaderboard Table -->
+                <div style="background: #050814; border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="color: #60a5fa; font-size: 16px; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 0.05em;" id="lbHeader">🏆 Leaderboard / 排行榜</h3>
+                    <button id="clearHistoryBtn" style="appearance: none; border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); color: #f87171; border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">Clear / 清除</button>
+                  </div>
+                  <div id="leaderboardList" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding-right: 4px;">
+                    <!-- Rows will be injected dynamically -->
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="panelFooter">
               <div style="font-size:12px;color:var(--text-muted)" id="fbMini">Shoot the fish that shows the correct formula.</div>
@@ -113,24 +178,32 @@
       const I18N = {
         en: {
           titleMain: 'HKDSE Chem Catch',
-          titleSub: 'Read the ionic question → shoot the fish with the correct formula.',
+          titleSub: 'Read the chemistry question → shoot the fish with the correct formula.',
           langLabel: 'Lang',
+          modeLabel: 'Mode',
+          durationLabel: 'Timer',
+          modeIonic: 'Ionic',
+          modeCovalent: 'Covalent',
+          modeMixed: 'Mixed',
           score: 'Score',
           streak: 'Streak',
           time: 'Time',
           hint: [
             '<b>How to play</b>: each round starts with the <b>question at the top</b>. Answers are on the fish.',
             '<b>Goal</b>: shoot the fish showing the <b>correct formula</b> (numbers as subscripts). Press <b>R</b> to restart.',
-            '<b>Ionic only</b>: named salts or charge-ratio patterns (M = cation, X = anion).'
+            '<b>Modes</b>: choose Ionic, Covalent, or Mixed challenge.'
           ],
           result: 'Result',
           continue: 'Continue',
           restart: 'Restart',
           streakReset: 'Streak reset',
           streakNow: (n) => `Streak: ${n}`,
-          correctPts: (tag, pts) => `${tag}: Correct. +${pts} points`,
+          correctPts: (tag, pts, diffLabel) => `${tag} (${diffLabel}): Correct. +${pts} points`,
           wrongPts: (tag) => `${tag}: Incorrect. −5 points`,
           correctAnswer: (f) => `Correct answer: ${f}.`,
+          diffEasy: 'Easy',
+          diffMedium: 'Medium',
+          diffHard: 'Hard',
           qPrompt: (tag) => `${tag} question`,
           whichFormulaOf: (name) => `Which is the formula of ${name}?`,
           abstractStem: (cat, anMag) => {
@@ -138,32 +211,45 @@
             const xs = anMag === 1 ? '\u22121' : anMag === 2 ? '\u22122' : '\u22123';
             return `M (${cs}) and X (${xs}).\nWhich empirical formula is correct for the ionic compound?`;
           },
+          abstractCovalentStem: (valA, valB) => {
+            return `Non-metal A has ${valA} valence electrons, B has ${valB} valence electrons.\nWhich formula is correct for the covalent compound formed between A and B?`;
+          },
           fbMiniHint: 'Shoot the fish that shows the correct formula.',
         },
         zh: {
           titleMain: 'HKDSE 化學捉魚',
-          titleSub: '先看離子題目 → 射中有正確化學式的魚。',
+          titleSub: '先看化學題目 → 射中有正確化學式的魚。',
           langLabel: '語言',
+          modeLabel: '模式',
+          durationLabel: '限時',
+          modeIonic: '離子',
+          modeCovalent: '共價',
+          modeMixed: '混合',
           score: '分數',
           streak: '連中',
           time: '時間',
           hint: [
             '<b>玩法</b>：每題開始時<b>題目在上方</b>，選項在魚身上。',
             '<b>目標</b>：射中顯示<b>正確化學式</b>的魚（數字為<b>下標</b>）。按 <b>R</b> 重新開始。',
-            '<b>只做離子題</b>：化合物命名或電荷比例（M＝陽離子，X＝陰離子）。'
+            '<b>模式</b>：可選擇離子、共價或混合挑戰。'
           ],
           result: '結果',
           continue: '繼續',
           restart: '重新開始',
           streakReset: '連中歸零',
           streakNow: (n) => `連中：${n}`,
-          correctPts: (tag, pts) => `${tag}：正確，+${pts} 分`,
+          correctPts: (tag, pts, diffLabel) => `${tag} (${diffLabel})：正確，+${pts} 分`,
           wrongPts: (tag) => `${tag}：錯誤，−5 分`,
           correctAnswer: (f) => `正確答案：${f}。`,
+          diffEasy: '簡單',
+          diffMedium: '中等',
+          diffHard: '困難',
           qPrompt: (tag) => `${tag}題目`,
           whichFormulaOf: (name) => `${name} 的化學式是？`,
           abstractStem: (cat, anMag) =>
             `陽離子 M（+${cat}）、陰離子 X（−${anMag}）。\n離子化合物的經驗式／化學式是哪一個？`,
+          abstractCovalentStem: (valA, valB) =>
+            `非金屬 A 有 ${valA} 個價電子，B 有 ${valB} 個價電子。\nA 與 B 形成的共價化合物的化學式是哪一個？`,
           fbMiniHint: '射中顯示正確化學式的魚。',
         }
       };
@@ -178,6 +264,11 @@
         document.getElementById('titleMain').textContent = t().titleMain;
         document.getElementById('titleSub').textContent = t().titleSub;
         document.getElementById('langLabel').textContent = t().langLabel;
+        document.getElementById('modeLabel').textContent = t().modeLabel;
+        document.getElementById('durationLabel').textContent = t().durationLabel;
+        document.getElementById('modeIonic').textContent = t().modeIonic;
+        document.getElementById('modeCovalent').textContent = t().modeCovalent;
+        document.getElementById('modeMixed').textContent = t().modeMixed;
         document.getElementById('lblScore').textContent = t().score;
         document.getElementById('lblStreak').textContent = t().streak;
         document.getElementById('lblTime').textContent = t().time;
@@ -192,25 +283,21 @@
       document.getElementById('langEn').addEventListener('click',()=>{setLang('en')});
       document.getElementById('langZh').addEventListener('click',()=>{setLang('zh')});
 
-      function getInitialLangFromQuery() {
-        try {
-          const params = new URLSearchParams(window.location.search || "");
-          const q = (params.get("lang") || "").trim().toLowerCase();
-          if (!q) return null;
-          if (q === "en") return "en";
-          if (q === "zh" || q === "zh-hant" || q === "zh-hk" || q.startsWith("zh")) return "zh";
-          return null;
-        } catch {
-          return null;
-        }
-      }
-
       // ---------- Utils ----------
       const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
       const choice=(arr)=>arr[randInt(0,arr.length-1)];
       const shuffle=(arr)=>{for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr};
       const gcd=(a,b)=>(b===0?Math.abs(a):gcd(b,a%b));
       const lcm=(a,b)=>Math.abs((a/gcd(a,b))*b);
+
+      /** Convert a chemical formula string into a proper LaTeX string with subscripts. */
+      function formulaToLatex(f) {
+        // Wrap any sequence of letters in \text{...}
+        // Wrap any sequence of numbers in _{...}
+        let latex = f.replace(/([A-Z][a-z]?|[a-z]+)/g, '\\text{$1}');
+        latex = latex.replace(/([0-9]+)/g, '_{$1}');
+        return latex;
+      }
 
       /** Choices per question (4-12). */
       const NUM_MCQ_OPTIONS = 6;
@@ -262,7 +349,7 @@
         const nCat=L/Math.abs(cat.charge);
         const nAn=L/Math.abs(an.charge);
         if(lang==='zh'){
-          return `配平電荷：LCM=${L}，下標分別為 ${nCat} 及 ${nAn}。多原子離子下標>1 時要加括號。`;
+          return `配平電荷：最小公倍數 LCM=${L}，陽離子下標為 ${nCat}，陰離子下標為 ${nAn}。多原子離子下標大於 1 時需加括號。`;
         }
         return `Balance charges. LCM=${L}, subscripts ${nCat} and ${nAn}. Brackets needed for polyatomic ions when subscript > 1.`;
       }
@@ -289,12 +376,29 @@
           if(!options.includes(extra)) options.push(extra);
         }
         shuffle(options);
-        return {tag:(lang==='zh'?'離子':'Ionic'),promptKind:'named',promptText,options,correct,explain};
+        return {
+          tag:(lang==='zh'?'離子':'Ionic'),
+          promptKind:'named',
+          promptText,
+          options,
+          correct,
+          explain,
+          compoundType: 'ionic',
+          catSymbol: cat.symbol,
+          anSymbol: an.symbol,
+          catCharge: cat.charge,
+          anChargeMag: Math.abs(an.charge),
+          difficulty: 'hard' // Requires recalling charges AND balancing via LCM
+        };
       }
 
       const CHARGE_SCENARIOS = [
+        { catCharge: 1, anChargeMag: 1, correct: 'MX', wrongPool: ['M2X', 'MX2', 'M3X', 'M2X2', 'MX4', 'M3X2', 'MX3', 'M4X2', 'M2X3', 'M3X3', 'MX5', 'M5X2', 'M4X'] },
+        { catCharge: 2, anChargeMag: 2, correct: 'MX', wrongPool: ['M2X', 'MX2', 'M3X', 'M2X2', 'MX4', 'M3X2', 'MX3', 'M4X2', 'M2X3', 'M3X3', 'MX5', 'M5X2', 'M4X'] },
+        { catCharge: 3, anChargeMag: 3, correct: 'MX', wrongPool: ['M2X', 'MX2', 'M3X', 'M2X2', 'MX4', 'M3X2', 'MX3', 'M4X2', 'M2X3', 'M3X3', 'MX5', 'M5X2', 'M4X'] },
         { catCharge: 2, anChargeMag: 1, correct: 'MX2', wrongPool: ['M2X', 'MX', 'MX3', 'M3X2', 'M2X3', 'M3X', 'M2X2', 'MX4', 'M4X2', 'M3X3', 'M2X4', 'MX5'] },
         { catCharge: 1, anChargeMag: 2, correct: 'M2X', wrongPool: ['MX', 'MX2', 'M3X', 'M2X2', 'MX4', 'M3X2', 'MX3', 'M4X2', 'M2X3', 'M3X3', 'MX5', 'M5X2', 'M4X'] },
+        { catCharge: 3, anChargeMag: 1, correct: 'MX3', wrongPool: ['M3X', 'MX', 'MX2', 'M2X', 'M2X3', 'M3X2', 'MX4', 'M4X', 'M3X3', 'M2X4', 'MX5'] },
         { catCharge: 3, anChargeMag: 2, correct: 'M2X3', wrongPool: ['MX2', 'M3X2', 'MX', 'M2X', 'M3X', 'MX3', 'M2X2', 'M3X3', 'M4X3', 'M2X4', 'MX4', 'M3X4', 'M4X2'] },
       ];
 
@@ -304,7 +408,7 @@
         const nX=L/anChargeMag;
         const disp = displayFormula(pattern);
         if(lang==='zh'){
-          return `總電荷為零：LCM=${L} → M 下標 ${nM}、X 下標 ${nX} → ${disp}。`;
+          return `總電荷為零：最小公倍數 LCM=${L} → 陽離子 M 下標 ${nM}、陰離子 X 下標 ${nX} → 化學式為 ${disp}。`;
         }
         return `Neutral compound: LCM=${L} → M subscript ${nM}, X subscript ${nX} → ${disp}.`;
       }
@@ -335,12 +439,805 @@
           anChargeMag: sc.anChargeMag,
           options,
           correct,
-          explain
+          explain,
+          compoundType: 'ionic',
+          catSymbol: 'M',
+          anSymbol: 'X',
+          difficulty: 'easy' // Charges are provided, only requires balancing via LCM
+        };
+      }
+
+      // ---------- Covalent question generation ----------
+      const COVALENT_COMPOUNDS = [
+        { symbol: "H2O", en: "water", zh: "水" },
+        { symbol: "CO2", en: "carbon dioxide", zh: "二氧化碳" },
+        { symbol: "NH3", en: "ammonia", zh: "氨" },
+        { symbol: "CH4", en: "methane", zh: "甲烷" },
+        { symbol: "HCl", en: "hydrogen chloride", zh: "氯化氫" },
+        { symbol: "O2", en: "oxygen gas", zh: "氧氣" },
+        { symbol: "N2", en: "nitrogen gas", zh: "氮氣" },
+        { symbol: "Cl2", en: "chlorine gas", zh: "氯氣" },
+        { symbol: "H2", en: "hydrogen gas", zh: "氫氣" },
+        { symbol: "F2", en: "fluorine gas", zh: "氟氣" }
+      ];
+
+      function covalentExplain(comp) {
+        if (lang === 'zh') {
+          switch (comp.symbol) {
+            case "H2O": return "氧原子（6個價電子）與兩個氫原子（各1個價電子）共用電子，形成兩個單共價鍵，使氧達到八隅體、氫達到雙電子穩定結構。";
+            case "CO2": return "碳原子（4個價電子）與兩個氧原子（各6個價電子）共用電子，形成兩個雙共價鍵（O=C=O），所有原子均達到八隅體穩定結構。";
+            case "NH3": return "氮原子（5個價電子）與三個氫原子（各1個價電子）共用電子，形成三個單共價鍵，並留有一對孤對電子。";
+            case "CH4": return "碳原子（4個價電子）與四個氫原子（各1個價電子）共用電子，形成四個單共價鍵，達到穩定的飽和結構。";
+            case "HCl": return "氫原子（1個價電子）與氯原子（7個價電子）共用一對電子，形成一個單共價鍵。";
+            case "O2": return "兩個氧原子（各6個價電子）共用兩對電子，形成一個雙共價鍵（O=O）。";
+            case "N2": return "兩個氮原子（各5個價電子）共用三對電子，形成一個強大的三共價鍵（N≡N）。";
+            case "Cl2": return "兩個氯原子（各7個價電子）共用一對電子，形成一個單共價鍵（Cl-Cl）。";
+            case "H2": return "兩個氫原子（各1個價電子）共用一對電子，形成一個單共價鍵（H-H），達到雙電子穩定結構。";
+            case "F2": return "兩個氟原子（各7個價電子）共用一對電子，形成一個單共價鍵（F-F）。";
+            default: return "原子間通過共用價電子對形成共價鍵，使所有原子達到穩定的電子排布。";
+          }
+        } else {
+          switch (comp.symbol) {
+            case "H2O": return "Oxygen (6 valence electrons) shares electrons with two Hydrogen atoms (1 valence electron each) to form two single covalent bonds, achieving stable octet and duplet configurations.";
+            case "CO2": return "Carbon (4 valence electrons) shares electrons with two Oxygen atoms (6 valence electrons each) to form two double covalent bonds (O=C=O), achieving octets for all atoms.";
+            case "NH3": return "Nitrogen (5 valence electrons) shares electrons with three Hydrogen atoms (1 valence electron each) to form three single covalent bonds, leaving one lone pair.";
+            case "CH4": return "Carbon (4 valence electrons) shares electrons with four Hydrogen atoms (1 valence electron each) to form four single covalent bonds.";
+            case "HCl": return "Hydrogen (1 valence electron) and Chlorine (7 valence electrons) share one pair of electrons to form a single covalent bond.";
+            case "O2": return "Two Oxygen atoms (6 valence electrons each) share two pairs of electrons to form a double covalent bond (O=O).";
+            case "N2": return "Two Nitrogen atoms (5 valence electrons each) share three pairs of electrons to form a strong triple covalent bond (N≡N).";
+            case "Cl2": return "Two Chlorine atoms (7 valence electrons each) share one pair of electrons to form a single covalent bond (Cl-Cl).";
+            case "H2": return "Two Hydrogen atoms (1 valence electron each) share one pair of electrons to form a single covalent bond (H-H), achieving stable duplets.";
+            case "F2": return "Two Fluorine atoms (7 valence electrons each) share one pair of electrons to form a single covalent bond (F-F).";
+            default: return "Atoms share valence electron pairs to form covalent bonds, allowing all atoms to achieve stable configurations.";
+          }
+        }
+      }
+
+      function buildCovalentMCQ() {
+        const comp = choice(COVALENT_COMPOUNDS);
+        const correct = comp.symbol;
+        const promptText = (lang === 'zh') ? comp.zh : comp.en;
+        const explain = covalentExplain(comp);
+
+        const wrong1 = correct.replace("2", "").replace("3", "").replace("4", "");
+        const wrong2 = (() => {
+          if (correct.includes("2")) return correct.replace("2", "3");
+          if (correct.includes("3")) return correct.replace("3", "2");
+          if (correct.includes("4")) return correct.replace("4", "2");
+          return correct + "2";
+        })();
+        const wrong3 = (() => {
+          if (correct === "H2O") return "HO2";
+          if (correct === "CO2") return "C2O";
+          if (correct === "NH3") return "N3H";
+          if (correct === "CH4") return "C4H";
+          if (correct === "HCl") return "ClH";
+          return correct + "3";
+        })();
+
+        const options = [correct, wrong1, wrong2, wrong3].filter((v, i, a) => a.indexOf(v) === i).slice(0, NUM_MCQ_OPTIONS);
+        while (options.length < NUM_MCQ_OPTIONS) {
+          const extraComp = choice(COVALENT_COMPOUNDS);
+          const extra = extraComp.symbol;
+          if (!options.includes(extra)) options.push(extra);
+        }
+        shuffle(options);
+        return {
+          tag: (lang === 'zh' ? '共價' : 'Covalent'),
+          promptKind: 'named',
+          promptText,
+          options,
+          correct,
+          explain,
+          compoundType: 'covalent',
+          compKey: comp.symbol,
+          difficulty: 'medium' // Requires knowing/recalling specific covalent formula
+        };
+      }
+
+      const COVALENT_SCENARIOS = [
+        { valA: 4, valB: 7, correct: 'AB4', wrongPool: ['A4B', 'AB', 'AB2', 'A2B', 'A2B3', 'AB3', 'A3B', 'A2B4'] },
+        { valA: 5, valB: 1, correct: 'AB3', wrongPool: ['A3B', 'AB', 'AB2', 'A2B', 'A2B3', 'AB5', 'A5B', 'A3B2'] },
+        { valA: 6, valB: 1, correct: 'AB2', wrongPool: ['A2B', 'AB', 'AB3', 'A3B', 'A2B3', 'AB4', 'A4B'] },
+        { valA: 4, valB: 6, correct: 'AB2', wrongPool: ['A2B', 'AB', 'AB4', 'A2B3', 'A3B2', 'A4B2'] },
+        { valA: 7, valB: 1, correct: 'AB',  wrongPool: ['A2B', 'AB2', 'A2B2', 'A3B', 'AB3'] }
+      ];
+
+      function abstractCovalentExplain(valA, valB, pattern) {
+        const needA = 8 - valA;
+        const needB = valB === 1 ? 1 : 8 - valB;
+        const disp = displayFormula(pattern);
+        if (lang === 'zh') {
+          return `非金屬 A 價電子數為 ${valA}（需 ${needA} 個電子達飽和），B 價電子數為 ${valB}（需 ${needB} 個電子達飽和）。共用電子對：A 與 B 按比例結合，形成共價分子 ${disp}。`;
+        }
+        return `Non-metal A has ${valA} valence electrons (needs ${needA} to complete octet), B has ${valB} valence electrons (needs ${needB} to complete octet/duplet). They share electrons in a ratio to form covalent molecule ${disp}.`;
+      }
+
+      function buildAbstractCovalentMCQ() {
+        const sc = choice(COVALENT_SCENARIOS);
+        const correct = sc.correct;
+        const need = NUM_MCQ_OPTIONS - 1;
+        let pool = [...new Set(sc.wrongPool.filter(w => w !== correct))];
+        shuffle(pool);
+        const picks = pool.slice(0, need);
+        while (picks.length < need) {
+          const x = choice(sc.wrongPool);
+          if (x !== correct && !picks.includes(x)) picks.push(x);
+        }
+        const options = shuffle([correct, ...picks]);
+        const explain = abstractCovalentExplain(sc.valA, sc.valB, correct);
+        return {
+          tag: (lang === 'zh' ? '共價' : 'Covalent'),
+          promptKind: 'abstract',
+          valA: sc.valA,
+          valB: sc.valB,
+          options,
+          correct,
+          explain,
+          compoundType: 'covalent',
+          compKey: correct,
+          difficulty: 'medium' // Requires calculating sharing ratio based on valence electrons
         };
       }
 
       function nextQuestion(){
-        return Math.random() < 0.5 ? buildIonicMCQ() : buildAbstractRatioMCQ();
+        if (state.gameMode === 'ionic') {
+          return Math.random() < 0.5 ? buildIonicMCQ() : buildAbstractRatioMCQ();
+        } else if (state.gameMode === 'covalent') {
+          return Math.random() < 0.5 ? buildCovalentMCQ() : buildAbstractCovalentMCQ();
+        } else {
+          const r = Math.random();
+          if (r < 0.25) return buildIonicMCQ();
+          if (r < 0.50) return buildAbstractRatioMCQ();
+          if (r < 0.75) return buildCovalentMCQ();
+          return buildAbstractCovalentMCQ();
+        }
+      }
+
+      // ---------- Sound FX (Web Audio API Synthesizer) ----------
+      class SoundFX {
+        constructor() {
+          this.ctx = null;
+        }
+        init() {
+          if (this.ctx) return;
+          try {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          } catch (e) {
+            console.warn("Web Audio API not supported", e);
+          }
+        }
+        playShoot() {
+          this.init();
+          if (!this.ctx) return;
+          if (this.ctx.state === 'suspended') this.ctx.resume();
+
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(850, this.ctx.currentTime + 0.12);
+
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.12);
+        }
+        playCorrect() {
+          this.init();
+          if (!this.ctx) return;
+          if (this.ctx.state === 'suspended') this.ctx.resume();
+
+          const now = this.ctx.currentTime;
+          const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+          notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+
+            gain.gain.setValueAtTime(0.1, now + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.35);
+
+            osc.start(now + i * 0.08);
+            osc.stop(now + i * 0.08 + 0.35);
+          });
+        }
+        playWrong() {
+          this.init();
+          if (!this.ctx) return;
+          if (this.ctx.state === 'suspended') this.ctx.resume();
+
+          const now = this.ctx.currentTime;
+          const osc1 = this.ctx.createOscillator();
+          const osc2 = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc1.type = 'sawtooth';
+          osc2.type = 'sawtooth';
+
+          osc1.frequency.setValueAtTime(150, now);
+          osc1.frequency.linearRampToValueAtTime(80, now + 0.25);
+
+          osc2.frequency.setValueAtTime(145, now);
+          osc2.frequency.linearRampToValueAtTime(75, now + 0.25);
+
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+
+          osc1.start();
+          osc2.start();
+          osc1.stop(now + 0.25);
+          osc2.stop(now + 0.25);
+        }
+        playGameOver() {
+          this.init();
+          if (!this.ctx) return;
+          if (this.ctx.state === 'suspended') this.ctx.resume();
+
+          const now = this.ctx.currentTime;
+          const notes = [392.00, 349.23, 311.13, 261.63]; // G4, F4, Eb4, C4
+          notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.18);
+
+            gain.gain.setValueAtTime(0.12, now + i * 0.18);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.18 + 0.4);
+
+            osc.start(now + i * 0.18);
+            osc.stop(now + i * 0.18 + 0.4);
+          });
+        }
+      }
+
+      window.soundFX = new SoundFX();
+
+      // ---------- Interactive SVG Dot-and-Cross Diagrams Data ----------
+      const DIAGRAM_DATA = {
+        "H2O": {
+          type: "covalent",
+          formula: "H₂O",
+          latex: "\\text{H}_2\\text{O}",
+          atoms: [
+            { id: "H1", sym: "H", val: 1, style: "cross", x1: 70, y1: 125, x2: 120, y2: 125, x3: 135, y3: 125, r: 35 },
+            { id: "O", sym: "O", val: 6, style: "dot", x1: 200, y1: 125, x2: 200, y2: 125, x3: 200, y3: 125, r: 55 },
+            { id: "H2", sym: "H", val: 1, style: "cross", x1: 330, y1: 125, x2: 280, y2: 125, x3: 265, y3: 125, r: 35 }
+          ],
+          bonds: [
+            { from: "H1", to: "O", pairs: 1, cx: 167.5, cy: 125 },
+            { from: "H2", to: "O", pairs: 1, cx: 232.5, cy: 125 }
+          ],
+          lones: [
+            { atom: "O", count: 4, style: "dot", positions: [{x: 200, y: 85}, {x: 200, y: 165}] }
+          ]
+        },
+        "CO2": {
+          type: "covalent",
+          formula: "CO₂",
+          latex: "\\text{CO}_2",
+          atoms: [
+            { id: "O1", sym: "O", val: 6, style: "cross", x1: 70, y1: 125, x2: 110, y2: 125, x3: 125, y3: 125, r: 50 },
+            { id: "C", sym: "C", val: 4, style: "dot", x1: 200, y1: 125, x2: 200, y2: 125, x3: 200, y3: 125, r: 55 },
+            { id: "O2", sym: "O", val: 6, style: "cross", x1: 330, y1: 125, x2: 290, y2: 125, x3: 275, y3: 125, r: 50 }
+          ],
+          bonds: [
+            { from: "O1", to: "C", pairs: 2, cx: 162.5, cy: 125 },
+            { from: "O2", to: "C", pairs: 2, cx: 237.5, cy: 125 }
+          ],
+          lones: [
+            { atom: "O1", count: 4, style: "cross", positions: [{x: 95, y: 100}, {x: 95, y: 150}] },
+            { atom: "O2", count: 4, style: "cross", positions: [{x: 305, y: 100}, {x: 305, y: 150}] }
+          ]
+        },
+        "NH3": {
+          type: "covalent",
+          formula: "NH₃",
+          latex: "\\text{NH}_3",
+          atoms: [
+            { id: "H1", sym: "H", val: 1, style: "cross", x1: 70, y1: 125, x2: 115, y2: 125, x3: 130, y3: 125, r: 35 },
+            { id: "N", sym: "N", val: 5, style: "dot", x1: 200, y1: 125, x2: 200, y2: 125, x3: 200, y3: 125, r: 55 },
+            { id: "H2", sym: "H", val: 1, style: "cross", x1: 330, y1: 125, x2: 285, y2: 125, x3: 270, y3: 125, r: 35 },
+            { id: "H3", sym: "H", val: 1, style: "cross", x1: 200, y1: 240, x2: 200, y2: 195, x3: 200, y3: 180, r: 35 }
+          ],
+          bonds: [
+            { from: "H1", to: "N", pairs: 1, cx: 165, cy: 125 },
+            { from: "H2", to: "N", pairs: 1, cx: 235, cy: 125 },
+            { from: "H3", to: "N", pairs: 1, cx: 200, cy: 152.5 }
+          ],
+          lones: [
+            { atom: "N", count: 2, style: "dot", positions: [{x: 200, y: 85}] }
+          ]
+        },
+        "CH4": {
+          type: "covalent",
+          formula: "CH₄",
+          latex: "\\text{CH}_4",
+          atoms: [
+            { id: "H1", sym: "H", val: 1, style: "cross", x1: 70, y1: 125, x2: 115, y2: 125, x3: 130, y3: 125, r: 35 },
+            { id: "C", sym: "C", val: 4, style: "dot", x1: 200, y1: 125, x2: 200, y2: 125, x3: 200, y3: 125, r: 55 },
+            { id: "H2", sym: "H", val: 1, style: "cross", x1: 330, y1: 125, x2: 285, y2: 125, x3: 270, y3: 125, r: 35 },
+            { id: "H3", sym: "H", val: 1, style: "cross", x1: 200, y1: 240, x2: 200, y2: 195, x3: 200, y3: 180, r: 35 },
+            { id: "H4", sym: "H", val: 1, style: "cross", x1: 200, y1: 10, x2: 200, y2: 55, x3: 200, y3: 70, r: 35 }
+          ],
+          bonds: [
+            { from: "H1", to: "C", pairs: 1, cx: 165, cy: 125 },
+            { from: "H2", to: "C", pairs: 1, cx: 235, cy: 125 },
+            { from: "H3", to: "C", pairs: 1, cx: 200, cy: 152.5 },
+            { from: "H4", to: "C", pairs: 1, cx: 200, cy: 97.5 }
+          ],
+          lones: []
+        },
+        "HCl": {
+          type: "covalent",
+          formula: "HCl",
+          latex: "\\text{HCl}",
+          atoms: [
+            { id: "H", sym: "H", val: 1, style: "cross", x1: 110, y1: 125, x2: 145, y2: 125, x3: 155, y3: 125, r: 35 },
+            { id: "Cl", sym: "Cl", val: 7, style: "dot", x1: 260, y1: 125, x2: 235, y2: 125, x3: 225, y3: 125, r: 55 }
+          ],
+          bonds: [
+            { from: "H", to: "Cl", pairs: 1, cx: 190, cy: 125 }
+          ],
+          lones: [
+            { atom: "Cl", count: 6, style: "dot", positions: [{x: 225, y: 85}, {x: 260, y: 165}, {x: 260, y: 85}] }
+          ]
+        },
+        "O2": {
+          type: "covalent",
+          formula: "O₂",
+          latex: "\\text{O}_2",
+          atoms: [
+            { id: "O1", sym: "O", val: 6, style: "cross", x1: 120, y1: 125, x2: 140, y2: 125, x3: 145, y3: 125, r: 55 },
+            { id: "O2", sym: "O", val: 6, style: "dot", x1: 280, y1: 125, x2: 260, y2: 125, x3: 255, y3: 125, r: 55 }
+          ],
+          bonds: [
+            { from: "O1", to: "O2", pairs: 2, cx: 200, cy: 125 }
+          ],
+          lones: [
+            { atom: "O1", count: 4, style: "cross", positions: [{x: 115, y: 90}, {x: 115, y: 160}] },
+            { atom: "O2", count: 4, style: "dot", positions: [{x: 285, y: 90}, {x: 285, y: 160}] }
+          ]
+        },
+        "N2": {
+          type: "covalent",
+          formula: "N₂",
+          latex: "\\text{N}_2",
+          atoms: [
+            { id: "N1", sym: "N", val: 5, style: "cross", x1: 120, y1: 125, x2: 140, y2: 125, x3: 145, y3: 125, r: 55 },
+            { id: "N2", sym: "N", val: 5, style: "dot", x1: 280, y1: 125, x2: 260, y2: 125, x3: 255, y3: 125, r: 55 }
+          ],
+          bonds: [
+            { from: "N1", to: "N2", pairs: 3, cx: 200, cy: 125 }
+          ],
+          lones: [
+            { atom: "N1", count: 2, style: "cross", positions: [{x: 105, y: 125}] },
+            { atom: "N2", count: 2, style: "dot", positions: [{x: 295, y: 125}] }
+          ]
+        },
+        "Cl2": {
+          type: "covalent",
+          formula: "Cl₂",
+          latex: "\\text{Cl}_2",
+          atoms: [
+            { id: "Cl1", sym: "Cl", val: 7, style: "cross", x1: 120, y1: 125, x2: 140, y2: 125, x3: 145, y3: 125, r: 55 },
+            { id: "Cl2", sym: "Cl", val: 7, style: "dot", x1: 280, y1: 125, x2: 260, y2: 125, x3: 255, y3: 125, r: 55 }
+          ],
+          bonds: [
+            { from: "Cl1", to: "Cl2", pairs: 1, cx: 200, cy: 125 }
+          ],
+          lones: [
+            { atom: "Cl1", count: 6, style: "cross", positions: [{x: 115, y: 85}, {x: 115, y: 165}, {x: 100, y: 125}] },
+            { atom: "Cl2", count: 6, style: "dot", positions: [{x: 285, y: 85}, {x: 285, y: 165}, {x: 300, y: 125}] }
+          ]
+        },
+        "H2": {
+          type: "covalent",
+          formula: "H₂",
+          latex: "\\text{H}_2",
+          atoms: [
+            { id: "H1", sym: "H", val: 1, style: "cross", x1: 130, y1: 125, x2: 155, y2: 125, x3: 165, y3: 125, r: 35 },
+            { id: "H2", sym: "H", val: 1, style: "dot", x1: 270, y1: 125, x2: 245, y2: 125, x3: 235, y3: 125, r: 35 }
+          ],
+          bonds: [
+            { from: "H1", to: "H2", pairs: 1, cx: 200, cy: 125 }
+          ],
+          lones: []
+        },
+        "F2": {
+          type: "covalent",
+          formula: "F₂",
+          latex: "\\text{F}_2",
+          atoms: [
+            { id: "F1", sym: "F", val: 7, style: "cross", x1: 120, y1: 125, x2: 140, y2: 125, x3: 145, y3: 125, r: 55 },
+            { id: "F2", sym: "F", val: 7, style: "dot", x1: 280, y1: 125, x2: 260, y2: 125, x3: 255, y3: 125, r: 55 }
+          ],
+          bonds: [
+            { from: "F1", to: "F2", pairs: 1, cx: 200, cy: 125 }
+          ],
+          lones: [
+            { atom: "F1", count: 6, style: "cross", positions: [{x: 115, y: 85}, {x: 115, y: 165}, {x: 100, y: 125}] },
+            { atom: "F2", count: 6, style: "dot", positions: [{x: 285, y: 85}, {x: 285, y: 165}, {x: 300, y: 125}] }
+          ]
+        }
+      };
+
+      const IONIC_DIAGRAM_DATA = {
+        "NaCl": {
+          type: "ionic",
+          formula: "NaCl",
+          latex: "\\text{NaCl}",
+          cations: [
+            { sym: "Na", charge: "+1", x1: 120, y1: 125, x3: 130, y3: 125, r: 35, val: 1, style: "dot" }
+          ],
+          anions: [
+            { sym: "Cl", charge: "-1", x1: 280, y1: 125, x3: 270, y3: 125, r: 55, val: 7, style: "cross" }
+          ],
+          transferArrows: [
+            { fromX: 120, fromY: 90, toX: 235, toY: 125 }
+          ],
+          step3Electrons: {
+            cationLones: [],
+            anionLones: [
+              { atomIdx: 0, count: 8, styles: ["cross","cross","cross","cross","cross","cross","cross","dot"], positions: [{x: 270, y: 80}, {x: 270, y: 170}, {x: 225, y: 125}, {x: 315, y: 125}] }
+            ]
+          }
+        },
+        "MgO": {
+          type: "ionic",
+          formula: "MgO",
+          latex: "\\text{MgO}",
+          cations: [
+            { sym: "Mg", charge: "+2", x1: 120, y1: 125, x3: 130, y3: 125, r: 35, val: 2, style: "dot" }
+          ],
+          anions: [
+            { sym: "O", charge: "-2", x1: 280, y1: 125, x3: 270, y3: 125, r: 55, val: 6, style: "cross" }
+          ],
+          transferArrows: [
+            { fromX: 120, fromY: 90, toX: 235, toY: 110 },
+            { fromX: 120, fromY: 160, toX: 235, toY: 140 }
+          ],
+          step3Electrons: {
+            cationLones: [],
+            anionLones: [
+              { atomIdx: 0, count: 8, styles: ["cross","cross","cross","cross","dot","dot","cross","cross"], positions: [{x: 270, y: 80}, {x: 270, y: 170}, {x: 225, y: 125}, {x: 315, y: 125}] }
+            ]
+          }
+        },
+        "MgCl2": {
+          type: "ionic",
+          formula: "MgCl₂",
+          latex: "\\text{MgCl}_2",
+          cations: [
+            { sym: "Mg", charge: "+2", x1: 200, y1: 125, x3: 200, y3: 125, r: 35, val: 2, style: "dot" }
+          ],
+          anions: [
+            { sym: "Cl", charge: "-1", x1: 80, y1: 125, x3: 110, y3: 125, r: 50, val: 7, style: "cross", idx: 0 },
+            { sym: "Cl", charge: "-1", x1: 320, y1: 125, x3: 290, y3: 125, r: 50, val: 7, style: "cross", idx: 1 }
+          ],
+          transferArrows: [
+            { fromX: 200, fromY: 90, toX: 125, toY: 125 },
+            { fromX: 200, fromY: 160, toX: 275, toY: 125 }
+          ],
+          step3Electrons: {
+            cationLones: [],
+            anionLones: [
+              { atomIdx: 0, count: 8, styles: ["cross","cross","cross","cross","cross","cross","cross","dot"], positions: [{x: 110, y: 85}, {x: 110, y: 165}, {x: 70, y: 125}, {x: 150, y: 125}] },
+              { atomIdx: 1, count: 8, styles: ["cross","cross","cross","cross","cross","cross","cross","dot"], positions: [{x: 290, y: 85}, {x: 290, y: 165}, {x: 250, y: 125}, {x: 330, y: 125}] }
+            ]
+          }
+        },
+        "Na2O": {
+          type: "ionic",
+          formula: "Na₂O",
+          latex: "\\text{Na}_2\\text{O}",
+          cations: [
+            { sym: "Na", charge: "+1", x1: 80, y1: 125, x3: 110, y3: 125, r: 35, val: 1, style: "dot", idx: 0 },
+            { sym: "Na", charge: "+1", x1: 320, y1: 125, x3: 290, y3: 125, r: 35, val: 1, style: "dot", idx: 1 }
+          ],
+          anions: [
+            { sym: "O", charge: "-2", x1: 200, y1: 125, x3: 200, y3: 125, r: 55, val: 6, style: "cross" }
+          ],
+          transferArrows: [
+            { fromX: 80, fromY: 90, toX: 155, toY: 125 },
+            { fromX: 320, fromY: 90, toX: 245, toY: 125 }
+          ],
+          step3Electrons: {
+            cationLones: [],
+            anionLones: [
+              { atomIdx: 0, count: 8, styles: ["cross","cross","cross","cross","cross","cross","dot","dot"], positions: [{x: 200, y: 80}, {x: 200, y: 170}, {x: 155, y: 125}, {x: 245, y: 125}] }
+            ]
+          }
+        }
+      };
+
+      function getDiagramTemplate(q) {
+        const key = q.compKey || q.correct;
+        if (q.compoundType === 'covalent') {
+          if (DIAGRAM_DATA[key]) {
+            const t = JSON.parse(JSON.stringify(DIAGRAM_DATA[key]));
+            t.latex = formulaToLatex(t.formula);
+            return t;
+          }
+          if (key.endsWith('4')) {
+            const t = JSON.parse(JSON.stringify(DIAGRAM_DATA["CH4"]));
+            t.formula = q.correct;
+            t.latex = formulaToLatex(q.correct);
+            t.atoms[1].sym = "A";
+            t.atoms[0].sym = t.atoms[2].sym = t.atoms[3].sym = t.atoms[4].sym = "B";
+            return t;
+          }
+          if (key.endsWith('3')) {
+            const t = JSON.parse(JSON.stringify(DIAGRAM_DATA["NH3"]));
+            t.formula = q.correct;
+            t.latex = formulaToLatex(q.correct);
+            t.atoms[1].sym = "A";
+            t.atoms[0].sym = t.atoms[2].sym = t.atoms[3].sym = "B";
+            return t;
+          }
+          if (key.endsWith('2')) {
+            const isDouble = (q.valA === 4 && q.valB === 6) || key === 'CO2' || key === 'SO2';
+            const templateKey = isDouble ? "CO2" : "H2O";
+            const t = JSON.parse(JSON.stringify(DIAGRAM_DATA[templateKey]));
+            t.formula = q.correct;
+            t.latex = formulaToLatex(q.correct);
+            t.atoms[1].sym = "A";
+            t.atoms[0].sym = t.atoms[2].sym = "B";
+            return t;
+          }
+          const t = JSON.parse(JSON.stringify(DIAGRAM_DATA["HCl"]));
+          t.formula = q.correct;
+          t.latex = formulaToLatex(q.correct);
+          t.atoms[0].sym = "A";
+          t.atoms[1].sym = "B";
+          return t;
+        } else {
+          // Dynamic Cation & Anion Charge Formatting (HKDSE standard: number then sign, e.g., 3+, 2+)
+          const catChgStr = q.catCharge === 1 ? "+" : q.catCharge + "+";
+          const anChgStr = q.anChargeMag === 1 ? "-" : q.anChargeMag + "-";
+
+          let t;
+          if (IONIC_DIAGRAM_DATA[key]) {
+            t = JSON.parse(JSON.stringify(IONIC_DIAGRAM_DATA[key]));
+          } else if (key === 'MX2' || (q.anChargeMag === 1 && q.catCharge === 2)) {
+            t = JSON.parse(JSON.stringify(IONIC_DIAGRAM_DATA["MgCl2"]));
+            t.cations[0].sym = q.catSymbol || "M";
+            t.anions[0].sym = t.anions[1].sym = q.anSymbol || "X";
+          } else if (key === 'M2X' || (q.anChargeMag === 2 && q.catCharge === 1)) {
+            t = JSON.parse(JSON.stringify(IONIC_DIAGRAM_DATA["Na2O"]));
+            t.cations[0].sym = t.cations[1].sym = q.catSymbol || "M";
+            t.anions[0].sym = q.anSymbol || "X";
+          } else {
+            // Default 1:1 fallback (e.g. NaCl, MgO, Al2(SO4)3 shown as unit ratio)
+            t = JSON.parse(JSON.stringify(IONIC_DIAGRAM_DATA["NaCl"]));
+            t.cations[0].sym = q.catSymbol || "M";
+            t.anions[0].sym = q.anSymbol || "X";
+          }
+
+          // Override charges dynamically to ensure chemical correctness
+          t.cations.forEach(c => { c.charge = catChgStr; });
+          t.anions.forEach(a => { a.charge = anChgStr; });
+
+          t.formula = q.correct;
+          t.latex = formulaToLatex(q.correct);
+          return t;
+        }
+      }
+
+      function buildSVGString(template, step, hoveredAtomId) {
+        let svg = `<svg width="100%" height="100%" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" style="background:transparent;">`;
+
+        svg += `<style>
+          @keyframes pulse {
+            0% { stroke-opacity: 0.3; stroke-width: 1.5; }
+            50% { stroke-opacity: 0.8; stroke-width: 3; }
+            100% { stroke-opacity: 0.3; stroke-width: 1.5; }
+          }
+          .shell-glow { animation: pulse 2s infinite; }
+          .atom-text { font-family: 'Inter', system-ui; font-weight: 800; font-size: 16px; fill: #f9fafb; text-anchor: middle; dominant-baseline: middle; }
+          .charge-text { font-family: 'Inter', system-ui; font-weight: 800; font-size: 11px; fill: #60a5fa; text-anchor: middle; }
+        </style>`;
+
+        if (template.type === 'covalent') {
+          const atoms = template.atoms;
+
+          atoms.forEach(a => {
+            const x = step === 1 ? a.x1 : step === 2 ? a.x2 : a.x3;
+            const y = step === 1 ? a.y1 : step === 2 ? a.y2 : a.y3;
+            const r = a.r;
+
+            let shellColor = 'rgba(255, 255, 255, 0.2)';
+            let isGlow = false;
+            if (step === 3) {
+              if (hoveredAtomId === a.id) {
+                shellColor = '#10b981';
+                isGlow = true;
+              } else {
+                shellColor = 'rgba(96, 165, 250, 0.3)';
+              }
+            }
+
+            svg += `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${shellColor}" stroke-width="${isGlow ? 3 : 1.5}" class="${isGlow ? '' : 'shell-glow'}" style="${isGlow ? 'filter: drop-shadow(0 0 4px #10b981);' : ''}" />`;
+
+            svg += `<circle cx="${x}" cy="${y}" r="15" fill="#0b0f19" stroke="rgba(255,255,255,0.1)" />`;
+            svg += `<text x="${x}" y="${y}" class="atom-text">${a.sym}</text>`;
+
+            if (step === 3) {
+              svg += `<circle cx="${x}" cy="${y}" r="${r + 10}" fill="transparent" style="cursor: pointer;" onmouseover="window.highlightAtom('${a.id}')" onmouseout="window.clearHighlightAtom()" />`;
+            }
+          });
+
+          if (step === 1 || step === 2) {
+            atoms.forEach(a => {
+              const x = step === 1 ? a.x1 : step === 2 ? a.x2 : a.x3;
+              const y = step === 1 ? a.y1 : step === 2 ? a.y2 : a.y3;
+              const r = a.r;
+              const val = a.val;
+              const style = a.style;
+
+              for (let i = 0; i < val; i++) {
+                const angle = (i * 2 * Math.PI) / val - Math.PI / 2;
+                svg += drawElectron(x, y, style, angle, r);
+              }
+            });
+
+            if (step === 2) {
+              template.bonds.forEach(b => {
+                const fromAtom = atoms.find(a => a.id === b.from);
+                const toAtom = atoms.find(a => a.id === b.to);
+                if (fromAtom && toAtom) {
+                  const fx = (fromAtom.x2 + toAtom.x2) / 2;
+                  const fy = (fromAtom.y2 + toAtom.y2) / 2;
+                  svg += `<g stroke="#3b82f6" stroke-width="1.5" fill="none" style="filter: drop-shadow(0 0 2px #3b82f6);">
+                    <path d="M ${fromAtom.x2} ${fromAtom.y2} Q ${fx} ${fy - 15} ${b.cx} ${b.cy}" stroke-dasharray="3,3" />
+                    <path d="M ${toAtom.x2} ${toAtom.y2} Q ${fx} ${fy + 15} ${b.cx} ${b.cy}" stroke-dasharray="3,3" />
+                  </g>`;
+                }
+              });
+            }
+          } else if (step === 3) {
+            template.bonds.forEach(b => {
+              const pairs = b.pairs;
+              for (let i = 0; i < pairs; i++) {
+                const dy = pairs === 1 ? 0 : (i - (pairs - 1) / 2) * 14;
+                svg += drawElectron(b.cx - 6, b.cy + dy, 'cross', 0, 0);
+                svg += drawElectron(b.cx + 6, b.cy + dy, 'dot', 0, 0);
+              }
+            });
+
+            template.lones.forEach(l => {
+              const atom = atoms.find(a => a.id === l.atom);
+              if (atom) {
+                l.positions.forEach(pos => {
+                  svg += drawElectron(pos.x - 6, pos.y, l.style, 0, 0);
+                  svg += drawElectron(pos.x + 6, pos.y, l.style, 0, 0);
+                });
+              }
+            });
+          }
+        } else {
+          const cations = template.cations;
+          const anions = template.anions;
+
+          if (step === 1 || step === 2) {
+            cations.forEach(c => {
+              const x = c.x1;
+              const y = c.y1;
+              svg += `<circle cx="${x}" cy="${y}" r="${c.r}" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" class="shell-glow" />`;
+              svg += `<circle cx="${x}" cy="${y}" r="15" fill="#0b0f19" stroke="rgba(255,255,255,0.1)" />`;
+              svg += `<text x="${x}" y="${y}" class="atom-text">${c.sym}</text>`;
+
+              for (let i = 0; i < c.val; i++) {
+                const angle = (i * 2 * Math.PI) / c.val - Math.PI / 2;
+                svg += drawElectron(x, y, c.style, angle, c.r);
+              }
+            });
+
+            anions.forEach(a => {
+              const x = a.x1;
+              const y = a.y1;
+              svg += `<circle cx="${x}" cy="${y}" r="${a.r}" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" class="shell-glow" />`;
+              svg += `<circle cx="${x}" cy="${y}" r="15" fill="#0b0f19" stroke="rgba(255,255,255,0.1)" />`;
+              svg += `<text x="${x}" y="${y}" class="atom-text">${a.sym}</text>`;
+
+              for (let i = 0; i < a.val; i++) {
+                const angle = (i * 2 * Math.PI) / a.val - Math.PI / 2;
+                svg += drawElectron(x, y, a.style, angle, a.r);
+              }
+            });
+
+            if (step === 2 && template.transferArrows) {
+              template.transferArrows.forEach(arr => {
+                svg += `<g stroke="#ef4444" stroke-width="2" fill="none" style="filter: drop-shadow(0 0 3px #ef4444);">
+                  <path d="M ${arr.fromX} ${arr.fromY} Q ${(arr.fromX + arr.toX)/2} ${arr.fromY - 30} ${arr.toX} ${arr.toY}" stroke-dasharray="3,3" />
+                  <polygon points="${arr.toX},${arr.toY} ${arr.toX - 8},${arr.toY - 2} ${arr.toX - 2},${arr.toY - 8}" fill="#ef4444" />
+                </g>`;
+              });
+            }
+          } else if (step === 3) {
+            cations.forEach((c, idx) => {
+              const x = c.x3;
+              const y = c.y3;
+
+              const isGlow = hoveredAtomId === `C${idx}`;
+              const shellColor = isGlow ? '#10b981' : 'rgba(96, 165, 250, 0.3)';
+
+              svg += `<circle cx="${x}" cy="${y}" r="${c.r}" fill="none" stroke="${shellColor}" stroke-width="${isGlow ? 3 : 1.5}" />`;
+              svg += `<circle cx="${x}" cy="${y}" r="15" fill="#0b0f19" stroke="rgba(255,255,255,0.1)" />`;
+              svg += `<text x="${x}" y="${y}" class="atom-text">${c.sym}</text>`;
+
+              svg += `<g stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none">
+                <path d="M ${x - 22} ${y - 25} L ${x - 28} ${y - 25} L ${x - 28} ${y + 25} L ${x - 22} ${y + 25}" />
+                <path d="M ${x + 22} ${y - 25} L ${x + 28} ${y - 25} L ${x + 28} ${y + 25} L ${x + 22} ${y + 25}" />
+              </g>`;
+              svg += `<text x="${x + 36}" y="${y - 18}" class="charge-text">${c.charge}</text>`;
+
+              svg += `<circle cx="${x}" cy="${y}" r="${c.r + 10}" fill="transparent" style="cursor: pointer;" onmouseover="window.highlightAtom('C${idx}')" onmouseout="window.clearHighlightAtom()" />`;
+            });
+
+            anions.forEach((a, idx) => {
+              const x = a.x3;
+              const y = a.y3;
+
+              const isGlow = hoveredAtomId === `A${idx}`;
+              const shellColor = isGlow ? '#10b981' : 'rgba(96, 165, 250, 0.3)';
+
+              svg += `<circle cx="${x}" cy="${y}" r="${a.r}" fill="none" stroke="${shellColor}" stroke-width="${isGlow ? 3 : 1.5}" />`;
+              svg += `<circle cx="${x}" cy="${y}" r="15" fill="#0b0f19" stroke="rgba(255,255,255,0.1)" />`;
+              svg += `<text x="${x}" y="${y}" class="atom-text">${a.sym}</text>`;
+
+              const electrons = template.step3Electrons.anionLones.find(l => l.atomIdx === idx || l.atomIdx === a.idx);
+              if (electrons) {
+                electrons.positions.forEach((pos, eIdx) => {
+                  const style1 = electrons.styles[eIdx * 2];
+                  const style2 = electrons.styles[eIdx * 2 + 1];
+                  svg += drawElectron(pos.x - 6, pos.y, style1, 0, 0);
+                  svg += drawElectron(pos.x + 6, pos.y, style2, 0, 0);
+                });
+              }
+
+              svg += `<g stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none">
+                <path d="M ${x - a.r - 4} ${y - a.r - 4} L ${x - a.r - 10} ${y - a.r - 4} L ${x - a.r - 10} ${y + a.r + 4} L ${x - a.r - 4} ${y + a.r + 4}" />
+                <path d="M ${x + a.r + 4} ${y - a.r - 4} L ${x + a.r + 10} ${y - a.r - 4} L ${x + a.r + 10} ${y + a.r + 4} L ${x + a.r + 4} ${y + a.r + 4}" />
+              </g>`;
+              svg += `<text x="${x + a.r + 18}" y="${y - a.r}" class="charge-text">${a.charge}</text>`;
+
+              svg += `<circle cx="${x}" cy="${y}" r="${a.r + 10}" fill="transparent" style="cursor: pointer;" onmouseover="window.highlightAtom('A${idx}')" onmouseout="window.clearHighlightAtom()" />`;
+            });
+          }
+        }
+
+        svg += `</svg>`;
+        return svg;
+      }
+
+      function drawElectron(cx, cy, style, angle, dist) {
+        const ex = cx + Math.cos(angle) * dist;
+        const ey = cy + Math.sin(angle) * dist;
+        if (style === 'dot') {
+          return `<circle cx="${ex}" cy="${ey}" r="4" fill="#60a5fa" stroke="#2563eb" stroke-width="1" />`;
+        } else {
+          const sz = 4;
+          return `<g stroke="#f43f5e" stroke-width="2" stroke-linecap="round">
+            <line x1="${ex - sz}" y1="${ey - sz}" x2="${ex + sz}" y2="${ey + sz}" />
+            <line x1="${ex - sz}" y1="${ey + sz}" x2="${ex + sz}" y2="${ey - sz}" />
+          </g>`;
+        }
       }
 
       // ---------- Game ----------
@@ -359,14 +1256,20 @@
       const state={
         running:true,
         mode:'question',
+        gameMode:'mixed', // 'ionic', 'covalent', or 'mixed'
         score:0,
         streak:0,
-        timeLeft:120,
+        maxTime:60, // Adjustable game duration (default 60s)
+        timeLeft:60,
         lastShotAt:0,
         shotCooldownMs:260,
         fish:[],
         projectiles:[],
         ripples:[],
+        particles:[], // glowing neon explosion and trail particles
+        bgBubbles:[], // background rising bubbles
+        pointerX:450, // default pointer position
+        pointerY:100,
         q:null,
       };
 
@@ -389,16 +1292,118 @@
         ui.time.textContent=String(state.timeLeft);
       }
 
+      function showLeaderboardOverlay() {
+        // Hide regular feedback elements
+        document.getElementById('regularFeedback').style.display = 'none';
+        
+        // Show leaderboard feedback elements
+        const lbFeedback = document.getElementById('leaderboardFeedback');
+        lbFeedback.style.display = 'block';
+        
+        // Update labels based on language
+        const isZh = lang === 'zh';
+        document.getElementById('lbTitle').textContent = isZh ? '時間到！遊戲結束' : 'Time Up! Game Over';
+        document.getElementById('lbScoreLabel').textContent = isZh ? '您的最終得分：' : 'Your Final Score:';
+        document.getElementById('lbHeader').textContent = isZh ? '🏆 榮譽排行榜' : '🏆 Leaderboard';
+        document.getElementById('fbTag').textContent = isZh ? '遊戲結束' : 'Game Over';
+        
+        document.getElementById('lbFinalScore').textContent = String(state.score);
+        
+        // Save score to LocalStorage and fetch updated leaderboard
+        const history = saveAndGetLeaderboard(state.score, state.gameMode);
+        
+        // Render Leaderboard list
+        const listContainer = document.getElementById('leaderboardList');
+        listContainer.innerHTML = '';
+        
+        history.forEach((entry, idx) => {
+          const isCurrent = entry.isCurrent ? 'background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981;' : 'background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);';
+          const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+          const modeName = isZh 
+            ? (entry.mode === 'ionic' ? '離子' : entry.mode === 'covalent' ? '共價' : '混合')
+            : (entry.mode === 'ionic' ? 'Ionic' : entry.mode === 'covalent' ? 'Covalent' : 'Mixed');
+          
+          const row = document.createElement('div');
+          row.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-radius: 8px; font-size: 13.5px; ${isCurrent}`;
+          row.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 16px; font-weight: 800; min-width: 24px;">${medal}</span>
+              <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">${modeName}</span>
+              <span style="color: var(--text-muted); font-size: 11px;">${entry.date}</span>
+            </div>
+            <div>
+              <strong style="color: #60a5fa; font-size: 15px;">${entry.score}</strong> <span style="font-size: 11px; color: var(--text-muted);">pts</span>
+            </div>
+          `;
+          listContainer.appendChild(row);
+        });
+        
+        // Open the overlay modal
+        document.getElementById('overlay').classList.add('open');
+        document.getElementById('overlay').setAttribute('aria-hidden','false');
+      }
+
+      function saveAndGetLeaderboard(newScore, currentMode) {
+        let history = [];
+        try {
+          history = JSON.parse(localStorage.getItem('chemcatch_scores')) || [];
+        } catch (e) {
+          history = [];
+        }
+        
+        const now = new Date();
+        const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        
+        // Add current score
+        const currentEntry = {
+          score: newScore,
+          mode: currentMode,
+          date: dateStr,
+          timestamp: now.getTime(),
+          isCurrent: true
+        };
+        history.push(currentEntry);
+        
+        // Sort by score descending, then by timestamp descending
+        history.sort((a, b) => b.score - a.score || b.timestamp - a.timestamp);
+        
+        // Keep top 10 scores
+        const topScores = history.slice(0, 10);
+        
+        // Save back to localStorage (without the isCurrent flag to avoid saving temporary states)
+        const cleanHistory = topScores.map(e => ({
+          score: e.score,
+          mode: e.mode,
+          date: e.date,
+          timestamp: e.timestamp
+        }));
+        localStorage.setItem('chemcatch_scores', JSON.stringify(cleanHistory));
+        
+        // Find if current score is in top 10 to highlight it
+        const finalHistory = topScores.map(e => {
+          if (e.isCurrent) return e;
+          if (e.score === newScore && e.timestamp === currentEntry.timestamp) {
+            return { ...e, isCurrent: true };
+          }
+          return e;
+        });
+        
+        return finalHistory;
+      }
+
       function closeFeedback(){
         document.getElementById('overlay').classList.remove('open');
         document.getElementById('overlay').setAttribute('aria-hidden','true');
+        // Restore regular feedback visibility
+        document.getElementById('regularFeedback').style.display = 'block';
+        document.getElementById('leaderboardFeedback').style.display = 'none';
       }
 
       function resetGame(){
         state.running=true;
         state.score=0;
         state.streak=0;
-        state.timeLeft=120;
+        state.timeLeft=state.maxTime;
         state.lastShotAt=0;
         state.projectiles=[];
         state.ripples=[];
@@ -441,9 +1446,18 @@
             alive:true,
             isAnswer:true,
             label,
-            option:opt
+            option:opt,
+            compoundType: q.compoundType || 'ionic'
           };
         });
+      }
+
+      // Input
+      function canvasPoint(ev){
+        const rect=canvas.getBoundingClientRect();
+        const x=((ev.clientX-rect.left)/rect.width)*canvas.width;
+        const y=((ev.clientY-rect.top)/rect.height)*canvas.height;
+        return {x,y};
       }
 
       function shootAt(x,y){
@@ -462,6 +1476,27 @@
         const vy=(dy/len)*520;
         state.projectiles.push({x:sx,y:sy,vx,vy,life:1.1});
         state.ripples.push({x,y,t:0});
+
+        // Play shoot sound if synthesizer is loaded
+        if (window.soundFX) {
+          window.soundFX.playShoot();
+        }
+
+        // Spawn muzzle blast bubble particles
+        for (let i = 0; i < 8; i++) {
+          const angle = Math.atan2(vy, vx) + (Math.random() - 0.5) * 0.5;
+          const speed = randInt(50, 150);
+          state.particles.push({
+            x: sx + (dx/len)*35,
+            y: sy + (dy/len)*35,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            r: randInt(2, 5),
+            color: 'rgba(96, 165, 250, 0.8)', // Glowing blue
+            life: 0.4,
+            maxLife: 0.4
+          });
+        }
       }
 
       function startQuestion(){
@@ -471,14 +1506,147 @@
         spawnAnswerFish(state.q);
       }
 
+      window.currentFeedbackTemplate = null;
+      window.currentFeedbackStep = 1;
+
+      function getStepExplanation(template, step, lang) {
+        const isZh = lang === 'zh';
+        if (template.type === 'covalent') {
+          if (step === 1) {
+            return isZh 
+              ? "第一步：價電子。非金屬原子在鍵合前各自擁有其最外層價電子（以藍點 • 或紅叉 ✕ 表示）。" 
+              : "Step 1: Valence Electrons. Non-metal atoms have their individual valence electrons (shown as blue dots • or red crosses ✕) before bonding.";
+          }
+          if (step === 2) {
+            return isZh 
+              ? "第二步：共用電子。價電子外殼重疊，電子移動到重疊區域，準備形成共價鍵。" 
+              : "Step 2: Electron Sharing. Valence shells overlap, and electrons move into the overlapping regions to form covalent bonds.";
+          }
+          return isZh 
+            ? "第三步：八隅體檢查。共用電子對使所有原子達到穩定結構。將滑鼠懸停在任何原子上進行檢查！" 
+            : "Step 3: Octet Rule Check. Shared electron pairs allow all atoms to achieve stable configurations. Hover over any atom to verify!";
+        } else {
+          if (step === 1) {
+            return isZh 
+              ? "第一步：反應物原子。金屬原子（左）價電子較少，非金屬原子（右）價電子較多。" 
+              : "Step 1: Reactant Atoms. Metal atom (left) has few valence electrons; non-metal atom (right) has many.";
+          }
+          if (step === 2) {
+            return isZh 
+              ? "第二步：電子轉移。金屬原子將其最外層價電子完全轉移給非金屬原子（如紅色箭頭所示）。" 
+              : "Step 2: Electron Transfer. Metal atom transfers its valence electrons completely to the non-metal atom (shown by red arrows).";
+          }
+          return isZh 
+            ? "第三步：穩定離子。金屬失去電子成為陽離子（[M]ⁿ⁺），非金屬得到電子成為陰離子（[X]ⁿ⁻）並達到八隅體。懸停在離子上檢查！" 
+            : "Step 3: Stable Ions. Metal becomes a cation ([M]n+); non-metal becomes an anion ([X]n-) with a stable octet. Hover over any ion to verify!";
+        }
+      }
+
+      function getAtomHoverExplanation(template, atomId, lang) {
+        const isZh = lang === 'zh';
+        if (template.type === 'covalent') {
+          const atom = template.atoms.find(a => a.id === atomId);
+          if (!atom) return "";
+          if (atom.sym === 'H') {
+            return isZh 
+              ? `氫原子 ${atom.sym} 共用了 2 個電子（1對共用電子對），達到了穩定的雙電子（Duplet）結構。` 
+              : `Hydrogen atom ${atom.sym} shares 2 electrons (1 bonding pair), achieving a stable duplet configuration.`;
+          } else {
+            let bondingCount = 0;
+            template.bonds.forEach(b => {
+              if (b.from === atomId || b.to === atomId) {
+                bondingCount += b.pairs * 2;
+              }
+            });
+            const loneGroup = template.lones.find(l => l.atom === atomId);
+            const loneCount = loneGroup ? loneGroup.count : 0;
+            const total = bondingCount + loneCount;
+            return isZh 
+              ? `${atom.sym} 原子最外層共有 ${total} 個電子（${bondingCount} 個共用，${loneCount} 個孤對），達到了穩定的八隅體（Octet）結構。` 
+              : `Atom ${atom.sym} has ${total} outer electrons (${bondingCount} shared, ${loneCount} lone), achieving a stable octet configuration.`;
+          }
+        } else {
+          if (atomId.startsWith('C')) {
+            const idx = parseInt(atomId.substring(1));
+            const c = template.cations[idx];
+            return isZh 
+              ? `陽離子 ${c.sym} 失去了外層所有價電子，暴露出內層已飽和的穩定八隅體結構，帶有 ${c.charge} 電荷。` 
+              : `Cation ${c.sym} lost all its outer valence electrons, exposing a stable, fully saturated inner octet, carrying a ${c.charge} charge.`;
+          } else if (atomId.startsWith('A')) {
+            const idx = parseInt(atomId.substring(1));
+            const a = template.anions[idx];
+            return isZh 
+              ? `陰離子 ${a.sym} 得到了電子，最外層共有 8 個電子（達到穩定八隅體結構），帶有 ${a.charge} 電荷。` 
+              : `Anion ${a.sym} gained electrons, achieving a stable outer shell of 8 electrons (stable octet), carrying a ${a.charge} charge.`;
+          }
+        }
+        return "";
+      }
+
+      window.highlightAtom = function(atomId) {
+        if (window.currentFeedbackStep !== 3) return;
+        const container = document.getElementById('fbDiagramContainer');
+        container.innerHTML = buildSVGString(window.currentFeedbackTemplate, 3, atomId);
+        
+        const explainBox = document.getElementById('fbStepExplain');
+        explainBox.innerHTML = `<strong style="color: #10b981;">${getAtomHoverExplanation(window.currentFeedbackTemplate, atomId, lang)}</strong>`;
+      };
+
+      window.clearHighlightAtom = function() {
+        if (window.currentFeedbackStep !== 3) return;
+        const container = document.getElementById('fbDiagramContainer');
+        container.innerHTML = buildSVGString(window.currentFeedbackTemplate, 3, null);
+        
+        const explainBox = document.getElementById('fbStepExplain');
+        explainBox.textContent = getStepExplanation(window.currentFeedbackTemplate, 3, lang);
+      };
+
+      function updateFeedbackStep(step) {
+        window.currentFeedbackStep = step;
+        
+        document.getElementById('stepBtn1').classList.toggle('active', step === 1);
+        document.getElementById('stepBtn2').classList.toggle('active', step === 2);
+        document.getElementById('stepBtn3').classList.toggle('active', step === 3);
+        
+        const container = document.getElementById('fbDiagramContainer');
+        container.innerHTML = buildSVGString(window.currentFeedbackTemplate, step, null);
+        
+        const explainBox = document.getElementById('fbStepExplain');
+        explainBox.textContent = getStepExplanation(window.currentFeedbackTemplate, step, lang);
+      }
+
       function openFeedback(title,explain,mini){
         document.getElementById('fbTag').textContent = t().result;
         ui.fbTitle.textContent = title;
         ui.fbExplain.textContent = explain;
         ui.fbMini.textContent = mini || t().fbMiniHint;
+        
+        const q = state.q;
+        if (q) {
+          window.currentFeedbackTemplate = getDiagramTemplate(q);
+          
+          const formulaContainer = document.getElementById('fbFormula');
+          const latexStr = window.currentFeedbackTemplate.latex;
+          if (window.katex) {
+            try {
+              window.katex.render(latexStr, formulaContainer, { throwOnError: false });
+            } catch (err) {
+              formulaContainer.innerHTML = displayFormula(q.correct);
+            }
+          } else {
+            formulaContainer.innerHTML = displayFormula(q.correct);
+          }
+          
+          updateFeedbackStep(1);
+        }
+
         document.getElementById('overlay').classList.add('open');
         document.getElementById('overlay').setAttribute('aria-hidden','false');
       }
+
+      document.getElementById('stepBtn1').addEventListener('click', () => updateFeedbackStep(1));
+      document.getElementById('stepBtn2').addEventListener('click', () => updateFeedbackStep(2));
+      document.getElementById('stepBtn3').addEventListener('click', () => updateFeedbackStep(3));
 
       function continueAfterFeedback(){
         closeFeedback();
@@ -491,14 +1659,47 @@
         const dispCorrect = displayFormula(q.correct);
 
         if(correct){
+          // Dynamic scoring based on question difficulty
+          let basePts = 10;
+          let diffLabel = t().diffEasy;
+          if (q.difficulty === 'medium') {
+            basePts = 15;
+            diffLabel = t().diffMedium;
+          } else if (q.difficulty === 'hard') {
+            basePts = 22;
+            diffLabel = t().diffHard;
+          }
+
           const bonus=Math.min(12,state.streak);
-          const pts = 10+bonus;
+          const pts = basePts+bonus;
           state.score+=pts;
           state.streak+=1;
-          openFeedback(t().correctPts(q.tag, pts), `${t().correctAnswer(dispCorrect)} ${q.explain}`, t().streakNow(state.streak));
+          state.timeLeft = Math.min(state.maxTime, state.timeLeft + 3); // Add +3 seconds, max game duration
+          
+          if (window.soundFX) {
+            window.soundFX.playCorrect();
+          }
+          
+          openFeedback(t().correctPts(q.tag, pts, diffLabel), `${t().correctAnswer(dispCorrect)} ${q.explain}`, t().streakNow(state.streak));
         } else {
           state.score=Math.max(0,state.score-5);
           state.streak=0;
+          state.timeLeft = Math.max(0, state.timeLeft - 5); // Deduct -5 seconds
+          
+          if (state.timeLeft === 0) {
+            state.running = false;
+            state.mode = 'feedback';
+            if (window.soundFX) {
+              window.soundFX.playGameOver();
+            }
+            showLeaderboardOverlay();
+            return; // Return early to avoid opening normal feedback
+          } else {
+            if (window.soundFX) {
+              window.soundFX.playWrong();
+            }
+          }
+          
           openFeedback(t().wrongPts(q.tag), `${t().correctAnswer(dispCorrect)} ${q.explain}`, t().streakReset);
         }
         syncHud();
@@ -510,79 +1711,278 @@
 
       // ---------- Drawing ----------
       function drawBackground(tNow){
-        const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
-        const s=0.5+0.5*Math.sin(tNow*0.00035);
-        g.addColorStop(0,`rgba(238,248,244,${0.92+0.05*s})`);
-        g.addColorStop(0.45,'rgba(240,244,251,0.96)');
-        g.addColorStop(1,'rgba(228,241,246,0.98)');
+        // Deep sea marine gradient
+        const g=ctx.createLinearGradient(0,0,0,canvas.height);
+        g.addColorStop(0,'#020617'); // Pitch black-blue
+        g.addColorStop(0.5,'#0b1329'); // Deep indigo
+        g.addColorStop(1,'#041a16'); // Dark bioluminescent teal
         ctx.fillStyle=g;
         ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle='rgba(213,228,236,0.35)';
+
+        // Draw background rising bubbles
+        if (state.bgBubbles.length < 25 && Math.random() < 0.05) {
+          state.bgBubbles.push({
+            x: Math.random() * canvas.width,
+            y: canvas.height + 10,
+            r: randInt(2, 6),
+            speed: randInt(20, 50),
+            wobbleSpeed: Math.random() * 2 + 1,
+            wobbleAmp: Math.random() * 15 + 5,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.lineWidth = 1;
+        for (let i = state.bgBubbles.length - 1; i >= 0; i--) {
+          const b = state.bgBubbles[i];
+          b.y -= b.speed * 0.016; // approximate dt
+          b.phase += b.wobbleSpeed * 0.016;
+          const xOffset = Math.sin(b.phase) * b.wobbleAmp * 0.1;
+          ctx.beginPath();
+          ctx.arc(b.x + xOffset, b.y, b.r, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Highlight dot on bubble
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+          ctx.beginPath();
+          ctx.arc(b.x + xOffset - b.r*0.3, b.y - b.r*0.3, b.r*0.2, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (b.y < -10) {
+            state.bgBubbles.splice(i, 1);
+          }
+        }
+        ctx.restore();
+
+        // Draw swaying sea anemones/kelp at the bottom
+        ctx.save();
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.2)'; // Glowing green kelp
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        for (let x = 30; x < canvas.width; x += 60) {
+          const h = 40 + Math.sin(tNow * 0.002 + x) * 10;
+          const sway = Math.sin(tNow * 0.001 + x) * 15;
+          ctx.beginPath();
+          ctx.moveTo(x, canvas.height);
+          ctx.quadraticCurveTo(x + sway * 0.5, canvas.height - h * 0.5, x + sway, canvas.height - h);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // Sandy/rocky bottom overlay
+        ctx.fillStyle='rgba(15, 23, 42, 0.6)';
         ctx.fillRect(0,canvas.height-110,canvas.width,110);
       }
 
       function drawCannon(){
         const x=canvas.width/2, y=canvas.height-80;
-        ctx.save();ctx.translate(x,y);
-        ctx.fillStyle='rgba(235,240,248,0.92)';
-        ctx.strokeStyle='rgba(45,52,54,0.08)';
-        ctx.lineWidth=1.5;
-        ctx.beginPath();ctx.ellipse(0,52,62,20,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-        ctx.fillStyle='rgba(206,222,242,0.95)';
-        ctx.strokeStyle='rgba(45,52,54,0.1)';
-        ctx.beginPath();ctx.roundRect(-18,-28,36,64,14);ctx.fill();ctx.stroke();
+
+        // 1) Draw Aiming Trajectory Guide (dotted glowing line)
+        if (state.running && state.mode === 'question') {
+          ctx.save();
+          ctx.strokeStyle = 'rgba(59, 130, 246, 0.4)';
+          ctx.lineWidth = 2.5;
+          ctx.setLineDash([6, 10]);
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = '#3b82f6';
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(state.pointerX, state.pointerY);
+          ctx.stroke();
+
+          // Draw Glowing Target Reticle at cursor position
+          ctx.strokeStyle = 'rgba(16, 185, 129, 0.7)'; // Neon green
+          ctx.lineWidth = 2;
+          ctx.setLineDash([]);
+          ctx.shadowColor = '#10b981';
+          ctx.beginPath();
+          ctx.arc(state.pointerX, state.pointerY, 14 + Math.sin(performance.now() * 0.01) * 3, 0, Math.PI * 2);
+          ctx.stroke();
+          // Crosshairs
+          ctx.beginPath();
+          ctx.moveTo(state.pointerX - 22, state.pointerY); ctx.lineTo(state.pointerX - 10, state.pointerY);
+          ctx.moveTo(state.pointerX + 10, state.pointerY); ctx.lineTo(state.pointerX + 22, state.pointerY);
+          ctx.moveTo(state.pointerX, state.pointerY - 22); ctx.lineTo(state.pointerX, state.pointerY - 10);
+          ctx.moveTo(state.pointerX, state.pointerY + 10); ctx.lineTo(state.pointerX, state.pointerY + 22);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // 2) Draw Rotated Cannon
+        const angle = Math.atan2(state.pointerY - y, state.pointerX - x);
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle + Math.PI / 2); // Rotate to point towards cursor
+
+        // Cannon Base (glowing semi-circle)
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+        ctx.strokeStyle = '#3b82f6';
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#3b82f6';
+        ctx.beginPath();
+        ctx.arc(0, 40, 45, Math.PI, 0);
+        ctx.fill();
+        ctx.stroke();
+
+        // Cannon Barrel (sleek futuristic design)
+        const gradient = ctx.createLinearGradient(-15, -35, 15, 35);
+        gradient.addColorStop(0, '#1e293b');
+        gradient.addColorStop(0.5, '#3b82f6');
+        gradient.addColorStop(1, '#1e293b');
+        ctx.fillStyle = gradient;
+        ctx.strokeStyle = '#60a5fa';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(-14, -35, 28, 70, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        // Glowing Core Line on Barrel
+        ctx.strokeStyle = '#10b981'; // Neon green core
+        ctx.lineWidth = 3;
+        ctx.shadowColor = '#10b981';
+        ctx.beginPath();
+        ctx.moveTo(0, -20);
+        ctx.lineTo(0, 20);
+        ctx.stroke();
+
         ctx.restore();
       }
 
       function drawFish(f){
         const body=f.body ?? '#ccd9f2';
         const tail=f.tail ?? '#b8c8eb';
-        ctx.save();ctx.translate(f.x,f.y);
+        ctx.save();
+        ctx.translate(f.x,f.y);
         const flip=f.vx<0?-1:1;
         ctx.scale(flip,1);
 
-        ctx.fillStyle=body;
-        ctx.strokeStyle='rgba(45,52,54,0.11)';
-        ctx.lineWidth=1.5;
-        ctx.beginPath();ctx.ellipse(0,0,f.size*1.55,f.size,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+        // Bioluminescent Neon Glow
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = tail;
 
+        // Fish Body - semi-transparent radial gradient
+        const fishGrad = ctx.createRadialGradient(f.size*0.3, -f.size*0.2, f.size*0.2, 0, 0, f.size*1.5);
+        fishGrad.addColorStop(0, '#ffffff');
+        fishGrad.addColorStop(0.3, body);
+        fishGrad.addColorStop(1, 'rgba(15, 23, 42, 0.4)'); // fading to dark transparent
+        ctx.fillStyle=fishGrad;
+        ctx.strokeStyle=tail;
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        ctx.ellipse(0,0,f.size*1.55,f.size,0,0,Math.PI*2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw Specific Bonding Patterns (Ionic vs Covalent)
+        ctx.save();
+        ctx.shadowBlur = 0; // disable shadow for internal details
+        if (f.compoundType === 'ionic') {
+          // Sharp crystalline diamond scales representing ionic lattice
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+          ctx.lineWidth = 1;
+          const scaleSize = f.size * 0.25;
+          for (let dx = -f.size * 0.8; dx < f.size * 0.4; dx += scaleSize * 1.5) {
+            for (let dy = -f.size * 0.5; dy < f.size * 0.6; dy += scaleSize * 1.5) {
+              // Draw a small diamond
+              ctx.beginPath();
+              ctx.moveTo(dx, dy - scaleSize * 0.5);
+              ctx.lineTo(dx + scaleSize * 0.5, dy);
+              ctx.lineTo(dx, dy + scaleSize * 0.5);
+              ctx.lineTo(dx - scaleSize * 0.5, dy);
+              ctx.closePath();
+              ctx.stroke();
+            }
+          }
+        } else {
+          // Soft, circular bubble-like patterns representing discrete covalent molecules
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+          ctx.lineWidth = 1;
+          const bubblePositions = [
+            {x: -f.size*0.5, y: -f.size*0.2, r: f.size*0.18},
+            {x: -f.size*0.2, y: f.size*0.3, r: f.size*0.12},
+            {x: -f.size*0.6, y: f.size*0.2, r: f.size*0.15},
+            {x: 0, y: -f.size*0.1, r: f.size*0.14},
+            {x: f.size*0.2, y: f.size*0.2, r: f.size*0.1}
+          ];
+          for (const b of bubblePositions) {
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+
+        // Fish Tail
         ctx.fillStyle=tail;
-        ctx.strokeStyle='rgba(45,52,54,0.09)';
-        ctx.beginPath();ctx.moveTo(-f.size*1.55,0);ctx.lineTo(-f.size*2.25,-f.size*0.8);ctx.lineTo(-f.size*2.25,f.size*0.8);ctx.closePath();ctx.fill();ctx.stroke();
+        ctx.strokeStyle='rgba(255,255,255,0.2)';
+        ctx.beginPath();
+        ctx.moveTo(-f.size*1.55,0);
+        ctx.lineTo(-f.size*2.25,-f.size*0.8);
+        ctx.lineTo(-f.size*2.25,f.size*0.8);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
 
+        // Fish Eye
         ctx.fillStyle='#ffffff';
-        ctx.strokeStyle='rgba(45,52,54,0.12)';
+        ctx.strokeStyle='rgba(0,0,0,0.3)';
         ctx.lineWidth=1;
-        ctx.beginPath();ctx.arc(f.size*0.8,-f.size*0.15,f.size*0.18,0,Math.PI*2);ctx.fill();ctx.stroke();
-        ctx.fillStyle='#374151';
-        ctx.beginPath();ctx.arc(f.size*0.86,-f.size*0.15,f.size*0.09,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();
+        ctx.arc(f.size*0.8,-f.size*0.15,f.size*0.18,0,Math.PI*2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle='#0f172a';
+        ctx.beginPath();
+        ctx.arc(f.size*0.86,-f.size*0.15,f.size*0.09,0,Math.PI*2);
+        ctx.fill();
 
+        // Option Text (Glassmorphic Bubble)
         if(f.isAnswer){
           const txt = displayFormula(f.option);
           ctx.save();
           ctx.scale(flip,1);
           ctx.globalAlpha=1;
-          ctx.font='700 14px ui-sans-serif, system-ui';
-          const w=Math.max(78,ctx.measureText(txt).width+42);
-          const h=28;
+          ctx.shadowBlur = 0; // disable shadow for text box
+
+          ctx.font='700 16px ui-sans-serif, system-ui';
+          const w=Math.max(90,ctx.measureText(txt).width+48);
+          const h=34;
           const px=-w/2, py=-h/2;
-          ctx.fillStyle='#ffffff';
-          ctx.strokeStyle='rgba(45,52,54,0.1)';
+
+          // Glassmorphic background
+          ctx.fillStyle='rgba(15, 23, 42, 0.85)';
+          ctx.strokeStyle='rgba(255, 255, 255, 0.15)';
           ctx.lineWidth=1.5;
-          ctx.beginPath();ctx.roundRect(px,py,w,h,10);ctx.fill();ctx.stroke();
+          ctx.beginPath();
+          ctx.roundRect(px,py,w,h,10);
+          ctx.fill();
+          ctx.stroke();
 
-          ctx.fillStyle=f.letterBg ?? '#b8c8eb';
-          ctx.strokeStyle='rgba(45,52,54,0.08)';
-          ctx.beginPath();ctx.arc(px+15,0,11,0,Math.PI*2);ctx.fill();ctx.stroke();
-          ctx.fillStyle='#2d3436';
-          ctx.font='800 12px ui-sans-serif, system-ui';
-          ctx.textAlign='center';ctx.textBaseline='middle';
-          ctx.fillText(f.label,px+15,0.5);
+          // Letter badge (A, B, C, D...)
+          ctx.fillStyle=f.letterBg ?? '#3b82f6';
+          ctx.strokeStyle='rgba(255,255,255,0.1)';
+          ctx.beginPath();
+          ctx.arc(px+18,0,13,0,Math.PI*2);
+          ctx.fill();
+          ctx.stroke();
 
-          ctx.fillStyle='#2d3436';
-          ctx.font='800 14px ui-sans-serif, system-ui';
+          ctx.fillStyle='#ffffff';
+          ctx.font='800 13px ui-sans-serif, system-ui';
+          ctx.textAlign='center';
+          ctx.textBaseline='middle';
+          ctx.fillText(f.label,px+18,0.5);
+
+          // Chemical Formula
+          ctx.fillStyle='#f9fafb';
+          ctx.font='800 17px ui-sans-serif, system-ui';
           ctx.textAlign='left';
-          ctx.fillText(txt,px+32,0.5);
+          ctx.fillText(txt,px+38,0.5);
           ctx.restore();
         }
 
@@ -617,7 +2017,11 @@
         const tagLine = t().qPrompt(q.tag);
         let bodyLines;
         if(q.promptKind === 'abstract') {
-          bodyLines = t().abstractStem(q.catCharge, q.anChargeMag).split('\n');
+          if (q.compoundType === 'covalent') {
+            bodyLines = t().abstractCovalentStem(q.valA, q.valB).split('\n');
+          } else {
+            bodyLines = t().abstractStem(q.catCharge, q.anChargeMag).split('\n');
+          }
         } else {
           bodyLines = [t().whichFormulaOf(q.promptText)];
         }
@@ -672,7 +2076,13 @@
           if(timerAcc>=1){
             timerAcc-=1;
             state.timeLeft=Math.max(0,state.timeLeft-1);
-            if(state.timeLeft===0){state.running=false;state.streak=0}
+            if(state.timeLeft===0){
+              state.running=false;
+              state.streak=0;
+              state.mode='feedback';
+              if (window.soundFX) window.soundFX.playGameOver();
+              showLeaderboardOverlay();
+            }
             syncHud();
           }
         }
@@ -694,7 +2104,25 @@
             if(f.vx<0 && f.x<-60) f.x=canvas.width+60;
           }
 
-          for(const p of state.projectiles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt}
+          for(const p of state.projectiles){
+            p.x+=p.vx*dt;
+            p.y+=p.vy*dt;
+            p.life-=dt;
+
+            // Spawn bubble trail behind projectile
+            if (Math.random() < 0.4) {
+              state.particles.push({
+                x: p.x,
+                y: p.y,
+                vx: (Math.random() - 0.5) * 40,
+                vy: (Math.random() - 0.5) * 40,
+                r: randInt(1, 3),
+                color: 'rgba(255, 255, 255, 0.4)',
+                life: 0.3,
+                maxLife: 0.3
+              });
+            }
+          }
           state.projectiles=state.projectiles.filter(p=>p.life>0 && p.x>-40 && p.x<canvas.width+40 && p.y>-40 && p.y<canvas.height+40);
 
           for(const r of state.ripples) r.t+=dt;
@@ -706,23 +2134,66 @@
               if(collideProjectileFish(p,f)){
                 f.alive=false; p.life=0;
                 resolveAnswer(f.option);
+
+                // Spawn beautiful neon bubble pop explosion particles
+                const particleColor = f.tail || '#3b82f6';
+                for (let i = 0; i < 22; i++) {
+                  const angle = Math.random() * Math.PI * 2;
+                  const speed = randInt(80, 260);
+                  state.particles.push({
+                    x: f.x,
+                    y: f.y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    r: randInt(2, 6),
+                    color: particleColor,
+                    life: 0.6,
+                    maxLife: 0.6
+                  });
+                }
                 break outerQ;
               }
             }
           }
         }
 
-        if(!state.running){
+        // Update and Draw Particles
+        ctx.save();
+        for (let i = state.particles.length - 1; i >= 0; i--) {
+          const p = state.particles[i];
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.life -= dt;
+          if (p.life <= 0) {
+            state.particles.splice(i, 1);
+            continue;
+          }
+          const alpha = p.life / p.maxLife;
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+
+        if(!state.running && state.mode !== 'feedback'){
           ctx.save();
-          ctx.fillStyle='rgba(246,247,249,0.82)';
+          // Dark glassmorphic overlay for Game Over
+          ctx.fillStyle='rgba(3, 7, 18, 0.85)';
           ctx.fillRect(0,0,canvas.width,canvas.height);
-          ctx.fillStyle='#2d3436';
-          ctx.font='800 28px ui-sans-serif, system-ui';
+          ctx.fillStyle='#ef4444'; // Neon red
+          ctx.font='800 32px ui-sans-serif, system-ui';
           ctx.textAlign='center';
-          ctx.fillText(lang==='zh'?'時間到！':'Time!',canvas.width/2,canvas.height/2-10);
-          ctx.fillStyle='#6b7280';
-          ctx.font='600 14px ui-sans-serif, system-ui';
-          ctx.fillText(lang==='zh'?'按 R 重新開始':'Press R to restart',canvas.width/2,canvas.height/2+22);
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = '#ef4444';
+          ctx.fillText(lang==='zh'?'時間到！':'Time Up!',canvas.width/2,canvas.height/2-10);
+          ctx.fillStyle='#9ca3af';
+          ctx.font='600 16px ui-sans-serif, system-ui';
+          ctx.shadowBlur = 0;
+          ctx.fillText(lang==='zh'?'按 R 重新開始':'Press R to restart',canvas.width/2,canvas.height/2+26);
           ctx.restore();
         }
 
@@ -735,14 +2206,6 @@
         requestAnimationFrame(loop);
       }
 
-      // Input
-      function canvasPoint(ev){
-        const rect=canvas.getBoundingClientRect();
-        const x=((ev.clientX-rect.left)/rect.width)*canvas.width;
-        const y=((ev.clientY-rect.top)/rect.height)*canvas.height;
-        return {x,y};
-      }
-
       canvas.addEventListener('pointerdown',(ev)=>{
         ev.preventDefault();
         if(!state.running) return;
@@ -750,13 +2213,58 @@
         shootAt(x,y);
       });
 
+      canvas.addEventListener('pointermove',(ev)=>{
+        const {x,y}=canvasPoint(ev);
+        state.pointerX=x;
+        state.pointerY=y;
+      });
+
       window.addEventListener('keydown',(ev)=>{
         if(ev.key.toLowerCase()==='r') resetGame();
         if(ev.key==='Escape' && state.mode==='feedback') continueAfterFeedback();
       });
 
+      function setGameMode(nextMode) {
+        state.gameMode = nextMode;
+        document.getElementById('modeIonic').classList.toggle('active', state.gameMode==='ionic');
+        document.getElementById('modeCovalent').classList.toggle('active', state.gameMode==='covalent');
+        document.getElementById('modeMixed').classList.toggle('active', state.gameMode==='mixed');
+        resetGame();
+      }
+
+      function setGameDuration(seconds) {
+        state.maxTime = seconds;
+        document.getElementById('time30').classList.toggle('active', state.maxTime === 30);
+        document.getElementById('time60').classList.toggle('active', state.maxTime === 60);
+        document.getElementById('time90').classList.toggle('active', state.maxTime === 90);
+        resetGame();
+      }
+
+      document.getElementById('modeIonic').addEventListener('click',()=>{setGameMode('ionic')});
+      document.getElementById('modeCovalent').addEventListener('click',()=>{setGameMode('covalent')});
+      document.getElementById('modeMixed').addEventListener('click',()=>{setGameMode('mixed')});
+
+      document.getElementById('time30').addEventListener('click',()=>{setGameDuration(30)});
+      document.getElementById('time60').addEventListener('click',()=>{setGameDuration(60)});
+      document.getElementById('time90').addEventListener('click',()=>{setGameDuration(90)});
+
+      document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+        const isZh = lang === 'zh';
+        const confirmMsg = isZh ? '確定要清除所有排行榜記錄嗎？' : 'Are you sure you want to clear all leaderboard records?';
+        if (confirm(confirmMsg)) {
+          localStorage.removeItem('chemcatch_scores');
+          // Re-render leaderboard with empty history
+          const listContainer = document.getElementById('leaderboardList');
+          listContainer.innerHTML = '';
+          const emptyRow = document.createElement('div');
+          emptyRow.style.cssText = 'text-align: center; color: var(--text-muted); padding: 20px; font-size: 13.5px;';
+          emptyRow.textContent = isZh ? '暫無記錄' : 'No records yet';
+          listContainer.appendChild(emptyRow);
+        }
+      });
+
       // Start
-      setLang(getInitialLangFromQuery() || 'en');
+      setLang('en');
       resetGame();
       requestAnimationFrame(loop);
     </script>
