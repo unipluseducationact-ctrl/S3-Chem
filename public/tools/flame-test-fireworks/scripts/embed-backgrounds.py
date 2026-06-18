@@ -8,12 +8,12 @@ BG_DIR = ROOT / "assets" / "backgrounds"
 OUT = ROOT / "js" / "background-scenes-embedded.js"
 
 SCENES = [
-    ("city-skyline", "city-skyline.png"),
-    ("city-skyline-1", "city-skyline-1.png"),
-    ("city-skyline-2", "city-skyline-2.png"),
-    ("city-skyline-3", "city-skyline-3.png"),
-    ("city-skyline-4", "city-skyline-4.png"),
-    ("city-skyline-5", "city-skyline-5.png"),
+    ("city-skyline", "city-skyline.jpg"),
+    ("city-skyline-1", "city-skyline-1.jpg"),
+    ("city-skyline-2", "city-skyline-2.jpg"),
+    ("city-skyline-3", "city-skyline-3.jpg"),
+    ("city-skyline-4", "city-skyline-4.jpg"),
+    ("city-skyline-5", "city-skyline-5.jpg"),
 ]
 
 def main():
@@ -47,7 +47,7 @@ def main():
 
     content = (
         "/* Auto-generated — run scripts/embed-backgrounds.py to refresh */\n"
-        "const SCENE_DATA_URLS = "
+        "window.SCENE_DATA_URLS = "
         + json.dumps(data, indent=2)
         + ";\n"
     )

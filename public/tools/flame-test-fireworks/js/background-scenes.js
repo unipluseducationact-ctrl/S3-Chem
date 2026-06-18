@@ -2,37 +2,37 @@
 const BACKGROUND_SCENES = [
   {
     id: 'city-skyline',
-    src: 'assets/backgrounds/city-skyline.png',
+    src: 'assets/backgrounds/city-skyline.jpg',
     labelEn: 'City Skyline (Dimmer)',
     labelZh: '\u57CE\u5E02\u591C\u666F\uFF08\u8F03\u6697\uFF09',
   },
   {
     id: 'city-skyline-1',
-    src: 'assets/backgrounds/city-skyline-1.png',
+    src: 'assets/backgrounds/city-skyline-1.jpg',
     labelEn: 'City Skyline',
     labelZh: '\u57CE\u5E02\u591C\u666F',
   },
   {
     id: 'city-skyline-2',
-    src: 'assets/backgrounds/city-skyline-2.png',
+    src: 'assets/backgrounds/city-skyline-2.jpg',
     labelEn: 'City Skyline 2',
     labelZh: '\u57CE\u5E02\u591C\u666F 2',
   },
   {
     id: 'city-skyline-3',
-    src: 'assets/backgrounds/city-skyline-3.png',
+    src: 'assets/backgrounds/city-skyline-3.jpg',
     labelEn: 'Lakeside Night',
     labelZh: '\u6E56\u7554\u591C\u666F',
   },
   {
     id: 'city-skyline-4',
-    src: 'assets/backgrounds/city-skyline-4.png',
+    src: 'assets/backgrounds/city-skyline-4.jpg',
     labelEn: 'Lakeside Night 2',
     labelZh: '\u6E56\u7554\u591C\u666F 2',
   },
   {
     id: 'city-skyline-5',
-    src: 'assets/backgrounds/city-skyline-5.png',
+    src: 'assets/backgrounds/city-skyline-5.jpg',
     labelEn: 'Lakeside Night 3',
     labelZh: '\u6E56\u7554\u591C\u666F 3',
   },
@@ -44,10 +44,28 @@ function getSceneById(id) {
   return BACKGROUND_SCENES.find((s) => s.id === id) || BACKGROUND_SCENES[0];
 }
 
-/** Data URLs avoid canvas taint when opening index.html via file:// */
+function getEmbeddedSceneUrls() {
+  if (typeof globalThis !== 'undefined' && globalThis.SCENE_DATA_URLS) {
+    return globalThis.SCENE_DATA_URLS;
+  }
+  if (typeof window !== 'undefined' && window.SCENE_DATA_URLS) {
+    return window.SCENE_DATA_URLS;
+  }
+  if (typeof SCENE_DATA_URLS !== 'undefined') {
+    return SCENE_DATA_URLS;
+  }
+  return null;
+}
+
+/** Use committed JPEG assets on HTTP(S); embedded data URLs only for file:// export. */
 function getSceneExportSrc(scene) {
-  if (typeof SCENE_DATA_URLS !== 'undefined' && SCENE_DATA_URLS[scene.id]) {
-    return SCENE_DATA_URLS[scene.id];
+  const useEmbedded =
+    typeof location !== 'undefined' && location.protocol === 'file:';
+  if (useEmbedded) {
+    const embedded = getEmbeddedSceneUrls();
+    if (embedded?.[scene.id]) {
+      return embedded[scene.id];
+    }
   }
   return scene.src;
 }
