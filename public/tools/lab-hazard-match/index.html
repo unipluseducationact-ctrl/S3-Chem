@@ -728,6 +728,10 @@ function attachThumbPaths(list) {
 }
 attachThumbPaths(GLASSWARE);
 
+function pngToWebp(path) {
+  return path.replace(/\.png$/i, ".webp");
+}
+
 function imgOnErrorAttr() {
   return ' onerror="if(this.dataset.full&amp;&amp;this.src!==this.dataset.full)this.src=this.dataset.full"';
 }
@@ -737,7 +741,8 @@ function glasswareImg(entry, className = "gw-img") {
   const src = entry.thumb || entry.image;
   const full = escHTML(entry.image);
   const thumb = escHTML(src);
-  return `<img class="${className}" src="${thumb}" data-full="${full}" data-thumb="${thumb}" alt="${escHTML(alt)}" loading="eager"${imgOnErrorAttr()}/>`;
+  const webp = escHTML(pngToWebp(src));
+  return `<picture><source type="image/webp" srcset="${webp}" /><img class="${className}" src="${thumb}" data-full="${full}" data-thumb="${thumb}" alt="${escHTML(alt)}" loading="eager"${imgOnErrorAttr()}/></picture>`;
 }
 
 //#region Hazard labels (OSHC poster — PNG labels + recognition cues)
@@ -816,7 +821,8 @@ function hazardImg(entry, className = "hazard-img") {
   const src = entry.thumb || entry.image;
   const full = escHTML(entry.image);
   const thumb = escHTML(src);
-  return `<img class="${className}" src="${thumb}" data-full="${full}" data-thumb="${thumb}" alt="${escHTML(alt)}" loading="eager"${imgOnErrorAttr()}/>`;
+  const webp = escHTML(pngToWebp(src));
+  return `<picture><source type="image/webp" srcset="${webp}" /><img class="${className}" src="${thumb}" data-full="${full}" data-thumb="${thumb}" alt="${escHTML(alt)}" loading="eager"${imgOnErrorAttr()}/></picture>`;
 }
 
 function renderHazardLabel(entry) {
