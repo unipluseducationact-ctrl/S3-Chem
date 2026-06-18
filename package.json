@@ -11,7 +11,7 @@
     "validate:ions": "python3 scripts/validate_ion_locales.py",
     "check": "npm run lint && npm run check:syntax && npm run build",
     "smoke": "playwright test",
-    "build": "vite build",
+    "build": "vite build && node scripts/copy-chapter-assets.mjs",
     "preview": "vite preview",
     "optimize:images": "node scripts/optimize-images.mjs"
   },
