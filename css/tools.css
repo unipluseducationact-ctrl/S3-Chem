@@ -935,14 +935,14 @@ html.dark-theme .feature-tag {
 
 /* Chem Catch (iframe): full-bleed canvas game */
 #feature-modal-content:has(.chem-catch-wrap) {
-  width: min(98vw, 1560px);
-  height: min(96dvh, 940px);
-  max-width: min(98vw, 1560px);
-  max-height: min(96dvh, 940px);
+  width: min(96vw, 1280px);
+  height: min(92dvh, 860px);
+  max-width: min(96vw, 1280px);
+  max-height: min(92dvh, 860px);
 }
 
 .feature-modal-body:has(.chem-catch-wrap) {
-  padding: 6px 8px 8px;
+  padding: 4px 6px 6px;
   overflow: hidden;
   flex: 1;
   min-height: 0;
@@ -968,7 +968,8 @@ html.dark-theme .feature-tag {
   height: 100%;
   border: 0;
   border-radius: 14px;
-  background: #f6f7f9;
+  background: #030712;
+  overflow: hidden;
 }
 
 /* Lab & Hazard Match (iframe): memory card game */

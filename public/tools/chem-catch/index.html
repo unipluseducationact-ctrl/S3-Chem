@@ -83,41 +83,76 @@
       .step-btn:hover{color:var(--text);background:var(--accent-fill)}
       .step-btn.active{background:var(--accent-fill);color:var(--text);border-color:var(--accent-border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
 
-      /* Embedded in Uni+ modal iframe — fill available space */
+      /* Embedded in Uni+ modal iframe — fit settings + play area without scroll */
       html.embed, html.embed body { height: 100%; overflow: hidden; }
       body.embed {
-        padding: 8px;
+        padding: 4px;
         min-height: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
-        align-items: stretch;
-        justify-content: stretch;
+        align-items: center;
+        justify-content: flex-start;
+        overflow: hidden;
       }
       body.embed .wrap {
         width: 100%;
-        max-width: none;
+        max-width: 1200px;
+        height: 100%;
         flex: 1;
         min-height: 0;
-        gap: 10px;
+        gap: 6px;
         grid-template-rows: auto minmax(0, 1fr);
+        transform-origin: top center;
       }
+      body.embed .title { display: none; }
       body.embed .topbar {
-        padding: 10px 14px;
+        padding: 6px 10px;
         flex-shrink: 0;
+        justify-content: center;
+        gap: 8px;
       }
+      body.embed .stats {
+        gap: 6px;
+        flex-wrap: nowrap;
+        justify-content: center;
+      }
+      body.embed .stats > span[style] { display: none; }
+      body.embed .mode-select,
+      body.embed .duration-select,
+      body.embed .lang {
+        padding: 2px 4px;
+      }
+      body.embed .mode-select button,
+      body.embed .duration-select button,
+      body.embed .lang button {
+        padding: 4px 7px;
+        font-size: 11px;
+      }
+      body.embed .pill {
+        padding: 4px 8px;
+      }
+      body.embed .pill b { font-size: 10px; }
+      body.embed .pill code { font-size: 12px; }
       body.embed .gamecard {
         flex: 1;
         min-height: 0;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
       }
       body.embed canvas {
         flex: 1;
         width: 100%;
         height: 100%;
-        min-height: 260px;
+        min-height: 0;
+        max-height: 100%;
         aspect-ratio: auto;
+      }
+      body.embed .hint {
+        font-size: 10px;
+        padding: 6px 8px;
+        max-width: min(220px, 34%);
       }
     </style>
   </head>
@@ -2300,6 +2335,26 @@
         }
       });
 
+      function fitEmbedLayout(){
+        if(!document.body.classList.contains('embed')) return;
+        const wrap=document.querySelector('.wrap');
+        if(!wrap) return;
+        wrap.style.transform='none';
+        wrap.style.width='100%';
+        const pad=8;
+        const availH=document.documentElement.clientHeight-pad;
+        const availW=document.documentElement.clientWidth-pad;
+        const h=wrap.offsetHeight;
+        const w=wrap.offsetWidth;
+        const scale=Math.min(1, availH/h, availW/w);
+        if(scale<0.995){
+          wrap.style.transform=`scale(${scale})`;
+          wrap.style.width=`${100/scale}%`;
+        }
+      }
+
+      window.addEventListener('resize', fitEmbedLayout);
+
       // Start
       const bootParams = new URLSearchParams(location.search);
       if (bootParams.get('embed') === '1' || window.self !== window.top) {
@@ -2309,6 +2364,12 @@
       setLang(bootParams.get('lang') === 'zh' ? 'zh' : 'en');
       resetGame();
       requestAnimationFrame(loop);
+      if (document.body.classList.contains('embed')) {
+        requestAnimationFrame(() => {
+          fitEmbedLayout();
+          requestAnimationFrame(fitEmbedLayout);
+        });
+      }
     </script>
   </body>
 </html>
