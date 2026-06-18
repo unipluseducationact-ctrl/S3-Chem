@@ -2058,7 +2058,7 @@ function generateAtomicArcadeToolContent() {
   return `
         <div class="tool-modal-content atomic-arcade-wrap">
             <iframe class="atomic-arcade-iframe"
-                src="tools/atomic-structure-arcade.html?lang=${lang}"
+                src="public/tools/atomic-structure-arcade.html?lang=${lang}"
                 title="${title.replace(/"/g, "&quot;")}"></iframe>
         </div>
     `;
@@ -2072,7 +2072,7 @@ function generateChemCatchToolContent() {
   return `
         <div class="tool-modal-content chem-catch-wrap">
             <iframe class="chem-catch-iframe"
-                src="tools/chem-catch/index.html?lang=${lang}&embed=1"
+                src="public/tools/chem-catch/index.html?lang=${lang}&embed=1"
                 scrolling="no"
                 title="${title.replace(/"/g, "&quot;")}"></iframe>
         </div>
@@ -2084,7 +2084,7 @@ function generateLabHazardMatchToolContent() {
   return `
         <div class="tool-modal-content lab-hazard-match-wrap">
             <iframe class="lab-hazard-match-iframe"
-                src="tools/lab-hazard-match/index.html"
+                src="public/tools/lab-hazard-match/index.html"
                 title="${title.replace(/"/g, "&quot;")}"></iframe>
         </div>
     `;
@@ -2095,7 +2095,7 @@ function generateFlameTestFireworksToolContent() {
   return `
         <div class="tool-modal-content flame-test-fireworks-wrap">
             <iframe class="flame-test-fireworks-iframe"
-                src="tools/flame-test-fireworks/index.html"
+                src="public/tools/flame-test-fireworks/index.html"
                 title="${title.replace(/"/g, "&quot;")}"></iframe>
         </div>
     `;
@@ -2114,21 +2114,21 @@ function generateInteractiveLabIframeContent(toolPath, titleKey) {
 
 function generateIonicCompoundPuzzleToolContent() {
   return generateInteractiveLabIframeContent(
-    "tools/ionic-compound-puzzle/index.html",
+    "public/tools/ionic-compound-puzzle/index.html",
     "lab.ionicName",
   );
 }
 
 function generateCovalentBondPuzzleToolContent() {
   return generateInteractiveLabIframeContent(
-    "tools/covalent-bond-puzzle/index.html",
+    "public/tools/covalent-bond-puzzle/index.html",
     "lab.covalentName",
   );
 }
 
 function generateCovalentPropertiesSandboxToolContent() {
   return generateInteractiveLabIframeContent(
-    "tools/covalent-properties-sandbox/index.html",
+    "public/tools/covalent-properties-sandbox/index.html",
     "lab.sandboxName",
   );
 }

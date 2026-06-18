@@ -44,6 +44,8 @@ jobs:
           grep -q 'data-page="flashcards"' dist/index.html
           test -f dist/public/notes/en/ch5-1-atomic-structure-and-symbol.pdf
           test -f dist/public/summary/infographic.png
+          test -f dist/public/tools/chem-catch/index.html
+          test -f dist/public/worksheets/cursor-chem/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
