@@ -46,6 +46,7 @@ jobs:
           test -f dist/public/summary/infographic.png
           test -f dist/public/tools/chem-catch/index.html
           test -f dist/public/worksheets/cursor-chem/index.html
+          test -f dist/public/three.min.js
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -123,11 +123,11 @@ function ensureSharedMaterials() {
   return sharedMaterials;
 }
 
-/** Resolved at build time — works on GitHub Pages and at domain root. */
+/** Works on GitHub Pages (public/three.min.js) and Vite dist (same path via copy step). */
 function getThreeScriptUrl() {
   const base = typeof import.meta !== "undefined" && import.meta.env && import.meta.env.BASE_URL;
-  if (!base) return "three.min.js";
-  return base.endsWith("/") ? `${base}three.min.js` : `${base}/three.min.js`;
+  if (!base) return "public/three.min.js";
+  return base.endsWith("/") ? `${base}public/three.min.js` : `${base}/public/three.min.js`;
 }
 
 // ===== Lazy-load Three.js =====
