@@ -82,6 +82,43 @@
       .step-btn{appearance:none;border:1px solid var(--border);background:var(--surface-muted);color:var(--text-muted);border-radius:8px;padding:6px 12px;font-weight:600;cursor:pointer;font-size:12px;transition:all 0.2s ease}
       .step-btn:hover{color:var(--text);background:var(--accent-fill)}
       .step-btn.active{background:var(--accent-fill);color:var(--text);border-color:var(--accent-border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+
+      /* Embedded in Uni+ modal iframe — fill available space */
+      html.embed, html.embed body { height: 100%; overflow: hidden; }
+      body.embed {
+        padding: 8px;
+        min-height: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: stretch;
+      }
+      body.embed .wrap {
+        width: 100%;
+        max-width: none;
+        flex: 1;
+        min-height: 0;
+        gap: 10px;
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+      body.embed .topbar {
+        padding: 10px 14px;
+        flex-shrink: 0;
+      }
+      body.embed .gamecard {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      body.embed canvas {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        min-height: 260px;
+        aspect-ratio: auto;
+      }
     </style>
   </head>
   <body>
@@ -2264,7 +2301,12 @@
       });
 
       // Start
-      setLang('en');
+      const bootParams = new URLSearchParams(location.search);
+      if (bootParams.get('embed') === '1' || window.self !== window.top) {
+        document.documentElement.classList.add('embed');
+        document.body.classList.add('embed');
+      }
+      setLang(bootParams.get('lang') === 'zh' ? 'zh' : 'en');
       resetGame();
       requestAnimationFrame(loop);
     </script>

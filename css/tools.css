@@ -935,12 +935,14 @@ html.dark-theme .feature-tag {
 
 /* Chem Catch (iframe): full-bleed canvas game */
 #feature-modal-content:has(.chem-catch-wrap) {
-  max-height: min(96dvh, 1000px);
-  max-width: min(98vw, 1320px);
+  width: min(98vw, 1560px);
+  height: min(96dvh, 940px);
+  max-width: min(98vw, 1560px);
+  max-height: min(96dvh, 940px);
 }
 
 .feature-modal-body:has(.chem-catch-wrap) {
-  padding: 10px 14px 14px;
+  padding: 6px 8px 8px;
   overflow: hidden;
   flex: 1;
   min-height: 0;

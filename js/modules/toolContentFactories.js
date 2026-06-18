@@ -2072,7 +2072,7 @@ function generateChemCatchToolContent() {
   return `
         <div class="tool-modal-content chem-catch-wrap">
             <iframe class="chem-catch-iframe"
-                src="tools/chem-catch/index.html?lang=${lang}"
+                src="tools/chem-catch/index.html?lang=${lang}&embed=1"
                 title="${title.replace(/"/g, "&quot;")}"></iframe>
         </div>
     `;
