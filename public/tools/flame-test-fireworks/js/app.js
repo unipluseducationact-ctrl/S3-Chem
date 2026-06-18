@@ -78,7 +78,7 @@
       btn.setAttribute('aria-checked', isDefault ? 'true' : 'false');
       btn.dataset.sceneId = scene.id;
       btn.title = `${scene.labelEn} ${scene.labelZh}`;
-      btn.innerHTML = `<img src="${scene.src}" alt="${scene.labelEn}" width="72" height="48" loading="lazy" />`;
+      btn.innerHTML = `<img src="${getSceneExportSrc(scene)}" alt="${scene.labelEn}" width="72" height="48" loading="lazy" />`;
       btn.addEventListener('click', () => selectScene(scene.id));
       scenePicker.appendChild(btn);
     });

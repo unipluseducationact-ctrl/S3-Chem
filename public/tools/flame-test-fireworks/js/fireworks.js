@@ -140,7 +140,7 @@ class FireworkSimulator {
   setScene(id) {
     const scene = getSceneById(id);
     this.currentSceneId = scene.id;
-    this.backgroundImg.src = scene.src;
+    this.backgroundImg.src = getSceneExportSrc(scene);
     this.backgroundImg.alt = `${scene.labelEn} ${scene.labelZh}`;
     return loadSceneImage(scene);
   }
