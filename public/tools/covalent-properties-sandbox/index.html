@@ -1,0 +1,2649 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微觀結構與物性沙盒 (Properties & Micro-Physics Sandbox)</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-cyber: #050814;
+            --sidebar-bg: #0b1126;
+            --card-glass: rgba(16, 22, 47, 0.65);
+            --card-border: rgba(0, 168, 255, 0.2);
+            --accent-blue: #00a8ff;
+            --accent-gold: #ffaa00;
+            --neon-green: #39ff14;
+            --neon-red: #ff3366;
+            --text-main: #f0f3ff;
+            --text-secondary: #8a9fc4;
+            
+            /* Custom Element/Atoms colors */
+            --h-color: #00f0ff;
+            --b-color: #fca5a5;
+            --c-color: #94a3b8;
+            --n-color: #6366f1;
+            --o-color: #ef4444;
+            --f-color: #f59e0b;
+            --si-color: #38bdf8;
+            --p-color: #ec4899;
+            --s-color: #eab308;
+            --cl-color: #10b981;
+            --br-color: #f43f5e;
+            --i-color: #a855f7;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-cyber);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(0, 168, 255, 0.1) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(255, 170, 0, 0.08) 0px, transparent 50%);
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px 30px;
+            box-sizing: border-box;
+            gap: 15px;
+        }
+
+        /* Top Header Bar */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            border-bottom: 1.5px solid rgba(0, 168, 255, 0.15);
+            padding-bottom: 15px;
+        }
+
+        .header-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(0, 168, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Orbitron', 'Noto Sans TC', sans-serif;
+        }
+
+        .header-title i {
+            color: var(--accent-blue);
+            filter: drop-shadow(0 0 8px var(--accent-blue));
+            animation: rotateAtom 10s linear infinite;
+        }
+
+        @keyframes rotateAtom {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
+        }
+
+        .lang-btn:hover {
+            background: var(--accent-blue);
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(0,168,255,0.4);
+        }
+
+        /* Main Workspace Grid */
+        .sandbox-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        /* Left Side Selector */
+        .sandbox-side {
+            background: rgba(11, 17, 38, 0.4);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+        }
+
+        .sandbox-mode-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .sandbox-mode-btn:hover {
+            background: rgba(0, 168, 255, 0.08);
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
+        }
+
+        .sandbox-mode-btn.active {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.15), rgba(155, 81, 224, 0.15));
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 168, 255, 0.15);
+        }
+
+        /* Right Side Simulator and Controls */
+        .sandbox-main {
+            display: grid;
+            grid-template-rows: 1fr 120px;
+            gap: 15px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sandbox-canvas-container {
+            background: rgba(3, 5, 15, 0.6);
+            border: 1.5px solid rgba(0, 168, 255, 0.15);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sandbox-canvas-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sandbox-control-panel {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .glass-card {
+            background-color: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Temp Slider */
+        .temp-slider-container {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .temp-slider-container input[type=range] {
+            flex-grow: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .temp-slider-container input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-blue);
+            transition: transform 0.1s;
+        }
+
+        .temp-slider-container input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .temp-val-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--neon-red);
+            min-width: 100px;
+            text-align: right;
+            text-shadow: 0 0 10px rgba(255,51,102,0.3);
+        }
+
+        /* Buttons */
+        .cyber-btn {
+            background: linear-gradient(135deg, var(--accent-blue), #9b51e0);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 168, 255, 0.25);
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        .cyber-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0, 168, 255, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .cyber-btn:active {
+            transform: translateY(1px);
+        }
+
+        .cyber-btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            box-shadow: none;
+        }
+
+        .cyber-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-secondary);
+        }
+
+        /* General Toast Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(11, 17, 38, 0.95);
+            border: 1.5px solid var(--accent-blue);
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+            display: none;
+            max-width: 450px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 168, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 頂部導航/標題 -->
+        <header class="header-bar">
+            <div class="header-title">
+                <i class="fa-solid fa-atom"></i>
+                <span class="lang-zh">微觀結構與物性沙盒</span>
+                <span class="lang-en" style="display:none;">Properties & Micro-Physics Sandbox</span>
+            </div>
+            <button class="lang-btn" onclick="toggleLanguage()">
+                <i class="fa-solid fa-language"></i>
+                <span id="lang-btn-text">English</span>
+            </button>
+        </header>
+
+        <!-- 主體區域 -->
+        <div class="sandbox-layout">
+            <!-- 左側晶體結構切換 -->
+            <aside class="sandbox-side">
+                <h3 style="margin: 0 0 5px 0; color: var(--accent-blue); font-size:1.1em; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span class="lang-zh">選擇晶體與結構類型</span>
+                    <span class="lang-en" style="display:none;">Select Solid Structure</span>
+                </h3>
+                <p style="font-size: 0.75em; color: var(--text-secondary); margin-bottom: 12px; line-height:1.4;">
+                    <span class="lang-zh">對比巨型與簡單分子晶體之微觀共價網絡與其宏觀物性之連繫。</span>
+                    <span class="lang-en" style="display:none;">Contrast macro-properties with molecular / network structures.</span>
+                </p>
+
+                <!-- Structure buttons -->
+                <div class="sandbox-mode-btn active" id="sb-mode-water" onclick="switchSandboxMode('water')">
+                    <div style="font-weight: 700; color:var(--h-color); font-size: 0.95em;">1. 水 (H<sub>2</sub>O)</div>
+                    <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
+                        <span class="lang-zh">簡單分子物質 (具氫鍵，熔沸時分子間力斷裂，共價鍵完好)</span>
+                        <span class="lang-en" style="display:none;">Simple Molecular (With H-bond, boiling breaks IMF, NOT covalent bond)</span>
+                    </div>
+                </div>
+
+                <div class="sandbox-mode-btn" id="sb-mode-co2" onclick="switchSandboxMode('co2')">
+                    <div style="font-weight: 700; color:var(--o-color); font-size: 0.95em;">2. 二氧化碳 (CO<sub>2</sub>)</div>
+                    <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
+                        <span class="lang-zh">簡單分子物質 (無氫鍵，低溫昇華，分子間力極弱)</span>
+                        <span class="lang-en" style="display:none;">Simple Molecular (No H-bond, sublimates, weak IMF)</span>
+                    </div>
+                </div>
+
+                <div class="sandbox-mode-btn" id="sb-mode-diamond" onclick="switchSandboxMode('diamond')">
+                    <div style="font-weight: 700; color:#cbd5e1; font-size: 0.95em;">3. 金剛石 (Diamond)</div>
+                    <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
+                        <span class="lang-zh">巨型共價網絡 (硬度極高，不導電，共價鍵極牢固)</span>
+                        <span class="lang-en" style="display:none;">Giant Covalent Network (Hard, non-conductive)</span>
+                    </div>
+                </div>
+
+                <div class="sandbox-mode-btn" id="sb-mode-graphite" onclick="switchSandboxMode('graphite')">
+                    <div style="font-weight: 700; color:var(--p-color); font-size: 0.95em;">4. 石墨 (Graphite)</div>
+                    <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
+                        <span class="lang-zh">層狀巨型共價 (層間力弱易滑動，具離域電子可導電)</span>
+                        <span class="lang-en" style="display:none;">Layered Giant Covalent (Slippery, conductive layers)</span>
+                    </div>
+                </div>
+
+                <div class="sandbox-mode-btn" id="sb-mode-nacl" onclick="switchSandboxMode('nacl')">
+                    <div style="font-weight: 700; color:var(--cl-color); font-size: 0.95em;">5. 氯化鈉 (NaCl - 對比)</div>
+                    <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
+                        <span class="lang-zh">巨型離子晶格 (6:6配位，易脆性：受敲擊同性 repulsion。熔融導電)</span>
+                        <span class="lang-en" style="display:none;">Giant Ionic Lattice (6:6 coordination. Brittle repulsion. Melt-conductive)</span>
+                    </div>
+                </div>
+
+                <div class="sandbox-mode-btn" id="sb-mode-cscl" onclick="switchSandboxMode('cscl')">
+                    <div style="font-weight: 700; color:var(--accent-blue); font-size: 0.95em;">6. 氯化銫 (CsCl - 對比)</div>
+                    <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
+                        <span class="lang-zh">巨型離子晶格 (8:8配位體心立方，易脆性，熔點 645°C)</span>
+                        <span class="lang-en" style="display:none;">Giant Ionic Lattice (8:8 BCC coordination. Brittle. m.p. 645°C)</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 右側模擬沙盒 -->
+            <main class="sandbox-main">
+                <!-- Physics Canvas Display -->
+                <div class="sandbox-canvas-container">
+                    <canvas id="sandbox-physics-canvas"></canvas>
+                    
+                    <!-- Top status badges inside canvas overlay -->
+                    <div style="position: absolute; top: 15px; left: 15px; pointer-events:none; background:rgba(11,17,38,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:10px; z-index:10; box-shadow: 0 4px 12px rgba(0,0,0,0.35);">
+                        <div style="font-size: 0.72em; color: var(--text-secondary); text-transform: uppercase; letter-spacing:0.5px;">Structure Info</div>
+                        <h4 style="margin: 3px 0 0 0; color: var(--accent-blue); font-size: 0.95em; font-weight:700;" id="sb-info-name">H2O - 簡單分子物質</h4>
+                    </div>
+
+                    <!-- Top-right options overlay inside canvas -->
+                    <div style="position: absolute; top: 15px; right: 15px; background:rgba(11,17,38,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:10px; z-index:10; display:flex; flex-direction:column; gap:6px; box-shadow: 0 4px 12px rgba(0,0,0,0.35);">
+                        <label style="display:flex; align-items:center; gap:8px; font-size:0.75em; color:var(--text-main); cursor:pointer; user-select:none; margin:0;">
+                            <input type="checkbox" id="sb-opt-show-imf" checked style="accent-color:var(--accent-blue); cursor:pointer; margin:0;" onchange="onToggleShowIMF()">
+                            <span class="lang-zh">顯示分子間作用力 / 氫鍵</span>
+                            <span class="lang-en" style="display:none;">Show IMF / Hydrogen Bonds</span>
+                        </label>
+                    </div>
+
+                    <!-- Bottom-left Legend Overlay inside canvas -->
+                    <div id="sb-legend-overlay" style="position: absolute; bottom: 15px; left: 15px; background:rgba(11,17,38,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.06); padding:10px 14px; border-radius:10px; z-index:10; pointer-events:none; display:flex; flex-direction:column; gap:6px; min-width: 150px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                        <div style="font-size: 0.72em; color: var(--text-secondary); text-transform: uppercase; letter-spacing:0.5px; margin-bottom: 2px; font-weight: 700;">
+                            <span class="lang-zh">圖例 / Legend</span>
+                            <span class="lang-en" style="display:none;">Legend</span>
+                        </div>
+                        <div id="sb-legend-items" style="display:flex; flex-direction:column; gap:6px; font-size:0.75em; color:var(--text-main);">
+                            <!-- Dynamic legend items will be injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Panel (Sliders & Macro Tests) -->
+                <div class="sandbox-control-panel">
+                    <!-- Thermal Slider Container -->
+                    <div class="temp-slider-container">
+                        <i class="fa-solid fa-temperature-half" style="font-size:1.6em; color:var(--neon-red); filter:drop-shadow(0 0 5px var(--neon-red));"></i>
+                        <div style="flex-grow:1; display:flex; flex-direction:column; gap:4px;">
+                            <div style="display:flex; justify-content:space-between; font-size:0.8em; color:var(--text-secondary);">
+                                <span class="lang-zh">調節微觀環境溫度 (Thermal Slider): <strong id="sb-temp-limits" style="color:var(--accent-blue);">0°C - 3000°C</strong></span>
+                                <span class="lang-en" style="display:none;">Adjust Microscopic Temp (Thermal Slider): <strong id="sb-temp-limits-en" style="color:var(--accent-blue);">0°C - 3000°C</strong></span>
+                            </div>
+                            <input type="range" id="sb-temp-slider" min="0" max="3000" value="25" oninput="onSandboxTempChange(this.value)">
+                        </div>
+                        <div class="temp-val-text" id="sb-temp-text">25 °C</div>
+                    </div>
+
+                    <!-- Macro Properties Tests -->
+                    <div class="glass-card" style="padding:10px 15px; display:flex; flex-direction:column; gap:8px; justify-content:center; height:100%; box-sizing:border-box;">
+                        <div style="font-size: 0.72em; color: var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Macro Properties Tests</div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="cyber-btn cyber-btn-secondary" style="flex:1; font-size:0.8em; padding:8px 12px;" onclick="applyShearForceSandbox()">
+                                <i class="fa-solid fa-hammer"></i>
+                                <span class="lang-zh">外力敲擊</span>
+                                <span class="lang-en" style="display:none;">Hammer Test</span>
+                            </button>
+                            <button class="cyber-btn cyber-btn-secondary" style="flex:1; font-size:0.8em; padding:8px 12px;" id="btn-sb-conductivity" onclick="toggleElectricalConductivitySandbox()">
+                                <i class="fa-solid fa-bolt"></i>
+                                <span class="lang-zh">導電測試</span>
+                                <span class="lang-en" style="display:none;">Conductivity</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Popup Tooltip -->
+    <div class="tooltip" id="global-tooltip">Tooltip</div>
+
+    <script>
+        // ==========================================
+        // 1. AUDIO SYNTHESIS ENGINE (Web Audio API)
+        // ==========================================
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+            }
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+            playClick() {
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                let osc = this.ctx.createOscillator();
+                let gain = this.ctx.createGain();
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.12);
+            }
+            playLink() {
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                let osc = this.ctx.createOscillator();
+                let gain = this.ctx.createGain();
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(350, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(700, this.ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.18);
+            }
+            playSuccess() {
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                let now = this.ctx.currentTime;
+                let notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+                notes.forEach((freq, idx) => {
+                    let osc = this.ctx.createOscillator();
+                    let gain = this.ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.type = "triangle";
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0.0, now);
+                    gain.gain.linearRampToValueAtTime(0.06, now + idx * 0.08 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.6);
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.62);
+                });
+            }
+            playError() {
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                let osc = this.ctx.createOscillator();
+                let gain = this.ctx.createGain();
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.type = "sawtooth";
+                osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(100, this.ctx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.26);
+            }
+        }
+        const sfx = new SoundEngine();
+
+        // ==========================================
+        // 2. LOCALIZATION UTILITIES
+        // ==========================================
+        var currentLang = 'zh'; // 'zh' or 'en'
+
+        function getTranslation(zh, en) {
+            return currentLang === 'zh' ? zh : en;
+        }
+
+        function refreshLanguageDisplay() {
+            if (currentLang === 'zh') {
+                document.querySelectorAll('.lang-zh').forEach(el => el.style.display = 'inline-block');
+                document.querySelectorAll('.lang-en').forEach(el => el.style.display = 'none');
+            } else {
+                document.querySelectorAll('.lang-zh').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.lang-en').forEach(el => el.style.display = 'inline-block');
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = (currentLang === 'zh') ? 'en' : 'zh';
+            const langBtnText = document.getElementById('lang-btn-text');
+            if (langBtnText) {
+                langBtnText.innerText = (currentLang === 'zh') ? 'English' : '繁體中文';
+            }
+
+            refreshLanguageDisplay();
+            updateSandboxInfoBanner();
+            
+            // Re-render slider limit labels dynamically
+            const limitsLabelZh = document.getElementById('sb-temp-limits');
+            const limitsLabelEn = document.getElementById('sb-temp-limits-en');
+            let limStr = '';
+            if (currentSandboxMode === 'water') {
+                limStr = `-50 °C - 300 °C`;
+            } else if (currentSandboxMode === 'co2') {
+                limStr = `-120 °C - 100 °C`;
+            } else if (currentSandboxMode === 'diamond' || currentSandboxMode === 'graphite') {
+                limStr = `25 °C - 3000 °C`;
+            } else if (currentSandboxMode === 'nacl' || currentSandboxMode === 'cscl') {
+                limStr = `25 °C - 1200 °C`;
+            }
+            if (limitsLabelZh) limitsLabelZh.innerText = limStr;
+            if (limitsLabelEn) limitsLabelEn.innerText = limStr;
+
+            // Re-render legend dynamically
+            updateSandboxLegend();
+        }
+
+        function showToast(zh, en) {
+            const tooltip = document.getElementById('global-tooltip');
+            if (!tooltip) return;
+            tooltip.innerHTML = getTranslation(zh, en);
+            tooltip.style.display = 'block';
+            tooltip.style.left = '50%';
+            tooltip.style.top = '12%';
+            tooltip.style.transform = 'translate(-50%, -50%)';
+            
+            // Clear existing timeout if any
+            if (window.toastTimeout) {
+                clearTimeout(window.toastTimeout);
+            }
+            window.toastTimeout = setTimeout(() => {
+                tooltip.style.display = 'none';
+            }, 4500);
+        }
+
+        // ==========================================
+        // 3. MICRO-PHYSICS SANDBOX VARIABLES
+        // ==========================================
+        var currentSandboxMode = 'water'; // 'water', 'co2', 'diamond', 'graphite', 'nacl', 'cscl'
+        var sandboxCanvas = null;
+        var sandboxCtx = null;
+        var sandboxTemp = 25; // celsius
+        var sandboxActive = false;
+        var sbParticles = []; // physics particles
+        var sbIntermolecularForces = []; // lines
+        var sbGraphiteVdWLinks = []; // cached Graphite interlayer links
+        var sbGraphiteCovalentBonds = []; // cached Graphite covalent bonds
+        var sbNaClBonds = []; // cached NaCl ionic bonds
+        var sbCsClWireframeBonds = []; // cached CsCl wireframe bonds
+        var sbCsClAttractionBonds = []; // cached CsCl attraction bonds
+        var sbHammerOffset = 0; // for hammer animation
+        var sbHammerAnimating = false;
+        var sbConductivityEnabled = false;
+        var sbDelocalizedElectrons = []; // charge carrying particles
+        var sbShowIMF = true; // show intermolecular forces / hydrogen bonds
+        var lastTime = 0; // for frame-rate independent physics
+        var sbTimeAccumulator = 0; // custom time accumulator for vibrations
+
+        // 3D Projection variables & helpers for realistic crystal structures
+        var sbRotationTheta = 0.5;
+        var sbRotationPhi = 0.35;
+
+        var sbCosTheta = Math.cos(sbRotationTheta);
+        var sbSinTheta = Math.sin(sbRotationTheta);
+        var sbCosPhi = Math.cos(sbRotationPhi);
+        var sbSinPhi = Math.sin(sbRotationPhi);
+        var sbLastTrigTheta = sbRotationTheta;
+        var sbLastTrigPhi = sbRotationPhi;
+
+        function updateRotationTrig() {
+            if (sbRotationTheta !== sbLastTrigTheta || sbRotationPhi !== sbLastTrigPhi) {
+                sbCosTheta = Math.cos(sbRotationTheta);
+                sbSinTheta = Math.sin(sbRotationTheta);
+                sbCosPhi = Math.cos(sbRotationPhi);
+                sbSinPhi = Math.sin(sbRotationPhi);
+                sbLastTrigTheta = sbRotationTheta;
+                sbLastTrigPhi = sbRotationPhi;
+            }
+        }
+
+        function rotate3DPoint(x, y, z) {
+            // Rotate around Y-axis (theta) using pre-calculated trig values
+            const x1 = x * sbCosTheta - z * sbSinTheta;
+            const z1 = x * sbSinTheta + z * sbCosTheta;
+
+            // Rotate around X-axis (phi) using pre-calculated trig values
+            const y2 = y * sbCosPhi - z1 * sbSinPhi;
+            const z2 = y * sbSinPhi + z1 * sbCosPhi;
+
+            return { x: x1, y: y2, z: z2 };
+        }
+
+        function project3DTo2D(px, py, pz, w, h, zoom = 1.0) {
+            updateRotationTrig();
+            const rotated = rotate3DPoint(px, py, pz);
+            const D = 4.0; // Camera distance
+            const scaleFactor = D / (D + rotated.z / 200.0);
+            // Increased global zoom to 1.8 for a significantly larger, clearer diagram
+            const finalZoom = zoom * 1.8;
+            const x = w / 2 + rotated.x * scaleFactor * finalZoom;
+            const y = h / 2 + rotated.y * scaleFactor * finalZoom;
+            return { x, y, z: rotated.z };
+        }
+
+        // ==========================================
+        // 4. MAIN PROPERTIES SANDBOX ENGINE
+        // ==========================================
+        function initPropertiesSandbox() {
+            sandboxCanvas = document.getElementById('sandbox-physics-canvas');
+            if (!sandboxCanvas) return;
+            sandboxCtx = sandboxCanvas.getContext('2d');
+
+            // Resize canvas to match css parent container bounds
+            const rect = sandboxCanvas.getBoundingClientRect();
+            sandboxCanvas.width = rect.width;
+            sandboxCanvas.height = rect.height;
+
+            // Reset temperature slider, values and limit texts
+            const slider = document.getElementById('sb-temp-slider');
+            const valText = document.getElementById('sb-temp-text');
+            const limitsLabelZh = document.getElementById('sb-temp-limits');
+            const limitsLabelEn = document.getElementById('sb-temp-limits-en');
+            
+            let limStr = '';
+            if (slider && valText) {
+                if (currentSandboxMode === 'water') {
+                    slider.min = "-50"; slider.max = "300"; slider.value = "25";
+                    sandboxTemp = 25; valText.innerText = `25 °C`;
+                    limStr = `-50 °C - 300 °C`;
+                } else if (currentSandboxMode === 'co2') {
+                    slider.min = "-120"; slider.max = "100"; slider.value = "25";
+                    sandboxTemp = 25; valText.innerText = `25 °C`;
+                    limStr = `-120 °C - 100 °C`;
+                } else if (currentSandboxMode === 'diamond' || currentSandboxMode === 'graphite') {
+                    slider.min = "25"; slider.max = "3000"; slider.value = "25";
+                    sandboxTemp = 25; valText.innerText = `25 °C`;
+                    limStr = `25 °C - 3000 °C`;
+                } else if (currentSandboxMode === 'nacl' || currentSandboxMode === 'cscl') {
+                    slider.min = "25"; slider.max = "1200"; slider.value = "25";
+                    sandboxTemp = 25; valText.innerText = `25 °C`;
+                    limStr = `25 °C - 1200 °C`;
+                }
+            }
+            if (limitsLabelZh) limitsLabelZh.innerText = limStr;
+            if (limitsLabelEn) limitsLabelEn.innerText = limStr;
+
+            // Toggle active sidebar buttons
+            document.querySelectorAll('.sandbox-mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const activeBtn = document.getElementById(`sb-mode-${currentSandboxMode}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Update Sandbox Info Banner Title
+            updateSandboxInfoBanner();
+
+            // Disable active modes
+            sbConductivityEnabled = false;
+            sbHammerAnimating = false;
+            sbHammerOffset = 0;
+            
+            // Reset Conductivity button style
+            const condBtn = document.getElementById('btn-sb-conductivity');
+            if (condBtn) {
+                condBtn.style.backgroundColor = '';
+                condBtn.style.boxShadow = '';
+                condBtn.style.borderColor = '';
+            }
+
+            // Reset timing and 3D rotation
+            lastTime = 0;
+            sbRotationTheta = 0.5;
+            sbRotationPhi = 0.35;
+
+            // Build particles
+            buildSandboxParticles();
+
+            // Start rendering loop (single instance)
+            if (!sandboxActive) {
+                sandboxActive = true;
+                animateSandbox();
+            }
+
+            // Update legend overlay
+            updateSandboxLegend();
+        }
+
+        function switchSandboxMode(mode) {
+            currentSandboxMode = mode;
+            initPropertiesSandbox();
+            sfx.playClick();
+        }
+
+        function onSandboxTempChange(val) {
+            sandboxTemp = parseFloat(val);
+            document.getElementById('sb-temp-text').innerText = `${sandboxTemp.toFixed(0)} °C`;
+            
+            // Water states label updates
+            updateSandboxInfoBanner();
+        }
+
+        function updateSandboxInfoBanner() {
+            const bannerTitle = document.getElementById('sb-info-name');
+            if (!bannerTitle) return;
+
+            let titleZh = '';
+            let titleEn = '';
+
+            if (currentSandboxMode === 'water') {
+                let stateZh = '液態 (Liquid)';
+                if (sandboxTemp <= 0) stateZh = '固態冰 (Solid Ice)';
+                else if (sandboxTemp >= 100) stateZh = '氣態水蒸氣 (Water Vapor)';
+                titleZh = `水 (H₂O) — 簡單分子物質 [目前狀態：${stateZh}]`;
+                titleEn = `Water (H₂O) — Simple Molecular Structure [State: ${sandboxTemp <= 0 ? 'Solid Ice' : sandboxTemp >= 100 ? 'Gas Vapor' : 'Liquid'}]`;
+            } else if (currentSandboxMode === 'co2') {
+                let stateZh = '氣態 (Gas)';
+                if (sandboxTemp <= -78) stateZh = '固態乾冰 (Solid Dry Ice)';
+                titleZh = `二氧化碳 (CO₂) — 簡單分子物質 [目前狀態：${stateZh}]`;
+                titleEn = `Carbon Dioxide (CO₂) — Simple Molecular Structure [State: ${sandboxTemp <= -78 ? 'Solid Dry Ice' : 'Gas'}]`;
+            } else if (currentSandboxMode === 'diamond') {
+                titleZh = '金剛石 (Diamond) — 巨型共價網絡結構';
+                titleEn = 'Diamond (Carbon) — Giant Covalent Network';
+            } else if (currentSandboxMode === 'graphite') {
+                titleZh = '石墨 (Graphite) — 層狀巨型共價結構';
+                titleEn = 'Graphite (Carbon) — Layered Giant Covalent';
+            } else if (currentSandboxMode === 'nacl') {
+                let stateZh = '固態晶格 (Solid Lattice)';
+                if (sandboxTemp >= 801) stateZh = '熔融態游離離子 (Molten Free Ions)';
+                titleZh = `氯化鈉 (NaCl) — 巨型離子晶格 [目前狀態：${stateZh}]`;
+                titleEn = `Sodium Chloride (NaCl) — Giant Ionic Lattice [State: ${sandboxTemp >= 801 ? 'Molten Liquid' : 'Solid Lattice'}]`;
+            } else if (currentSandboxMode === 'cscl') {
+                let stateZh = '固態晶格 (Solid Lattice)';
+                if (sandboxTemp >= 645) stateZh = '熔融態游離離子 (Molten Free Ions)';
+                titleZh = `氯化銫 (CsCl) — 巨型離子晶格 [目前狀態：${stateZh}]`;
+                titleEn = `Cesium Chloride (CsCl) — Giant Ionic Lattice [State: ${sandboxTemp >= 645 ? 'Molten Liquid' : 'Solid Lattice'}]`;
+            }
+
+            bannerTitle.innerText = getTranslation(titleZh, titleEn);
+        }
+
+        function updateSandboxLegend() {
+            const legendItems = document.getElementById('sb-legend-items');
+            if (!legendItems) return;
+
+            let html = '';
+
+            const circleSpan = (bgColor, borderColor, text, textColor = '#ffffff') => {
+                return `<span style="display:inline-block; width:14px; height:14px; border-radius:50%; background:${bgColor}; border:1.5px solid ${borderColor}; vertical-align:middle; margin-right:8px; text-align:center; line-height:11px; font-size:8px; color:${textColor}; font-weight:bold; box-shadow:0 0 4px ${bgColor}80;">${text}</span>`;
+            };
+
+            const lineSpan = (color, isDashed = false, isDouble = false, isThick = false) => {
+                let borderStyle = isDashed ? 'dashed' : 'solid';
+                let height = isThick ? '4px' : '2px';
+                if (isDouble) {
+                    return `<span style="display:inline-block; width:20px; height:6px; border-top:2px solid ${color}; border-bottom:2px solid ${color}; vertical-align:middle; margin-right:8px;"></span>`;
+                }
+                if (isDashed) {
+                    return `<span style="display:inline-block; width:20px; height:0; border-top:2px dashed ${color}; vertical-align:middle; margin-right:8px;"></span>`;
+                }
+                return `<span style="display:inline-block; width:20px; height:${height}; background:${color}; vertical-align:middle; margin-right:8px; border-radius:1px;"></span>`;
+            };
+
+            const electronSpan = (color) => {
+                return `<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${color}; box-shadow:0 0 8px ${color}; vertical-align:middle; margin-right:8px;"></span>`;
+            };
+
+            const formatItem = (visual, zhText, enText) => {
+                return `<div style="display:flex; align-items:center; line-height:1.4; margin-bottom: 2px;">${visual}<span class="lang-zh">${zhText}</span><span class="lang-en" style="display:none;">${enText}</span></div>`;
+            };
+
+            if (currentSandboxMode === 'water') {
+                html += formatItem(circleSpan('#ef4444', '#f87171', 'O'), '氧原子 (O, 帶偏負電荷 δ⁻)', 'Oxygen (O, δ⁻)');
+                html += formatItem(circleSpan('#00f0ff', '#22d3ee', 'H', '#0b1126'), '氫原子 (H, 帶偏正電荷 δ⁺)', 'Hydrogen (H, δ⁺)');
+                html += formatItem(lineSpan('#ffffff'), '共價鍵 (分子內強化學鍵)', 'Covalent Bond (Strong)');
+                if (sbShowIMF) {
+                    html += formatItem(lineSpan('rgba(0, 240, 255, 0.95)', true), '氫鍵 (分子間作用力，弱)', 'Hydrogen Bond (Weak IMF)');
+                }
+            } else if (currentSandboxMode === 'co2') {
+                html += formatItem(circleSpan('#94a3b8', '#cbd5e1', 'C'), '碳原子 (C)', 'Carbon (C)');
+                html += formatItem(circleSpan('#ef4444', '#f87171', 'O'), '氧原子 (O)', 'Oxygen (O)');
+                html += formatItem(lineSpan('#ffffff', false, true), '共價雙鍵 (分子內強化學鍵)', 'Double Covalent Bond (Strong)');
+                if (sbShowIMF) {
+                    html += formatItem(lineSpan('rgba(148, 163, 184, 0.75)', true), '范德華力 (分子間作用力，極弱)', 'Van der Waals (Very Weak IMF)');
+                }
+            } else if (currentSandboxMode === 'diamond') {
+                html += formatItem(circleSpan('#94a3b8', '#cbd5e1', 'C'), '碳原子 (C)', 'Carbon (C)');
+                html += formatItem(lineSpan('rgba(148, 163, 184, 0.75)', false, false, true), '共價單鍵 (極強網狀結構)', 'Covalent Bond (Extremely Strong)');
+                html += formatItem(lineSpan('rgba(148, 163, 184, 0.25)', true), '晶胞輔助線', 'Unit Cell Wireframe');
+            } else if (currentSandboxMode === 'graphite') {
+                html += formatItem(circleSpan('#475569', '#94a3b8', 'C'), '碳原子 (C)', 'Carbon (C)');
+                html += formatItem(lineSpan('rgba(148, 163, 184, 0.75)'), '層內共價鍵 (強)', 'In-layer Covalent Bond (Strong)');
+                if (sbShowIMF) {
+                    html += formatItem(lineSpan('rgba(148, 163, 184, 0.75)', true), '層間范德華力 (弱，易滑動)', 'Interlayer Van der Waals (Weak)');
+                }
+                if (sbConductivityEnabled) {
+                    html += formatItem(electronSpan('#00f0ff'), '離域自由電子 (定向移動導電)', 'Delocalized Electron (Conductive)');
+                }
+            } else if (currentSandboxMode === 'nacl') {
+                html += formatItem(circleSpan('#a855f7', '#c084fc', '+'), '鈉離子 (Na⁺)', 'Sodium Ion (Na⁺)');
+                html += formatItem(circleSpan('#10b981', '#34d399', '-'), '氯離子 (Cl⁻)', 'Chloride Ion (Cl⁻)');
+                html += formatItem(lineSpan('rgba(16, 185, 129, 0.45)'), '離子鍵 (靜電吸引力，強)', 'Ionic Bond (Strong Attraction)');
+                if (sbHammerAnimating && sbHammerOffset > 8) {
+                    html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '同性電荷排斥 (錯位碎裂)', 'Like-charge Repulsion (Shatter)');
+                }
+            } else if (currentSandboxMode === 'cscl') {
+                html += formatItem(circleSpan('#a855f7', '#c084fc', '+'), '銫離子 (Cs⁺)', 'Cesium Ion (Cs⁺)');
+                html += formatItem(circleSpan('#22c55e', '#4ade80', '-'), '氯離子 (Cl⁻)', 'Chloride Ion (Cl⁻)');
+                html += formatItem(lineSpan('rgba(148, 163, 184, 0.75)', false, false, true), '離子鍵 (體心立方配位連接)', 'Ionic Bond (BCC Coordination)');
+                html += formatItem(lineSpan('rgba(148, 163, 184, 0.35)', true), '晶胞輔助線', 'Unit Cell Wireframe');
+                if (sbHammerAnimating && sbHammerOffset > 8) {
+                    html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '同性電荷排斥 (錯位碎裂)', 'Like-charge Repulsion (Shatter)');
+                }
+            }
+
+            legendItems.innerHTML = html;
+
+            // Apply current language display to the newly injected legend elements
+            refreshLanguageDisplay();
+        }
+
+        // ==========================================
+        // 5. BUILD PHYSICS PARTICLES
+        // ==========================================
+        function buildSandboxParticles() {
+            sbParticles = [];
+            sbIntermolecularForces = [];
+            sbDelocalizedElectrons = [];
+
+            const w = sandboxCanvas.width;
+            const h = sandboxCanvas.height;
+
+            if (currentSandboxMode === 'water') {
+                // Build 16 water molecules
+                for (let i = 0; i < 16; i++) {
+                    let col = i % 4;
+                    let row = Math.floor(i / 4);
+                    let x = w/4 + col * (w/8) + (Math.random() - 0.5) * 15;
+                    let y = h/4 + row * (h/6) + (Math.random() - 0.5) * 15;
+                    
+                    sbParticles.push({
+                        id: i,
+                        ox: x,
+                        oy: y,
+                        x: x,
+                        y: y,
+                        vx: (Math.random() - 0.5) * 3,
+                        vy: (Math.random() - 0.5) * 3,
+                        angle: Math.random() * Math.PI * 2,
+                        spinSpeed: (Math.random() - 0.5) * 0.04,
+                        r: 18 // effective radius of H2O molecule
+                    });
+                }
+            } else if (currentSandboxMode === 'co2') {
+                // Build 12 CO2 molecules
+                for (let i = 0; i < 12; i++) {
+                    let col = i % 4;
+                    let row = Math.floor(i / 4);
+                    let x = w/4 + col * (w/8) + (Math.random() - 0.5) * 15;
+                    let y = h/4 + row * (h/6) + (Math.random() - 0.5) * 15;
+                    
+                    sbParticles.push({
+                        id: i,
+                        c: col,
+                        r_row: row,
+                        ox: x,
+                        oy: y,
+                        x: x,
+                        y: y,
+                        vx: (Math.random() - 0.5) * 3,
+                        vy: (Math.random() - 0.5) * 3,
+                        angle: (col + row) % 2 === 0 ? Math.PI / 4 : -Math.PI / 4,
+                        spinSpeed: (Math.random() - 0.5) * 0.04,
+                        r: 20 // effective radius of CO2 molecule
+                    });
+                }
+            } else if (currentSandboxMode === 'diamond') {
+                // Diamond 3D network: textbook face-centered cubic (FCC) unit cell with 4 tetrahedral carbon atoms inside
+                // This matches the attached diagram exactly, showing the full interlocking cage structure!
+                const atoms = [
+                    // Corner atoms of the FCC unit cell (8 atoms)
+                    { x: -1, y: -1, z: -1 }, // 0: (0, 0, 0)
+                    { x:  1, y: -1, z: -1 }, // 1: (1, 0, 0)
+                    { x:  1, y:  1, z: -1 }, // 2: (1, 1, 0)
+                    { x: -1, y:  1, z: -1 }, // 3: (0, 1, 0)
+                    { x: -1, y: -1, z:  1 }, // 4: (0, 0, 1)
+                    { x:  1, y: -1, z:  1 }, // 5: (1, 0, 1)
+                    { x:  1, y:  1, z:  1 }, // 6: (1, 1, 1)
+                    { x: -1, y:  1, z:  1 }, // 7: (0, 1, 1)
+
+                    // Face-centered atoms of the FCC unit cell (6 atoms)
+                    { x:  0, y: -1, z:  0 }, // 8: Bottom face center
+                    { x:  0, y:  1, z:  0 }, // 9: Top face center
+                    { x: -1, y:  0, z:  0 }, // 10: Left face center
+                    { x:  1, y:  0, z:  0 }, // 11: Right face center
+                    { x:  0, y:  0, z: -1 }, // 12: Back face center
+                    { x:  0, y:  0, z:  1 }, // 13: Front face center
+
+                    // Inner tetrahedral atoms (4 atoms)
+                    { x: -0.5, y: -0.5, z: -0.5 }, // 14: Bottom-Back-Left octant center
+                    { x:  0.5, y:  0.5, z: -0.5 }, // 15: Bottom-Front-Right octant center
+                    { x: -0.5, y:  0.5, z:  0.5 }, // 16: Top-Back-Right octant center
+                    { x:  0.5, y: -0.5, z:  0.5 }  // 17: Top-Front-Left octant center
+                ];
+
+                const scale = 80;
+                atoms.forEach((a, i) => {
+                    // Calculate initial projected coordinates
+                    const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, 1.2);
+                    sbParticles.push({
+                        id: i,
+                        ox3d: a.x * scale,
+                        oy3d: a.y * scale,
+                        oz3d: a.z * scale,
+                        ox: proj.x,
+                        oy: proj.y,
+                        x: proj.x,
+                        y: proj.y,
+                        z: proj.z,
+                        vx: 0,
+                        vy: 0,
+                        r: 9 // Carbon atom radius
+                    });
+                });
+            } else if (currentSandboxMode === 'graphite') {
+                // Layered grid: 3 horizontal layers of carbon atoms in 3D
+                let id = 0;
+                const L = 30; // bond length
+                
+                // Generate a perfect honeycomb sheet of unique atoms in the X-Z plane
+                let sheetAtoms = [];
+                // We want a 2x3 grid of hexagons
+                for (let r = 0; r < 2; r++) {
+                    for (let c = 0; c < 3; c++) {
+                        let cx = c * L * Math.sqrt(3) - 75;
+                        let cz = r * L * 1.5 - 35;
+                        if (r % 2 === 1) {
+                            cx += L * Math.sqrt(3) / 2;
+                        }
+                        
+                        // Add 6 vertices for this hexagon
+                        for (let a = 0; a < 6; a++) {
+                            let angle = (a * Math.PI / 3) + Math.PI / 6; // 30, 90, 150, ...
+                            let px = cx + L * Math.cos(angle);
+                            let pz = cz + L * Math.sin(angle);
+                            
+                            // Check if this point already exists
+                            let exists = false;
+                            for (let p of sheetAtoms) {
+                                let dx = p.x - px;
+                                let dz = p.z - pz;
+                                if (dx*dx + dz*dz < 25) { // 5px tolerance
+                                    exists = true;
+                                    break;
+                                }
+                            }
+                            if (!exists) {
+                                sheetAtoms.push({ x: px, z: pz });
+                            }
+                        }
+                    }
+                }
+
+                for (let layer = 0; layer < 3; layer++) {
+                    let y = (layer - 1) * 75; // 3 layers stacked vertically along Y: -75, 0, 75
+                    
+                    sheetAtoms.forEach(sa => {
+                        let x = sa.x;
+                        let z = sa.z;
+                        
+                        // Apply AB stacking offset to layer 1
+                        if (layer === 1) {
+                            x += L * 0.866025;
+                            z += L * 0.5;
+                        }
+
+                        const proj = project3DTo2D(x, y, z, w, h, 1.2);
+                        sbParticles.push({
+                            id: id++,
+                            layer: layer,
+                            ox3d: x,
+                            oy3d: y,
+                            oz3d: z,
+                            ox: proj.x,
+                            oy: proj.y,
+                            x: proj.x,
+                            y: proj.y,
+                            z: proj.z,
+                            vx: 0,
+                            vy: 0,
+                            r: 8 // Carbon atom radius
+                        });
+                    });
+
+                    // Create free floating delocalized valence electrons along layers!
+                    // We'll update their Y coordinates dynamically in drawGraphiteLattice
+                    for (let e = 0; e < 5; e++) {
+                        sbDelocalizedElectrons.push({
+                            layer: layer,
+                            x: Math.random() * w,
+                            y: h/2, // Will be updated dynamically
+                            vx: Math.random() * 2 + 1
+                        });
+                    }
+                }
+
+                // Pre-calculate covalent bonds
+                sbGraphiteCovalentBonds = [];
+                for (let i = 0; i < sbParticles.length; i++) {
+                    let p1 = sbParticles[i];
+                    for (let j = i + 1; j < sbParticles.length; j++) {
+                        let p2 = sbParticles[j];
+                        if (p1.layer === p2.layer) {
+                            let dx = p1.ox3d - p2.ox3d;
+                            let dz = p1.oz3d - p2.oz3d;
+                            let d = dx*dx + dz*dz;
+                            if (d < 1100) {
+                                sbGraphiteCovalentBonds.push({ u: p1.id, v: p2.id });
+                            }
+                        }
+                    }
+                }
+
+                // Pre-calculate Van der Waals vertical links
+                sbGraphiteVdWLinks = [];
+                for (let i = 0; i < sbParticles.length; i++) {
+                    let p1 = sbParticles[i];
+                    if (p1.layer !== 0 && p1.layer !== 1) continue;
+                    let minD = 999999;
+                    let closestId = -1;
+                    for (let j = 0; j < sbParticles.length; j++) {
+                        let p2 = sbParticles[j];
+                        if (p2.layer !== p1.layer + 1) continue;
+                        let dx = p1.ox3d - p2.ox3d;
+                        let dz = p1.oz3d - p2.oz3d;
+                        let d = dx*dx + dz*dz;
+                        if (d < minD) {
+                            minD = d;
+                            closestId = p2.id;
+                        }
+                    }
+                    if (closestId !== -1 && minD < 200) {
+                        sbGraphiteVdWLinks.push({ u: p1.id, v: closestId });
+                    }
+                }
+            } else if (currentSandboxMode === 'nacl') {
+                // NaCl: 3x3x3 alternating cubic lattice in 3D
+                let id = 0;
+                const scale = 55;
+                for (let gx = -1; gx <= 1; gx++) {
+                    for (let gy = -1; gy <= 1; gy++) {
+                        for (let gz = -1; gz <= 1; gz++) {
+                            const isNa = (gx + gy + gz) % 2 === 0;
+                            const x3d = gx * scale;
+                            const y3d = gy * scale;
+                            const z3d = gz * scale;
+                            
+                            const proj = project3DTo2D(x3d, y3d, z3d, w, h, 1.2);
+                            sbParticles.push({
+                                id: id++,
+                                gx: gx,
+                                gy: gy,
+                                gz: gz,
+                                isNa: isNa,
+                                ox3d: x3d,
+                                oy3d: y3d,
+                                oz3d: z3d,
+                                ox: proj.x,
+                                oy: proj.y,
+                                x: proj.x,
+                                y: proj.y,
+                                z: proj.z,
+                                vx: (Math.random() - 0.5) * 1.5,
+                                vy: (Math.random() - 0.5) * 1.5,
+                                r: isNa ? 8 : 13 // Na+ is 8, Cl- is 13
+                            });
+                        }
+                    }
+                }
+
+                // Pre-calculate NaCl ionic bonds
+                sbNaClBonds = [];
+                for (let i = 0; i < sbParticles.length; i++) {
+                    let p1 = sbParticles[i];
+                    for (let j = i + 1; j < sbParticles.length; j++) {
+                        let p2 = sbParticles[j];
+                        let distGrid = Math.abs(p1.gx - p2.gx) + Math.abs(p1.gy - p2.gy) + Math.abs(p1.gz - p2.gz);
+                        if (distGrid === 1) {
+                            sbNaClBonds.push({ u: p1.id, v: p2.id, u_gx: p1.gx, v_gx: p2.gx });
+                        }
+                    }
+                }
+            } else if (currentSandboxMode === 'cscl') {
+                // CsCl: 8 adjacent unit cells (2x2x2 block)
+                // To keep the exact unit cell structure (where corners are Cs+ (purple) and center is Cl- (green)),
+                // we generate 8 adjacent unit cells.
+                // Each unit cell has 8 Cs+ corners (purple) and 1 Cl- center (green).
+                // When combined into a 2x2x2 block of unit cells:
+                // - The corners of the cells form a 3x3x3 grid of Cs+ ions (purple, total 27 ions).
+                // - The centers of the cells form a 2x2x2 grid of Cl- ions (green, total 8 ions).
+                let id = 0;
+                const scale = 45; // slightly smaller scale to fit all 8 unit cells perfectly
+                
+                // 27 Cs+ corners (purple in the attached diagram)
+                for (let gx = -1; gx <= 1; gx++) {
+                    for (let gy = -1; gy <= 1; gy++) {
+                        for (let gz = -1; gz <= 1; gz++) {
+                            const x3d = gx * scale * 2;
+                            const y3d = gy * scale * 2;
+                            const z3d = gz * scale * 2;
+                            
+                            const proj = project3DTo2D(x3d, y3d, z3d, w, h, 1.2);
+                            sbParticles.push({
+                                id: id++,
+                                gx: gx,
+                                gy: gy,
+                                gz: gz,
+                                isCs: true, // Cs+ corners (purple)
+                                ox3d: x3d,
+                                oy3d: y3d,
+                                oz3d: z3d,
+                                ox: proj.x,
+                                oy: proj.y,
+                                x: proj.x,
+                                y: proj.y,
+                                z: proj.z,
+                                vx: (Math.random() - 0.5) * 1.5,
+                                vy: (Math.random() - 0.5) * 1.5,
+                                r: 11 // Cs+ is 11
+                            });
+                        }
+                    }
+                }
+                
+                // 8 Cl- body centers (green in the attached diagram)
+                for (let gx = -0.5; gx <= 0.5; gx++) {
+                    for (let gy = -0.5; gy <= 0.5; gy++) {
+                        for (let gz = -0.5; gz <= 0.5; gz++) {
+                            const x3d = gx * scale * 2;
+                            const y3d = gy * scale * 2;
+                            const z3d = gz * scale * 2;
+                            
+                            const proj = project3DTo2D(x3d, y3d, z3d, w, h, 1.2);
+                            sbParticles.push({
+                                id: id++,
+                                gx: gx,
+                                gy: gy,
+                                gz: gz,
+                                isCs: false, // Cl- centers (green)
+                                ox3d: x3d,
+                                oy3d: y3d,
+                                oz3d: z3d,
+                                ox: proj.x,
+                                oy: proj.y,
+                                x: proj.x,
+                                y: proj.y,
+                                z: proj.z,
+                                vx: (Math.random() - 0.5) * 1.5,
+                                vy: (Math.random() - 0.5) * 1.5,
+                                r: 13 // Cl- is 13
+                            });
+                        }
+                    }
+                }
+
+                // Pre-calculate CsCl Wireframe Bonds
+                sbCsClWireframeBonds = [];
+                for (let i = 0; i < sbParticles.length; i++) {
+                    let p1 = sbParticles[i];
+                    if (!p1.isCs) continue;
+                    for (let j = i + 1; j < sbParticles.length; j++) {
+                        let p2 = sbParticles[j];
+                        if (!p2.isCs) continue;
+                        let distGrid = Math.abs(p1.gx - p2.gx) + Math.abs(p1.gy - p2.gy) + Math.abs(p1.gz - p2.gz);
+                        if (distGrid === 1) {
+                            sbCsClWireframeBonds.push({ u: p1.id, v: p2.id, u_gx: p1.gx, v_gx: p2.gx });
+                        }
+                    }
+                }
+
+                // Pre-calculate CsCl Attraction Bonds
+                sbCsClAttractionBonds = [];
+                for (let i = 0; i < sbParticles.length; i++) {
+                    let p1 = sbParticles[i];
+                    if (p1.isCs) continue; // Start from Cl- centers (isCs = false)
+                    for (let j = 0; j < sbParticles.length; j++) {
+                        let p2 = sbParticles[j];
+                        if (!p2.isCs) continue; // Must connect to Cs+ corners
+                        let dx = Math.abs(p1.gx - p2.gx);
+                        let dy = Math.abs(p1.gy - p2.gy);
+                        let dz = Math.abs(p1.gz - p2.gz);
+                        if (dx === 0.5 && dy === 0.5 && dz === 0.5) {
+                            sbCsClAttractionBonds.push({ u: p1.id, v: p2.id, u_gx: p1.gx, v_gx: p2.gx });
+                        }
+                    }
+                }
+            }
+
+            // Update legend overlay dynamically
+            updateSandboxLegend();
+        }
+
+        // ==========================================
+        // 5.5 PHYSICS HELPERS (COLLISIONS & TIMING)
+        // ==========================================
+        function resolveCollisions(particles) {
+            for (let i = 0; i < particles.length; i++) {
+                let p1 = particles[i];
+                for (let j = i + 1; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    
+                    let dx = p2.x - p1.x;
+                    let dy = p2.y - p1.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    let minDist = p1.r + p2.r;
+                    
+                    if (dist < minDist) {
+                        // Collision detected!
+                        // 1. Separate them to prevent overlapping (static resolution)
+                        let overlap = minDist - dist;
+                        let nx = dx / (dist || 1);
+                        let ny = dy / (dist || 1);
+                        
+                        // Mass proportional to radius squared (area)
+                        let m1 = p1.r * p1.r;
+                        let m2 = p2.r * p2.r;
+                        let totalMass = m1 + m2;
+                        
+                        p1.x -= nx * overlap * (m2 / totalMass);
+                        p1.y -= ny * overlap * (m2 / totalMass);
+                        p2.x += nx * overlap * (m1 / totalMass);
+                        p2.y += ny * overlap * (m1 / totalMass);
+                        
+                        // 2. Dynamic resolution (elastic collision)
+                        let rvx = p2.vx - p1.vx;
+                        let rvy = p2.vy - p1.vy;
+                        
+                        // Velocity along normal
+                        let velAlongNormal = rvx * nx + rvy * ny;
+                        
+                        // Do not resolve if velocities are separating
+                        if (velAlongNormal < 0) {
+                            let restitution = 0.9;
+                            let impulseScalar = -(1 + restitution) * velAlongNormal;
+                            impulseScalar /= (1/m1 + 1/m2);
+                            
+                            let ix = impulseScalar * nx;
+                            let iy = impulseScalar * ny;
+                            
+                            p1.vx -= ix / m1;
+                            p1.vy -= iy / m1;
+                            p2.vx += ix / m2;
+                            p2.vy += iy / m2;
+                        }
+                    }
+                }
+            }
+        }
+
+        function handleBoundaryCollisions(p, w, h, padding = 0) {
+            let radius = p.r || 0;
+            let minX = radius + padding;
+            let maxX = w - radius - padding;
+            let minY = radius + padding;
+            let maxY = h - radius - padding;
+            
+            if (p.x < minX) {
+                p.x = minX;
+                p.vx = Math.abs(p.vx) * 0.9;
+            } else if (p.x > maxX) {
+                p.x = maxX;
+                p.vx = -Math.abs(p.vx) * 0.9;
+            }
+            
+            if (p.y < minY) {
+                p.y = minY;
+                p.vy = Math.abs(p.vy) * 0.9;
+            } else if (p.y > maxY) {
+                p.y = maxY;
+                p.vy = -Math.abs(p.vy) * 0.9;
+            }
+        }
+
+        // ==========================================
+        // 6. MAIN RENDER & PHYSICS LOOP
+        // ==========================================
+        function animateSandbox(timestamp) {
+            if (!sandboxActive) {
+                return;
+            }
+
+            if (!timestamp) timestamp = performance.now();
+            if (!lastTime) lastTime = timestamp;
+            let dt = (timestamp - lastTime) / 16.67; // normalized deltaTime (1.0 at 60fps)
+            if (dt > 4) dt = 4; // cap to prevent huge jumps
+            lastTime = timestamp;
+
+            const w = sandboxCanvas.width;
+            const h = sandboxCanvas.height;
+            const ctx = sandboxCtx;
+
+            ctx.clearRect(0, 0, w, h);
+
+            let speedMult = 1.0;
+            sbTimeAccumulator += dt * speedMult; // accumulate time
+
+            if (currentSandboxMode === 'water') {
+                if (sandboxTemp <= 0) {
+                    // Ice solid: locked, vibrating slightly
+                    speedMult = 0.15 + (sandboxTemp + 50) * 0.005;
+                    speedMult = Math.max(0.02, speedMult);
+                    drawWaterSolidIce(ctx, speedMult, dt);
+                } else if (sandboxTemp < 100) {
+                    // Liquid water: flow, temporary hydrogen bonds break/form
+                    speedMult = 0.5 + (sandboxTemp * 0.015);
+                    // Resolve elastic collisions for liquid water
+                    resolveCollisions(sbParticles);
+                    drawWaterLiquid(ctx, speedMult, w, h, dt);
+                } else {
+                    // Steam Gas: extremely high speed bouncing off walls
+                    speedMult = 2.0 + (sandboxTemp - 100) * 0.01;
+                    // Resolve elastic collisions for gaseous water
+                    resolveCollisions(sbParticles);
+                    drawWaterSteamGas(ctx, speedMult, w, h, dt);
+                }
+            } else if (currentSandboxMode === 'co2') {
+                if (sandboxTemp <= -78) {
+                    // Solid dry ice lattice
+                    speedMult = 0.15 + (sandboxTemp + 120) * 0.005;
+                    speedMult = Math.max(0.02, speedMult);
+                    drawCO2Solid(ctx, speedMult, dt);
+                } else {
+                    // Gaseous CO2: high speed bouncing
+                    speedMult = 1.5 + (sandboxTemp + 78) * 0.01;
+                    resolveCollisions(sbParticles);
+                    drawCO2Gas(ctx, speedMult, w, h, dt);
+                }
+            } else if (currentSandboxMode === 'diamond') {
+                // Diamond: rigid lattice vibration increases with heat
+                speedMult = 0.2 + (sandboxTemp / 3000) * 1.5;
+                drawDiamondLattice(ctx, speedMult, dt);
+            } else if (currentSandboxMode === 'graphite') {
+                // Graphite: layers vibrate, delocalized electrons float
+                speedMult = 0.2 + (sandboxTemp / 3000) * 1.5;
+                drawGraphiteLattice(ctx, speedMult, w, dt);
+            } else if (currentSandboxMode === 'nacl') {
+                if (sandboxTemp < 801) {
+                    // Solid vibrating ionic lattice
+                    speedMult = 0.15 + (sandboxTemp / 801) * 0.8;
+                    drawNaClSolid(ctx, speedMult, dt);
+                } else {
+                    // Molten liquid: ions dissociate and flow!
+                    speedMult = 1.0 + (sandboxTemp - 801) * 0.005;
+                    resolveCollisions(sbParticles);
+                    drawNaClMolten(ctx, speedMult, w, h, dt);
+                }
+            } else if (currentSandboxMode === 'cscl') {
+                if (sandboxTemp < 645) {
+                    // Solid vibrating ionic lattice
+                    speedMult = 0.15 + (sandboxTemp / 645) * 0.8;
+                    drawCsClSolid(ctx, speedMult, dt);
+                } else {
+                    // Molten liquid: ions dissociate and flow!
+                    speedMult = 1.0 + (sandboxTemp - 645) * 0.005;
+                    resolveCollisions(sbParticles);
+                    drawCsClMolten(ctx, speedMult, w, h, dt);
+                }
+            }
+
+            // Render hammer if animating
+            if (sbHammerAnimating) {
+                drawHammerStrike(ctx, w, h);
+            }
+
+            requestAnimationFrame(animateSandbox);
+        }
+
+        // ==========================================
+        // 7. WATER PHYSICS ANIMATORS
+        // ==========================================
+        function getWaterHCoords(p) {
+            let h1_angle = p.angle;
+            let h2_angle = p.angle + (104.5 * Math.PI) / 180;
+            let dist = 17; // bond length
+            return [
+                { x: p.x + dist * Math.cos(h1_angle), y: p.y + dist * Math.sin(h1_angle) },
+                { x: p.x + dist * Math.cos(h2_angle), y: p.y + dist * Math.sin(h2_angle) }
+            ];
+        }
+
+        function drawWaterHBonds(ctx) {
+            if (!sbShowIMF) return;
+
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([3, 3]);
+            ctx.shadowColor = 'rgba(0, 240, 255, 0.9)';
+            ctx.shadowBlur = 8;
+
+            for (let i = 0; i < sbParticles.length; i++) {
+                let p1 = sbParticles[i];
+                let hCoords1 = getWaterHCoords(p1);
+
+                for (let j = i + 1; j < sbParticles.length; j++) {
+                    let p2 = sbParticles[j];
+                    let hCoords2 = getWaterHCoords(p2);
+
+                    // If hammer is active and split is high, do NOT draw bonds crossing the split
+                    if (sbHammerAnimating && sbHammerOffset > 10) {
+                        let col1 = p1.id % 4;
+                        let col2 = p2.id % 4;
+                        if ((col1 < 2 && col2 >= 2) || (col1 >= 2 && col2 < 2)) {
+                            continue;
+                        }
+                    }
+
+                    // Check H of p1 to O of p2
+                    hCoords1.forEach(h => {
+                        let dx = p2.x - h.x;
+                        let dy = p2.y - h.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist >= 12 && dist < 110) {
+                            let opacity = 1.0 - (dist - 15) / (110 - 15);
+                            opacity = Math.max(0, Math.min(1, opacity));
+                            ctx.strokeStyle = `rgba(0, 240, 255, ${opacity * 0.95})`; // cyan glowing H-bond
+                            ctx.beginPath();
+                            ctx.moveTo(h.x, h.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    });
+
+                    // Check H of p2 to O of p1
+                    hCoords2.forEach(h => {
+                        let dx = p1.x - h.x;
+                        let dy = p1.y - h.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist >= 12 && dist < 110) {
+                            let opacity = 1.0 - (dist - 15) / (110 - 15);
+                            opacity = Math.max(0, Math.min(1, opacity));
+                            ctx.strokeStyle = `rgba(0, 240, 255, ${opacity * 0.95})`; // cyan glowing H-bond
+                            ctx.beginPath();
+                            ctx.moveTo(h.x, h.y);
+                            ctx.lineTo(p1.x, p1.y);
+                            ctx.stroke();
+                        }
+                    });
+                }
+            }
+            ctx.setLineDash([]);
+            ctx.shadowBlur = 0; // Reset shadow blur!
+        }
+
+        function drawWaterSolidIce(ctx, vFactor, dt) {
+            const offsetAmp = vFactor * 3;
+
+            sbParticles.forEach(p => {
+                let vx = Math.sin(sbTimeAccumulator * 0.2 + p.id) * offsetAmp;
+                let vy = Math.cos(sbTimeAccumulator * 0.24 + p.id) * offsetAmp;
+
+                let cleaveShiftY = 0;
+                if (sbHammerAnimating) {
+                    let col = p.id % 4;
+                    if (col >= 2) {
+                        cleaveShiftY = Math.min(65, sbHammerOffset * 3);
+                    }
+                }
+
+                p.x = p.ox + vx;
+                p.y = p.oy + vy + cleaveShiftY;
+                p.angle += p.spinSpeed * vFactor * dt * 0.1;
+            });
+
+            // Draw hydrogen bonds
+            drawWaterHBonds(ctx);
+
+            // Draw molecules
+            sbParticles.forEach(p => {
+                drawSingleWaterMolecule(ctx, p.x, p.y, p.angle);
+            });
+        }
+
+        function drawWaterLiquid(ctx, vFactor, w, h, dt) {
+            sbParticles.forEach(p => {
+                p.x += p.vx * vFactor * dt * 0.4;
+                p.y += p.vy * vFactor * dt * 0.4;
+                p.angle += p.spinSpeed * vFactor * dt;
+
+                // Bounce boundaries
+                handleBoundaryCollisions(p, w, h);
+            });
+
+            // Draw hydrogen bonds
+            drawWaterHBonds(ctx);
+
+            // Draw molecules
+            sbParticles.forEach(p => {
+                drawSingleWaterMolecule(ctx, p.x, p.y, p.angle);
+            });
+        }
+
+        function drawWaterSteamGas(ctx, vFactor, w, h, dt) {
+            sbParticles.forEach(p => {
+                p.x += p.vx * vFactor * dt * 0.8;
+                p.y += p.vy * vFactor * dt * 0.8;
+                p.angle += p.spinSpeed * vFactor * dt * 2.0;
+
+                // Bounce boundaries
+                handleBoundaryCollisions(p, w, h);
+            });
+
+            // Draw hydrogen bonds
+            drawWaterHBonds(ctx);
+
+            // Draw molecules
+            sbParticles.forEach(p => {
+                drawSingleWaterMolecule(ctx, p.x, p.y, p.angle);
+            });
+        }
+
+        function drawSingleWaterMolecule(ctx, x, y, angle) {
+            // Bond angles (Bent 104.5 degrees)
+            let h1_angle = angle;
+            let h2_angle = angle + (104.5 * Math.PI) / 180;
+            let dist = 17; // bond length
+
+            let hx1 = x + dist * Math.cos(h1_angle);
+            let hy1 = y + dist * Math.sin(h1_angle);
+            let hx2 = x + dist * Math.cos(h2_angle);
+            let hy2 = y + dist * Math.sin(h2_angle);
+
+            // 1. Draw covalent single bond lines
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(hx1, hy1);
+            ctx.moveTo(x, y);
+            ctx.lineTo(hx2, hy2);
+            ctx.stroke();
+
+            // 2. Oxygen circle (red)
+            ctx.beginPath();
+            ctx.arc(x, y, 11, 0, Math.PI * 2);
+            ctx.fillStyle = '#ef4444';
+            ctx.shadowColor = 'rgba(239, 68, 68, 0.4)';
+            ctx.shadowBlur = 4;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // 3. Hydrogen circles (cyan)
+            ctx.beginPath();
+            ctx.arc(hx1, hy1, 7, 0, Math.PI * 2);
+            ctx.arc(hx2, hy2, 7, 0, Math.PI * 2);
+            ctx.fillStyle = '#00f0ff';
+            ctx.shadowColor = 'rgba(0, 240, 255, 0.4)';
+            ctx.shadowBlur = 3;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // 4. Draw 'O' label
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 10px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('O', x, y);
+
+            // 5. Draw 'H' labels
+            ctx.fillStyle = '#0b1126'; // dark background color for high contrast against cyan
+            ctx.font = 'bold 7px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('H', hx1, hy1);
+            ctx.fillText('H', hx2, hy2);
+        }
+
+        // ==========================================
+        // 7.5 CO2 PHYSICS ANIMATORS
+        // ==========================================
+        function drawCO2Solid(ctx, vFactor, dt) {
+            const offsetAmp = vFactor * 3;
+
+            sbParticles.forEach(p => {
+                let vx = Math.sin(sbTimeAccumulator * 0.2 + p.id) * offsetAmp;
+                let vy = Math.cos(sbTimeAccumulator * 0.24 + p.id) * offsetAmp;
+
+                let cleaveShiftY = 0;
+                if (sbHammerAnimating) {
+                    if (p.c >= 3) {
+                        cleaveShiftY = Math.min(65, sbHammerOffset * 3);
+                    }
+                }
+
+                p.x = p.ox + vx;
+                p.y = p.oy + vy + cleaveShiftY;
+                p.angle = ((p.c + p.r_row) % 2 === 0 ? Math.PI / 4 : -Math.PI / 4) + p.spinSpeed * vFactor * dt * 0.1;
+            });
+
+            // Draw weak van der Waals forces between dry ice molecules
+            if (sbShowIMF) {
+                ctx.strokeStyle = 'rgba(255, 100, 100, 0.75)'; // bright glowing red/pink for CO2 IMF
+                ctx.lineWidth = 2.2;
+                ctx.setLineDash([3, 3]);
+                ctx.shadowColor = 'rgba(255, 100, 100, 0.9)';
+                ctx.shadowBlur = 8;
+                for (let i = 0; i < sbParticles.length; i++) {
+                    let p1 = sbParticles[i];
+                    for (let j = i + 1; j < sbParticles.length; j++) {
+                        let p2 = sbParticles[j];
+
+                        // If split is high, do NOT draw bonds crossing the split
+                        if (sbHammerAnimating && sbHammerOffset > 10) {
+                            if ((p1.c < 3 && p2.c >= 3) || (p1.c >= 3 && p2.c < 3)) {
+                                continue;
+                            }
+                        }
+
+                        let dx = p2.x - p1.x;
+                        let dy = p2.y - p1.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                ctx.setLineDash([]);
+                ctx.shadowBlur = 0; // Reset shadow blur!
+            }
+
+            // Draw molecules
+            sbParticles.forEach(p => {
+                drawSingleCO2Molecule(ctx, p.x, p.y, p.angle);
+            });
+        }
+
+        function drawCO2Gas(ctx, vFactor, w, h, dt) {
+            sbParticles.forEach(p => {
+                p.x += p.vx * vFactor * dt * 0.6;
+                p.y += p.vy * vFactor * dt * 0.6;
+                p.angle += p.spinSpeed * vFactor * dt;
+
+                // Bounce boundaries
+                handleBoundaryCollisions(p, w, h);
+            });
+
+            // Draw molecules
+            sbParticles.forEach(p => {
+                drawSingleCO2Molecule(ctx, p.x, p.y, p.angle);
+            });
+        }
+
+        function drawSingleCO2Molecule(ctx, x, y, angle) {
+            // Linear O=C=O
+            let dist = 18; // bond length
+            let ox1 = x + dist * Math.cos(angle);
+            let oy1 = y + dist * Math.sin(angle);
+            let ox2 = x - dist * Math.cos(angle);
+            let oy2 = y - dist * Math.sin(angle);
+
+            // 1. Draw double covalent bonds (two parallel lines)
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            
+            // Calculate perpendicular offset for double bonds
+            let perpX = Math.sin(angle) * 2;
+            let perpY = -Math.cos(angle) * 2;
+            
+            ctx.beginPath();
+            // First bond line
+            ctx.moveTo(x + perpX, y + perpY);
+            ctx.lineTo(ox1 + perpX, oy1 + perpY);
+            ctx.moveTo(x + perpX, y + perpY);
+            ctx.lineTo(ox2 + perpX, oy2 + perpY);
+            // Second bond line
+            ctx.moveTo(x - perpX, y - perpY);
+            ctx.lineTo(ox1 - perpX, oy1 - perpY);
+            ctx.moveTo(x - perpX, y - perpY);
+            ctx.lineTo(ox2 - perpX, oy2 - perpY);
+            ctx.stroke();
+
+            // 2. Carbon circle (center, gray)
+            ctx.beginPath();
+            ctx.arc(x, y, 9, 0, Math.PI * 2);
+            ctx.fillStyle = '#94a3b8'; // gray
+            ctx.shadowColor = 'rgba(148, 163, 184, 0.4)';
+            ctx.shadowBlur = 4;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // 3. Oxygen circles (red)
+            ctx.beginPath();
+            ctx.arc(ox1, oy1, 11, 0, Math.PI * 2);
+            ctx.arc(ox2, oy2, 11, 0, Math.PI * 2);
+            ctx.fillStyle = '#ef4444'; // red
+            ctx.shadowColor = 'rgba(239, 68, 68, 0.4)';
+            ctx.shadowBlur = 4;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // 4. Draw 'C' label
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 9px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('C', x, y);
+
+            // 5. Draw 'O' labels
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 10px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('O', ox1, oy1);
+            ctx.fillText('O', ox2, oy2);
+        }
+
+        // ==========================================
+        // 8. DIAMOND LATTICE ANIMATORS
+        // ==========================================
+        function drawDiamondLattice(ctx, vFactor, dt) {
+            let amp = vFactor * 3.5;
+
+            // Rotate theta slowly over time only if the user is not dragging/interacting
+            if (!window.sbUserInteracted || !window.sbUserInteracted()) {
+                sbRotationTheta += 0.003 * vFactor * dt * 0.06;
+            }
+
+            sbParticles.forEach(p => {
+                let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * amp;
+                let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
+                let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
+
+                // Project 3D coordinates (with vibration) to 2D
+                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.2);
+                p.x = proj.x;
+                p.y = proj.y;
+                p.z = proj.z;
+            });
+
+            // Draw rigid gray covalent network lines
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.65)';
+            ctx.lineWidth = 3.5;
+            ctx.shadowColor = 'rgba(148, 163, 184, 0.4)';
+            ctx.shadowBlur = 4;
+
+            // Connect inner tetrahedral atoms to their corresponding FCC corners and face centers
+            // Inner atom 14 is at (-0.5, -0.5, -0.5). It bonds to:
+            // - Corner 0: (-1, -1, -1)
+            // - Face center 8: (0, -1, 0) (bottom)
+            // - Face center 10: (-1, 0, 0) (left)
+            // - Face center 12: (0, 0, -1) (back)
+            
+            // Inner atom 15 is at (0.5, 0.5, -0.5). It bonds to:
+            // - Corner 2: (1, 1, -1)
+            // - Face center 9: (0, 1, 0) (top)
+            // - Face center 11: (1, 0, 0) (right)
+            // - Face center 12: (0, 0, -1) (back)
+
+            // Inner atom 16 is at (-0.5, 0.5, 0.5). It bonds to:
+            // - Corner 7: (-1, 1, 1)
+            // - Face center 9: (0, 1, 0) (top)
+            // - Face center 10: (-1, 0, 0) (left)
+            // - Face center 13: (0, 0, 1) (front)
+
+            // Inner atom 17 is at (0.5, -0.5, 0.5). It bonds to:
+            // - Corner 5: (1, -1, 1)
+            // - Face center 8: (0, -1, 0) (bottom)
+            // - Face center 11: (1, 0, 0) (right)
+            // - Face center 13: (0, 0, 1) (front)
+
+            const bonds = [
+                // Inner 14 bonds
+                [14, 0], [14, 8], [14, 10], [14, 12],
+                // Inner 15 bonds
+                [15, 2], [15, 9], [15, 11], [15, 12],
+                // Inner 16 bonds
+                [16, 7], [16, 9], [16, 10], [16, 13],
+                // Inner 17 bonds
+                [17, 5], [17, 8], [17, 11], [17, 13]
+            ];
+
+            // Also draw thin dashed unit cell wireframe lines (connecting FCC corners and faces)
+            // to perfectly match the wireframe box look in the textbook diagram
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+            ctx.lineWidth = 1.2;
+            ctx.setLineDash([3, 3]);
+            const wireframe = [
+                [0, 1], [1, 2], [2, 3], [3, 0], // Back face corners
+                [4, 5], [5, 6], [6, 7], [7, 4], // Front face corners
+                [0, 4], [1, 5], [2, 6], [3, 7]  // Connecting pillars
+            ];
+            wireframe.forEach(([u, v]) => {
+                let p1 = sbParticles[u];
+                let p2 = sbParticles[v];
+                if (p1 && p2) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            });
+            ctx.setLineDash([]); // reset
+
+            // Draw strong solid covalent bonds
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.75)';
+            ctx.lineWidth = 3.5;
+            bonds.forEach(([u, v]) => {
+                let p1 = sbParticles[u];
+                let p2 = sbParticles[v];
+                if (p1 && p2) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            });
+            ctx.shadowBlur = 0;
+
+            // Draw Carbon atoms as metal gray circles, sorted by depth (painter's algorithm)
+            let sorted = [...sbParticles].sort((a, b) => b.z - a.z);
+            sorted.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 9, 0, Math.PI * 2);
+                ctx.fillStyle = '#94a3b8';
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 1;
+                ctx.shadowColor = 'rgba(148, 163, 184, 0.5)';
+                ctx.shadowBlur = 6;
+                ctx.fill();
+                ctx.stroke();
+
+                // Draw 'C' label inside the carbon atom
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 9px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('C', p.x, p.y);
+            });
+            ctx.shadowBlur = 0;
+        }
+
+        // ==========================================
+        // 9. GRAPHITE LATTICE ANIMATORS
+        // ==========================================
+        function drawGraphiteLattice(ctx, vFactor, w, dt) {
+            let amp = vFactor * 3.5;
+
+            // Rotate theta slowly over time only if the user is not dragging/interacting
+            if (!window.sbUserInteracted || !window.sbUserInteracted()) {
+                sbRotationTheta += 0.003 * vFactor * dt * 0.06;
+            }
+
+            sbParticles.forEach(p => {
+                let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * amp;
+                let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
+                let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
+                
+                // If hammer strikes, slide layers horizontally (shearing effect)
+                let shear = 0;
+                if (sbHammerAnimating) {
+                    if (p.layer === 0) {
+                        shear = Math.min(50, sbHammerOffset * 3.0);
+                    } else if (p.layer === 1) {
+                        shear = Math.min(25, sbHammerOffset * 1.5);
+                    }
+                }
+
+                // Project 3D coordinates (with vibration and shear) to 2D
+                let proj = project3DTo2D(p.ox3d + shear + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.2);
+                p.x = proj.x;
+                p.y = proj.y;
+                p.z = proj.z;
+            });
+
+            // 1. Draw weak interlayer Van der Waals forces (dashed lines)
+            if (sbShowIMF) {
+                ctx.strokeStyle = 'rgba(148, 163, 184, 0.75)'; // brighter gray for Graphite IMF
+                ctx.lineWidth = 2.2;
+                ctx.setLineDash([3, 3]);
+                ctx.shadowColor = 'rgba(148, 163, 184, 0.9)';
+                ctx.shadowBlur = 6;
+
+                sbGraphiteVdWLinks.forEach(link => {
+                    let p1 = sbParticles[link.u];
+                    let p2 = sbParticles[link.v];
+                    if (p1 && p2) {
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+                ctx.setLineDash([]); // reset
+                ctx.shadowBlur = 0; // Reset shadow blur!
+            }
+
+            // 2. Draw strong horizontal covalent bonds within sheets
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.75)';
+            ctx.lineWidth = 3;
+
+            sbGraphiteCovalentBonds.forEach(bond => {
+                let p1 = sbParticles[bond.u];
+                let p2 = sbParticles[bond.v];
+                if (p1 && p2) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            });
+
+            // 3. Draw carbon atoms sorted by depth
+            let sorted = [...sbParticles].sort((a, b) => b.z - a.z);
+            sorted.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+                ctx.fillStyle = '#475569'; // charcoal black
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1;
+                ctx.shadowColor = 'rgba(71, 85, 105, 0.4)';
+                ctx.shadowBlur = 5;
+                ctx.fill();
+                ctx.stroke();
+
+                // Draw 'C' label inside the carbon atom
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 8px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('C', p.x, p.y);
+            });
+            ctx.shadowBlur = 0;
+
+            // 4. Animate delocalized electron dots if conductivity mode is on!
+            if (sbConductivityEnabled) {
+                // Update electron Y coordinates to match the current projected layer Y coordinates
+                for (let layer = 0; layer < 3; layer++) {
+                    let layerAtoms = sbParticles.filter(p => p.layer === layer);
+                    if (layerAtoms.length > 0) {
+                        let avgY = layerAtoms.reduce((sum, p) => sum + p.y, 0) / layerAtoms.length;
+                        sbDelocalizedElectrons.forEach(e => {
+                            if (e.layer === layer) {
+                                e.y = avgY + 10; // slightly offset from the layer plane
+                            }
+                        });
+                    }
+                }
+
+                sbDelocalizedElectrons.forEach(e => {
+                    e.x += e.vx * dt * 1.5;
+                    if (e.x > w) {
+                        e.x = 0; // wrap around loop
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(e.x, e.y, 3.5, 0, Math.PI * 2);
+                    ctx.fillStyle = '#fbbf24'; // glowing gold dots
+                    ctx.shadowColor = '#fbbf24';
+                    ctx.shadowBlur = 8;
+                    ctx.fill();
+                });
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // ==========================================
+        // 10. NaCl IONIC CRYSTALS ANIMATORS (SOLID & MOLTEN)
+        // ==========================================
+        function drawNaClSolid(ctx, vFactor, dt) {
+            let amp = vFactor * 3.5;
+
+            // Rotate theta slowly over time only if the user is not dragging/interacting
+            if (!window.sbUserInteracted || !window.sbUserInteracted()) {
+                sbRotationTheta += 0.003 * vFactor * dt * 0.06;
+            }
+
+            sbParticles.forEach(p => {
+                let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * amp;
+                let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
+                let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
+
+                // Hammer strike splits the lattice apart (brittleness demo)
+                let cleaveShiftY = 0;
+                if (sbHammerAnimating) {
+                    if (p.gx === 1) {
+                        cleaveShiftY = Math.min(55, sbHammerOffset * 3);
+                    }
+                }
+
+                // Project 3D coordinates (with vibration and cleave shift) to 2D
+                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy + cleaveShiftY, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.2);
+                p.x = proj.x;
+                p.y = proj.y;
+                p.z = proj.z;
+            });
+
+            // Draw electrostatic attraction lines between ions
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+            ctx.lineWidth = 2.2;
+            ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
+            ctx.shadowBlur = 6;
+
+            sbNaClBonds.forEach(bond => {
+                // If split is high, do NOT draw electrostatic lines crossing split line (between gx=0 and gx=1)
+                if (sbHammerAnimating && sbHammerOffset > 10 && ((bond.u_gx === 0 && bond.v_gx === 1) || (bond.u_gx === 1 && bond.v_gx === 0))) {
+                    return; 
+                }
+                let p1 = sbParticles[bond.u];
+                let p2 = sbParticles[bond.v];
+                if (p1 && p2) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            });
+            ctx.shadowBlur = 0; // Reset shadow blur!
+
+            // Draw repulsion lines if cleaved
+            if (sbHammerAnimating && sbHammerOffset > 8) {
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.85)'; // bright red
+                ctx.lineWidth = 2.5;
+                ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+                ctx.shadowBlur = 8;
+                
+                for (let i = 0; i < sbParticles.length; i++) {
+                    let p1 = sbParticles[i];
+                    if (p1.gx !== 0) continue;
+                    for (let j = 0; j < sbParticles.length; j++) {
+                        let p2 = sbParticles[j];
+                        if (p2.gx !== 1) continue;
+                        
+                        // Newly aligned like charges (shifted down by 1 grid spacing)
+                        if (p2.gz === p1.gz && p2.gy === p1.gy - 1) {
+                            if (p1.isNa === p2.isNa) {
+                                ctx.beginPath();
+                                ctx.moveTo(p1.x, p1.y);
+                                ctx.lineTo(p2.x, p2.y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                }
+                ctx.shadowBlur = 0;
+            }
+
+            // Draw ions sorted by depth (painter's algorithm)
+            let sorted = [...sbParticles].sort((a, b) => b.z - a.z);
+            sorted.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.isNa ? 8 : 13, 0, Math.PI * 2); // Cl- is larger than Na+
+                ctx.fillStyle = p.isNa ? '#a855f7' : '#10b981'; // Purple Na+, Green Cl-
+                ctx.shadowColor = p.isNa ? 'rgba(168, 85, 247, 0.4)' : 'rgba(16, 185, 129, 0.4)';
+                ctx.shadowBlur = 6;
+                ctx.fill();
+
+                // Plus/Minus labels
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 9px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(p.isNa ? '+' : '-', p.x, p.y);
+            });
+            ctx.shadowBlur = 0;
+        }
+
+        function drawNaClMolten(ctx, vFactor, w, h, dt) {
+            sbParticles.forEach(p => {
+                p.x += p.vx * vFactor * dt * 0.5;
+                p.y += p.vy * vFactor * dt * 0.5;
+
+                // Boundary bounce
+                handleBoundaryCollisions(p, w, h);
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.isNa ? 8 : 13, 0, Math.PI * 2);
+                ctx.fillStyle = p.isNa ? '#a855f7' : '#10b981';
+                ctx.shadowColor = p.isNa ? 'rgba(168, 85, 247, 0.3)' : 'rgba(16, 185, 129, 0.3)';
+                ctx.shadowBlur = 5;
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 9px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(p.isNa ? '+' : '-', p.x, p.y);
+            });
+            ctx.shadowBlur = 0;
+
+            // Electric charges directional drift
+            if (sbConductivityEnabled) {
+                sbParticles.forEach((p, idx) => {
+                    if (p.isNa) {
+                        // Na+ flows to negative electrode (left)
+                        p.x -= 0.6 * vFactor * dt;
+                    } else {
+                        // Cl- flows to positive electrode (right)
+                        p.x += 0.6 * vFactor * dt;
+                    }
+                });
+            }
+        }
+
+        // ==========================================
+        // 10.5 CsCl IONIC CRYSTALS ANIMATORS (SOLID & MOLTEN)
+        // ==========================================
+        function drawCsClSolid(ctx, vFactor, dt) {
+            let amp = vFactor * 3.5;
+
+            // Rotate theta slowly over time only if the user is not dragging/interacting
+            if (!window.sbUserInteracted || !window.sbUserInteracted()) {
+                sbRotationTheta += 0.003 * vFactor * dt * 0.06;
+            }
+
+            sbParticles.forEach(p => {
+                let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * amp;
+                let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
+                let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
+
+                // Hammer strike splits the lattice apart (brittleness demo)
+                let cleaveShiftY = 0;
+                if (sbHammerAnimating) {
+                    if (p.gx >= 0.5) { // Shift right half if cleaved (gx is 0.5 or 1)
+                        cleaveShiftY = Math.min(55, sbHammerOffset * 3);
+                    }
+                }
+
+                // Project 3D coordinates (with vibration and cleave shift) to 2D
+                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy + cleaveShiftY, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.2);
+                p.x = proj.x;
+                p.y = proj.y;
+                p.z = proj.z;
+            });
+
+            // 1. Draw thin dashed cubic unit cell outlines (connecting Cs+ corner ions)
+            // Corners are Cs+ (isCs = true) on a 3x3x3 grid (gx, gy, gz in [-1, 0, 1])
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([3, 3]);
+            sbCsClWireframeBonds.forEach(bond => {
+                // If split is high, do NOT draw lines crossing split line (between gx=0 and gx=1)
+                if (sbHammerAnimating && sbHammerOffset > 10 && ((bond.u_gx < 0.5 && bond.v_gx >= 0.5) || (bond.u_gx >= 0.5 && bond.v_gx < 0.5))) {
+                    return; 
+                }
+                let p1 = sbParticles[bond.u];
+                let p2 = sbParticles[bond.v];
+                if (p1 && p2) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            });
+            ctx.setLineDash([]); // reset
+
+            // 2. Draw electrostatic attraction lines between each center Cl- and its 8 surrounding corner Cs+ ions
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.75)'; // textbook grey/silver rods
+            ctx.lineWidth = 3.5;
+            ctx.shadowColor = 'rgba(255, 255, 255, 0.15)';
+            ctx.shadowBlur = 4;
+            sbCsClAttractionBonds.forEach(bond => {
+                // If split is high, do NOT draw lines crossing split line
+                if (sbHammerAnimating && sbHammerOffset > 10 && ((bond.u_gx < 0.5 && bond.v_gx >= 0.5) || (bond.u_gx >= 0.5 && bond.v_gx < 0.5))) {
+                    return; 
+                }
+                let p1 = sbParticles[bond.u];
+                let p2 = sbParticles[bond.v];
+                if (p1 && p2) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            });
+            ctx.shadowBlur = 0; // Reset shadow blur!
+
+            // 3. Draw repulsion lines if cleaved
+            if (sbHammerAnimating && sbHammerOffset > 8) {
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.85)'; // bright red
+                ctx.lineWidth = 2.5;
+                ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+                ctx.shadowBlur = 8;
+                
+                for (let i = 0; i < sbParticles.length; i++) {
+                    let p1 = sbParticles[i];
+                    if (p1.gx !== -0.5 && p1.gx !== 0) continue; // left side of split
+                    for (let j = 0; j < sbParticles.length; j++) {
+                        let p2 = sbParticles[j];
+                        if (p2.gx !== p1.gx + 1) continue; // right side of split
+                        
+                        if (p2.gz === p1.gz && p2.gy === p1.gy - 1) {
+                            if (p1.isCs === p2.isCs) {
+                                ctx.beginPath();
+                                ctx.moveTo(p1.x, p1.y);
+                                ctx.lineTo(p2.x, p2.y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                }
+                ctx.shadowBlur = 0;
+            }
+
+            // 4. Draw ions sorted by depth (painter's algorithm)
+            let sorted = [...sbParticles].sort((a, b) => b.z - a.z);
+            sorted.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.isCs ? 11 : 13, 0, Math.PI * 2); // Cl- is 13, Cs+ is 11
+                
+                // Color according to the attached textbook unit cell image:
+                // Cs+ corners are purple, Cl- center is green
+                ctx.fillStyle = p.isCs ? '#a855f7' : '#22c55e'; // Purple Cs+, Green Cl-
+                ctx.strokeStyle = p.isCs ? '#7e22ce' : '#15803d'; // Darker border
+                ctx.lineWidth = 2.0;
+                ctx.shadowColor = p.isCs ? 'rgba(168, 85, 247, 0.4)' : 'rgba(34, 197, 94, 0.4)';
+                ctx.shadowBlur = 6;
+                ctx.fill();
+                ctx.stroke();
+
+                // Plus/Minus labels
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 10px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(p.isCs ? '+' : '-', p.x, p.y);
+            });
+            ctx.shadowBlur = 0;
+        }
+
+        function drawCsClMolten(ctx, vFactor, w, h, dt) {
+            sbParticles.forEach(p => {
+                p.x += p.vx * vFactor * dt * 0.5;
+                p.y += p.vy * vFactor * dt * 0.5;
+
+                // Boundary bounce
+                handleBoundaryCollisions(p, w, h);
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.isCs ? 12 : 13, 0, Math.PI * 2);
+                ctx.fillStyle = p.isCs ? '#00a8ff' : '#10b981';
+                ctx.shadowColor = p.isCs ? 'rgba(0, 168, 255, 0.3)' : 'rgba(16, 185, 129, 0.3)';
+                ctx.shadowBlur = 5;
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(p.isCs ? '+' : '-', p.x, p.y);
+            });
+            ctx.shadowBlur = 0;
+
+            // Electric charges directional drift
+            if (sbConductivityEnabled) {
+                sbParticles.forEach((p, idx) => {
+                    if (p.isCs) {
+                        // Cs+ flows to negative electrode (left)
+                        p.x -= 0.6 * vFactor * dt;
+                    } else {
+                        // Cl- flows to positive electrode (right)
+                        p.x += 0.6 * vFactor * dt;
+                    }
+                });
+            }
+        }
+
+        // ==========================================
+        // 11. SHIER FORCE / HAMMER TESTING & ANIMATIONS
+        // ==========================================
+        function applyShearForceSandbox() {
+            if (sbHammerAnimating) return;
+            sbHammerAnimating = true;
+            sbHammerOffset = 0;
+
+            // Update legend overlay to show repulsion if applicable
+            updateSandboxLegend();
+
+            let targetMax = 12;
+            let isShattered = false;
+            let toastZh = '';
+            let toastEn = '';
+
+            if (currentSandboxMode === 'water') {
+                if (sandboxTemp <= 0) {
+                    targetMax = 15;
+                    isShattered = true;
+                    toastZh = '敲擊成功！冰晶體中分子間僅由弱氫鍵連接，受外力時極易碎裂！';
+                    toastEn = 'Shattered! Ice molecules are held only by weak hydrogen bonds, which are easily broken by external force!';
+                } else {
+                    toastZh = '液態/氣態水具有流動性，無法被敲碎！';
+                    toastEn = 'Liquid/Gas water is fluid and cannot be shattered!';
+                }
+            } else if (currentSandboxMode === 'co2') {
+                if (sandboxTemp <= -78) {
+                    targetMax = 15;
+                    isShattered = true;
+                    toastZh = '敲擊成功！乾冰晶體中分子間僅由極弱的范德華力連接，受外力時極易碎裂！';
+                    toastEn = 'Shattered! Dry ice molecules are held only by extremely weak van der Waals forces, which easily break!';
+                } else {
+                    toastZh = '氣態二氧化碳具有流動性，無法被敲碎！';
+                    toastEn = 'Gaseous CO2 is fluid and cannot be shattered!';
+                }
+            } else if (currentSandboxMode === 'diamond') {
+                toastZh = '敲擊失敗！金剛石擁有巨型共價網絡結構，所有碳原子均以極強的共價單鍵鎖定，硬度極高！';
+                toastEn = 'Hammer failed! Diamond has a giant covalent network where all carbon atoms are locked by extremely strong single covalent bonds.';
+            } else if (currentSandboxMode === 'graphite') {
+                targetMax = 22;
+                isShattered = true; // layers slide
+                toastZh = '層間滑動！石墨層與層之間僅有微弱的范德華力，受剪切力時層與層極易滑動（具潤滑性）！';
+                toastEn = 'Layers slipped! Graphite layers are held by weak van der Waals forces, making them slide past each other easily (lubricative).';
+            } else if (currentSandboxMode === 'nacl') {
+                if (sandboxTemp < 801) {
+                    targetMax = 25;
+                    isShattered = true;
+                    toastZh = '敲擊碎裂！受外力敲擊時，離子層發生位移，導致同性電荷離子相鄰，產生極強的靜電排斥力而碎裂！';
+                    toastEn = 'Shattered! External force shifts ionic layers, bringing like-charged ions adjacent to each other, causing strong electrostatic repulsion and cleavage!';
+                } else {
+                    toastZh = '熔融態氯化鈉具有流動性，無法被敲碎！';
+                    toastEn = 'Molten NaCl is fluid and cannot be shattered!';
+                }
+            } else if (currentSandboxMode === 'cscl') {
+                if (sandboxTemp < 645) {
+                    targetMax = 25;
+                    isShattered = true;
+                    toastZh = '敲擊碎裂！受剪切力時，體心立方離子層位移，使同性電荷離子（Cs⁺與Cs⁺、Cl⁻與Cl⁻）相鄰，強烈排斥而碎裂！';
+                    toastEn = 'Shattered! Shear force shifts the BCC ionic layers, bringing like-charged ions adjacent to each other, causing strong electrostatic repulsion and cleavage!';
+                } else {
+                    toastZh = '熔融態氯化銫具有流動性，無法被敲碎！';
+                    toastEn = 'Molten CsCl is fluid and cannot be shattered!';
+                }
+            }
+
+            if (isShattered) {
+                sfx.playError(); // play shatter sound
+            } else {
+                sfx.playClick(); // play bounce sound
+            }
+            showToast(toastZh, toastEn);
+
+            function animateHammer() {
+                if (sbHammerOffset < targetMax) {
+                    sbHammerOffset += 1.5;
+                    requestAnimationFrame(animateHammer);
+                } else {
+                    // Hammer retract after a short pause
+                    setTimeout(() => {
+                        retractHammer();
+                    }, 600);
+                }
+            }
+            animateHammer();
+        }
+
+        function retractHammer() {
+            function animateRetract() {
+                if (sbHammerOffset > 0) {
+                    sbHammerOffset -= 2.0;
+                    requestAnimationFrame(animateRetract);
+                } else {
+                    sbHammerOffset = 0;
+                    sbHammerAnimating = false;
+                    
+                    // Re-build particles to reset cleaved structures!
+                    buildSandboxParticles();
+                }
+            }
+            animateRetract();
+        }
+
+        function drawHammerStrike(ctx, w, h) {
+            // Render sliding vertical hammer block
+            const hY = h/8 + sbHammerOffset * 3.5;
+            const hX = w/2 - 25;
+
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.85)'; // hot red hammer head
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            
+            // Hammer block
+            ctx.beginPath();
+            ctx.rect(hX, hY - 30, 50, 25);
+            ctx.fill();
+            ctx.stroke();
+
+            // Handle
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(w/2, hY - 30);
+            ctx.lineTo(w/2, 0);
+            ctx.stroke();
+        }
+
+        // ==========================================
+        // 12. CONDUCTIVITY TESTING LOGIC
+        // ==========================================
+        function toggleElectricalConductivitySandbox() {
+            sbConductivityEnabled = !sbConductivityEnabled;
+            const btn = document.getElementById('btn-sb-conductivity');
+            if (!btn) return;
+
+            if (sbConductivityEnabled) {
+                let isConducting = false;
+                let toastZh = '';
+                let toastEn = '';
+
+                if (currentSandboxMode === 'graphite') {
+                    isConducting = true;
+                    toastZh = '導電成功！石墨層與層之間擁有自由移動的離域電子，可定向移動導電！';
+                    toastEn = 'Conducting! Graphite possesses free delocalized electrons along sheets that can drift to carry current!';
+                } else if (currentSandboxMode === 'nacl' && sandboxTemp >= 801) {
+                    isConducting = true;
+                    toastZh = '導電成功！熔融狀態下的氯化鈉離子完全解離成帶電游離陰陽離子，可定向移動！';
+                    toastEn = 'Conducting! Molten NaCl has free dissolved ions that easily drift to electrodes!';
+                } else if (currentSandboxMode === 'cscl' && sandboxTemp >= 645) {
+                    isConducting = true;
+                    toastZh = '導電成功！熔融狀態下的氯化銫離子完全解離成帶電游離陰陽離子，可定向移動！';
+                    toastEn = 'Conducting! Molten CsCl has free dissolved ions that easily drift to electrodes!';
+                } else if (currentSandboxMode === 'water') {
+                    toastZh = '導電失敗。純水中分子均為電中性，沒有自由移動的帶電離子或電子！';
+                    toastEn = 'No conduction. Pure water molecules are electrically neutral (no mobile charges).';
+                } else if (currentSandboxMode === 'co2') {
+                    toastZh = '導電失敗。二氧化碳分子均為電中性，沒有自由移動的帶電離子或電子！';
+                    toastEn = 'No conduction. CO2 molecules are electrically neutral (no mobile charges).';
+                } else if (currentSandboxMode === 'diamond') {
+                    toastZh = '導電失敗。金剛石中所有最外層電子皆被牢固鎖定於共價單鍵，無移動自由電子！';
+                    toastEn = 'No conduction. All carbon valence electrons in diamond are localized in strong single bonds.';
+                } else if (currentSandboxMode === 'nacl' && sandboxTemp < 801) {
+                    toastZh = '導電失敗。固態離子晶格中，陰陽離子被牢牢束縛在固定位置，無法移動！';
+                    toastEn = 'No conduction. Ions in solid lattice are locked in fixed positions.';
+                } else if (currentSandboxMode === 'cscl' && sandboxTemp < 645) {
+                    toastZh = '導電失敗。固態離子晶格中，陰陽離子被牢牢束縛在固定位置，無法移動！';
+                    toastEn = 'No conduction. Ions in solid lattice are locked in fixed positions.';
+                }
+
+                if (isConducting) {
+                    sfx.playSuccess();
+                    btn.style.backgroundColor = 'var(--neon-green)';
+                    btn.style.boxShadow = '0 0 15px var(--neon-green)';
+                    btn.style.borderColor = 'var(--neon-green)';
+                    showToast(toastZh, toastEn);
+                } else {
+                    sfx.playError();
+                    btn.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+                    btn.style.borderColor = 'var(--neon-red)';
+                    showToast(toastZh, toastEn);
+                    // Automatically toggle off
+                    sbConductivityEnabled = false;
+                }
+            } else {
+                btn.style.backgroundColor = '';
+                btn.style.boxShadow = '';
+                btn.style.borderColor = '';
+            }
+
+            // Update legend overlay
+            updateSandboxLegend();
+        }
+
+        function onToggleShowIMF() {
+            const cb = document.getElementById('sb-opt-show-imf');
+            if (cb) {
+                sbShowIMF = cb.checked;
+            }
+            sfx.playClick();
+            updateSandboxLegend();
+        }
+
+        // ==========================================
+        // 13. GLOBAL EVENT HANDLERS & RESIZE
+        // ==========================================
+        window.onload = () => {
+            initPropertiesSandbox();
+            
+            // Mouse/Touch drag interaction for adjusting the 3D angle of view
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+            let autoRotateTimer = null;
+            let userInteracted = false;
+
+            function handleDragStart(x, y) {
+                isDragging = true;
+                previousMousePosition = { x, y };
+                userInteracted = true;
+                // Clear any auto-rotation resume timer
+                if (autoRotateTimer) clearTimeout(autoRotateTimer);
+            }
+
+            function handleDragMove(x, y) {
+                if (!isDragging) return;
+                const deltaX = x - previousMousePosition.x;
+                const deltaY = y - previousMousePosition.y;
+
+                // Adjust angles based on drag distance
+                sbRotationTheta += deltaX * 0.01;
+                sbRotationPhi += deltaY * 0.01;
+
+                // Keep Phi (vertical rotation) within reasonable limits to avoid flipping upside down
+                sbRotationPhi = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, sbRotationPhi));
+
+                previousMousePosition = { x, y };
+            }
+
+            function handleDragEnd() {
+                isDragging = false;
+                // Resume auto-rotation after 5 seconds of inactivity
+                if (autoRotateTimer) clearTimeout(autoRotateTimer);
+                autoRotateTimer = setTimeout(() => {
+                    userInteracted = false;
+                }, 5000);
+            }
+
+            // Mouse Events
+            sandboxCanvas.addEventListener('mousedown', (e) => {
+                const rect = sandboxCanvas.getBoundingClientRect();
+                handleDragStart(e.clientX - rect.left, e.clientY - rect.top);
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = sandboxCanvas.getBoundingClientRect();
+                handleDragMove(e.clientX - rect.left, e.clientY - rect.top);
+            });
+
+            window.addEventListener('mouseup', () => {
+                handleDragEnd();
+            });
+
+            // Touch Events (for mobile/tablet support)
+            sandboxCanvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    const rect = sandboxCanvas.getBoundingClientRect();
+                    handleDragStart(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    const rect = sandboxCanvas.getBoundingClientRect();
+                    handleDragMove(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => {
+                handleDragEnd();
+            });
+
+            // Expose userInteracted state globally so animation loop can pause auto-rotation
+            window.sbUserInteracted = () => userInteracted;
+            
+            // Adjust canvas sizes smoothly during screen size changes
+            window.addEventListener('resize', () => {
+                if (sandboxCanvas) {
+                    const rect = sandboxCanvas.getBoundingClientRect();
+                    sandboxCanvas.width = rect.width;
+                    sandboxCanvas.height = rect.height;
+                    buildSandboxParticles();
+                }
+            });
+        };
+    </script>
+</body>
+</html>

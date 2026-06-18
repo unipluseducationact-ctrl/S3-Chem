@@ -2,10 +2,11 @@ export const urUI = {
   "nav": {
     "table": "1. جدول",
     "notes": "2. نوٹس",
-    "interactiveTools": "3. انٹرایکٹو ٹولز",
-    "worksheets": "4. ورک شیٹس",
-    "flashcards": "5. فلیش کارڈز",
-    "summary": "6. خلاصہ",
+    "interactiveTools": "3. گیمز",
+    "interactiveLab": "4. انٹرایکٹو لیب",
+    "worksheets": "5. ورک شیٹس",
+    "flashcards": "6. فلیش کارڈز",
+    "summary": "7. خلاصہ",
     "ions": "آئن",
     "tools": "اوزار",
     "worksheet": "ورقہ مشق",
@@ -179,7 +180,7 @@ export const urUI = {
     "hazards": "خطرات"
   },
   "tools": {
-    "pageTitle": "انٹرایکٹو اوزار",
+    "pageTitle": "گیمز",
     "pendingName": "زیر التواء",
     "pendingDesc": "سلاٹ محفوظ؛ مواد بعد میں جوڑا جائے گا۔",
     "pageSubtitle": "گریڈ 9 تا 12 کے لیے کیمسٹری ٹولز اور منی لیب",
@@ -209,6 +210,15 @@ export const urUI = {
     "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels.",
     "flameFireworksName": "Flame Test Fireworks",
     "flameFireworksDesc": "Design metal-ion burst patterns, launch them over night-sky scenes, and download your flame-test firework display."
+  },
+  "lab": {
+    "pageTitle": "Interactive Lab",
+    "ionicName": "Ionic",
+    "ionicDesc": "Build ionic lattice structures and explore ionic compound formation.",
+    "covalentName": "Covalent",
+    "covalentDesc": "Draw covalent bonds and explore covalent compound structures.",
+    "sandboxName": "Sandbox",
+    "sandboxDesc": "Simulate micro-structure and compare covalent substance properties."
   },
   "worksheet": {
     "title": "ورقۂ مشق ساز",

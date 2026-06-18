@@ -2,10 +2,11 @@ export const frUI = {
   "nav": {
     "table": "1. Tableau",
     "notes": "2. Notes",
-    "interactiveTools": "3. Outils interactifs",
-    "worksheets": "4. Fiches",
-    "flashcards": "5. Cartes memoire",
-    "summary": "6. Synthese",
+    "interactiveTools": "3. Jeux",
+    "interactiveLab": "4. Labo interactif",
+    "worksheets": "5. Fiches",
+    "flashcards": "6. Cartes memoire",
+    "summary": "7. Synthese",
     "ions": "Ions",
     "tools": "Outils",
     "worksheet": "Exercices",
@@ -179,7 +180,7 @@ export const frUI = {
     "hazards": "Risques"
   },
   "tools": {
-    "pageTitle": "Outils interactifs",
+    "pageTitle": "Jeux",
     "pendingName": "En attente",
     "pendingDesc": "Emplacement reserve ; contenu a brancher plus tard.",
     "pageSubtitle": "Outils et mini-labos de chimie niveau 9-12",
@@ -209,6 +210,15 @@ export const frUI = {
     "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels.",
     "flameFireworksName": "Flame Test Fireworks",
     "flameFireworksDesc": "Design metal-ion burst patterns, launch them over night-sky scenes, and download your flame-test firework display."
+  },
+  "lab": {
+    "pageTitle": "Labo interactif",
+    "ionicName": "Ionique",
+    "ionicDesc": "Construisez des structures ioniques et explorez la formation des composes ioniques.",
+    "covalentName": "Covalent",
+    "covalentDesc": "Tracez des liaisons covalentes et explorez les structures covalentes.",
+    "sandboxName": "Bac a sable",
+    "sandboxDesc": "Simulez la microstructure et comparez les proprietes des substances covalentes."
   },
   "worksheet": {
     "title": "Generateur d'exercices",

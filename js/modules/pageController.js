@@ -8,6 +8,7 @@ export function initPageController(options = {}) {
   const {
     onTablePageShown,
     onToolsPageShown,
+    onLabPageShown,
     onWorksheetPageShown,
     onSettingsPageShown,
     onFlashcardsPageShown,
@@ -15,6 +16,7 @@ export function initPageController(options = {}) {
 
   const mainContainer = document.getElementById("main-container");
   const blankPage1 = document.getElementById("blank-page-1");
+  const interactiveLabPage = document.getElementById("interactive-lab-page");
   const blankPage2 = document.getElementById("blank-page-2");
   const notesPage = document.getElementById("notes-page");
   const flashcardsPage = document.getElementById("flashcards-page");
@@ -33,6 +35,9 @@ export function initPageController(options = {}) {
     blank1: () => {
       if (blankPage1) blankPage1.classList.add("active");
     },
+    lab: () => {
+      if (interactiveLabPage) interactiveLabPage.classList.add("active");
+    },
     blank2: () => {
       if (blankPage2) blankPage2.classList.add("active");
     },
@@ -47,6 +52,7 @@ export function initPageController(options = {}) {
   function hideAllPages() {
     if (mainContainer) mainContainer.style.display = "none";
     if (blankPage1) blankPage1.classList.remove("active");
+    if (interactiveLabPage) interactiveLabPage.classList.remove("active");
     if (blankPage2) blankPage2.classList.remove("active");
     if (notesPage) notesPage.classList.remove("active");
     if (flashcardsPage) flashcardsPage.classList.remove("active");
@@ -78,6 +84,10 @@ export function initPageController(options = {}) {
       onToolsPageShown();
     }
 
+    if (page === "lab" && typeof onLabPageShown === "function") {
+      onLabPageShown();
+    }
+
     if (page === "blank2" && typeof onWorksheetPageShown === "function") {
       onWorksheetPageShown();
     }
@@ -96,6 +106,7 @@ export function initPageController(options = {}) {
     table: "table",
     notes: "notes",
     tools: "blank1",
+    lab: "lab",
     worksheet: "blank2",
     flashcards: "flashcards",
     summary: "settings",

@@ -1452,14 +1452,6 @@
         });
       }
 
-      // Input
-      function canvasPoint(ev){
-        const rect=canvas.getBoundingClientRect();
-        const x=((ev.clientX-rect.left)/rect.width)*canvas.width;
-        const y=((ev.clientY-rect.top)/rect.height)*canvas.height;
-        return {x,y};
-      }
-
       function shootAt(x,y){
         const now=performance.now();
         if(!state.running) return;
@@ -2204,6 +2196,14 @@
         drawCannon();
 
         requestAnimationFrame(loop);
+      }
+
+      // Input
+      function canvasPoint(ev){
+        const rect=canvas.getBoundingClientRect();
+        const x=((ev.clientX-rect.left)/rect.width)*canvas.width;
+        const y=((ev.clientY-rect.top)/rect.height)*canvas.height;
+        return {x,y};
       }
 
       canvas.addEventListener('pointerdown',(ev)=>{

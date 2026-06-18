@@ -1,0 +1,3117 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>極致化學：離子化合物立體拼圖學堂 (Aesthetic Ionic Compound Puzzle Lab)</title>
+    <!-- 引入科幛字體及標準 Montserrat 字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 圖標庫 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX 化學與數學公式軔染器 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <style>
+        :root {
+            --bg-cyber: #050814;
+            --sidebar-bg: #0b1126;
+            --card-glass: rgba(16, 22, 47, 0.65);
+            --card-border: rgba(0, 168, 255, 0.2);
+            --accent-blue: #00a8ff;
+            --accent-gold: #ffaa00;
+            --neon-green: #39ff14;
+            --neon-red: #ff3366;
+            --text-main: #f0f3ff;
+            --text-secondary: #8a9fc4;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-cyber);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(0, 168, 255, 0.1) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(255, 170, 0, 0.08) 0px, transparent 50%);
+        }
+
+        #sidebar {
+            width: 320px;
+            background-color: var(--sidebar-bg);
+            border-right: 2px solid rgba(0, 168, 255, 0.2);
+            padding: 30px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.4em;
+            background: linear-gradient(45deg, var(--accent-blue), #9b51e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 2px solid rgba(255,255,255,0.05);
+            padding-bottom: 20px;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 1.4em;
+            filter: drop-shadow(0 0 8px var(--accent-blue));
+            animation: rotateAtom 10s linear infinite;
+            background: initial;
+            -webkit-background-clip: initial;
+            -webkit-text-fill-color: initial;
+            color: var(--accent-blue);
+        }
+
+        @keyframes rotateAtom {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .nav-item {
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .nav-item:hover {
+            background: rgba(0, 168, 255, 0.1);
+            border-color: var(--accent-blue);
+            color: var(--text-main);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.2);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.2), rgba(155, 81, 224, 0.2));
+            border-color: var(--accent-blue);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 168, 255, 0.25);
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.05);
+            margin: 10px 0;
+        }
+
+        .stat-box {
+            background: rgba(0,0,0,0.3);
+            border: 1px dashed rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: auto;
+        }
+
+        .stat-title {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--neon-green);
+            margin-top: 5px;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+        }
+
+        #main-content {
+            flex-grow: 1;
+            padding: 30px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .view-section {
+            display: none;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .view-section.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+        }
+
+        .glass-card {
+            background-color: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            margin-bottom: 20px;
+        }
+
+        .lab-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr 240px;
+            gap: 20px;
+            height: calc(100vh - 160px);
+            min-height: 500px;
+        }
+
+        .ion-pool {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: rgba(11, 17, 38, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .ion-pool h3 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .pool-cation h3 { color: var(--accent-blue); text-shadow: 0 0 8px rgba(0, 168, 255, 0.3); }
+        .pool-anion h3 { color: var(--accent-gold); text-shadow: 0 0 8px rgba(255, 170, 0, 0.3); }
+
+        .ion-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            gap: 8px;
+            min-height: 48px;
+            box-sizing: border-box;
+        }
+
+        .ion-card:hover {
+            background: rgba(255,255,255,0.07);
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.05);
+        }
+
+        .ion-card.cation-hover:hover { border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(0, 168, 255, 0.2); }
+        .ion-card.anion-hover:hover { border-color: var(--accent-gold); box-shadow: 0 0 10px rgba(255, 170, 0, 0.2); }
+
+        .ion-sym-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .ion-name-zh {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .reaction-vessel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: rgba(3, 6, 17, 0.8);
+            border: 2px dashed rgba(0, 168, 255, 0.15);
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .reaction-vessel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-size: 30px 30px;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.01) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.01) 1px, transparent 1px);
+            pointer-events: none;
+        }
+
+        .puzzle-board {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            min-height: 250px;
+            position: relative;
+        }
+
+        .puzzle-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .scale-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 90px;
+            position: relative;
+        }
+
+        .scale-base {
+            width: 120px;
+            height: 10px;
+            background: #2a3b5c;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .scale-pole {
+            width: 10px;
+            height: 50px;
+            background: #2a3b5c;
+            position: absolute;
+            bottom: 10px;
+        }
+
+        .scale-beam {
+            width: 240px;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-gold));
+            position: absolute;
+            bottom: 54px;
+            border-radius: 3px;
+            transform-origin: center center;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .scale-pan {
+            width: 50px;
+            height: 6px;
+            background: #475d82;
+            border-radius: 3px;
+            position: relative;
+            transform-origin: center top;
+            transition: transform 0.3s ease;
+        }
+
+        .scale-string-left, .scale-string-right {
+            position: absolute;
+            width: 2px;
+            height: 30px;
+            background: rgba(255,255,255,0.3);
+            top: -30px;
+        }
+        .scale-string-left { left: 10px; transform: rotate(15deg); transform-origin: left bottom; }
+        .scale-string-right { right: 10px; transform: rotate(-15deg); transform-origin: right bottom; }
+
+        .scale-pan-left {
+            transform: translate(-20px, 30px);
+        }
+        .scale-pan-right {
+            transform: translate(20px, 30px);
+        }
+
+        .scale-weight-indicator {
+            position: absolute;
+            top: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4em;
+            font-weight: 900;
+        }
+        #weight-left { color: var(--accent-blue); left: 10px; }
+        #weight-right { color: var(--accent-gold); right: 10px; }
+
+        .scale-indicator-light {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--neon-red);
+            top: 15px;
+            box-shadow: 0 0 10px var(--neon-red);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .scale-indicator-light.balanced {
+            background-color: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        #particle-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .ion-svg-element {
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: grab;
+        }
+        .ion-svg-element:active { cursor: grabbing; }
+
+        .crystal-projection {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 15px;
+        }
+
+        .lattice-container {
+            width: 100%;
+            height: 160px;
+            position: relative;
+            perspective: 600px;
+        }
+
+        .lattice-grid {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transform: rotateX(20deg) rotateY(-20deg);
+            transition: transform 0.8s ease;
+        }
+
+        .formula-display-bar {
+            background: rgba(11, 17, 38, 0.8);
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2em;
+        }
+
+        .math-tex {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .quest-target-card {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.1), rgba(255, 170, 0, 0.1));
+            border: 2px solid var(--accent-blue);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.1);
+        }
+
+        .quest-target-title {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .quest-target-name {
+            font-size: 2.2em;
+            font-family: 'Orbitron', 'Noto Sans TC', sans-serif;
+            font-weight: 900;
+            color: #ffffff;
+            margin: 10px 0;
+            text-shadow: 0 0 10px rgba(0, 168, 255, 0.5);
+        }
+
+        .cyber-btn {
+            background: linear-gradient(135deg, var(--accent-blue), #5f27cd);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Orbitron', 'Noto Sans TC', sans-serif;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cyber-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(0, 168, 255, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .cyber-btn:active {
+            transform: translateY(1px);
+        }
+
+        .cyber-btn-gold {
+            background: linear-gradient(135deg, var(--accent-gold), #ff5e00);
+            box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);
+        }
+
+        .cyber-btn-gold:hover {
+            box-shadow: 0 6px 20px rgba(255, 170, 0, 0.5);
+        }
+
+        .cyber-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+        }
+        .cyber-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--sidebar-bg);
+            border: 2px solid var(--accent-blue);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 550px;
+            padding: 30px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 40px rgba(0,168,255,0.3);
+            text-align: center;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-card.active {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-card h2 {
+            font-family: 'Orbitron', 'Noto Sans TC', sans-serif;
+            color: var(--neon-green);
+            font-size: 2em;
+            margin-top: 0;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+        }
+
+        .modal-formula {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 1.5em;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .crystal-fact-container {
+            text-align: left;
+            background: rgba(255,255,255,0.02);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-blue);
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .settings-card {
+            background: rgba(11, 17, 38, 0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .settings-card h3 {
+            color: var(--accent-blue);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .checkbox-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78em;
+            background: rgba(255,255,255,0.02);
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            word-break: break-word;
+            min-height: 38px;
+        }
+        .checkbox-item:hover { background: rgba(255,255,255,0.07); }
+        .checkbox-item input { cursor: pointer; }
+
+        .hint-box {
+            background: rgba(255, 170, 0, 0.08);
+            border: 1px solid rgba(255, 170, 0, 0.2);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* Bilingual switcher visibility rules */
+        body.lang-zh-active .lang-en { display: none !important; }
+        body.lang-zh-active .lang-zh { display: inline-block !important; }
+        body.lang-zh-active div.lang-zh { display: block !important; }
+        body.lang-zh-active flex.lang-zh { display: flex !important; }
+
+        body.lang-en-active .lang-zh { display: none !important; }
+        body.lang-en-active .lang-en { display: inline-block !important; }
+        body.lang-en-active div.lang-en { display: block !important; }
+        body.lang-en-active flex.lang-en { display: flex !important; }
+
+        /* Electron Dot-and-Cross Diagram Styles */
+        .modal-tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+        }
+
+        .modal-tab-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans TC', 'Montserrat', sans-serif;
+        }
+
+        .modal-tab-btn:hover {
+            background: rgba(0, 168, 255, 0.08);
+            border-color: rgba(0, 168, 255, 0.3);
+            color: var(--text-main);
+        }
+
+        .modal-tab-btn.active {
+            background: rgba(0, 168, 255, 0.15);
+            border-color: var(--accent-blue);
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(0, 168, 255, 0.25);
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        .modal-panel {
+            display: none;
+            animation: fadeInModalPanel 0.3s ease-out forwards;
+        }
+
+        .modal-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeInModalPanel {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .electron-diagram-container {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(0, 168, 255, 0.15);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+            overflow: visible;
+        }
+
+        .electron-diagram-container svg {
+            width: 100%;
+            height: auto;
+            max-height: 320px;
+            overflow: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 側邊導航欄 -->
+    <div id="sidebar">
+        <div class="logo" style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-atom"></i>
+                <span class="lang-zh">離子化學拼圖</span>
+                <span class="lang-en" style="display:none;">Ionic Puzzle</span>
+            </div>
+            <!-- 語言切換按鈕 (Language Switcher) -->
+            <div class="lang-switcher" style="display: flex; gap: 5px; margin-top: 5px; width: 100%; -webkit-text-fill-color: initial !important; background-clip: initial !important; -webkit-background-clip: initial !important;">
+                <button id="btn-lang-zh" class="cyber-btn" style="padding: 6px 8px; font-size: 0.75em; flex: 1; min-height: unset; line-height: 1; text-shadow: none; -webkit-text-fill-color: #ffffff !important;" onclick="setLanguage('zh')">繁中</button>
+                <button id="btn-lang-en" class="cyber-btn" style="padding: 6px 8px; font-size: 0.75em; flex: 1; min-height: unset; line-height: 1; text-shadow: none; -webkit-text-fill-color: #ffffff !important;" onclick="setLanguage('en')">EN</button>
+            </div>
+        </div>
+        
+        <div class="nav-item active" id="nav-lab" onclick="switchTab('lab')">
+            <i class="fa-solid fa-flask-vial"></i> 
+            <span class="lang-zh">實驗模擬室 (Lab)</span>
+            <span class="lang-en" style="display:none;">Synthesis Lab</span>
+        </div>
+        <div class="nav-item" id="nav-quest" onclick="switchTab('quest')">
+            <i class="fa-solid fa-trophy"></i> 
+            <span class="lang-zh">挑戰闖關區 (Quest)</span>
+            <span class="lang-en" style="display:none;">Quest Mode</span>
+        </div>
+        <div class="nav-item" id="nav-settings" onclick="switchTab('settings')">
+            <i class="fa-solid fa-sliders"></i> 
+            <span class="lang-zh">離子資料庫 (Settings)</span>
+            <span class="lang-en" style="display:none;">Ion Database</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="stat-box" id="quest-status-box" style="display: none;">
+            <div class="stat-title">
+                <span class="lang-zh">合成闖關積分</span>
+                <span class="lang-en" style="display:none;">Quest Score</span>
+            </div>
+            <div class="stat-val" id="quest-score">Level 1 / 10</div>
+            <div style="font-size: 0.8em; color: var(--text-secondary); margin-top: 5px;">
+                <span class="lang-zh">正確率：</span>
+                <span class="lang-en" style="display:none;">Accuracy: </span>
+                <span id="quest-accuracy" style="color: white; font-weight: bold;">100%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 主工作區 -->
+    <div id="main-content">
+        
+        <!-- A. 實驗模擬室 -->
+        <div class="view-section active" id="tab-lab">
+            <div class="formula-display-bar glass-card">
+                <div>
+                    <i class="fa-solid fa-microscope" style="color: var(--accent-blue); margin-right: 8px;"></i>
+                    <span>
+                        <span class="lang-zh">當前反應方程式：</span>
+                        <span class="lang-en" style="display:none;">Chemical Reaction Equation:</span>
+                    </span>
+                </div>
+                <div class="math-tex" id="lab-equation">A^{y+} + B^{x-} \\longrightarrow \\text{等待添加離子...}</div>
+            </div>
+
+            <div class="lab-layout">
+                <!-- 陽離子池 -->
+                <div class="ion-pool pool-cation">
+                    <h3>Cations (+)</h3>
+                    <div id="lab-cation-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+                </div>
+
+                <!-- 實驗反應室 (中央) -->
+                <div class="reaction-vessel">
+                    <!-- 化學天平 -->
+                    <div class="scale-container">
+                        <div class="scale-weight-indicator" id="weight-left">0+</div>
+                        <div class="scale-weight-indicator" id="weight-right">0-</div>
+                        <div class="scale-indicator-light" id="scale-light"></div>
+                        <div class="scale-beam" id="scale-beam">
+                            <div class="scale-pan scale-pan-left"><div class="scale-string-left"></div><div class="scale-string-right"></div></div>
+                            <div class="scale-pan scale-pan-right"><div class="scale-string-left"></div><div class="scale-string-right"></div></div>
+                        </div>
+                        <div class="scale-pole"></div>
+                        <div class="scale-base"></div>
+                    </div>
+
+                    <!-- 拼圖區域 -->
+                    <div class="puzzle-board" id="puzzle-board-lab">
+                        <div class="puzzle-column" id="cation-column-lab"></div>
+                        <div class="puzzle-column" id="anion-column-lab"></div>
+                    </div>
+
+                    <canvas id="particle-canvas"></canvas>
+
+                    <!-- 操作欄 -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; z-index:10;">
+                        <button class="cyber-btn cyber-btn-secondary" onclick="clearVessel()">
+                            <i class="fa-solid fa-trash-can"></i> 
+                            <span class="lang-zh">清除全部</span>
+                            <span class="lang-en" style="display:none;">Clear All</span>
+                        </button>
+                        <div style="font-size:0.85em; color:var(--text-secondary); text-align:center;">
+                            <span class="lang-zh">點擊離子卡片加入反應室，雙擊反應室中的離子將其移除</span>
+                            <span class="lang-en" style="display:none;">Click ion card to add, double click in vessel to remove</span>
+                        </div>
+                        <button class="cyber-btn" id="btn-synthesize" onclick="checkSynthesis()">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> 
+                            <span class="lang-zh">點擊合成</span>
+                            <span class="lang-en" style="display:none;">Synthesize</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 陰離子池 -->
+                <div class="ion-pool pool-anion">
+                    <h3>Anions (-)</h3>
+                    <div id="lab-anion-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- B. 挑戰闖關區 -->
+        <div class="view-section" id="tab-quest">
+            <div class="quest-target-card glass-card">
+                <div class="quest-target-title">
+                    <span class="lang-zh">🎯 當前合成任務 (QUEST TARGET)</span>
+                    <span class="lang-en" style="display:none;">🎯 CURRENT QUEST TARGET</span>
+                </div>
+                <div class="quest-target-name" id="quest-target-display"></div>
+                <div style="font-size: 0.9em; color: var(--text-secondary);" id="quest-target-desc">
+                    <span class="lang-zh">請添加正確比例的陽離子與陰離子，使其正負電荷平衡且拼圖完美互鎖！</span>
+                    <span class="lang-en" style="display:none;">Add cations and anions in correct ratio to balance charges and interlock perfectly!</span>
+                </div>
+                <div class="hint-box" id="quest-hint-box"></div>
+            </div>
+
+            <div class="lab-layout">
+                <!-- 陽離子池 (闖關預設) -->
+                <div class="ion-pool pool-cation" style="display:flex; flex-direction:column; gap:15px; height:100%; box-sizing:border-box;">
+                    <div style="flex:1; display:flex; flex-direction:column; min-height:0;">
+                        <h3 class="pool-cation" style="color:var(--accent-blue); text-shadow:0 0 8px rgba(0,168,255,0.3); margin:0 0 10px 0; text-align:center; font-family:'Orbitron', sans-serif;">Cations (+)</h3>
+                        <div id="quest-cation-list" style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1;"></div>
+                    </div>
+                    <div class="divider" style="height:1px; background:rgba(255,255,255,0.1); margin:5px 0;"></div>
+                    <div style="flex:1; display:flex; flex-direction:column; min-height:0;">
+                        <h3 class="pool-anion" style="color:var(--accent-gold); text-shadow:0 0 8px rgba(255,170,0,0.3); margin:0 0 10px 0; text-align:center; font-family:'Orbitron', sans-serif;">Anions (-)</h3>
+                        <div id="quest-anion-list" style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1;"></div>
+                    </div>
+                </div>
+
+                <!-- 實驗反應室 (中央) -->
+                <div class="reaction-vessel">
+                    <!-- 化學天平 -->
+                    <div class="scale-container">
+                        <div class="scale-weight-indicator" id="q-weight-left">0+</div>
+                        <div class="scale-weight-indicator" id="q-weight-right">0-</div>
+                        <div class="scale-indicator-light" id="q-scale-light"></div>
+                        <div class="scale-beam" id="q-scale-beam">
+                            <div class="scale-pan scale-pan-left"><div class="scale-string-left"></div><div class="scale-string-right"></div></div>
+                            <div class="scale-pan scale-pan-right"><div class="scale-string-left"></div><div class="scale-string-right"></div></div>
+                        </div>
+                        <div class="scale-pole"></div>
+                        <div class="scale-base"></div>
+                    </div>
+
+                    <!-- 拼圖區域 -->
+                    <div class="puzzle-board" id="puzzle-board-quest">
+                        <div class="puzzle-column" id="cation-column-quest"></div>
+                        <div class="puzzle-column" id="anion-column-quest"></div>
+                    </div>
+
+                    <!-- 操作欄 -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; z-index:10;">
+                        <button class="cyber-btn cyber-btn-secondary" onclick="clearQuestVessel()">
+                            <i class="fa-solid fa-rotate-left"></i> 
+                            <span class="lang-zh">重置</span>
+                            <span class="lang-en" style="display:none;">Reset</span>
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" id="btn-quest-hint" onclick="showQuestHint()">
+                            <i class="fa-solid fa-lightbulb"></i> 
+                            <span class="lang-zh">提示</span>
+                            <span class="lang-en" style="display:none;">Hint</span>
+                        </button>
+                        <button class="cyber-btn cyber-btn-gold" onclick="submitQuest()">
+                            <i class="fa-solid fa-circle-check"></i> 
+                            <span class="lang-zh">驗證合成</span>
+                            <span class="lang-en" style="display:none;">Verify Synthesis</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 晶體投影與微觀圖 -->
+                <div class="crystal-projection glass-card">
+                    <h3 style="font-family:'Orbitron', sans-serif; margin:0; color:var(--accent-blue); text-shadow:0 0 5px rgba(0,168,255,0.3); font-size:1.1em;">
+                        <span class="lang-zh">晶格點陣投影</span>
+                        <span class="lang-en" style="display:none;">Crystal Lattice Projection</span>
+                    </h3>
+                    <div class="lattice-container">
+                        <div class="lattice-grid" id="lattice-projection-grid"></div>
+                    </div>
+                    <div style="font-size: 0.8em; color: var(--text-secondary); text-align: center; line-height: 1.4;">
+                        <i class="fa-solid fa-circle-nodes"></i> 
+                        <span class="lang-zh">點陣圖展示了合成後晶格中陽離子與陰離子交替排列的微觀三維結構比例。</span>
+                        <span class="lang-en" style="display:none;">Projection displays the alternating 3D ratio of cations & anions in the synthesized crystal lattice.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- C. 離子資料庫與系統設定 -->
+        <div class="view-section" id="tab-settings">
+            <div class="glass-card">
+                <h2>
+                    <span class="lang-zh">系統設定與陰離子庫維護</span>
+                    <span class="lang-en" style="display:none;">System Configuration & Ion Database</span>
+                </h2>
+                <p style="color:var(--text-secondary);">
+                    <span class="lang-zh">在這裡你可以啟用/停用特定的離子、調整音效及自訂題目。</span>
+                    <span class="lang-en" style="display:none;">Enable/disable specific ions, toggle sound effects, and customize features.</span>
+                </p>
+            </div>
+
+            <div class="settings-grid">
+                <!-- 陽離子勾選 -->
+                <div class="settings-card">
+                    <h3>
+                        <span class="lang-zh">啟用陽離子 (Cations)</span>
+                        <span class="lang-en" style="display:none;">Enable Cations (+)</span>
+                    </h3>
+                    <div style="margin-bottom: 10px;">
+                        <button class="cyber-btn cyber-btn-secondary" style="padding:4px 10px; font-size:0.8em;" onclick="selectAllIons('cations', true)">
+                            <span class="lang-zh">全選</span>
+                            <span class="lang-en" style="display:none;">Select All</span>
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" style="padding:4px 10px; font-size:0.8em;" onclick="selectAllIons('cations', false)">
+                            <span class="lang-zh">全空</span>
+                            <span class="lang-en" style="display:none;">Clear All</span>
+                        </button>
+                    </div>
+                    <div class="checkbox-container" id="settings-cation-container"></div>
+                </div>
+
+                <!-- 陰離子勾選 -->
+                <div class="settings-card">
+                    <h3>
+                        <span class="lang-zh">啟用陰離子 (Anions)</span>
+                        <span class="lang-en" style="display:none;">Enable Anions (-)</span>
+                    </h3>
+                    <div style="margin-bottom: 10px;">
+                        <button class="cyber-btn cyber-btn-secondary" style="padding:4px 10px; font-size:0.8em;" onclick="selectAllIons('anions', true)">
+                            <span class="lang-zh">全選</span>
+                            <span class="lang-en" style="display:none;">Select All</span>
+                        </button>
+                        <button class="cyber-btn cyber-btn-secondary" style="padding:4px 10px; font-size:0.8em;" onclick="selectAllIons('anions', false)">
+                            <span class="lang-zh">全空</span>
+                            <span class="lang-en" style="display:none;">Clear All</span>
+                        </button>
+                    </div>
+                    <div class="checkbox-container" id="settings-anion-container"></div>
+                </div>
+
+                <!-- 功能選項 -->
+                <div class="settings-card" style="grid-column: span 2;">
+                    <h3>其他進階功能選項</h3>
+                    <div style="display:flex; gap:30px; align-items:center;">
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" id="setting-sound" checked style="width:18px; height:18px;">
+                            <span>啟用合成音效</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" id="setting-particles" checked style="width:18px; height:18px;">
+                            <span>啟用粒子爆炸特效</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" id="setting-hint-auto" checked style="width:18px; height:18px;">
+                            <span>答錯時自動彊出提示</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 3. 合成成功彊出視窗 (Modal) -->
+    <div class="modal-overlay" id="success-modal">
+        <div class="modal-card" id="success-modal-card">
+            <h2 id="modal-title"><i class="fa-solid fa-circle-check pulse"></i> 合成成功！</h2>
+            <div id="modal-compound-name" style="font-size:1.8em; font-weight:bold; margin-bottom:10px;">硫酸銅 (Copper(II) Sulphate)</div>
+            
+            <div class="modal-formula" id="modal-formula-latex"></div>
+
+            <!-- Tab Navigation inside Success Modal -->
+            <div class="modal-tabs-container">
+                <button class="modal-tab-btn active" id="modal-tab-btn-electron" onclick="switchModalTab('electron')">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                    <span class="lang-zh">電子排布圖</span>
+                    <span class="lang-en" style="display:none;">Electron Diagram</span>
+                </button>
+                <button class="modal-tab-btn" id="modal-tab-btn-crystal" onclick="switchModalTab('crystal')">
+                    <i class="fa-solid fa-gem"></i>
+                    <span class="lang-zh">晶體特徵</span>
+                    <span class="lang-en" style="display:none;">Crystal Lattice</span>
+                </button>
+            </div>
+
+            <!-- Tab Panel 1: Electron Diagram -->
+            <div class="modal-panel active" id="panel-electron">
+                <div class="electron-diagram-container" id="electron-diagram-container">
+                    <!-- SVG diagram will be rendered dynamically here -->
+                </div>
+            </div>
+
+            <!-- Tab Panel 2: Crystal Lattice (Original Crystal Facts) -->
+            <div class="modal-panel" id="panel-crystal">
+                <div class="crystal-fact-container">
+                    <div style="font-weight:bold; color:var(--accent-blue); margin-bottom:5px;">
+                        <i class="fa-solid fa-gem"></i> 
+                        <span class="lang-zh">晶體特徵與微觀數理科普</span>
+                        <span class="lang-en" style="display:none;">Crystal Properties & Microscopic Facts</span>
+                    </div>
+                    <div id="modal-crystal-text"></div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:15px;">
+                <button class="cyber-btn cyber-btn-secondary" onclick="closeSuccessModal()">留在這研究</button>
+                <button class="cyber-btn" id="btn-next-level" onclick="nextQuestLevel()">下一關挑戰 <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 系統音效 (利用 Web Audio API 合成) -->
+    <script>
+        var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (!document.getElementById('setting-sound').checked) return;
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                if (type === 'add') {
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'remove') {
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                } else if (type === 'success') {
+                    const now = audioCtx.currentTime;
+                    const freqs = [523.25, 659.25, 783.99, 1046.50];
+                    freqs.forEach(function(f, i) {
+                        let osc = audioCtx.createOscillator();
+                        let gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(f, now + i * 0.05);
+                        gain.gain.setValueAtTime(0.05, now + i * 0.05);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6 + i * 0.05);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + i * 0.05);
+                        osc.stop(now + 0.6 + i * 0.05);
+                    });
+                } else if (type === 'error') {
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.25);
+                    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.25);
+                }
+            } catch (e) {
+                console.error("Audio error: ", e);
+            }
+        }
+    </script>
+
+    <!-- 5. 離子大數據庫 -->
+    <script>
+        var dbCations = [
+            { id: "c1", name: "Sodium ion", nameZh: "鈉離子", sym: "Na", charge: 1, poly: false },
+            { id: "c2", name: "Potassium ion", nameZh: "鉀離子", sym: "K", charge: 1, poly: false },
+            { id: "c3", name: "Hydrogen ion", nameZh: "氫離子", sym: "H", charge: 1, poly: false },
+            { id: "c4", name: "Ammonium ion", nameZh: "銨離子", sym: "NH4", charge: 1, poly: true },
+            { id: "c5", name: "Silver ion", nameZh: "銀離子", sym: "Ag", charge: 1, poly: false },
+            { id: "c6", name: "Copper(I) ion", nameZh: "銅(I)離子", sym: "Cu", charge: 1, poly: false },
+            { id: "c7", name: "Magnesium ion", nameZh: "鎂離子", sym: "Mg", charge: 2, poly: false },
+            { id: "c8", name: "Calcium ion", nameZh: "鈣離子", sym: "Ca", charge: 2, poly: false },
+            { id: "c9", name: "Barium ion", nameZh: "鋇離子", sym: "Ba", charge: 2, poly: false },
+            { id: "c10", name: "Zinc ion", nameZh: "鋅離子", sym: "Zn", charge: 2, poly: false },
+            { id: "c11", name: "Lead(II) ion", nameZh: "鉛(II)離子", sym: "Pb", charge: 2, poly: false },
+            { id: "c12", name: "Manganese(II) ion", nameZh: "錳(II)離子", sym: "Mn", charge: 2, poly: false, color: "Pale pink" },
+            { id: "c13", name: "Iron(II) ion", nameZh: "鐵(II)離子", sym: "Fe", charge: 2, poly: false, color: "Green" },
+            { id: "c14", name: "Cobalt(II) ion", nameZh: "鈷(II)離子", sym: "Co", charge: 2, poly: false, color: "Pink" },
+            { id: "c15", name: "Nickel(II) ion", nameZh: "鎳(II)離子", sym: "Ni", charge: 2, poly: false, color: "Green" },
+            { id: "c16", name: "Copper(II) ion", nameZh: "銅(II)離子", sym: "Cu", charge: 2, poly: false, color: "Blue" },
+            { id: "c17", name: "Aluminium ion", nameZh: "鋁離子", sym: "Al", charge: 3, poly: false },
+            { id: "c18", name: "Iron(III) ion", nameZh: "鐵(III)離子", sym: "Fe", charge: 3, poly: false, color: "Yellow" },
+            { id: "c19", name: "Chromium(III) ion", nameZh: "鉻(III)離子", sym: "Cr", charge: 3, poly: false, color: "Green" }
+        ];
+
+        var dbAnions = [
+            { id: "a1", name: "Hydride ion", nameZh: "氫負離子", sym: "H", charge: 1, poly: false },
+            { id: "a2", name: "Hydroxide ion", nameZh: "氫氧根離子", sym: "OH", charge: 1, poly: true },
+            { id: "a3", name: "Chloride ion", nameZh: "氯離子", sym: "Cl", charge: 1, poly: false },
+            { id: "a4", name: "Bromide ion", nameZh: "溴離子", sym: "Br", charge: 1, poly: false },
+            { id: "a5", name: "Iodide ion", nameZh: "碘離子", sym: "I", charge: 1, poly: false },
+            { id: "a6", name: "Nitrate ion", nameZh: "硝酸根離子", sym: "NO3", charge: 1, poly: true },
+            { id: "a7", name: "Nitrite ion", nameZh: "亞硝酸根離子", sym: "NO2", charge: 1, poly: true },
+            { id: "a8", name: "Hydrogencarbonate ion", nameZh: "碳酸氫根離子", sym: "HCO3", charge: 1, poly: true },
+            { id: "a9", name: "Hydrogensulphate ion", nameZh: "硫酸氫根離子", sym: "HSO4", charge: 1, poly: true },
+            { id: "a10", name: "Cyanide ion", nameZh: "氰根離子", sym: "CN", charge: 1, poly: true },
+            { id: "a11", name: "Chlorate ion", nameZh: "氯酸根離子", sym: "ClO3", charge: 1, poly: true },
+            { id: "a12", name: "Permanganate ion", nameZh: "高錳酸根離子", sym: "MnO4", charge: 1, poly: true, color: "Purple" },
+            { id: "a13", name: "Oxide ion", nameZh: "氧離子", sym: "O", charge: 2, poly: false },
+            { id: "a14", name: "Sulphide ion", nameZh: "硫離子", sym: "S", charge: 2, poly: false },
+            { id: "a15", name: "Sulphate ion", nameZh: "硫酸根離子", sym: "SO4", charge: 2, poly: true },
+            { id: "a16", name: "Sulphite ion", nameZh: "亞硫酸根離子", sym: "SO3", charge: 2, poly: true },
+            { id: "a17", name: "Thiosulphate ion", nameZh: "硫代硫酸根離子", sym: "S2O3", charge: 2, poly: true },
+            { id: "a18", name: "Carbonate ion", nameZh: "碳酸根離子", sym: "CO3", charge: 2, poly: true },
+            { id: "a19", name: "Chromate ion", nameZh: "鉻酸根離子", sym: "CrO4", charge: 2, poly: true, color: "Yellow" },
+            { id: "a20", name: "Dichromate ion", nameZh: "重鉻酸根離子", sym: "Cr2O7", charge: 2, poly: true, color: "Orange" },
+            { id: "a21", name: "Nitride ion", nameZh: "氮離子", sym: "N", charge: 3, poly: false },
+            { id: "a22", name: "Phosphide ion", nameZh: "磷離子", sym: "P", charge: 3, poly: false },
+            { id: "a23", name: "Phosphate ion", nameZh: "磷酸根離子", sym: "PO4", charge: 3, poly: true }
+        ];
+
+        var dbCrystals = {
+            "NaCl": {
+                nameZh: "氯化鈉 (Sodium Chloride)",
+                nameEn: "Sodium Chloride (NaCl)",
+                systemZh: "等軸晶系 (Cubic Crystal System)",
+                systemEn: "Cubic Crystal System",
+                structureZh: "面心立方晶格 (Face-Centered Cubic Lattice, FCC)",
+                structureEn: "Face-Centered Cubic Lattice (FCC)",
+                factZh: "氯化鈉（食鹽）具有極高對稱性的晶體結構。微觀下，每個鈉離子 Na+ 被 6 個氯離子 Cl- 八面體包圍，反之亦然，離子配位數為 6:6。這種均勻交替的晶格排列賦予了食鹽完美的面心立方解理性質，在外力敲擊下，它會沿著垂直平面整齊解理分裂成完美的小正方體！",
+                factEn: "Sodium chloride (table salt) has a highly symmetrical crystal structure. Microscopically, each Na+ ion is surrounded by an octahedron of 6 Cl- ions, and vice versa, with a coordination number of 6:6. This uniform alternating lattice arrangement gives salt perfect cubic cleavage properties; when struck, it cleaves cleanly along perpendicular planes into perfect tiny cubes!"
+            },
+            "CuSO4": {
+                nameZh: "硫酸銅 (Copper(II) Sulphate)",
+                nameEn: "Copper(II) Sulphate (CuSO4)",
+                systemZh: "三斜晶系 (Triclinic Crystal System)",
+                systemEn: "Triclinic Crystal System",
+                structureZh: "五水合物晶網 (Triclinic Hydrated Lattice)",
+                structureEn: "Triclinic Hydrated Lattice",
+                factZh: "硫酸銅在常溫下以五水合物 CuSO4 . 5H2O 形式存在。銅(II)離子 Cu2+ 呈現出璀璨的深天藍色（由於 d-d 電子躍遷吸收黃光所致）。其微觀晶格屬於極低對稱性的三斜晶系，在幾何學上三個晶軸長度各不相等且夾角都不是 90 度，形成了自然界中最美妙的不規則多面體晶簇！",
+                factEn: "Copper(II) sulphate exists as the pentahydrate CuSO4 . 5H2O at room temperature. The Cu2+ ions exhibit a brilliant deep sky-blue color due to d-d electronic transitions absorbing yellow light. Its microscopic lattice belongs to the triclinic system with extremely low symmetry, where the three crystal axes are unequal and none of the angles are 90 degrees, forming some of nature's most beautiful irregular polyhedral crystal clusters!"
+            },
+            "CaCO3": {
+                nameZh: "碳酸鈣 (Calcium Carbonate)",
+                nameEn: "Calcium Carbonate (CaCO3)",
+                systemZh: "三方晶系 / 斜方晶系 (Trigonal / Orthorhombic)",
+                systemEn: "Trigonal / Orthorhombic Crystal System",
+                structureZh: "方解石與霰石晶格 (Calcite / Aragonite Polymorphs)",
+                structureEn: "Calcite / Aragonite Polymorphs",
+                factZh: "碳酸鈣具有卓越的雙折射光學效應。光線穿過方解石（碳酸鈣最穩定的晶型）時會分裂成兩道折射光，讓你透過晶體能看到雙重字體現象！它是大理石、鐘乳石、珍珠和海洋貝殼的核心無機成分，其微觀拼圖比例為 1:1，但微觀卻能構築起震撼的世界地貌。",
+                factEn: "Calcium carbonate exhibits remarkable double refraction (birefringence). Light passing through calcite (the most stable polymorph of CaCO3) splits into two refracted rays, allowing you to see double images through the crystal! It is the core inorganic component of marble, stalactites, pearls, and seashells. While its puzzle ratio is a simple 1:1, its microscopic structure builds spectacular world landscapes."
+            },
+            "Al2(SO4)3": {
+                nameZh: "硫酸鋁 (Aluminium Sulphate)",
+                nameEn: "Aluminium Sulphate (Al2(SO4)3)",
+                systemZh: "單斜晶系 (Monoclinic Crystal System)",
+                systemEn: "Monoclinic Crystal System",
+                structureZh: "層狀堆積結構 (Layered Octahedral Grid)",
+                structureEn: "Layered Octahedral Grid",
+                factZh: "硫酸鋁在水中電離出 Al3+ 與 SO4 2-。在拼圖結構中，為了達到電中性，需要 2 個鋁離子對應 3 個硫酸根，拼圖高度達到 360 像素！在淨水工程中，帶 3+ 高電荷的 Al3+ 能強力吸附水中帶負電荷的膠體雜質，形成羽狀沉澱，這正是幾何多電荷互鎖帶來的微觀化學工程奇蹟。",
+                factEn: "Aluminium sulphate dissociates into Al3+ and SO4 2- in water. In the puzzle structure, to achieve electrical neutrality, 2 aluminium ions pair with 3 sulphate ions, reaching a puzzle height of 360 pixels! In water purification, the highly charged Al3+ strongly adsorbs negatively charged colloidal impurities to form flocs. This is a microscopic chemical engineering miracle brought by multi-charge geometric interlocking."
+            },
+            "KMnO4": {
+                nameZh: "高錳酸鉀 (Potassium Permanganate)",
+                nameEn: "Potassium Permanganate (KMnO4)",
+                systemZh: "斜方晶系 (Orthorhombic Crystal System)",
+                systemEn: "Orthorhombic Crystal System",
+                structureZh: "四面體配位晶格 (Permanganate Tetrahedral Grid)",
+                structureEn: "Permanganate Tetrahedral Grid",
+                factZh: "高錳酸根 MnO4- 中的錳處於最頂級的 +7 氧化態，使晶體呈現出帶有黑色的極深紫紅色澤。這是一種非常強大的氧化劑。在它的斜方晶體中，鉀離子與由 4 個氧原子緊密包圍的高錳酸根四面體整齊交錯，這在幾何拼圖上表現為完美的 1:1 剛性卡扣配合。",
+                factEn: "The manganese in permanganate MnO4- is in its highest +7 oxidation state, giving the crystal an extremely deep, almost black, purplish-red color. It is a powerful oxidizing agent. In its orthorhombic crystal lattice, potassium ions interlock orderly with the tetrahedral permanganate groups (tightly surrounded by 4 oxygen atoms), which manifests in our geometric puzzle as a perfect 1:1 rigid snap-fit."
+            },
+            "FeCl3": {
+                nameZh: "氯化鐵 (Iron(III) Chloride)",
+                nameEn: "Iron(III) Chloride (FeCl3)",
+                systemZh: "三方晶系 (Trigonal Crystal System)",
+                systemEn: "Trigonal Crystal System",
+                structureZh: "層狀銸型晶格 (Layered BiI3-type Lattice)",
+                structureEn: "Layered BiI3-type Lattice",
+                factZh: "鐵(III)離子 Fe3+ 在溶液中呈現出溫暖的黃褐色，這是由其 d 軌域部分充填電子所展現的過渡金屬典型特徵。在晶體結構中，每個鐵(III)離子與 6 個氯離子包圍。由於陰陽離子電荷比為 1:3，在互鎖拼圖中，1 個 Fe3+ 恰好契合 3 個 Cl-，是無機化學立體幾何的最典型範例。",
+                factEn: "Trivalent iron ions Fe3+ exhibit a warm yellow-brown color in solution, a typical characteristic of transition metals with partially filled d-orbitals. In its crystal structure, each iron ion is surrounded by 6 chloride ions. Since the cation-to-anion charge ratio is 1:3, in the interlocking puzzle, 1 Fe3+ fits perfectly with 3 Cl-, representing a classic textbook example of inorganic stereochemistry."
+            },
+            "FeSO4": {
+                nameZh: "硫酸鐵(II) (Iron(II) Sulphate)",
+                nameEn: "Iron(II) Sulphate (FeSO4)",
+                systemZh: "單斜晶系 (Monoclinic Crystal System)",
+                systemEn: "Monoclinic Crystal System",
+                structureZh: "綠礬晶格 (Melanterite-type Grid)",
+                structureEn: "Melanterite-type Grid",
+                factZh: "硫酸鐵(II)在古籍中被稱為綠礬。鐵(II)離子 Fe2+ 帶有淡淡的薄荷綠色。在水溶液中，鐵(II)離子極易被空氣中的氧氣氧化成黃褐色的鐵(III)離子。其微觀幾何對稱性呈現出單斜晶特點，晶胞中有一個夾角不等於 90 度，猶如一座微微傾斜但堅不可摧的微觀宮殿！",
+                factEn: "Iron(II) sulphate was known as 'green vitriol' in ancient times. The Fe2+ ions carry a pale mint-green color. In aqueous solution, Fe2+ is easily oxidized by oxygen in the air into yellowish-brown trivalent iron. Its microscopic symmetry exhibits monoclinic characteristics, where one angle of the unit cell is not equal to 90 degrees, resembling a slightly tilted but indestructible microscopic palace!"
+            },
+            "default": {
+                nameZh: "自訂離子化合物 (Custom Ionic Compound)",
+                nameEn: "Custom Ionic Compound",
+                systemZh: "離子晶體點陣 (Ionic Crystal Lattice)",
+                systemEn: "Ionic Crystal Lattice",
+                structureZh: "電荷平衡晶格 (Charge-Balanced Grid)",
+                structureEn: "Charge-Balanced Grid",
+                factZh: "離子化合物由陽離子與陰離子通過強大的靜電引力（庫崙力）緊密結合而成。在微觀上，晶體中沒有獨立的單分子存在，而是由無數個陽離子與陰離子在空間中交替排列成無限延展的規律晶格。拼圖中的凹槽與凸筍，正是庫崙引力在微觀幾何學中的視覺化具體體現！",
+                factEn: "Ionic compounds are formed by cations and anions tightly bound together by strong electrostatic forces (Coulomb forces). Microscopically, there are no independent single molecules in the crystal; instead, countless cations and anions are arranged alternately in space to form an infinitely extending regular lattice. The slots and tabs in our puzzle are the concrete visual representation of Coulomb attraction in microscopic geometry!"
+            }
+        };
+
+        for (var k in dbCrystals) {
+            if (dbCrystals[k].fact) {
+                dbCrystals[k].fact = dbCrystals[k].fact.replace("and 陰離子", "and 陰離子").replace("與陰離子", "與陰離子");
+            }
+        }
+    </script>
+
+    <!-- 6. 核心 JS 拼圖運算引擎 & 反應控制 -->
+    <script>
+        var currentLang = 'zh';
+        var activeTab = 'lab';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            var btnZh = document.getElementById('btn-lang-zh');
+            var btnEn = document.getElementById('btn-lang-en');
+            
+            if (lang === 'zh') {
+                document.body.classList.remove('lang-en-active');
+                document.body.classList.add('lang-zh-active');
+                
+                // Highlight ZH as active, EN as inactive
+                btnZh.style.background = 'linear-gradient(135deg, var(--accent-blue), #5f27cd)';
+                btnZh.style.border = 'none';
+                btnZh.style.color = '#ffffff';
+                btnZh.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
+                btnZh.style.opacity = '1';
+                btnZh.style.boxShadow = '0 0 10px rgba(0, 168, 255, 0.4)';
+                
+                btnEn.style.background = 'rgba(255, 255, 255, 0.05)';
+                btnEn.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+                btnEn.style.color = 'rgba(255, 255, 255, 0.6)';
+                btnEn.style.setProperty('-webkit-text-fill-color', 'rgba(255, 255, 255, 0.6)', 'important');
+                btnEn.style.opacity = '0.7';
+                btnEn.style.boxShadow = 'none';
+            } else {
+                document.body.classList.remove('lang-zh-active');
+                document.body.classList.add('lang-en-active');
+                
+                // Highlight EN as active, ZH as inactive
+                btnEn.style.background = 'linear-gradient(135deg, var(--accent-blue), #5f27cd)';
+                btnEn.style.border = 'none';
+                btnEn.style.color = '#ffffff';
+                btnEn.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
+                btnEn.style.opacity = '1';
+                btnEn.style.boxShadow = '0 0 10px rgba(0, 168, 255, 0.4)';
+                
+                btnZh.style.background = 'rgba(255, 255, 255, 0.05)';
+                btnZh.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+                btnZh.style.color = 'rgba(255, 255, 255, 0.6)';
+                btnZh.style.setProperty('-webkit-text-fill-color', 'rgba(255, 255, 255, 0.6)', 'important');
+                btnZh.style.opacity = '0.7';
+                btnZh.style.boxShadow = 'none';
+            }
+            
+            // Re-render UI elements to update languages
+            renderLabPools();
+            updateVesselUI();
+            initSettings();
+            
+            if (activeTab === 'quest') {
+                loadQuestLevel();
+            }
+        }
+        var vesselCations = [];
+        var vesselAnions = [];
+        
+        var masterQuestPool = [
+            { catId: "c16", anId: "a15", name: "硫酸銅 (Copper(II) Sulphate)", formula: "CuSO4" },
+            { catId: "c1", anId: "a3", name: "氯化鈉 (Sodium Chloride)", formula: "NaCl" },
+            { catId: "c17", anId: "a15", name: "硫酸鋁 (Aluminium Sulphate)", formula: "Al2(SO4)3" },
+            { catId: "c18", anId: "a3", name: "氯化鐵 (Iron(III) Chloride)", formula: "FeCl3" },
+            { catId: "c2", anId: "a12", name: "高錳酸鉀 (Potassium Permanganate)", formula: "KMnO4" },
+            { catId: "c8", anId: "a18", name: "碳酸鈣 (Calcium Carbonate)", formula: "CaCO3" },
+            { catId: "c13", anId: "a15", name: "硫酸鐵(II) (Iron(II) Sulphate)", formula: "FeSO4" },
+            { catId: "c1", anId: "a2", name: "氫氧化鈉 (Sodium Hydroxide)", formula: "NaOH" },
+            { catId: "c4", anId: "a6", name: "硝酸銨 (Ammonium Nitrate)", formula: "NH4NO3" },
+            { catId: "c9", anId: "a3", name: "氯化鋇 (Barium Chloride)", formula: "BaCl2" },
+            { catId: "c1", anId: "a18", name: "碳酸鈉 (Sodium Carbonate)", formula: "Na2CO3" },
+            { catId: "c8", anId: "a23", name: "磷酸鈣 (Calcium Phosphate)", formula: "Ca3(PO4)2" },
+            { catId: "c5", anId: "a6", name: "硝酸銀 (Silver Nitrate)", formula: "AgNO3" },
+            { catId: "c8", anId: "a2", name: "氫氧化鈣 (Calcium Hydroxide)", formula: "Ca(OH)2" },
+            { catId: "c10", anId: "a15", name: "硫酸鋅 (Zinc Sulphate)", formula: "ZnSO4" },
+            { catId: "c4", anId: "a3", name: "氯化銨 (Ammonium Chloride)", formula: "NH4Cl" }
+        ];
+
+        var questList = [];
+        var currentQuestIndex = 0;
+        var questVesselCations = [];
+        var questVesselAnions = [];
+        var questSuccessCount = 0;
+        var questTotalAttempts = 0;
+
+        function initQuestGame() {
+            var shuffled = masterQuestPool.slice().sort(function() {
+                return 0.5 - Math.random();
+            });
+            questList = shuffled.slice(0, 10);
+            currentQuestIndex = 0;
+            questVesselCations = [];
+            questVesselAnions = [];
+            
+            // Reset UI score/stats on load if elements are there
+            var scoreEl = document.getElementById('quest-score');
+            var accuracyEl = document.getElementById('quest-accuracy');
+            if (scoreEl) scoreEl.innerText = 'Level 1 / 10';
+            if (accuracyEl) accuracyEl.innerText = '100%';
+        }
+
+        // Run once on load to populate the first 10 random levels
+        initQuestGame();
+
+        function formatChemicalFormulaHTML(formula) {
+            return formula.replace(/(\d+)/g, '<sub>$1</sub>');
+        }
+
+        function formatChemicalFormulaLaTeX(symbol) {
+            return symbol.replace(/([a-zA-Z()]+)/g, '\\text{$1}').replace(/(\d+)/g, '_{$1}');
+        }
+
+        function formatChemicalFormulaSVG(symbol) {
+            return symbol.replace(/(\d+)/g, '<tspan baseline-shift="sub" font-size="10">$1</tspan>');
+        }
+
+        function getIonColor(ion, isCation) {
+            if (ion.color) {
+                switch(ion.color.toLowerCase()) {
+                    case 'blue':
+                        return { start: '#0052d4', end: '#4364f7', border: '#00bfff', text: '#ffffff', textSecondary: '#a5c9eb' };
+                    case 'yellow':
+                        return { start: '#f1c40f', end: '#f39c12', border: '#ffd700', text: '#111111', textSecondary: '#554400' };
+                    case 'green':
+                        if (ion.name.includes('Chromium')) {
+                            return { start: '#11998e', end: '#38ef7d', border: '#00ffcc', text: '#ffffff', textSecondary: '#d0f8eb' };
+                        }
+                        return { start: '#134e5e', end: '#71973c', border: '#7cfc00', text: '#ffffff', textSecondary: '#e2f4ce' };
+                    case 'pink':
+                        return { start: '#ec008c', end: '#fc6767', border: '#ff69b4', text: '#ffffff', textSecondary: '#ffd4f0' };
+                    case 'pale pink':
+                        return { start: '#ff9a9e', end: '#fecfef', border: '#ffb6c1', text: '#333333', textSecondary: '#663344' };
+                    case 'purple':
+                        return { start: '#4b0082', end: '#800080', border: '#ff00ff', text: '#ffffff', textSecondary: '#f8d0f7' };
+                    case 'orange':
+                        return { start: '#f857a6', end: '#ff5858', border: '#ff4500', text: '#ffffff', textSecondary: '#ffe0d8' };
+                }
+            }
+            
+            if (isCation) {
+                return { start: 'rgba(30, 80, 180, 0.45)', end: 'rgba(10, 40, 100, 0.25)', border: 'rgba(0, 168, 255, 0.6)', text: '#ffffff', textSecondary: '#a3d8f4' };
+            } else {
+                return { start: 'rgba(180, 110, 30, 0.45)', end: 'rgba(100, 50, 10, 0.25)', border: 'rgba(255, 170, 0, 0.6)', text: '#ffffff', textSecondary: '#f4d8a3' };
+            }
+        }
+
+        function generateIonSVG(ion, isCation, indexInVessel) {
+            if (indexInVessel === undefined) indexInVessel = -1;
+            var unitHeight = 60;
+            var width = 120;
+            var charge = ion.charge;
+            var height = charge * unitHeight;
+            var radius = 12;
+
+            var path = "";
+            if (isCation) {
+                path += 'M 0 0';
+                path += ' L ' + width + ' 0';
+                for (var i = 0; i < charge; i++) {
+                    var y1 = i * unitHeight + 18;
+                    var y2 = i * unitHeight + 42;
+                    path += ' L ' + width + ' ' + y1;
+                    path += ' A ' + radius + ' ' + radius + ' 0 0 0 ' + width + ' ' + y2;
+                }
+                path += ' L ' + width + ' ' + height;
+                path += ' L 0 ' + height;
+                path += ' Z';
+            } else {
+                path += 'M 0 0';
+                for (var i = 0; i < charge; i++) {
+                    var y1 = i * unitHeight + 18;
+                    var y2 = i * unitHeight + 42;
+                    path += ' L 0 ' + y1;
+                    path += ' A ' + radius + ' ' + radius + ' 0 0 0 0 ' + y2;
+                }
+                path += ' L 0 ' + height;
+                path += ' L ' + width + ' ' + height;
+                path += ' L ' + width + ' 0';
+                path += ' Z';
+            }
+
+            var color = getIonColor(ion, isCation);
+            var textY = height / 2 + 5;
+            
+            var alignmentMarkers = "";
+            for (var i = 0; i < charge; i++) {
+                var markY = i * unitHeight + 30;
+                if (isCation) {
+                    alignmentMarkers += '<circle cx="' + (width - 15) + '" cy="' + markY + '" r="4" fill="#00a8ff" opacity="0.8" />' +
+                                        '<text x="' + (width - 15) + '" y="' + (markY + 3) + '" fill="#ffffff" font-size="10" text-anchor="middle" font-family="Orbitron, sans-serif" font-weight="bold">+</text>';
+                } else {
+                    alignmentMarkers += '<circle cx="15" cy="' + markY + '" r="4" fill="#ffaa00" opacity="0.8" />' +
+                                        '<text x="15" y="' + (markY + 3) + '" fill="#ffffff" font-size="10" text-anchor="middle" font-family="Orbitron, sans-serif" font-weight="bold">-</text>';
+                }
+            }
+
+            var doubleClickEvent = indexInVessel >= 0 ? 'ondblclick="removeIon(' + indexInVessel + ', ' + isCation + ')"' : '';
+
+            return '<div class="ion-svg-element" ' + doubleClickEvent + ' style="width:' + width + 'px; height:' + height + 'px;" title="雙擊可從反應器中移除">' +
+                   '<svg width="' + width + '" height="' + height + '" viewBox="-15 -5 ' + (width + 30) + ' ' + (height + 10) + '">' +
+                   '<defs>' +
+                   '<linearGradient id="grad-' + ion.id + '-' + indexInVessel + '" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                   '<stop offset="0%" stop-color="' + color.start + '" />' +
+                   '<stop offset="100%" stop-color="' + color.end + '" />' +
+                   '</linearGradient>' +
+                   '<filter id="glow-' + ion.id + '-' + indexInVessel + '" x="-20%" y="-20%" width="140%" height="140%">' +
+                   '<feGaussianBlur stdDeviation="3" result="blur" />' +
+                   '<feComposite in="SourceGraphic" in2="blur" operator="over" />' +
+                   '</filter>' +
+                   '</defs>' +
+                   '<path d="' + path + '" fill="url(#grad-' + ion.id + '-' + indexInVessel + ')" stroke="' + color.border + '" stroke-width="2" filter="url(#glow-' + ion.id + '-' + indexInVessel + ')" />' +
+                   alignmentMarkers +
+                   '<g transform="translate(' + (width/2) + ', ' + textY + ')">' +
+                   '<text text-anchor="middle" dominant-baseline="middle" fill="' + color.text + '" font-family="Orbitron, sans-serif" font-weight="900" font-size="18">' + formatChemicalFormulaSVG(ion.sym) + '</text>' +
+                   '<text x="16" y="-12" fill="' + color.text + '" font-family="Orbitron, sans-serif" font-size="11" font-weight="bold">' + (charge === 1 ? '' : charge) + (isCation ? '+' : '-') + '</text>' +
+                   '<text x="0" y="18" fill="' + color.textSecondary + '" font-family="Noto Sans TC, sans-serif" font-size="9" text-anchor="middle" font-weight="bold">' + (currentLang === 'zh' ? ion.nameZh : ion.name) + '</text>' +
+                   '</g>' +
+                   '</svg>' +
+                   '</div>';
+        }
+
+        function renderLabPools() {
+            var catList = document.getElementById('lab-cation-list');
+            var anList = document.getElementById('lab-anion-list');
+            catList.innerHTML = '';
+            anList.innerHTML = '';
+
+            dbCations.forEach(function(c) {
+                var checkbox = document.getElementById('cb-cat-' + c.id);
+                if (checkbox && !checkbox.checked) return;
+
+                var card = document.createElement('div');
+                card.className = 'ion-card cation-hover';
+                var displayName = currentLang === 'zh' ? c.nameZh : c.name;
+                var fontSize = displayName.length > 15 ? '0.78em' : (displayName.length > 10 ? '0.85em' : '0.9em');
+                card.innerHTML = '<div style="flex:1; min-width:0;"><div style="font-weight:bold; font-size:' + fontSize + '; line-height:1.2; word-wrap:break-word; word-break:break-word;">' + displayName + '</div></div>' +
+                                 '<div class="ion-sym-badge" style="color:var(--accent-blue); flex-shrink:0;">' + formatChemicalFormulaHTML(c.sym) + '<sup>' + (c.charge > 1 ? c.charge : '') + '+</sup></div>';
+                card.onclick = function() { addIon(c, true); };
+                catList.appendChild(card);
+            });
+
+            dbAnions.forEach(function(a) {
+                var checkbox = document.getElementById('cb-ani-' + a.id);
+                if (checkbox && !checkbox.checked) return;
+
+                var card = document.createElement('div');
+                card.className = 'ion-card anion-hover';
+                var displayName = currentLang === 'zh' ? a.nameZh : a.name;
+                var fontSize = displayName.length > 15 ? '0.78em' : (displayName.length > 10 ? '0.85em' : '0.9em');
+                card.innerHTML = '<div style="flex:1; min-width:0;"><div style="font-weight:bold; font-size:' + fontSize + '; line-height:1.2; word-wrap:break-word; word-break:break-word;">' + displayName + '</div></div>' +
+                                 '<div class="ion-sym-badge" style="color:var(--accent-gold); flex-shrink:0;">' + formatChemicalFormulaHTML(a.sym) + '<sup>' + (a.charge > 1 ? a.charge : '') + '-</sup></div>';
+                card.onclick = function() { addIon(a, false); };
+                anList.appendChild(card);
+            });
+        }
+
+        function addIon(ion, isCation) {
+            playSound('add');
+            if (isCation) {
+                vesselCations.push(ion);
+            } else {
+                vesselAnions.push(ion);
+            }
+            updateVesselUI();
+        }
+
+        function removeIon(index, isCation) {
+            playSound('remove');
+            if (isCation) {
+                vesselCations.splice(index, 1);
+            } else {
+                vesselAnions.splice(index, 1);
+            }
+            updateVesselUI();
+        }
+
+        function clearVessel() {
+            playSound('remove');
+            vesselCations = [];
+            vesselAnions = [];
+            updateVesselUI();
+        }
+
+        function updateVesselUI() {
+            var catCol = document.getElementById('cation-column-lab');
+            var anCol = document.getElementById('anion-column-lab');
+            catCol.innerHTML = '';
+            anCol.innerHTML = '';
+
+            vesselCations.forEach(function(c, idx) {
+                catCol.innerHTML += generateIonSVG(c, true, idx);
+            });
+
+            vesselAnions.forEach(function(a, idx) {
+                anCol.innerHTML += generateIonSVG(a, false, idx);
+            });
+
+            var totalPos = vesselCations.reduce(function(sum, c) { return sum + c.charge; }, 0);
+            var totalNeg = vesselAnions.reduce(function(sum, a) { return sum + a.charge; }, 0);
+            var netCharge = totalPos - totalNeg;
+
+            document.getElementById('weight-left').innerText = totalPos > 0 ? totalPos + '+' : '0';
+            document.getElementById('weight-right').innerText = totalNeg > 0 ? totalNeg + '-' : '0';
+
+            var beam = document.getElementById('scale-beam');
+            var light = document.getElementById('scale-light');
+
+            var angle = Math.max(-15, Math.min(15, netCharge * 4));
+            beam.style.transform = 'rotate(' + angle + 'deg)';
+
+            document.querySelectorAll('.scale-pan').forEach(function(pan) {
+                pan.style.transform = 'translate(' + (pan.classList.contains('scale-pan-left') ? '-20px, 30px' : '20px, 30px') + ' ) rotate(' + (-angle) + 'deg)';
+            });
+
+            if (netCharge === 0 && totalPos > 0) {
+                light.classList.add('balanced');
+            } else {
+                light.classList.remove('balanced');
+            }
+
+            updateEquationLaTeX();
+        }
+
+        function safeRenderLaTeX(elementId, texString, fallbackHtml) {
+            var el = document.getElementById(elementId);
+            if (!el) return;
+            
+            if (window.katex) {
+                try {
+                    window.katex.render(texString, el, {
+                        throwOnError: false,
+                        displayMode: false
+                    });
+                } catch (err) {
+                    el.innerHTML = fallbackHtml;
+                }
+            } else {
+                el.innerHTML = fallbackHtml;
+            }
+        }
+
+        function updateEquationLaTeX() {
+            if (vesselCations.length === 0 && vesselAnions.length === 0) {
+                var tex = currentLang === 'zh' ? "A^{y+} + B^{x-} \\longrightarrow \\text{等待添加離子...}" : "A^{y+} + B^{x-} \\longrightarrow \\text{Waiting for ions...}";
+                var fallback = currentLang === 'zh' ? "A<sup>y+</sup> + B<sup>x-</sup> &rarr; 等待添加離子..." : "A<sup>y+</sup> + B<sup>x-</sup> &rarr; Waiting for ions...";
+                safeRenderLaTeX('lab-equation', tex, fallback);
+                return;
+            }
+
+            var catCount = vesselCations.length;
+            var anCount = vesselAnions.length;
+
+            if (catCount === 0 || anCount === 0) {
+                var formulaLeft = "";
+                if (catCount > 0) {
+                    var c = vesselCations[0];
+                    formulaLeft = (catCount > 1 ? catCount : '') + formatChemicalFormulaLaTeX(c.sym) + '^{' + (c.charge > 1 ? c.charge : '') + '+}';
+                } else {
+                    var a = vesselAnions[0];
+                    formulaLeft = (anCount > 1 ? anCount : '') + formatChemicalFormulaLaTeX(a.sym) + '^{' + (a.charge > 1 ? a.charge : '') + '-}';
+                }
+                var texWaiting = currentLang === 'zh' ? "\\text{等待配對...}" : "\\text{Waiting for pair...}";
+                var fallbackWaiting = currentLang === 'zh' ? "等待配對..." : "Waiting for pair...";
+                safeRenderLaTeX('lab-equation', formulaLeft + ' \\longrightarrow ' + texWaiting, formulaLeft + " &rarr; " + fallbackWaiting);
+                return;
+            }
+
+            var cat = vesselCations[0];
+            var an = vesselAnions[0];
+
+            var texLeft = (catCount > 1 ? catCount : '') + formatChemicalFormulaLaTeX(cat.sym) + '^{' + (cat.charge > 1 ? cat.charge : '') + '+} + ' + (anCount > 1 ? anCount : '') + formatChemicalFormulaLaTeX(an.sym) + '^{' + (an.charge > 1 ? an.charge : '') + '-}';
+            var fallbackLeft = (catCount > 1 ? catCount : '') + formatChemicalFormulaHTML(cat.sym) + '<sup>' + (cat.charge > 1 ? cat.charge : '') + '+</sup> + ' + (anCount > 1 ? anCount : '') + formatChemicalFormulaHTML(an.sym) + '<sup>' + (an.charge > 1 ? an.charge : '') + '-</sup>';
+
+            var totalPos = vesselCations.reduce(function(sum, c) { return sum + c.charge; }, 0);
+            var totalNeg = vesselAnions.reduce(function(sum, a) { return sum + a.charge; }, 0);
+
+            if (totalPos === totalNeg) {
+                var compoundTex = generateCompoundLaTeX(cat, an, catCount, anCount);
+                var compoundHtml = generateCompoundHTML(cat, an, catCount, anCount);
+                safeRenderLaTeX('lab-equation', texLeft + ' \\longrightarrow ' + compoundTex, fallbackLeft + ' &rarr; ' + compoundHtml);
+            } else {
+                var texUnbal = currentLang === 'zh' ? "\\text{電荷不平衡!}" : "\\text{Unbalanced Charge!}";
+                var fallbackUnbal = currentLang === 'zh' ? "電荷不平衡!" : "Unbalanced!";
+                safeRenderLaTeX('lab-equation', texLeft + ' \\longrightarrow ' + texUnbal, fallbackLeft + ' &rarr; ' + fallbackUnbal);
+            }
+        }
+
+        function generateCompoundLaTeX(cat, an, catCount, anCount) {
+            var catPart = cat.poly && catCount > 1 ? '(' + formatChemicalFormulaLaTeX(cat.sym) + ')_{' + catCount + '}' : formatChemicalFormulaLaTeX(cat.sym) + (catCount > 1 ? '_{' + catCount + '}' : '');
+            var anPart = an.poly && anCount > 1 ? '(' + formatChemicalFormulaLaTeX(an.sym) + ')_{' + anCount + '}' : formatChemicalFormulaLaTeX(an.sym) + (anCount > 1 ? '_{' + anCount + '}' : '');
+            return catPart + anPart;
+        }
+
+        function generateCompoundHTML(cat, an, catCount, anCount) {
+            var catPart = cat.poly && catCount > 1 ? '(' + formatChemicalFormulaHTML(cat.sym) + ')<sub>' + catCount + '</sub>' : formatChemicalFormulaHTML(cat.sym) + (catCount > 1 ? '<sub>' + catCount + '</sub>' : '');
+            var anPart = an.poly && anCount > 1 ? '(' + formatChemicalFormulaHTML(an.sym) + ')<sub>' + anCount + '</sub>' : formatChemicalFormulaHTML(an.sym) + (anCount > 1 ? '<sub>' + anCount + '</sub>' : '');
+            return catPart + anPart;
+        }
+
+        function checkSynthesis() {
+            if (vesselCations.length === 0 || vesselAnions.length === 0) {
+                playSound('error');
+                var msg = currentLang === 'zh' ? "請先在反應室內添加陽離子與陰離子！" : "Please add both cations and anions to the reaction vessel first!";
+                alert(msg);
+                return;
+            }
+
+            var totalPos = vesselCations.reduce(function(sum, c) { return sum + c.charge; }, 0);
+            var totalNeg = vesselAnions.reduce(function(sum, a) { return sum + a.charge; }, 0);
+
+            if (totalPos === totalNeg) {
+                var cat = vesselCations[0];
+                var an = vesselAnions[0];
+                triggerCelebration();
+                showSuccessModal(cat, an, vesselCations.length, vesselAnions.length);
+            } else {
+                playSound('error');
+                var msg = currentLang === 'zh' ? 
+                    '電荷不平衡！正電荷為 +' + totalPos + '，負電荷為 -' + totalNeg + '。請添加或移除離子使它們達到平衡。' : 
+                    'Charge unbalanced! Positive charge is +' + totalPos + ', negative charge is -' + totalNeg + '. Please add or remove ions to balance them.';
+                alert(msg);
+            }
+        }
+
+        function loadQuestLevel() {
+            var quest = questList[currentQuestIndex];
+            var cat = dbCations.find(function(c) { return c.id === quest.catId; });
+            var an = dbAnions.find(function(a) { return a.id === quest.anId; });
+
+            // Bilingual target compound display
+            var displayName = quest.name;
+            if (quest.name.includes(' (')) {
+                var parts = quest.name.split(' (');
+                var zhPart = parts[0];
+                // Join back any accidentally split parts of the English name, and strip ONLY the trailing parenthesized ')'
+                var enPart = parts.slice(1).join(' (');
+                if (enPart.endsWith(')')) {
+                    enPart = enPart.slice(0, -1);
+                }
+                displayName = currentLang === 'zh' ? zhPart : enPart;
+            }
+            document.getElementById('quest-target-display').innerHTML = displayName;
+            document.getElementById('quest-score').innerText = 'Level ' + (currentQuestIndex + 1) + ' / ' + questList.length;
+
+            questVesselCations = [];
+            questVesselAnions = [];
+            document.getElementById('quest-hint-box').style.display = 'none';
+
+            // Generate 3 distractor cations that are different from the correct one
+            var otherCations = dbCations.filter(function(c) { return c.id !== cat.id; });
+            var distractorCations = [];
+            while (distractorCations.length < 3 && otherCations.length > 0) {
+                var randIdx = Math.floor(Math.random() * otherCations.length);
+                distractorCations.push(otherCations.splice(randIdx, 1)[0]);
+            }
+            // Shuffle the correct cation and distractors
+            var questCations = [cat].concat(distractorCations).sort(function() { return 0.5 - Math.random(); });
+
+            // Generate 3 distractor anions that are different from the correct one
+            var otherAnions = dbAnions.filter(function(a) { return a.id !== an.id; });
+            var distractorAnions = [];
+            while (distractorAnions.length < 3 && otherAnions.length > 0) {
+                var randIdx = Math.floor(Math.random() * otherAnions.length);
+                distractorAnions.push(otherAnions.splice(randIdx, 1)[0]);
+            }
+            // Shuffle the correct anion and distractors
+            var questAnions = [an].concat(distractorAnions).sort(function() { return 0.5 - Math.random(); });
+
+            // Render Shuffled Cations (Formulas Only for Gamified Challenge!)
+            var catList = document.getElementById('quest-cation-list');
+            catList.innerHTML = '';
+            questCations.forEach(function(c) {
+                var cardC = document.createElement('div');
+                cardC.className = 'ion-card cation-hover';
+                cardC.style.justifyContent = 'center'; // Center the formula badge
+                cardC.style.minHeight = '50px';
+                
+                cardC.innerHTML = '<div class="ion-sym-badge" style="color:var(--accent-blue); font-size: 1.25em; font-family:\'Orbitron\', sans-serif; font-weight: bold;">' + 
+                                  formatChemicalFormulaHTML(c.sym) + '<sup>' + (c.charge > 1 ? c.charge : '') + '+</sup>' +
+                                  '</div>';
+                cardC.onclick = function() { addQuestIon(c, true); };
+                catList.appendChild(cardC);
+            });
+
+            // Render Shuffled Anions (Formulas Only for Gamified Challenge!)
+            var anList = document.getElementById('quest-anion-list');
+            anList.innerHTML = '';
+            questAnions.forEach(function(a) {
+                var cardA = document.createElement('div');
+                cardA.className = 'ion-card anion-hover';
+                cardA.style.justifyContent = 'center'; // Center the formula badge
+                cardA.style.minHeight = '50px';
+                
+                cardA.innerHTML = '<div class="ion-sym-badge" style="color:var(--accent-gold); font-size: 1.25em; font-family:\'Orbitron\', sans-serif; font-weight: bold;">' + 
+                                  formatChemicalFormulaHTML(a.sym) + '<sup>' + (a.charge > 1 ? a.charge : '') + '-</sup>' +
+                                  '</div>';
+                cardA.onclick = function() { addQuestIon(a, false); };
+                anList.appendChild(cardA);
+            });
+
+            updateQuestVesselUI();
+        }
+
+        function addQuestIon(ion, isCation) {
+            playSound('add');
+            if (isCation) {
+                questVesselCations.push(ion);
+            } else {
+                questVesselAnions.push(ion);
+            }
+            updateQuestVesselUI();
+        }
+
+        function removeQuestIon(index, isCation) {
+            playSound('remove');
+            if (isCation) {
+                questVesselCations.splice(index, 1);
+            } else {
+                questVesselAnions.splice(index, 1);
+            }
+            updateQuestVesselUI();
+        }
+
+        function clearQuestVessel() {
+            playSound('remove');
+            questVesselCations = [];
+            questVesselAnions = [];
+            updateQuestVesselUI();
+        }
+
+        function updateQuestVesselUI() {
+            var catCol = document.getElementById('cation-column-quest');
+            var anCol = document.getElementById('anion-column-quest');
+            catCol.innerHTML = '';
+            anCol.innerHTML = '';
+
+            questVesselCations.forEach(function(c, idx) {
+                var el = document.createElement('div');
+                el.innerHTML = generateIonSVG(c, true, idx);
+                el.firstChild.ondblclick = function() { removeQuestIon(idx, true); };
+                catCol.appendChild(el.firstChild);
+            });
+
+            questVesselAnions.forEach(function(a, idx) {
+                var el = document.createElement('div');
+                el.innerHTML = generateIonSVG(a, false, idx);
+                el.firstChild.ondblclick = function() { removeQuestIon(idx, false); };
+                anCol.appendChild(el.firstChild);
+            });
+
+            var totalPos = questVesselCations.reduce(function(sum, c) { return sum + c.charge; }, 0);
+            var totalNeg = questVesselAnions.reduce(function(sum, a) { return sum + a.charge; }, 0);
+            var netCharge = totalPos - totalNeg;
+
+            document.getElementById('q-weight-left').innerText = totalPos > 0 ? totalPos + '+' : '0';
+            document.getElementById('q-weight-right').innerText = totalNeg > 0 ? totalNeg + '-' : '0';
+
+            var beam = document.getElementById('q-scale-beam');
+            var light = document.getElementById('q-scale-light');
+
+            var angle = Math.max(-15, Math.min(15, netCharge * 4));
+            beam.style.transform = 'rotate(' + angle + 'deg)';
+
+            document.querySelectorAll('#tab-quest .scale-pan').forEach(function(pan) {
+                pan.style.transform = 'translate(' + (pan.classList.contains('scale-pan-left') ? '-20px, 30px' : '20px, 30px') + ' ) rotate(' + (-angle) + 'deg)';
+            });
+
+            if (netCharge === 0 && totalPos > 0) {
+                light.classList.add('balanced');
+            } else {
+                light.classList.remove('balanced');
+            }
+
+            drawLatticeProjection(totalPos, totalNeg);
+        }
+
+        function drawLatticeProjection(posCharge, negCharge) {
+            var gridContainer = document.getElementById('lattice-projection-grid');
+            gridContainer.innerHTML = '';
+
+            if (questVesselCations.length === 0 || questVesselAnions.length === 0) {
+                gridContainer.innerHTML = '<div style="color:var(--text-secondary); text-align:center; padding-top:60px;">反應室內尚未形成晶體結構</div>';
+                return;
+            }
+
+            var cat = questVesselCations[0];
+            var an = questVesselAnions[0];
+
+            var catColor = getIonColor(cat, true).border;
+            var anColor = getIonColor(an, false).border;
+
+            var nodesHtml = "";
+            var totalCations = questVesselCations.length;
+            var totalAnions = questVesselAnions.length;
+            var totalItems = totalCations + totalAnions;
+
+            for (var z = 0; z < 3; z++) {
+                for (var y = 0; y < 3; y++) {
+                    for (var x = 0; x < 3; x++) {
+                        var isCatNode = (x + y + z) % 2 === 0;
+                        
+                        if (totalCations / totalItems < 0.35) {
+                            isCatNode = (x === 1 && y === 1 && z === 1) || (x+y+z === 1);
+                        } else if (totalAnions / totalItems < 0.35) {
+                            isCatNode = !((x === 1 && y === 1 && z === 1) || (x+y+z === 1));
+                        }
+
+                        var color = isCatNode ? catColor : anColor;
+                        var label = isCatNode ? cat.sym : an.sym;
+                        var size = isCatNode ? 14 : 12;
+
+                        var px = (x - 1) * 45 + (z - 1) * 15 + 90;
+                        var py = (y - 1) * 35 + (z - 1) * -10 + 60;
+                        var pz = (z - 1) * 20;
+
+                        nodesHtml += '<div style="' +
+                                     'position: absolute;' +
+                                     'left: ' + px + 'px;' +
+                                     'top: ' + py + 'px;' +
+                                     'width: ' + size + 'px;' +
+                                     'height: ' + size + 'px;' +
+                                     'border-radius: 50%;' +
+                                     'background: ' + color + ';' +
+                                     'border: 1.5px solid #ffffff;' +
+                                     'transform: translate3D(0, 0, ' + pz + 'px);' +
+                                     'display: flex;' +
+                                     'align-items: center;' +
+                                     'justify-content: center;' +
+                                     'font-family: Orbitron, sans-serif;' +
+                                     'font-size: 6px;' +
+                                     'font-weight: bold;' +
+                                     'color: #ffffff;' +
+                                     'box-shadow: 0 0 8px ' + color + ';' +
+                                     'opacity: ' + (0.5 + (z * 0.25)) + ';' +
+                                     '">' + label + '</div>';
+                    }
+                }
+            }
+
+            gridContainer.innerHTML = nodesHtml;
+            if (posCharge === negCharge && posCharge > 0) {
+                gridContainer.style.transform = "rotateX(25deg) rotateY(35deg) scale(1.1)";
+            } else {
+                gridContainer.style.transform = "rotateX(15deg) rotateY(-15deg)";
+            }
+        }
+
+        function submitQuest() {
+            questTotalAttempts++;
+            var quest = questList[currentQuestIndex];
+            var cat = dbCations.find(function(c) { return c.id === quest.catId; });
+            var an = dbAnions.find(function(a) { return a.id === quest.anId; });
+
+            // Check for incorrect ion selection
+            var hasIncorrectCation = questVesselCations.some(function(c) { return c.id !== cat.id; });
+            var hasIncorrectAnion = questVesselAnions.some(function(a) { return a.id !== an.id; });
+
+            if (hasIncorrectCation || hasIncorrectAnion) {
+                playSound('error');
+                var targetName = quest.name;
+                if (quest.name.includes(' (')) {
+                    var parts = quest.name.split(' (');
+                    targetName = currentLang === 'zh' ? parts[0] : parts[1].replace(')', '');
+                }
+                var msg = currentLang === 'zh' ?
+                    '配對錯誤：反應室內包含不正確的離子！\n目標化合物為【' + targetName + '】。\n請仔細閱讀名稱，找出正確的陽離子與陰離子，並將錯誤的離子雙擊移除後重新嘗試！' :
+                    'Incorrect Pairing: The reaction vessel contains incorrect ions!\nTarget compound is [' + targetName + '].\nPlease read the name carefully to find the correct cation and anion, double click to remove the incorrect ions and try again!';
+                alert(msg);
+                return;
+            }
+
+            var totalPos = questVesselCations.reduce(function(sum, c) { return sum + c.charge; }, 0);
+            var totalNeg = questVesselAnions.reduce(function(sum, a) { return sum + a.charge; }, 0);
+
+            if (totalPos === totalNeg && totalPos > 0) {
+                var lcm = getLCM(cat.charge, an.charge);
+                var correctCations = lcm / cat.charge;
+                var correctAnions = lcm / an.charge;
+
+                if (questVesselCations.length === correctCations && questVesselAnions.length === correctAnions) {
+                    playSound('success');
+                    triggerCelebration();
+                    questSuccessCount++;
+                    updateQuestStats();
+                    showSuccessModal(cat, an, correctCations, correctAnions, true);
+                } else {
+                    playSound('error');
+                    var msg = currentLang === 'zh' ?
+                        '雖然正負電荷代數平衡，但目前使用的離子數量並非最簡比例！\n目前使用了 ' + questVesselCations.length + ':' + questVesselAnions.length + '，最簡化化學式比例應為 ' + correctCations + ':' + correctAnions + '。請重新調整拼圖使其最簡化！' :
+                        'Although charges are balanced, the current ion ratio is not simplified!\nYou used ' + questVesselCations.length + ':' + questVesselAnions.length + ', but the empirical formula ratio should be ' + correctCations + ':' + correctAnions + '. Please adjust the puzzle pieces to simplify!';
+                    alert(msg);
+                }
+            } else {
+                playSound('error');
+                if (document.getElementById('setting-hint-auto').checked) {
+                    showQuestHint();
+                } else {
+                    var msg = currentLang === 'zh' ?
+                        "電荷尚未平衡或拼圖並未契合！請仔細觀察天平並參考提示！" :
+                        "Charge is not yet balanced or the puzzle pieces do not fit! Please inspect the scale carefully or read the hint!";
+                    alert(msg);
+                }
+            }
+        }
+
+        function getGCD(a, b) {
+            return b === 0 ? a : getGCD(b, a % b);
+        }
+
+        function getLCM(a, b) {
+            return (a * b) / getGCD(a, b);
+        }
+
+        function showQuestHint() {
+            var quest = questList[currentQuestIndex];
+            var cat = dbCations.find(function(c) { return c.id === quest.catId; });
+            var an = dbAnions.find(function(a) { return a.id === quest.anId; });
+            var hintBox = document.getElementById('quest-hint-box');
+
+            var lcm = getLCM(cat.charge, an.charge);
+            var correctCations = lcm / cat.charge;
+            var correctAnions = lcm / an.charge;
+
+            var title = currentLang === 'zh' ? '<div style="font-weight:bold; margin-bottom:5px;"><i class="fa-solid fa-graduation-cap"></i> 數理解析提示 (Mathematical Hint)：</div>' : '<div style="font-weight:bold; margin-bottom:5px;"><i class="fa-solid fa-graduation-cap"></i> Mathematical Analysis Hint:</div>';
+            
+            var body = currentLang === 'zh' ? 
+                '陽離子電荷為 <b>+' + cat.charge + '</b> (擁有 ' + cat.charge + ' 個凹槽)，陰離子電荷為 <b>-' + an.charge + '</b> (擁有 ' + an.charge + ' 個凸榫)。<br>' +
+                '為了使電荷平衡，我們尋找最小公倍數 (LCM)：<br>' +
+                'LCM(' + cat.charge + ', ' + an.charge + ') = ' + lcm + '<br>' +
+                '因此，你需要：<br>' +
+                '&bull; <b>' + correctCations + '</b> 個 ' + cat.nameZh + ' (' + cat.sym + '<sup>' + (cat.charge > 1 ? cat.charge : '') + '+</sup>) &rarr; ' + correctCations + ' x (+' + cat.charge + ') = +' + lcm + '<br>' +
+                '&bull; <b>' + correctAnions + '</b> 個 ' + an.nameZh + ' (' + an.sym + '<sup>' + (an.charge > 1 ? an.charge : '') + '-</sup>) &rarr; ' + correctAnions + ' x (-' + an.charge + ') = -' + lcm + '<br>' +
+                '這會使拼圖高度精準達到 <b>' + (lcm * 60) + 'px</b> 完美齊平，凹凸榫互鎖合一！' :
+                
+                'Cation charge is <b>+' + cat.charge + '</b> (has ' + cat.charge + ' slots), anion charge is <b>-' + an.charge + '</b> (has ' + an.charge + ' tabs).<br>' +
+                'To balance the charge, we find the Least Common Multiple (LCM):<br>' +
+                'LCM(' + cat.charge + ', ' + an.charge + ') = ' + lcm + '<br>' +
+                'Therefore, you need:<br>' +
+                '&bull; <b>' + correctCations + '</b> of ' + cat.name + ' (' + cat.sym + '<sup>' + (cat.charge > 1 ? cat.charge : '') + '+</sup>) &rarr; ' + correctCations + ' x (+' + cat.charge + ') = +' + lcm + '<br>' +
+                '&bull; <b>' + correctAnions + '</b> of ' + an.name + ' (' + an.sym + '<sup>' + (an.charge > 1 ? an.charge : '') + '-</sup>) &rarr; ' + correctAnions + ' x (-' + an.charge + ') = -' + lcm + '<br>' +
+                'This makes the puzzle height exactly <b>' + (lcm * 60) + 'px</b>, perfectly level and locked together!';
+            
+            hintBox.innerHTML = title + body;
+            hintBox.style.display = 'block';
+
+            if (window.katex) {
+                try {
+                    window.katex.render('\\text{LCM}(' + cat.charge + ', ' + an.charge + ') = ' + lcm, hintBox.querySelector('.katex') || hintBox, {throwOnError:false});
+                } catch(e){}
+            }
+        }
+
+        function updateQuestStats() {
+            document.getElementById('quest-score').innerText = 'Level ' + (currentQuestIndex + 1) + ' / ' + questList.length;
+            var accuracy = questTotalAttempts > 0 ? Math.round((questSuccessCount / questTotalAttempts) * 100) : 100;
+            document.getElementById('quest-accuracy').innerText = accuracy + '%';
+        }
+
+        function getChineseCompoundName(cat, an) {
+            var cationName = cat.nameZh.replace('離子', '');
+            var anionName = an.nameZh;
+            var anionPart = '';
+            
+            if (anionName.endsWith('根離子')) {
+                if (anionName === '氫氧根離子') {
+                    anionPart = '氫氧化';
+                } else if (anionName === '氰根離子') {
+                    anionPart = '氰化';
+                } else {
+                    anionPart = anionName.replace('根離子', '');
+                }
+            } else if (anionName.endsWith('離子')) {
+                if (anionName === '氫負離子') {
+                    anionPart = '氫化';
+                } else if (anionName === '氧離子') {
+                    anionPart = '氧化';
+                } else {
+                    anionPart = anionName.replace('離子', '') + '化';
+                }
+            } else {
+                anionPart = anionName;
+            }
+            
+            return anionPart + cationName;
+        }
+
+        function showSuccessModal(cat, an, catCount, anCount, isQuest) {
+            if (isQuest === undefined) isQuest = false;
+            var overlay = document.getElementById('success-modal');
+            var card = document.getElementById('success-modal-card');
+            
+            // Set default modal tab and render electron diagram
+            switchModalTab('electron');
+            renderElectronDiagram(cat, an, catCount, anCount);
+            
+            var key = cat.sym + (catCount > 1 ? catCount : '') + an.sym + (anCount > 1 ? anCount : '');
+            var crystalInfo = dbCrystals[key] || dbCrystals[cat.sym + an.sym] || dbCrystals["default"];
+
+            var compName = '';
+            if (crystalInfo !== dbCrystals["default"]) {
+                compName = currentLang === 'zh' ? crystalInfo.nameZh : crystalInfo.nameEn;
+            } else {
+                var cnName = getChineseCompoundName(cat, an);
+                var enName = cat.name.replace(' ion','') + ' ' + an.name.replace(' ion','');
+                compName = currentLang === 'zh' ? 
+                    cnName + ' (自訂離子化合物 (Custom Ionic Compound))' :
+                    enName + ' (Custom Ionic Compound)';
+            }
+            document.getElementById('modal-compound-name').innerText = compName;
+            
+            var tex = generateCompoundLaTeX(cat, an, catCount, anCount);
+            var html = generateCompoundHTML(cat, an, catCount, anCount);
+            
+            var labelText = currentLang === 'zh' ? '\\text{平衡化學式：} ' : '\\text{Balanced Equation: } ';
+            var labelFallback = currentLang === 'zh' ? "平衡化學式：" : "Balanced Equation: ";
+            safeRenderLaTeX('modal-formula-latex', labelText + tex, labelFallback + html);
+
+            var systemTitle = currentLang === 'zh' ? '晶體幾何晶系：' : 'Crystal System:';
+            var structureTitle = currentLang === 'zh' ? '微觀晶胞網格：' : 'Unit Cell Grid:';
+            var factTitle = currentLang === 'zh' ? '幾何常規解說：' : 'Geometric Principles:';
+
+            var sysText = currentLang === 'zh' ? crystalInfo.systemZh : crystalInfo.systemEn;
+            var structText = currentLang === 'zh' ? crystalInfo.structureZh : crystalInfo.structureEn;
+            var factText = currentLang === 'zh' ? crystalInfo.factZh : crystalInfo.factEn;
+
+            document.getElementById('modal-crystal-text').innerHTML = 
+                '&bull; <b>' + systemTitle + '</b> ' + sysText + '<br>' +
+                '&bull; <b>' + structureTitle + '</b> ' + structText + '<br>' +
+                '&bull; <b>' + factTitle + '</b><br>' + factText;
+
+            var btnNext = document.getElementById('btn-next-level');
+            if (isQuest) {
+                btnNext.style.display = 'inline-flex';
+                if (currentQuestIndex === questList.length - 1) {
+                    btnNext.innerHTML = currentLang === 'zh' ? '重新挑戰第一關 <i class="fa-solid fa-rotate-left"></i>' : 'Restart from Level 1 <i class="fa-solid fa-rotate-left"></i>';
+                } else {
+                    btnNext.innerHTML = currentLang === 'zh' ? '進入下一關挑戰 <i class="fa-solid fa-chevron-right"></i>' : 'Next Level Challenge <i class="fa-solid fa-chevron-right"></i>';
+                }
+            } else {
+                btnNext.style.display = 'none';
+            }
+
+            overlay.style.display = 'flex';
+            setTimeout(function() { card.classList.add('active'); }, 50);
+        }
+
+        function closeSuccessModal() {
+            var overlay = document.getElementById('success-modal');
+            var card = document.getElementById('success-modal-card');
+            card.classList.remove('active');
+            setTimeout(function() { overlay.style.display = 'none'; }, 300);
+        }
+
+        function nextQuestLevel() {
+            closeSuccessModal();
+            if (currentQuestIndex === questList.length - 1) {
+                // If they completed all 10, restart the game with a fresh set of shuffled unique questions!
+                initQuestGame();
+            } else {
+                currentQuestIndex++;
+            }
+            loadQuestLevel();
+        }
+
+        var canvas = document.getElementById('particle-canvas');
+        var ctx = canvas.getContext('2d');
+        var particles = [];
+
+        function resizeCanvas() {
+            if (canvas && canvas.parentElement) {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        function Particle(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.size = Math.random() * 4 + 2;
+            this.speedX = (Math.random() - 0.5) * 8;
+            this.speedY = (Math.random() - 0.5) * 8 - 3;
+            this.gravity = 0.15;
+            this.opacity = 1;
+            this.decay = Math.random() * 0.02 + 0.01;
+        }
+
+        Particle.prototype.update = function() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.speedY += this.gravity;
+            this.opacity -= this.decay;
+        };
+
+        Particle.prototype.draw = function() {
+            ctx.save();
+            ctx.globalAlpha = this.opacity;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = this.color;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        };
+
+        function animateParticles() {
+            if (particles.length === 0) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (var idx = particles.length - 1; idx >= 0; idx--) {
+                var p = particles[idx];
+                p.update();
+                p.draw();
+                if (p.opacity <= 0) {
+                    particles.splice(idx, 1);
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        function triggerCelebration() {
+            if (!document.getElementById('setting-particles').checked) return;
+            resizeCanvas();
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+            var colors = ['#00a8ff', '#ffaa00', '#39ff14', '#ff3366', '#e056fd', '#f9ca24'];
+
+            for (var i = 0; i < 150; i++) {
+                var color = colors[Math.floor(Math.random() * colors.length)];
+                particles.push(new Particle(centerX, centerY, color));
+            }
+            animateParticles();
+        }
+
+        function initSettings() {
+            var catSettings = document.getElementById('settings-cation-container');
+            var anSettings = document.getElementById('settings-anion-container');
+            catSettings.innerHTML = '';
+            anSettings.innerHTML = '';
+
+            dbCations.forEach(function(c) {
+                var label = document.createElement('label');
+                label.className = 'checkbox-item';
+                var formattedSym = formatChemicalFormulaHTML(c.sym) + '<sup>' + (c.charge > 1 ? c.charge : '') + '+</sup>';
+                var displayName = currentLang === 'zh' ? c.nameZh : c.name;
+                label.innerHTML = '<input type="checkbox" id="cb-cat-' + c.id + '" checked onchange="renderLabPools()">' +
+                                  '<span style="flex:1; min-width:0; line-height:1.2;">' + formattedSym + ' (' + displayName + ')</span>';
+                catSettings.appendChild(label);
+            });
+
+            dbAnions.forEach(function(a) {
+                var label = document.createElement('label');
+                label.className = 'checkbox-item';
+                var formattedSym = formatChemicalFormulaHTML(a.sym) + '<sup>' + (a.charge > 1 ? a.charge : '') + '-</sup>';
+                var displayName = currentLang === 'zh' ? a.nameZh : a.name;
+                label.innerHTML = '<input type="checkbox" id="cb-ani-' + a.id + '" checked onchange="renderLabPools()">' +
+                                  '<span style="flex:1; min-width:0; line-height:1.2;">' + formattedSym + ' (' + displayName + ')</span>';
+                anSettings.appendChild(label);
+            });
+        }
+
+        function selectAllIons(type, state) {
+            var containerId = type === 'cations' ? 'settings-cation-container' : 'settings-anion-container';
+            document.querySelectorAll('#' + containerId + ' input[type="checkbox"]').forEach(function(cb) {
+                cb.checked = state;
+            });
+            renderLabPools();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(function(sec) {
+                sec.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-item').forEach(function(item) {
+                item.classList.remove('active');
+            });
+
+            document.getElementById('tab-' + tabId).classList.add('active');
+            document.getElementById('nav-' + tabId).classList.add('active');
+            activeTab = tabId;
+
+            // Show or hide the Quest Level stats box in the sidebar dynamically
+            var statBox = document.getElementById('quest-status-box');
+            if (statBox) {
+                if (tabId === 'quest') {
+                    statBox.style.display = 'block';
+                } else {
+                    statBox.style.display = 'none';
+                }
+            }
+
+            if (tabId === 'quest') {
+                loadQuestLevel();
+            }
+        }
+
+        // ====================================================
+        // 7. 電子式 (點叉圖) 繪圖引擎 (Electron Dot-and-Cross Engine)
+        // ====================================================
+        var monoatomicIonsConfig = {
+            // 陽離子 (+)
+            "c1": { sym: "Na", shells: [2, 8] },
+            "c2": { sym: "K", shells: [2, 8, 8] },
+            "c3": { sym: "H", shells: [] }, // 空殼，僅顯示質子/原子核
+            "c5": { sym: "Ag", shells: [2, 8, 18, 18] },
+            "c6": { sym: "Cu", shells: [2, 8, 18] },
+            "c7": { sym: "Mg", shells: [2, 8] },
+            "c8": { sym: "Ca", shells: [2, 8, 8] },
+            "c9": { sym: "Ba", shells: [2, 8, 18, 18, 8] },
+            "c10": { sym: "Zn", shells: [2, 8, 18] },
+            "c11": { sym: "Pb", shells: [2, 8, 18, 32, 18, 2] },
+            "c12": { sym: "Mn", shells: [2, 8, 13] },
+            "c13": { sym: "Fe", shells: [2, 8, 14] },
+            "c14": { sym: "Co", shells: [2, 8, 15] },
+            "c15": { sym: "Ni", shells: [2, 8, 16] },
+            "c16": { sym: "Cu", shells: [2, 8, 17] },
+            "c17": { sym: "Al", shells: [2, 8] },
+            "c18": { sym: "Fe", shells: [2, 8, 13] },
+            "c19": { sym: "Cr", shells: [2, 8, 11] },
+            
+            // 陰離子 (-)
+            "a1": { sym: "H", shells: [2], valence: 1 },
+            "a3": { sym: "Cl", shells: [2, 8, 8], valence: 7 },
+            "a4": { sym: "Br", shells: [2, 8, 18, 8], valence: 7 },
+            "a5": { sym: "I", shells: [2, 8, 18, 18, 8], valence: 7 },
+            "a13": { sym: "O", shells: [2, 8], valence: 6 },
+            "a14": { sym: "S", shells: [2, 8, 8], valence: 6 },
+            "a21": { sym: "N", shells: [2, 8], valence: 5 },
+            "a22": { sym: "P", shells: [2, 8, 8], valence: 5 }
+        };
+
+        var polyatomicIonsConfig = {
+            // 多原子陽離子
+            "c4": { // 銨根 NH4+
+                center: "N",
+                innerShells: [2],
+                satellites: [
+                    { sym: "H", angle: 0, distance: 48, bondPairs: 1 },
+                    { sym: "H", angle: 90, distance: 48, bondPairs: 1 },
+                    { sym: "H", angle: 180, distance: 48, bondPairs: 1 },
+                    { sym: "H", angle: 270, distance: 48, bondPairs: 1 }
+                ]
+            },
+            // For OH-, make sure we align the O-H bond horizontally and place O on the left, H on the right.
+            // Under scale factors, the distance is beautifully proportioned.
+            "a2": { // 氫氧根 OH-
+                center: "O",
+                innerShells: [2],
+                satellites: [
+                    { sym: "H", angle: 0, distance: 40, bondPairs: 1 } // tight O-H bond length to look extremely cohesive
+                ]
+            },
+            "a6": { // 硝酸根 NO3-
+                center: "N",
+                innerShells: [2],
+                satellites: [
+                    { sym: "O", angle: 90, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 210, distance: 52, bondPairs: 2 },
+                    { sym: "O", angle: 330, distance: 52, bondPairs: 1 }
+                ]
+            },
+            "a7": { // 亞硝酸根 NO2-
+                center: "N",
+                innerShells: [2],
+                satellites: [
+                    { sym: "O", angle: 45, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 135, distance: 52, bondPairs: 1 }
+                ]
+            },
+            "a8": { // 碳酸氫根 HCO3-
+                center: "C",
+                innerShells: [2],
+                satellites: [
+                    { sym: "O", angle: 90, distance: 52, bondPairs: 2 },
+                    { sym: "O", angle: 210, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 330, distance: 52, bondPairs: 1 },
+                    { sym: "H", angle: 330, distance: 88, bondPairs: 1, relativeToIdx: 2 }
+                ]
+            },
+            "a9": { // 硫酸氫根 HSO4-
+                center: "S",
+                innerShells: [2, 8],
+                satellites: [
+                    { sym: "O", angle: 0, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 90, distance: 52, bondPairs: 2 },
+                    { sym: "O", angle: 180, distance: 52, bondPairs: 2 },
+                    { sym: "O", angle: 270, distance: 52, bondPairs: 1 },
+                    { sym: "H", angle: 0, distance: 88, bondPairs: 1, relativeToIdx: 0 }
+                ]
+            },
+            "a10": { // 氰根 CN-
+                center: "C",
+                innerShells: [2],
+                satellites: [
+                    { sym: "N", angle: 0, distance: 45, bondPairs: 3 }
+                ]
+            },
+            "a11": { // 氯酸根 ClO3-
+                center: "Cl",
+                innerShells: [2, 8],
+                satellites: [
+                    { sym: "O", angle: 90, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 210, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 330, distance: 52, bondPairs: 1 }
+                ]
+            },
+            "a12": { // 高錳酸根 MnO4-
+                center: "Mn",
+                innerShells: [2, 8, 14],
+                satellites: [
+                    { sym: "O", angle: 45, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 135, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 225, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 315, distance: 52, bondPairs: 1 }
+                ]
+            },
+            "a15": { // 硫酸根 SO42-
+                center: "S",
+                innerShells: [2, 8],
+                satellites: [
+                    { sym: "O", angle: 45, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 135, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 225, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 315, distance: 52, bondPairs: 1 }
+                ]
+            },
+            "a16": { // 亞硫酸根 SO32-
+                center: "S",
+                innerShells: [2, 8],
+                satellites: [
+                    { sym: "O", angle: 90, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 210, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 330, distance: 52, bondPairs: 1 }
+                ]
+            },
+            "a17": { // 硫代硫酸根 S2O32-
+                center: "S",
+                innerShells: [2, 8],
+                satellites: [
+                    { sym: "S", angle: 90, distance: 52, bondPairs: 2 },
+                    { sym: "O", angle: 210, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 330, distance: 52, bondPairs: 1 }
+                ]
+            },
+            "a18": { // 碳酸根 CO32-
+                center: "C",
+                innerShells: [2],
+                satellites: [
+                    { sym: "O", angle: 90, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 210, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 330, distance: 52, bondPairs: 1 }
+                ]
+            },
+            "a19": { // 鉻酸根 CrO42-
+                center: "Cr",
+                innerShells: [2, 8, 11],
+                satellites: [
+                    { sym: "O", angle: 45, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 135, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 225, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 315, distance: 52, bondPairs: 1 }
+                ]
+            },
+            "a20": { // 重鉻酸根 Cr2O72-
+                center: "O", // 橋接氧為中心
+                innerShells: [2],
+                satellites: [
+                    { sym: "Cr", angle: 180, distance: 48, bondPairs: 1 },
+                    { sym: "Cr", angle: 0, distance: 48, bondPairs: 1 },
+                    { sym: "O", angle: 120, distance: 88, bondPairs: 1, relativeToIdx: 0 },
+                    { sym: "O", angle: 180, distance: 88, bondPairs: 1, relativeToIdx: 0 },
+                    { sym: "O", angle: 240, distance: 88, bondPairs: 1, relativeToIdx: 0 },
+                    { sym: "O", angle: 60, distance: 88, bondPairs: 1, relativeToIdx: 1 },
+                    { sym: "O", angle: 0, distance: 88, bondPairs: 1, relativeToIdx: 1 },
+                    { sym: "O", angle: 300, distance: 88, bondPairs: 1, relativeToIdx: 1 }
+                ]
+            },
+            "a23": { // 磷酸根 PO43-
+                center: "P",
+                innerShells: [2, 8],
+                satellites: [
+                    { sym: "O", angle: 45, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 135, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 225, distance: 52, bondPairs: 1 },
+                    { sym: "O", angle: 315, distance: 52, bondPairs: 1 }
+                ]
+            }
+        };
+
+        var activeModalTab = 'electron';
+        
+        function switchModalTab(tabId) {
+            activeModalTab = tabId;
+            var btnElectron = document.getElementById('modal-tab-btn-electron');
+            var btnCrystal = document.getElementById('modal-tab-btn-crystal');
+            var panelElectron = document.getElementById('panel-electron');
+            var panelCrystal = document.getElementById('panel-crystal');
+            
+            if (!btnElectron || !btnCrystal || !panelElectron || !panelCrystal) return;
+            
+            if (tabId === 'electron') {
+                btnElectron.classList.add('active');
+                btnCrystal.classList.remove('active');
+                panelElectron.classList.add('active');
+                panelCrystal.classList.remove('active');
+            } else {
+                btnElectron.classList.remove('active');
+                btnCrystal.classList.add('active');
+                panelElectron.classList.remove('active');
+                panelCrystal.classList.add('active');
+            }
+        }
+
+        function getFallbackPolyatomicConfig(ion) {
+            var sym = ion.sym;
+            var elementRegex = /([A-Z][a-z]?)([0-9]*)/g;
+            var atoms = [];
+            var match;
+            while ((match = elementRegex.exec(sym)) !== null) {
+                var el = match[1];
+                var count = match[2] ? parseInt(match[2]) : 1;
+                atoms.push({ el: el, count: count });
+            }
+            if (atoms.length === 0) {
+                return { center: ion.sym.slice(0, 1), innerShells: [2], satellites: [] };
+            }
+            var centerEl = atoms[0].el;
+            var centerCount = atoms[0].count;
+            var satAtoms = [];
+            if (centerCount > 1) {
+                satAtoms.push({ el: centerEl, count: centerCount - 1 });
+            }
+            for (var i = 1; i < atoms.length; i++) {
+                satAtoms.push(atoms[i]);
+            }
+            
+            var flatSats = [];
+            satAtoms.forEach(function(sa) {
+                for (var j = 0; j < sa.count; j++) {
+                    flatSats.push(sa.el);
+                }
+            });
+            
+            var satellites = [];
+            var numSats = flatSats.length;
+            flatSats.forEach(function(el, idx) {
+                var angle = (idx * 360) / numSats;
+                satellites.push({
+                    sym: el,
+                    angle: angle,
+                    distance: 52,
+                    bondPairs: 1
+                });
+            });
+            
+            var innerShells = [2];
+            var mainHeavy = ["S", "P", "Cl", "Mn", "Cr"];
+            if (mainHeavy.indexOf(centerEl) >= 0) {
+                innerShells = [2, 8];
+            }
+            
+            return {
+                center: centerEl,
+                innerShells: innerShells,
+                satellites: satellites
+            };
+        }
+
+        function getElectronAngles(count) {
+            var angles = [];
+            var d = 7.5; // Small angle offset for pairing (approx 7.5 degrees)
+            if (count === 1) {
+                return [270]; // Top
+            } else if (count === 2) {
+                return [90, 270]; // Top and Bottom
+            } else if (count === 3) {
+                return [90, 210, 330];
+            } else if (count === 4) {
+                return [0, 90, 180, 270];
+            } else if (count === 5) {
+                // 1 pair at 0, 3 single electrons at 90, 180, 270
+                return [360 - d, d, 90, 180, 270];
+            } else if (count === 6) {
+                // 2 pairs at 0 and 180, 2 single electrons at 90 and 270
+                return [360 - d, d, 90, 180 - d, 180 + d, 270];
+            } else if (count === 7) {
+                // 3 pairs at 0, 90, 180, 1 single electron at 270
+                return [360 - d, d, 90 - d, 90 + d, 180 - d, 180 + d, 270];
+            } else if (count === 8) {
+                // 4 pairs at 0, 90, 180, 270
+                return [360 - d, d, 90 - d, 90 + d, 180 - d, 180 + d, 270 - d, 270 + d];
+            } else {
+                for (var i = 0; i < count; i++) {
+                    angles.push((i * 360) / count);
+                }
+            }
+            return angles;
+        }
+
+        function drawDot(svg, cx, cy, color) {
+            var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", cx);
+            circle.setAttribute("cy", cy);
+            circle.setAttribute("r", "4.5"); // Enlarged dot size from 3.2 to 4.5
+            circle.setAttribute("fill", color || "#ffaa00");
+            svg.appendChild(circle);
+        }
+
+        function drawCross(svg, cx, cy, color, strokeWidth) {
+            var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            var line1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line1.setAttribute("x1", cx - 4.5); // Enlarged cross size from 3.2 to 4.5
+            line1.setAttribute("y1", cy - 4.5);
+            line1.setAttribute("x2", cx + 4.5);
+            line1.setAttribute("y2", cy + 4.5);
+            line1.setAttribute("stroke", color || "#00a8ff");
+            line1.setAttribute("stroke-width", strokeWidth || "2"); // Increased standard stroke width
+            line1.setAttribute("stroke-linecap", "round");
+            
+            var line2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line2.setAttribute("x1", cx - 4.5);
+            line2.setAttribute("y1", cy + 4.5);
+            line2.setAttribute("x2", cx + 4.5);
+            line2.setAttribute("y2", cy - 4.5);
+            line2.setAttribute("stroke", color || "#00a8ff");
+            line2.setAttribute("stroke-width", strokeWidth || "2");
+            line2.setAttribute("stroke-linecap", "round");
+            
+            g.appendChild(line1);
+            g.appendChild(line2);
+            svg.appendChild(g);
+        }
+
+        function drawSatelliteLonePairs(g, satX, satY, rOuter, bx, by, numUnshared, color, numCrosses) {
+            var outwardAng = Math.atan2(-by, -bx);
+            var pairs = Math.ceil(numUnshared / 2);
+            var spacing = 45 * Math.PI / 180;
+            var crossesDrawn = 0;
+            numCrosses = numCrosses || 0;
+            
+            for (var p = 0; p < pairs; p++) {
+                var angleOffset = (p - (pairs - 1) / 2) * spacing;
+                var pairAng = outwardAng + angleOffset;
+                
+                var ex1 = satX + rOuter * Math.cos(pairAng - 0.08);
+                var ey1 = satY + rOuter * Math.sin(pairAng - 0.08);
+                var ex2 = satX + rOuter * Math.cos(pairAng + 0.08);
+                var ey2 = satY + rOuter * Math.sin(pairAng + 0.08);
+                
+                // ex1
+                if (crossesDrawn < numCrosses) {
+                    var boxSize = 14;
+                    var box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    box.setAttribute("x", ex1 - boxSize/2);
+                    box.setAttribute("y", ey1 - boxSize/2);
+                    box.setAttribute("width", boxSize);
+                    box.setAttribute("height", boxSize);
+                    box.setAttribute("rx", "2");
+                    box.setAttribute("ry", "2");
+                    box.setAttribute("fill", "rgba(0, 168, 255, 0.22)");
+                    box.setAttribute("stroke", "rgba(0, 168, 255, 0.4)");
+                    box.setAttribute("stroke-width", "0.7");
+                    g.appendChild(box);
+                    
+                    drawCross(g, ex1, ey1, "#00a8ff", "2");
+                    crossesDrawn++;
+                } else {
+                    if (color === "#ffaa00") {
+                        drawDot(g, ex1, ey1, color);
+                    } else {
+                        drawCross(g, ex1, ey1, color);
+                    }
+                }
+                
+                // ex2
+                if (crossesDrawn < numCrosses) {
+                    var boxSize = 14;
+                    var box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    box.setAttribute("x", ex2 - boxSize/2);
+                    box.setAttribute("y", ey2 - boxSize/2);
+                    box.setAttribute("width", boxSize);
+                    box.setAttribute("height", boxSize);
+                    box.setAttribute("rx", "2");
+                    box.setAttribute("ry", "2");
+                    box.setAttribute("fill", "rgba(0, 168, 255, 0.22)");
+                    box.setAttribute("stroke", "rgba(0, 168, 255, 0.4)");
+                    box.setAttribute("stroke-width", "0.7");
+                    g.appendChild(box);
+                    
+                    drawCross(g, ex2, ey2, "#00a8ff", "2");
+                    crossesDrawn++;
+                } else {
+                    if (color === "#ffaa00") {
+                        drawDot(g, ex2, ey2, color);
+                    } else {
+                        drawCross(g, ex2, ey2, color);
+                    }
+                }
+            }
+        }
+
+        function drawBracket(svg, cx, cy, hw, h, chargeText, isCation) {
+            var hh = h / 2;
+            var color = isCation ? "rgba(0, 168, 255, 0.45)" : "rgba(255, 170, 0, 0.45)";
+            var textColor = isCation ? "#00a8ff" : "#ffaa00";
+            var textShadow = isCation ? "0 0 8px rgba(0, 168, 255, 0.5)" : "0 0 8px rgba(255, 170, 0, 0.5)";
+            
+            var pathLeft = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            pathLeft.setAttribute("d", "M " + (cx - hw + 8) + " " + (cy - hh) + " L " + (cx - hw) + " " + (cy - hh) + " L " + (cx - hw) + " " + (cy + hh) + " L " + (cx - hw + 8) + " " + (cy + hh));
+            pathLeft.setAttribute("stroke", color);
+            pathLeft.setAttribute("stroke-width", "2.5");
+            pathLeft.setAttribute("stroke-linecap", "round");
+            pathLeft.setAttribute("fill", "none");
+            svg.appendChild(pathLeft);
+            
+            var pathRight = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            pathRight.setAttribute("d", "M " + (cx + hw - 8) + " " + (cy - hh) + " L " + (cx + hw) + " " + (cy - hh) + " L " + (cx + hw) + " " + (cy + hh) + " L " + (cx + hw - 8) + " " + (cy + hh));
+            pathRight.setAttribute("stroke", color);
+            pathRight.setAttribute("stroke-width", "2.5");
+            pathRight.setAttribute("stroke-linecap", "round");
+            pathRight.setAttribute("fill", "none");
+            svg.appendChild(pathRight);
+            
+            var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", cx + hw + 4);
+            text.setAttribute("y", cy - hh + 12);
+            text.setAttribute("fill", textColor);
+            text.setAttribute("font-size", "20px");
+            text.setAttribute("font-weight", "bold");
+            text.setAttribute("font-family", "'Orbitron', sans-serif");
+            text.style.textShadow = textShadow;
+            text.textContent = chargeText;
+            svg.appendChild(text);
+        }
+
+        function drawMonoatomicIon(g, cx, cy, ion, config, isCation) {
+            var colorTheme = isCation ? "#00a8ff" : "#ffaa00";
+            
+            var nucleus = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            nucleus.setAttribute("cx", cx);
+            nucleus.setAttribute("cy", cy);
+            nucleus.setAttribute("r", "28");
+            nucleus.setAttribute("fill", isCation ? "rgba(0,168,255,0.08)" : "rgba(255,170,0,0.08)");
+            nucleus.setAttribute("stroke", colorTheme);
+            nucleus.setAttribute("stroke-width", "2");
+            g.appendChild(nucleus);
+            
+            var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.setAttribute("x", cx);
+            label.setAttribute("y", cy + 8);
+            label.setAttribute("fill", "#ffffff");
+            label.setAttribute("font-size", "20px");
+            label.setAttribute("font-weight", "bold");
+            label.setAttribute("font-family", "'Orbitron', sans-serif");
+            label.setAttribute("text-anchor", "middle");
+            label.textContent = ion.sym;
+            g.appendChild(label);
+            
+            // Scaled up standard radius from 35 to 65 for monatomic ions to fill the empty bracket space!
+            var r = 65; 
+            var shells = config.shells;
+            var numElec = (shells.length > 0) ? shells[shells.length - 1] : 0;
+            
+            if (numElec > 0) {
+                var shellCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                shellCircle.setAttribute("cx", cx);
+                shellCircle.setAttribute("cy", cy);
+                shellCircle.setAttribute("r", r);
+                shellCircle.setAttribute("fill", "none");
+                shellCircle.setAttribute("stroke", "rgba(255, 255, 255, 0.12)");
+                shellCircle.setAttribute("stroke-width", "1.2");
+                g.appendChild(shellCircle);
+                
+                var angles = getElectronAngles(numElec);
+                
+                for (var e = 0; e < numElec; e++) {
+                    var angleRad = (angles[e] * Math.PI) / 180;
+                    var ex = cx + r * Math.cos(angleRad);
+                    var ey = cy + r * Math.sin(angleRad);
+                    
+                    if (isCation) {
+                        drawCross(g, ex, ey, "#00a8ff", "2");
+                    } else {
+                        var originalValenceCount = config.valence;
+                        if (e >= originalValenceCount) {
+                            var boxSize = 16;
+                            var box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                            box.setAttribute("x", ex - boxSize/2);
+                            box.setAttribute("y", ey - boxSize/2);
+                            box.setAttribute("width", boxSize);
+                            box.setAttribute("height", boxSize);
+                            box.setAttribute("rx", "2.5");
+                            box.setAttribute("ry", "2.5");
+                            box.setAttribute("fill", "rgba(0, 168, 255, 0.22)");
+                            box.setAttribute("stroke", "rgba(0, 168, 255, 0.4)");
+                            box.setAttribute("stroke-width", "0.8");
+                            g.appendChild(box);
+                            
+                            drawCross(g, ex, ey, "#00a8ff", "2.2");
+                        } else {
+                            drawDot(g, ex, ey, "#ffaa00");
+                        }
+                    }
+                }
+            }
+        }
+
+        function drawPolyatomicIon(g, cx, cy, ion, config, isCation) {
+            var colorTheme = isCation ? "#00a8ff" : "#ffaa00";
+            var electronColor = isCation ? "#00a8ff" : "#ffaa00";
+            
+            var nucleus = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            nucleus.setAttribute("cx", cx);
+            nucleus.setAttribute("cy", cy);
+            nucleus.setAttribute("r", "25"); // Enlarged polyatomic core nucleus from 18 to 25
+            nucleus.setAttribute("fill", isCation ? "rgba(0,168,255,0.06)" : "rgba(255,170,0,0.06)");
+            nucleus.setAttribute("stroke", colorTheme);
+            nucleus.setAttribute("stroke-width", "1.5");
+            g.appendChild(nucleus);
+            
+            var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.setAttribute("x", cx);
+            label.setAttribute("y", cy + 7);
+            label.setAttribute("fill", "#ffffff");
+            label.setAttribute("font-size", "18px"); // Enlarged label text
+            label.setAttribute("font-weight", "bold");
+            label.setAttribute("font-family", "'Orbitron', sans-serif");
+            label.setAttribute("text-anchor", "middle");
+            label.textContent = config.center;
+            g.appendChild(label);
+            
+            // To reduce visual complexity, we DO NOT draw inner electron shells of polyatomic ions!
+            // This leaves only the valence (outermost) shell clearly visible.
+            var innerShells = config.innerShells || [2];
+            // Scaled up outer orbital spacing: multiplied factor by 1.35 to fill bracket dead space!
+            var rCentralOuter = ((innerShells.length * 16) + 20) * 1.35;
+            var centralOuterCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            centralOuterCircle.setAttribute("cx", cx);
+            centralOuterCircle.setAttribute("cy", cy);
+            centralOuterCircle.setAttribute("r", rCentralOuter);
+            centralOuterCircle.setAttribute("fill", "none");
+            centralOuterCircle.setAttribute("stroke", "rgba(255, 255, 255, 0.12)");
+            centralOuterCircle.setAttribute("stroke-width", "1.2");
+            g.appendChild(centralOuterCircle);
+            
+            var satPositions = [];
+            
+            config.satellites.forEach(function(sat, idx) {
+                var satX, satY;
+                var baseDistance = sat.distance || 52;
+                var scaledDistance = baseDistance * 1.35; // Scaled up distance by 1.35
+                
+                if (sat.relativeToIdx !== undefined) {
+                    var parentPos = satPositions[sat.relativeToIdx];
+                    var satAngRad = (sat.angle * Math.PI) / 180;
+                    satX = parentPos.x + 48 * Math.cos(satAngRad); // Scaled nested bond length from 36 to 48
+                    satY = parentPos.y + 48 * Math.sin(satAngRad);
+                } else {
+                    var satAngRad = (sat.angle * Math.PI) / 180;
+                    satX = cx + scaledDistance * Math.cos(satAngRad);
+                    satY = cy + scaledDistance * Math.sin(satAngRad);
+                }
+                
+                satPositions.push({ x: satX, y: satY, sym: sat.sym });
+                
+                var rSatNucleus = sat.sym === "H" ? 15 : 19; // Enlarged satellite core nuclei (11->15, 14->19)
+                var satNucleus = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                satNucleus.setAttribute("cx", satX);
+                satNucleus.setAttribute("cy", satY);
+                satNucleus.setAttribute("r", rSatNucleus);
+                satNucleus.setAttribute("fill", isCation ? "rgba(0,168,255,0.06)" : "rgba(255,170,0,0.06)");
+                satNucleus.setAttribute("stroke", colorTheme);
+                satNucleus.setAttribute("stroke-width", "1.2");
+                g.appendChild(satNucleus);
+                
+                var satLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                satLabel.setAttribute("x", satX);
+                satLabel.setAttribute("y", satY + 5);
+                satLabel.setAttribute("fill", "#ffffff");
+                satLabel.setAttribute("font-size", sat.sym === "H" ? "13px" : "14px"); // Enlarged label text
+                satLabel.setAttribute("font-weight", "bold");
+                satLabel.setAttribute("font-family", "'Orbitron', sans-serif");
+                satLabel.setAttribute("text-anchor", "middle");
+                satLabel.textContent = sat.sym;
+                g.appendChild(satLabel);
+                
+                var rSatOuter = sat.sym === "H" ? 24 : 36; // Enlarged satellite outer shells (18->24, 28->36)
+                var satOuterCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                satOuterCircle.setAttribute("cx", satX);
+                satOuterCircle.setAttribute("cy", satY);
+                satOuterCircle.setAttribute("r", rSatOuter);
+                satOuterCircle.setAttribute("fill", "none");
+                satOuterCircle.setAttribute("stroke", "rgba(255, 255, 255, 0.1)");
+                satOuterCircle.setAttribute("stroke-width", "1");
+                g.appendChild(satOuterCircle);
+                
+                // Outer-shell ONLY: No inner shell circles or inner electrons on satellites!
+                
+                var bondOriginX = cx, bondOriginY = cy;
+                if (sat.relativeToIdx !== undefined) {
+                    var parentPos = satPositions[sat.relativeToIdx];
+                    bondOriginX = parentPos.x;
+                    bondOriginY = parentPos.y;
+                }
+                
+                var dx = satX - bondOriginX;
+                var dy = satY - bondOriginY;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                var ux = dx / dist;
+                var uy = dy / dist;
+                var px = -uy;
+                var py = ux;
+                
+                var rParentOuter = 36;
+                
+                var overlapMidX = bondOriginX + ux * (dist * 0.58);
+                var overlapMidY = bondOriginY + uy * (dist * 0.58);
+                if (sat.sym === "H") {
+                    overlapMidX = bondOriginX + ux * (dist - 14); // Adjusted overlap midpoint for enlarged Hydrogen shell
+                    overlapMidY = bondOriginY + uy * (dist - 14);
+                }
+                
+                var bondPairs = sat.bondPairs || 1;
+                if (bondPairs === 1) {
+                    var dotX = overlapMidX - 5.5 * ux;
+                    var dotY = overlapMidY - 5.5 * uy;
+                    var crossX = overlapMidX + 5.5 * ux;
+                    var crossY = overlapMidY + 5.5 * uy;
+                    
+                    drawDot(g, dotX, dotY, "#ffaa00");
+                    drawCross(g, crossX, crossY, "#00a8ff", "1.5");
+                } else if (bondPairs === 2) {
+                    var offsets = [-4.5, 4.5];
+                    offsets.forEach(function(offset) {
+                        var bmidX = overlapMidX + offset * px;
+                        var bmidY = overlapMidY + offset * py;
+                        
+                        var dotX = bmidX - 5.5 * ux;
+                        var dotY = bmidY - 5.5 * uy;
+                        var crossX = bmidX + 5.5 * ux;
+                        var crossY = bmidY + 5.5 * uy;
+                        
+                        drawDot(g, dotX, dotY, "#ffaa00");
+                        drawCross(g, crossX, crossY, "#00a8ff", "1.5");
+                    });
+                } else if (bondPairs === 3) {
+                    var offsets = [-6, 0, 6];
+                    offsets.forEach(function(offset) {
+                        var bmidX = overlapMidX + offset * px;
+                        var bmidY = overlapMidY + offset * py;
+                        
+                        var dotX = bmidX - 5.5 * ux;
+                        var dotY = bmidY - 5.5 * uy;
+                        var crossX = bmidX + 5.5 * ux;
+                        var crossY = bmidY + 5.5 * uy;
+                        
+                        drawDot(g, dotX, dotY, "#ffaa00");
+                        drawCross(g, crossX, crossY, "#00a8ff", "1.5");
+                    });
+                }
+                
+                if (sat.sym === "O") {
+                    var numUnshared = (bondPairs === 1) ? 6 : 4;
+                    drawSatelliteLonePairs(g, satX, satY, rSatOuter, ux, uy, numUnshared, electronColor);
+                } else if (sat.sym === "N" && bondPairs === 3) {
+                    drawSatelliteLonePairs(g, satX, satY, rSatOuter, ux, uy, 2, electronColor);
+                }
+            });
+            
+            if (ion.id === "a2") {
+                // For hydroxide (OH-), the 6 unshared electrons are located on Oxygen (central core).
+                // They should be distributed on the side opposite to the O-H bond (to the left, i.e., bx = -1).
+                // Out of the 6 unshared, exactly 1 is the gained electron (cyan cross in blue box).
+                drawSatelliteLonePairs(g, cx, cy, rCentralOuter, -1, 0, 6, electronColor, ion.charge);
+            } else if (ion.id === "a10") {
+                drawSatelliteLonePairs(g, cx, cy, rCentralOuter, -1, 0, 2, electronColor, ion.charge);
+            }
+        }
+
+        function getIonMaxRadius(ion, isPoly, config) {
+            if (!isPoly) {
+                // Monatomic ion
+                return (config && config.shells && config.shells.length > 0) ? config.shells.length * 25 + 10 : 35;
+            } else {
+                // Polyatomic ion - calculate based on satellites
+                var polyConfig = polyatomicIonsConfig[ion.id] || getFallbackPolyatomicConfig(ion);
+                var maxD = 0;
+                if (polyConfig && polyConfig.satellites) {
+                    polyConfig.satellites.forEach(function(sat) {
+                        var satR = sat.sym === "H" ? 18 : 28;
+                        var dist = sat.distance || 52;
+                        if (sat.relativeToIdx !== undefined) {
+                            dist += 36; // approximate nested distance
+                        }
+                        if (dist + satR > maxD) {
+                            maxD = dist + satR;
+                        }
+                    });
+                }
+                return maxD > 0 ? maxD + 4 : 80;
+            }
+        }
+
+        function renderElectronDiagram(cat, an, catCount, anCount) {
+            var container = document.getElementById('electron-diagram-container');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("viewBox", "0 0 600 280");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.style.overflow = "visible";
+            
+            var catConfig = monoatomicIonsConfig[cat.id];
+            var isCatPoly = cat.poly;
+            var anConfig = monoatomicIonsConfig[an.id];
+            var isAnPoly = an.poly;
+
+            var cationMaxR = getIonMaxRadius(cat, isCatPoly, catConfig);
+            var anionMaxR = getIonMaxRadius(an, isAnPoly, anConfig);
+
+            // Layout spacing calculations
+            var leftLimit = 15 + (catCount > 1 ? 25 : 0);
+            var rightLimit = 275;
+            var cationCenter = {
+                x: leftLimit + (rightLimit - leftLimit) / 2,
+                y: 140
+            };
+
+            var anLeftLimit = 325 + (anCount > 1 ? 25 : 0);
+            var anRightLimit = 585;
+            var anionCenter = {
+                x: anLeftLimit + (anRightLimit - anLeftLimit) / 2,
+                y: 140
+            };
+            
+            var cationG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            cationG.setAttribute("id", "cation-diagram-group");
+            svg.appendChild(cationG);
+            
+            if (!isCatPoly && catConfig) {
+                drawMonoatomicIon(cationG, cationCenter.x, cationCenter.y, cat, catConfig, true);
+            } else {
+                var polyConfig = polyatomicIonsConfig[cat.id] || getFallbackPolyatomicConfig(cat);
+                drawPolyatomicIon(cationG, cationCenter.x, cationCenter.y, cat, polyConfig, true);
+            }
+            
+            if (catCount > 1) {
+                var coefText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                coefText.setAttribute("x", cationCenter.x - cationMaxR - 25);
+                coefText.setAttribute("y", cationCenter.y + 8);
+                coefText.setAttribute("fill", "#ffffff");
+                coefText.setAttribute("font-size", "24px");
+                coefText.setAttribute("font-weight", "bold");
+                coefText.setAttribute("font-family", "'Orbitron', sans-serif");
+                coefText.setAttribute("text-anchor", "middle");
+                coefText.textContent = catCount;
+                svg.appendChild(coefText);
+            }
+            
+            drawBracket(svg, cationCenter.x, cationCenter.y, cationMaxR + 8, cationMaxR * 2 + 10, cat.charge + "+", true);
+            
+            var plusText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            plusText.setAttribute("x", 300);
+            plusText.setAttribute("y", 148);
+            plusText.setAttribute("fill", "rgba(255,255,255,0.4)");
+            plusText.setAttribute("font-size", "28px");
+            plusText.setAttribute("font-weight", "bold");
+            plusText.setAttribute("font-family", "'Montserrat', sans-serif");
+            plusText.setAttribute("text-anchor", "middle");
+            plusText.textContent = "+";
+            svg.appendChild(plusText);
+            
+            var anionG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            anionG.setAttribute("id", "anion-diagram-group");
+            svg.appendChild(anionG);
+            
+            if (!isAnPoly && anConfig) {
+                drawMonoatomicIon(anionG, anionCenter.x, anionCenter.y, an, anConfig, false);
+            } else {
+                var polyConfig = polyatomicIonsConfig[an.id] || getFallbackPolyatomicConfig(an);
+                drawPolyatomicIon(anionG, anionCenter.x, anionCenter.y, an, polyConfig, false);
+            }
+            
+            if (anCount > 1) {
+                var coefText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                coefText.setAttribute("x", anionCenter.x - anionMaxR - 25);
+                coefText.setAttribute("y", anionCenter.y + 8);
+                coefText.setAttribute("fill", "#ffffff");
+                coefText.setAttribute("font-size", "24px");
+                coefText.setAttribute("font-weight", "bold");
+                coefText.setAttribute("font-family", "'Orbitron', sans-serif");
+                coefText.setAttribute("text-anchor", "middle");
+                coefText.textContent = anCount;
+                svg.appendChild(coefText);
+            }
+            
+            drawBracket(svg, anionCenter.x, anionCenter.y, anionMaxR + 8, anionMaxR * 2 + 10, an.charge + "-", false);
+            
+            container.appendChild(svg);
+        }
+
+        window.onload = function() {
+            setLanguage('zh');
+            resizeCanvas();
+        };
+    </script>
+    
+    <!-- 
+      化學與數理公式極致融合解說 (Traditional Chinese Code Explanations):
+      
+      1. 幾何互鎖拼圖 (Interlocking SVG Engine):
+         在無機化學中，離子的電荷數量（如 Na+ 帶 +1 電荷，Al3+ 帶 +3 電荷，硫酸根離子帶 -2 電荷）決定了它們結合成電中性化合物時的化學式計量比例。
+         為了讓學生能在視覺上「看見」電荷的配合，我們利用 SVG 動態繪製了拼圖卡片。
+         凹槽（Slots）表示 Cation（陽離子）擁有的正電荷接收端，凳筍（Tabs）表示 Anion（陰離子）擁有的負電荷。
+         - 對於一個電荷數為 C 的 Cation，我們在卡片的右邊界上沿 y 方向均勻分七繪製了 C 個「向內彊曲」的半圓形凹槽。
+         - 對於一個電荷數為 A 的 Anion，我們在卡片的左邊界上均勻分七繪製了 A 個「向外凸出」丞「同樣向左彊曲」的半圓形凳筍。
+         當 Cation 放置在左、Anion 放置在右時，由於凹槽與凳筍的幾何曲線曲率完美一致且方向互補，它們能以 0 像素間隙完美咬合！
+         
+      2. 最小公倍數與高度平衡幾何關係 (Mathematical Height Alignment):
+         設 Cation 電荷為 C，Anion 電荷為 A。達到電荷平衡的實質，就是尋找 C 與 A 的最小公倍數 LCM(C, A)。
+         - 所需的 Cation 個數為：Num_Cat = LCM(C, A) / C
+         - 所需的 Anion 個數為：Num_Ani = LCM(C, A) / A
+         在代碼中，我們尋找拼圖每 1 個電荷單位高度設定為 60px。
+         因此，一疊陽離子的總高度為：Num_Cat * C * 60px = LCM(C, A) * 60px。
+         而一疊陰離子的總高度為：Num_Ani * A * 60px = LCM(C, A) * 60px。
+         正因為兩者的總高度在平衡時精準相等，拼圖列的項部與底部便會完美齊平，形成一個整齊的矩形區塊！
+         這種設計將抽象的電荷代數運算，變成了極其直觀的「高度拼圖齊平」空間幾何遊戲。
+      -->
+</body>
+</html>

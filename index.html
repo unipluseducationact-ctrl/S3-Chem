@@ -121,10 +121,11 @@
             <div class="global-nav-pill">
                 <button class="nav-pill-btn active" data-page="table" data-i18n="nav.table">1. Table</button>
                 <button class="nav-pill-btn" data-page="notes" data-i18n="nav.notes">2. Notes</button>
-                <button class="nav-pill-btn" data-page="tools" data-i18n="nav.interactiveTools">3. Interactive Tools</button>
-                <button class="nav-pill-btn" data-page="worksheet" data-i18n="nav.worksheets">4. Worksheets</button>
-                <button class="nav-pill-btn" data-page="flashcards" data-i18n="nav.flashcards">5. Flashcards</button>
-                <button class="nav-pill-btn" data-page="summary" data-i18n="nav.summary">6. Summary</button>
+                <button class="nav-pill-btn" data-page="tools" data-i18n="nav.interactiveTools">3. Games</button>
+                <button class="nav-pill-btn" data-page="lab" data-i18n="nav.interactiveLab">4. Interactive Lab</button>
+                <button class="nav-pill-btn" data-page="worksheet" data-i18n="nav.worksheets">5. Worksheets</button>
+                <button class="nav-pill-btn" data-page="flashcards" data-i18n="nav.flashcards">6. Flashcards</button>
+                <button class="nav-pill-btn" data-page="summary" data-i18n="nav.summary">7. Summary</button>
             </div>
         </div>
 
@@ -298,7 +299,7 @@
     <div id="blank-page-1" class="blank-page chemistry-tools-page">
         <div class="blank-page-content" id="page-tools">
             <div class="chem-tools-container">
-                <h1 class="chem-tools-title" data-i18n="tools.pageTitle">Interactive Tools</h1>
+                <h1 class="chem-tools-title" data-i18n="tools.pageTitle">Games</h1>
 
 
                 <div class="chem-tools-grid chem-tools-grid--four-games">
@@ -336,6 +337,45 @@
                         </div>
                         <div class="chem-tool-info chem-tool-info--title-only">
                             <h3 class="chem-tool-name" data-i18n="tools.flameFireworksName">Flame Test Fireworks</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Lab Page -->
+    <div id="interactive-lab-page" class="blank-page chemistry-tools-page">
+        <div class="blank-page-content" id="page-lab">
+            <div class="chem-tools-container">
+                <h1 class="chem-tools-title" data-i18n="lab.pageTitle">Interactive Lab</h1>
+
+                <div class="chem-tools-grid chem-tools-grid--three-games">
+                    <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="ionic-compound-puzzle" role="button" tabindex="0">
+                        <div class="chem-tool-thumb chem-tool-thumb--lab-ionic" aria-hidden="true">
+                            <span class="chem-tool-badge-num">1</span>
+                            <img class="chem-tool-thumb-img" src="images/interactive-lab-ionic-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
+                        </div>
+                        <div class="chem-tool-info chem-tool-info--title-only">
+                            <h3 class="chem-tool-name" data-i18n="lab.ionicName">Ionic</h3>
+                        </div>
+                    </div>
+                    <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="covalent-bond-puzzle" role="button" tabindex="0">
+                        <div class="chem-tool-thumb chem-tool-thumb--lab-covalent" aria-hidden="true">
+                            <span class="chem-tool-badge-num">2</span>
+                            <img class="chem-tool-thumb-img" src="images/interactive-lab-covalent-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
+                        </div>
+                        <div class="chem-tool-info chem-tool-info--title-only">
+                            <h3 class="chem-tool-name" data-i18n="lab.covalentName">Covalent</h3>
+                        </div>
+                    </div>
+                    <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="covalent-properties-sandbox" role="button" tabindex="0">
+                        <div class="chem-tool-thumb chem-tool-thumb--lab-sandbox" aria-hidden="true">
+                            <span class="chem-tool-badge-num">3</span>
+                            <img class="chem-tool-thumb-img" src="images/interactive-lab-sandbox-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
+                        </div>
+                        <div class="chem-tool-info chem-tool-info--title-only">
+                            <h3 class="chem-tool-name" data-i18n="lab.sandboxName">Sandbox</h3>
                         </div>
                     </div>
                 </div>

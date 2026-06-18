@@ -2,10 +2,11 @@ export const faUI = {
   "nav": {
     "table": "۱. جدول",
     "notes": "۲. یادداشت‌ها",
-    "interactiveTools": "۳. ابزارهای تعاملی",
-    "worksheets": "۴. برگه‌های کار",
-    "flashcards": "۵. فلش‌کارت‌ها",
-    "summary": "۶. جمع‌بندی",
+    "interactiveTools": "۳. بازی‌ها",
+    "interactiveLab": "۴. آزمایشگاه تعاملی",
+    "worksheets": "۵. برگه‌های کار",
+    "flashcards": "۶. فلش‌کارت‌ها",
+    "summary": "۷. جمع‌بندی",
     "ions": "یون‌ها",
     "tools": "ابزارها",
     "worksheet": "برگه تمرین",
@@ -179,7 +180,7 @@ export const faUI = {
     "hazards": "خطرات"
   },
   "tools": {
-    "pageTitle": "ابزارهای تعاملی",
+    "pageTitle": "بازی‌ها",
     "pendingName": "در انتظار",
     "pendingDesc": "جای ابزار رزرو است؛ محتوا بعداً وصل می‌شود.",
     "pageSubtitle": "ابزارها و مینی لب های شیمی برای پایه های 9 تا 12",
@@ -209,6 +210,15 @@ export const faUI = {
     "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels.",
     "flameFireworksName": "Flame Test Fireworks",
     "flameFireworksDesc": "Design metal-ion burst patterns, launch them over night-sky scenes, and download your flame-test firework display."
+  },
+  "lab": {
+    "pageTitle": "Interactive Lab",
+    "ionicName": "Ionic",
+    "ionicDesc": "Build ionic lattice structures and explore ionic compound formation.",
+    "covalentName": "Covalent",
+    "covalentDesc": "Draw covalent bonds and explore covalent compound structures.",
+    "sandboxName": "Sandbox",
+    "sandboxDesc": "Simulate micro-structure and compare covalent substance properties."
   },
   "worksheet": {
     "title": "سازنده برگه تمرین",

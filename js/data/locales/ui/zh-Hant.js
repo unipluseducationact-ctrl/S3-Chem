@@ -2,10 +2,11 @@ export const zhHantUI = {
   "nav": {
     "table": "1. 元素表",
     "notes": "2. 筆記",
-    "interactiveTools": "3. 互動工具",
-    "worksheets": "4. 工作紙",
-    "flashcards": "5. 閃卡",
-    "summary": "6. 總結",
+    "interactiveTools": "3. 遊戲",
+    "interactiveLab": "4. 互動實驗室",
+    "worksheets": "5. 工作紙",
+    "flashcards": "6. 閃卡",
+    "summary": "7. 總結",
     "ions": "離子",
     "tools": "工具",
     "worksheet": "練習",
@@ -179,7 +180,7 @@ export const zhHantUI = {
     "hazards": "危害"
   },
   "tools": {
-    "pageTitle": "互動工具",
+    "pageTitle": "遊戲",
     "pendingName": "待定",
     "pendingDesc": "工具位預留，稍後接入內容。",
     "balancerName": "方程式配平",
@@ -208,6 +209,15 @@ export const zhHantUI = {
     "labMatchDesc": "配對遊戲：中英實驗器皿名稱與圖片，以及職安處化學品危險標籤。",
     "flameFireworksName": "焰色試驗煙火",
     "flameFireworksDesc": "以金屬離子設計圓形煙火圖案，在夜景背景發射，並可下載合成圖片。"
+  },
+  "lab": {
+    "pageTitle": "互動實驗室",
+    "ionicName": "離子",
+    "ionicDesc": "搭建離子晶格結構，探索離子化合物形成。",
+    "covalentName": "共價",
+    "covalentDesc": "繪製共價鍵，探索共價化合物結構。",
+    "sandboxName": "沙盒",
+    "sandboxDesc": "模擬微觀結構，比較共價物質性質。"
   },
   "worksheet": {
     "title": "練習單生成器",

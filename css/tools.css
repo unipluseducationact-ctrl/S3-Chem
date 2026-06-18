@@ -1041,6 +1041,61 @@ html.dark-theme .feature-tag {
   background: #050818;
 }
 
+/* Interactive Lab (iframe): full-bleed lab apps */
+#feature-modal-content:has(.interactive-lab-wrap) {
+  max-height: min(96dvh, 1000px);
+  max-width: min(98vw, 1400px);
+}
+
+.feature-modal-body:has(.interactive-lab-wrap) {
+  padding: 10px 14px 14px;
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+.interactive-lab-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.tool-modal-content.interactive-lab-wrap {
+  gap: 0;
+}
+
+.interactive-lab-iframe {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  border: 0;
+  border-radius: 14px;
+  background: #050814;
+}
+
+/* Lab card preview fallbacks when PNG is missing */
+.chem-tool-thumb--lab-ionic {
+  background: linear-gradient(135deg, #0b1126 0%, #1a3a6b 55%, #00a8ff 100%);
+}
+
+.chem-tool-thumb--lab-covalent {
+  background: linear-gradient(135deg, #0b1126 0%, #2d1b69 55%, #6366f1 100%);
+}
+
+.chem-tool-thumb--lab-sandbox {
+  background: linear-gradient(135deg, #0b1126 0%, #1a472a 55%, #39ff14 100%);
+}
+
+.chem-tool-thumb--lab-ionic .chem-tool-thumb-img,
+.chem-tool-thumb--lab-covalent .chem-tool-thumb-img,
+.chem-tool-thumb--lab-sandbox .chem-tool-thumb-img {
+  background: transparent;
+}
+
 .feature-detail-header {
   display: flex;
   align-items: center;

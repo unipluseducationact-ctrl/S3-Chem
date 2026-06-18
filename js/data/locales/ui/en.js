@@ -2,10 +2,11 @@ export const enUI = {
   "nav": {
     "table": "1. Table",
     "notes": "2. Notes",
-    "interactiveTools": "3. Interactive Tools",
-    "worksheets": "4. Worksheets",
-    "flashcards": "5. Flashcards",
-    "summary": "6. Summary",
+    "interactiveTools": "3. Games",
+    "interactiveLab": "4. Interactive Lab",
+    "worksheets": "5. Worksheets",
+    "flashcards": "6. Flashcards",
+    "summary": "7. Summary",
     "ions": "Ions",
     "tools": "Tools",
     "worksheet": "Worksheet",
@@ -179,7 +180,7 @@ export const enUI = {
     "hazards": "Hazards"
   },
   "tools": {
-    "pageTitle": "Interactive Tools",
+    "pageTitle": "Games",
     "pageSubtitle": "Grade 9-12 Chemistry Tools & Labs",
     "pendingName": "Pending",
     "pendingDesc": "Tool slot reserved. Content will be connected later.",
@@ -209,6 +210,15 @@ export const enUI = {
     "labMatchDesc": "Memory game: match bilingual lab apparatus names to pictures and OSHC chemical hazard labels.",
     "flameFireworksName": "Flame Test Fireworks",
     "flameFireworksDesc": "Design metal-ion burst patterns, launch them over night-sky scenes, and download your flame-test firework display."
+  },
+  "lab": {
+    "pageTitle": "Interactive Lab",
+    "ionicName": "Ionic",
+    "ionicDesc": "Build ionic lattice structures and explore ionic compound formation.",
+    "covalentName": "Covalent",
+    "covalentDesc": "Draw covalent bonds and explore covalent compound structures.",
+    "sandboxName": "Sandbox",
+    "sandboxDesc": "Simulate micro-structure and compare covalent substance properties."
   },
   "worksheet": {
     "title": "Worksheet Generator",

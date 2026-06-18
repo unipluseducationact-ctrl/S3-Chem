@@ -11,6 +11,9 @@ const TOOL_CONTENT_FACTORIES = {
   "chem-catch": generateChemCatchToolContent,
   "lab-hazard-match": generateLabHazardMatchToolContent,
   "flame-test-fireworks": generateFlameTestFireworksToolContent,
+  "ionic-compound-puzzle": generateIonicCompoundPuzzleToolContent,
+  "covalent-bond-puzzle": generateCovalentBondPuzzleToolContent,
+  "covalent-properties-sandbox": generateCovalentPropertiesSandboxToolContent,
 };
 
 export function getChemToolContent(toolType) {
@@ -2095,5 +2098,37 @@ function generateFlameTestFireworksToolContent() {
                 title="${title.replace(/"/g, "&quot;")}"></iframe>
         </div>
     `;
+}
+
+function generateInteractiveLabIframeContent(toolPath, titleKey) {
+  const title = t(titleKey);
+  return `
+        <div class="tool-modal-content interactive-lab-wrap">
+            <iframe class="interactive-lab-iframe"
+                src="${toolPath}"
+                title="${title.replace(/"/g, "&quot;")}"></iframe>
+        </div>
+    `;
+}
+
+function generateIonicCompoundPuzzleToolContent() {
+  return generateInteractiveLabIframeContent(
+    "tools/ionic-compound-puzzle/index.html",
+    "lab.ionicName",
+  );
+}
+
+function generateCovalentBondPuzzleToolContent() {
+  return generateInteractiveLabIframeContent(
+    "tools/covalent-bond-puzzle/index.html",
+    "lab.covalentName",
+  );
+}
+
+function generateCovalentPropertiesSandboxToolContent() {
+  return generateInteractiveLabIframeContent(
+    "tools/covalent-properties-sandbox/index.html",
+    "lab.sandboxName",
+  );
 }
 

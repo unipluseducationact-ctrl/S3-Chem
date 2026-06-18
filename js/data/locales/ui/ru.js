@@ -2,10 +2,11 @@ export const ruUI = {
   "nav": {
     "table": "1. Таблица",
     "notes": "2. Заметки",
-    "interactiveTools": "3. Интерактивные инструменты",
-    "worksheets": "4. Рабочие листы",
-    "flashcards": "5. Карточки",
-    "summary": "6. Итог",
+    "interactiveTools": "3. Игры",
+    "interactiveLab": "4. Интерактивная лаборатория",
+    "worksheets": "5. Рабочие листы",
+    "flashcards": "6. Карточки",
+    "summary": "7. Итог",
     "ions": "Ионы",
     "tools": "Инструменты",
     "worksheet": "Практика",
@@ -179,7 +180,7 @@ export const ruUI = {
     "hazards": "Опасности"
   },
   "tools": {
-    "pageTitle": "Интерактивные инструменты",
+    "pageTitle": "Игры",
     "pendingName": "Ожидается",
     "pendingDesc": "Слот зарезервирован; контент подключится позже.",
     "pageSubtitle": "Инструменты и мини-лаборатории по химии для 9-12 классов",
@@ -209,6 +210,15 @@ export const ruUI = {
     "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels.",
     "flameFireworksName": "Flame Test Fireworks",
     "flameFireworksDesc": "Design metal-ion burst patterns, launch them over night-sky scenes, and download your flame-test firework display."
+  },
+  "lab": {
+    "pageTitle": "Interactive Lab",
+    "ionicName": "Ionic",
+    "ionicDesc": "Build ionic lattice structures and explore ionic compound formation.",
+    "covalentName": "Covalent",
+    "covalentDesc": "Draw covalent bonds and explore covalent compound structures.",
+    "sandboxName": "Sandbox",
+    "sandboxDesc": "Simulate micro-structure and compare covalent substance properties."
   },
   "worksheet": {
     "title": "Генератор листов заданий",

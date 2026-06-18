@@ -456,6 +456,10 @@ function initMainApp() {
       setTimeout(() => toolsModalController.initChemToolCards(), 100);
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
+    onLabPageShown: () => {
+      setTimeout(() => toolsModalController.initChemToolCards(), 100);
+      if (tableContainer) syncEitMobileMount(tableContainer, eitController);
+    },
     onWorksheetPageShown: () => {
       void ensureWorksheetReady()
         .then(() => {

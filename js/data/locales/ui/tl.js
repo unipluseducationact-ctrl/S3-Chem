@@ -2,10 +2,11 @@ export const tlUI = {
   "nav": {
     "table": "1. Talaan",
     "notes": "2. Mga Tala",
-    "interactiveTools": "3. Interactive na Mga Tool",
-    "worksheets": "4. Mga Worksheet",
-    "flashcards": "5. Mga Flashcard",
-    "summary": "6. Buod",
+    "interactiveTools": "3. Mga Laro",
+    "interactiveLab": "4. Interactive na Lab",
+    "worksheets": "5. Mga Worksheet",
+    "flashcards": "6. Mga Flashcard",
+    "summary": "7. Buod",
     "ions": "Ion",
     "tools": "Mga Tool",
     "worksheet": "Praktis",
@@ -179,7 +180,7 @@ export const tlUI = {
     "hazards": "Panganib"
   },
   "tools": {
-    "pageTitle": "Interactive na Mga Tool",
+    "pageTitle": "Mga Laro",
     "pendingName": "Nakabinbin",
     "pendingDesc": "Nakalaan ang slot; idadagdag ang nilalaman mamaya.",
     "pageSubtitle": "Mga tool at mini lab sa kimika para sa Grade 9-12",
@@ -209,6 +210,15 @@ export const tlUI = {
     "labMatchDesc": "Memory game: match bilingual lab apparatus and OSHC hazard labels.",
     "flameFireworksName": "Flame Test Fireworks",
     "flameFireworksDesc": "Design metal-ion burst patterns, launch them over night-sky scenes, and download your flame-test firework display."
+  },
+  "lab": {
+    "pageTitle": "Interactive Lab",
+    "ionicName": "Ionic",
+    "ionicDesc": "Build ionic lattice structures and explore ionic compound formation.",
+    "covalentName": "Covalent",
+    "covalentDesc": "Draw covalent bonds and explore covalent compound structures.",
+    "sandboxName": "Sandbox",
+    "sandboxDesc": "Simulate micro-structure and compare covalent substance properties."
   },
   "worksheet": {
     "title": "Generator ng Worksheet",

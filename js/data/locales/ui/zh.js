@@ -2,10 +2,11 @@ export const zhUI = {
   "nav": {
     "table": "1. 元素表",
     "notes": "2. 笔记",
-    "interactiveTools": "3. 互动工具",
-    "worksheets": "4. 工作纸",
-    "flashcards": "5. 闪卡",
-    "summary": "6. 总结",
+    "interactiveTools": "3. 游戏",
+    "interactiveLab": "4. 互动实验室",
+    "worksheets": "5. 工作纸",
+    "flashcards": "6. 闪卡",
+    "summary": "7. 总结",
     "ions": "离子",
     "tools": "工具",
     "worksheet": "练习",
@@ -179,7 +180,7 @@ export const zhUI = {
     "hazards": "危害"
   },
   "tools": {
-    "pageTitle": "互动工具",
+    "pageTitle": "游戏",
     "pendingName": "待定",
     "pendingDesc": "工具位预留，稍后接入内容。",
     "pageSubtitle": "面向 9-12 年级的化学工具与实验",
@@ -209,6 +210,15 @@ export const zhUI = {
     "labMatchDesc": "配对游戏：中英实验器皿名称与图片，以及职安处化学品危险标签。",
     "flameFireworksName": "焰色试验烟火",
     "flameFireworksDesc": "用金属离子设计圆形烟火图案，在夜景背景发射，并可下载合成图片。"
+  },
+  "lab": {
+    "pageTitle": "互动实验室",
+    "ionicName": "离子",
+    "ionicDesc": "搭建离子晶格结构，探索离子化合物形成。",
+    "covalentName": "共价",
+    "covalentDesc": "绘制共价键，探索共价化合物结构。",
+    "sandboxName": "沙盒",
+    "sandboxDesc": "模拟微观结构，比较共价物质性质。"
   },
   "worksheet": {
     "title": "练习单生成器",

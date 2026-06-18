@@ -21,6 +21,9 @@ const TOOL_LISTENER_MAP = {
   "chem-catch": () => {},
   "lab-hazard-match": () => {},
   "flame-test-fireworks": () => {},
+  "ionic-compound-puzzle": () => {},
+  "covalent-bond-puzzle": () => {},
+  "covalent-properties-sandbox": () => {},
 };
 
 export function attachToolEventListeners(toolType) {

@@ -208,13 +208,11 @@ export function createToolsModalController(options = {}) {
   }
 
   function initChemToolCards() {
-    const toolsGrid = document.querySelector(".chem-tools-grid");
-    if (!toolsGrid) return;
-
-    toolsGrid
-      .querySelectorAll(".chem-tool-card[data-tool]")
-      .forEach(bindToolCard);
-
+    document.querySelectorAll(".chem-tools-grid").forEach((toolsGrid) => {
+      toolsGrid
+        .querySelectorAll(".chem-tool-card[data-tool]")
+        .forEach(bindToolCard);
+    });
   }
 
   function init() {
