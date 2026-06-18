@@ -1,6 +1,7 @@
 # Publishes the built site to GitHub Pages when you push to main.
 # After the first successful run, your site will be at:
-#   https://unipluseducationact-ctrl.github.io/S3-CH5-table/
+#   https://unipluseducationact-ctrl.github.io/S3-Chem/
+# Old URL https://…/S3-CH5-table/ is preserved via pages-redirect/ (see pages-redirect/README.md).
 name: Deploy to GitHub Pages
 
 on:
