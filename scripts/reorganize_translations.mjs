@@ -1,4 +1,3 @@
-/* global console */
 
 /**
  * Reorganize translations.js into clean, separate modules

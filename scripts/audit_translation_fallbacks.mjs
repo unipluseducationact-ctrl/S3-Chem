@@ -1,4 +1,3 @@
-/* global console */
 import { translations } from "../js/data/translations.js";
 
 function flatten(obj, prefix = "", out = {}) {

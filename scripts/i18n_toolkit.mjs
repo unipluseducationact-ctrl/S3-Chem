@@ -1,4 +1,3 @@
-/* global console, process */
 
 /**
  * Uni+ i18n Toolkit
