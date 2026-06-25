@@ -612,7 +612,7 @@
             transform: scale(1.05);
         }
 
-        /* 2D Lewis Output, 3D Render Panel */
+        /* 2D Structural Formula Output, 3D Render Panel */
         .right-sidebar {
             display: flex;
             flex-direction: column;
@@ -948,6 +948,31 @@
             border-color: #ffffff;
             box-shadow: 0 0 8px var(--el-color);
         }
+
+        @media (max-width: 900px) {
+            body { overflow: auto; }
+            #sidebar { width: 100%; height: auto; flex-direction: row; flex-wrap: wrap; padding: 10px; }
+            #main-content { margin-left: 0; width: 100%; height: auto; min-height: calc(100vh - 80px); }
+            .lab-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+                min-height: 500px;
+                overflow: visible;
+            }
+            .quest-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+                min-height: 600px;
+                overflow: visible;
+            }
+            .right-sidebar { order: -1; }
+        }
+
+        @media (max-width: 600px) {
+            .cyber-btn { min-height: 44px; }
+            .quest-list-panel { max-height: 200px; }
+            .vessel-workspace { min-height: 200px !important; }
+        }
     </style>
 </head>
 <body>
@@ -986,7 +1011,7 @@
                 <span class="lang-zh">闖關進度 (QUEST PROGRESS)</span>
                 <span class="lang-en" style="display:none;">QUEST PROGRESS</span>
             </div>
-            <div class="stat-val" id="quest-progress-text">0 / 20</div>
+            <div class="stat-val" id="quest-progress-text">0 / 21</div>
             <div style="margin-top: 10px; background: rgba(255,255,255,0.05); height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid rgba(0, 168, 255, 0.2);">
                 <div id="quest-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--neon-green)); transition: width 0.5s;"></div>
             </div>
@@ -1260,8 +1285,8 @@
                     <div class="glass-card">
                         <div class="mini-header">
                             <i class="fa-solid fa-fingerprint"></i>
-                            <span class="lang-zh">路易斯結構電子點叉圖 (2D)</span>
-                            <span class="lang-en" style="display:none;">2D Lewis Structure (Dot-Cross)</span>
+                            <span class="lang-zh">結構式 (2D)</span>
+                            <span class="lang-en" style="display:none;">2D Structural Formula</span>
                         </div>
                         <div class="lewis-svg-card" id="lab-lewis-target">
                             <span style="color:var(--text-secondary); font-size:0.85em;">-</span>
@@ -1313,7 +1338,7 @@
                         <!-- Target Level Banner Card -->
                         <div style="background: rgba(11, 17, 38, 0.85); border-bottom: 1px solid rgba(0, 168, 255, 0.2); padding: 10px 15px; display:flex; justify-content:space-between; align-items:center; z-index:12;">
                             <div>
-                                <div style="font-size: 0.75em; color: var(--accent-blue); text-transform: uppercase; letter-spacing:1px; font-weight:700;" id="quest-stage-indicator">STAGE 1 / 20</div>
+                                <div style="font-size: 0.75em; color: var(--accent-blue); text-transform: uppercase; letter-spacing:1px; font-weight:700;" id="quest-stage-indicator">STAGE 1 / 21</div>
                                 <h3 style="margin: 2px 0 0 0; font-family:'Orbitron', 'Noto Sans TC', sans-serif; font-size:1.15em;" id="quest-title-text">H2 - 氫氣</h3>
                             </div>
                         </div>
@@ -1709,6 +1734,16 @@ const QUEST_LEVELS_DB = [
         atoms: ['O', 'S', 'O'],
         geometry: 'bent',
         target_bonds: [{ a0: 0, a1: 1, order: 2 }, { a0: 1, a1: 2, order: 2 }]
+    },
+    {
+        formula: 'H_2O_2',
+        name_zh: '過氧化氫',
+        name_en: 'Hydrogen Peroxide',
+        desc_zh: '常見的過氧化物。兩個氧原子以單鍵相連（O–O），每個氧原子再與一個氫原子形成單鍵。O–O 鍵較弱，且每個氧上仍留有兩對孤隅電子對，呈開鏈形結構。',
+        desc_en: 'A common peroxide. Two oxygen atoms are linked by a weak single O–O bond, with each oxygen also bonded to one hydrogen. Each oxygen retains two lone pairs in an open-chain structure.',
+        atoms: ['H', 'O', 'O', 'H'],
+        geometry: 'open_chain',
+        target_bonds: [{ a0: 0, a1: 1, order: 1 }, { a0: 1, a1: 2, order: 1 }, { a0: 2, a1: 3, order: 1 }]
     }
 ];
 
@@ -4962,8 +4997,8 @@ function validateOctetAndOutputFormula() {
         }
     }
     
-    // 4. Generate 2D Lewis dot-cross SVG
-    generateLabLewisStructure();
+    // 4. Generate 2D structural formula SVG
+    generateLabStructuralFormula();
     refreshLanguageDisplay();
 }
 
@@ -4998,7 +5033,7 @@ function generateFormulaLaTeX(atomsList) {
     return latex;
 }
 
-function generateLabLewisStructure() {
+function generateLabStructuralFormula() {
     const target = document.getElementById('lab-lewis-target');
     if (!target) return;
     target.innerHTML = ''; // clear
@@ -5010,8 +5045,7 @@ function generateLabLewisStructure() {
         return;
     }
 
-    // Since we want dynamic Lewis structures in a beautifully-rendered SVG panel:
-    // We will render a mini 2D Lewis representation where bonded electrons are dots-crosses!
+    // Render a 2D structural formula with atom symbols and bond lines
     const svgNS = "http://www.w3.org/2000/svg";
     const width = 200;
     const height = 110;
@@ -5020,7 +5054,7 @@ function generateLabLewisStructure() {
     svg.setAttribute("height", "100%");
     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
-    // Map atoms to relative positions inside Lewis viewer
+    // Map atoms to relative positions inside structural formula viewer
     // Find min-max and normalize
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
     labAtoms.forEach(a => {
@@ -5039,7 +5073,7 @@ function generateLabLewisStructure() {
         return { id: a.id, sym: a.sym, x: px, y: py };
     });
 
-    // Draw Lewis bonds as simple thin gray lines
+    // Draw structural formula bonds as thin gray lines
     labBonds.forEach(b => {
         const p1 = lewisPoints.find(p => p.id === b.a1_id);
         const p2 = lewisPoints.find(p => p.id === b.a2_id);
@@ -5300,6 +5334,9 @@ function getGeometryCoords(geom, idx, totalAtoms) {
         ],
         'octahedral': [
             [0, 0, 0], [0, -50, 0], [0, 50, 0], [-45, 0, 0], [45, 0, 0], [0, 0, -45], [0, 0, 45]
+        ],
+        'open_chain': [
+            [-70, 0, 0], [-25, 0, 0], [25, 0, 0], [70, 0, 0]
         ]
     };
 

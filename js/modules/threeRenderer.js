@@ -4,6 +4,8 @@
 // reusable Vector3 pool, for-loop hot paths, capped DPR
 // =============================================================================
 
+import { getShellArrangementByZ } from "../utils/electronArrangement.js";
+
 // ===== Module-level state =====
 let scene, camera, renderer, atomGroup, animationId;
 let electrons = [];
@@ -479,14 +481,15 @@ export function updateAtomStructure(element) {
     return cloudGroup;
   };
 
-  // --- Electron shells ---
-  const shells = [2, 8, 8, 18, 18, 32, 32];
+  // --- Electron shells (principal quantum numbers from elementsData) ---
+  const shellCounts = getShellArrangementByZ(atomicNumber);
+  const shells = shellCounts.length ? shellCounts : [atomicNumber];
   
   let electronsLeft = atomicNumber;
   for (let s = 0; s < shells.length; s++) {
     if (electronsLeft <= 0) break;
-    const capacity = shells[s];
-    const count = Math.min(electronsLeft, capacity);
+    const count = shells[s];
+    if (count <= 0) continue;
     electronsLeft -= count;
     const radius = 4.5 + s * 2.5;
 

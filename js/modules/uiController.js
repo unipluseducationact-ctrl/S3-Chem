@@ -4,6 +4,7 @@
 // =============================================================================
 
 import { finallyData, elements } from "../data/elementsData.js";
+import { getElectronArrangementByZ } from "../utils/electronArrangement.js";
 import { translations } from "../data/translations.js";
 import {
   ensureThreeLibLoaded,
@@ -810,22 +811,6 @@ function getDisplayGroupHKDSE(element) {
   if (col === 1) return toRoman(1);
   if (col === 2) return toRoman(2);
   return null;
-}
-
-// ===== Electron arrangement helpers (Bohr shell allocation) =====
-const BOHR_SHELL_CAPACITIES = [2, 8, 8, 18, 18, 32, 32];
-
-function getElectronArrangementByZ(z) {
-  if (!Number.isFinite(z) || z <= 0) return [];
-  let left = Math.floor(z);
-  const out = [];
-  for (let i = 0; i < BOHR_SHELL_CAPACITIES.length && left > 0; i++) {
-    const cap = BOHR_SHELL_CAPACITIES[i];
-    const take = Math.min(left, cap);
-    out.push(take);
-    left -= take;
-  }
-  return out;
 }
 
 function formatShellElectronsLabel(shells, label) {
