@@ -1584,7 +1584,7 @@ const QUEST_LEVELS_DB = [
         desc_zh: '中央的氧原子與兩個氫原子形成兩個單鍵。由於氧上有兩對孤隅電子對 (Lone Pairs)，排斥作用使分子呈彎曲形 (Bent)，角度為 104.5°。',
         desc_en: 'The cradle of life. The central oxygen forms single bonds with two hydrogens. Two lone pairs on oxygen repel the bond pairs, resulting in a bent geometry (104.5°).',
         atoms: ['H', 'O', 'H'],
-        geometry: 'bent',
+        geometry: 'bent_water',
         target_bonds: [{ a0: 0, a1: 1, order: 1 }, { a0: 1, a1: 2, order: 1 }]
     },
     {
@@ -1732,17 +1732,17 @@ const QUEST_LEVELS_DB = [
         desc_zh: '火山爆發產生的刺鼻氣體。中央的硫原子與兩個氧原子分別以雙鍵相連，且硫上擁有一對孤隅電子對，使其分子呈現彎曲形 (Bent) 結構（鍵角約為 119°）。',
         desc_en: 'A pungent gas produced by volcanic activity. The central sulfur forms double bonds with two oxygens. A lone pair on the sulfur repels the bonds, resulting in a bent geometry (119°).',
         atoms: ['O', 'S', 'O'],
-        geometry: 'bent',
+        geometry: 'bent_wide',
         target_bonds: [{ a0: 0, a1: 1, order: 2 }, { a0: 1, a1: 2, order: 2 }]
     },
     {
         formula: 'H_2O_2',
         name_zh: '過氧化氫',
         name_en: 'Hydrogen Peroxide',
-        desc_zh: '常見的過氧化物。兩個氧原子以單鍵相連（O–O），每個氧原子再與一個氫原子形成單鍵。O–O 鍵較弱，且每個氧上仍留有兩對孤隅電子對，呈開鏈形結構。',
-        desc_en: 'A common peroxide. Two oxygen atoms are linked by a weak single O–O bond, with each oxygen also bonded to one hydrogen. Each oxygen retains two lone pairs in an open-chain structure.',
+        desc_zh: '常見的過氧化物。兩個氧原子以單鍵相連（O–O），每個氧原子再與一個氫原子形成單鍵。每個氧上留有兩對孤隅電子對，局部呈彎曲形；兩個 O–H 鍵不在同一平面，呈非平面「開書本」構象（gauche，二面角約 112°）。',
+        desc_en: 'A common peroxide. Two oxygen atoms are linked by a weak single O–O bond, with each oxygen also bonded to one hydrogen. Each oxygen has two lone pairs (local bent geometry). The two O–H bonds lie in different planes, giving a non-planar open-book (gauche) conformation (~112° dihedral).',
         atoms: ['H', 'O', 'O', 'H'],
-        geometry: 'open_chain',
+        geometry: 'peroxide_gauche',
         target_bonds: [{ a0: 0, a1: 1, order: 1 }, { a0: 1, a1: 2, order: 1 }, { a0: 2, a1: 3, order: 1 }]
     }
 ];
@@ -5314,6 +5314,14 @@ function getGeometryCoords(geom, idx, totalAtoms) {
         'bent': [
             [-42, 28, 0], [0, -12, 0], [42, 28, 0]
         ],
+        // H-O-H ~104.5° (AX2E2 bent)
+        'bent_water': [
+            [-46, 24, 0], [0, -12, 0], [46, 24, 0]
+        ],
+        // O-S-O ~119° (AX2E1 bent, lone pair on S)
+        'bent_wide': [
+            [-51, 18, 0], [0, -12, 0], [51, 18, 0]
+        ],
         'pyramidal': [
             [-36, 22, -18], [0, -15, 0], [36, 22, -18], [0, 22, 38]
         ],
@@ -5335,8 +5343,9 @@ function getGeometryCoords(geom, idx, totalAtoms) {
         'octahedral': [
             [0, 0, 0], [0, -50, 0], [0, 50, 0], [-45, 0, 0], [45, 0, 0], [0, 0, -45], [0, 0, 45]
         ],
-        'open_chain': [
-            [-70, 0, 0], [-25, 0, 0], [25, 0, 0], [70, 0, 0]
+        // H2O2: O-O-H ~95°, H-O-O-H dihedral ~112° (non-planar gauche / open-book)
+        'peroxide_gauche': [
+            [-22, 45, 0], [-18, 0, 0], [18, 0, 0], [22, 16, -42]
         ]
     };
 
