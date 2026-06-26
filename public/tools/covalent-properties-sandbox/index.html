@@ -377,8 +377,8 @@
                 <div class="sandbox-mode-btn active" id="sb-mode-water" onclick="switchSandboxMode('water')">
                     <div style="font-weight: 700; color:var(--h-color); font-size: 0.95em;">1. 水 (H<sub>2</sub>O)</div>
                     <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
-                        <span class="lang-zh">簡單分子物質 (具氫鍵，熔沸時分子間力斷裂，共價鍵完好)</span>
-                        <span class="lang-en" style="display:none;">Simple Molecular (With H-bond, boiling breaks IMF, NOT covalent bond)</span>
+                        <span class="lang-zh">簡單分子物質 (具氫鍵；0°C 以下呈 Ice Ih 開放晶格，熔沸時分子間力斷裂)</span>
+                        <span class="lang-en" style="display:none;">Simple Molecular (H-bonds; Ice Ih open lattice at ≤0°C; boiling breaks IMF)</span>
                     </div>
                 </div>
 
@@ -422,16 +422,8 @@
                     </div>
                 </div>
 
-                <div class="sandbox-mode-btn" id="sb-mode-ice" onclick="switchSandboxMode('ice')">
-                    <div style="font-weight: 700; color:var(--h-color); font-size: 0.95em;">7. 冰 (Ice I<sub>h</sub>)</div>
-                    <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
-                        <span class="lang-zh">開放型氫鍵晶格 (六方對稱，密度低於液態水)</span>
-                        <span class="lang-en" style="display:none;">Open H-bonded lattice (hexagonal, less dense than liquid water)</span>
-                    </div>
-                </div>
-
                 <div class="sandbox-mode-btn" id="sb-mode-sio2" onclick="switchSandboxMode('sio2')">
-                    <div style="font-weight: 700; color:var(--si-color); font-size: 0.95em;">8. 二氧化矽 (SiO<sub>2</sub>)</div>
+                    <div style="font-weight: 700; color:var(--si-color); font-size: 0.95em;">7. 二氧化矽 (SiO<sub>2</sub>)</div>
                     <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
                         <span class="lang-zh">巨型共價網絡 (SiO<sub>4</sub> 四面體，石英結構，極硬)</span>
                         <span class="lang-en" style="display:none;">Giant covalent network (SiO₄ tetrahedra, quartz, very hard)</span>
@@ -439,7 +431,7 @@
                 </div>
 
                 <div class="sandbox-mode-btn" id="sb-mode-metal" onclick="switchSandboxMode('metal')">
-                    <div style="font-weight: 700; color:#fbbf24; font-size: 0.95em;">9. 銅 (Cu) 巨型金屬</div>
+                    <div style="font-weight: 700; color:#fbbf24; font-size: 0.95em;">8. 銅 (Cu) 巨型金屬</div>
                     <div style="font-size:0.75em; color:var(--text-secondary); margin-top:4px; line-height:1.3;">
                         <span class="lang-zh">巨型金屬結構 (離域電子海，具延展性與導電性)</span>
                         <span class="lang-en" style="display:none;">Giant metallic structure (delocalized e⁻ sea, malleable & conductive)</span>
@@ -645,8 +637,6 @@
                 limStr = `25 °C - 3000 °C`;
             } else if (currentSandboxMode === 'nacl' || currentSandboxMode === 'cscl') {
                 limStr = `25 °C - 1200 °C`;
-            } else if (currentSandboxMode === 'ice') {
-                limStr = `-50 °C - 0 °C`;
             } else if (currentSandboxMode === 'metal') {
                 limStr = `25 °C - 1500 °C`;
             }
@@ -752,7 +742,7 @@
         }
 
         function isIceIhView() {
-            return currentSandboxMode === 'ice' || (currentSandboxMode === 'water' && sandboxTemp <= 0);
+            return currentSandboxMode === 'water' && sandboxTemp <= 0;
         }
 
         function updateRotateHint() {
@@ -769,16 +759,17 @@
             sbIceHBonds = [];
             let id = 0;
 
-            const a = 34;
+            const a = 38;
             const c = a * 1.628;
             const oCutoff = a * 0.92;
             const oHLen = a * 0.22;
+            const latticeZoom = 1.25;
 
             function fracToCart(u, v, ww) {
                 return {
-                    x: a * (u - 0.5 * v) - a * 1.0,
-                    y: c * ww - c * 0.55,
-                    z: a * (Math.sqrt(3) / 2 * v) - a * 1.0
+                    x: a * (u - 0.5 * v) - a * 0.5,
+                    y: c * ww - c * 0.35,
+                    z: a * (Math.sqrt(3) / 2 * v) - a * 0.65
                 };
             }
 
@@ -791,18 +782,17 @@
 
             const oPositions = [];
             const seen = new Set();
-            for (let du = -1; du <= 1; du++) {
-                for (let dv = -1; dv <= 1; dv++) {
-                    for (let dw = -1; dw <= 1; dw++) {
-                        baseFracs.forEach(([fu, fv, fw]) => {
-                            const cart = fracToCart(fu + du, fv + dv, fw + dw);
-                            const key = `${Math.round(cart.x * 3)},${Math.round(cart.y * 3)},${Math.round(cart.z * 3)}`;
-                            if (!seen.has(key)) {
-                                seen.add(key);
-                                oPositions.push(cart);
-                            }
-                        });
-                    }
+            // Compact 2×2 basal slice (one layer) — enough to show open hexagonal H-bond network
+            for (let du = -1; du <= 0; du++) {
+                for (let dv = -1; dv <= 0; dv++) {
+                    baseFracs.forEach(([fu, fv, fw]) => {
+                        const cart = fracToCart(fu + du, fv + dv, fw);
+                        const key = `${Math.round(cart.x * 3)},${Math.round(cart.y * 3)},${Math.round(cart.z * 3)}`;
+                        if (!seen.has(key)) {
+                            seen.add(key);
+                            oPositions.push(cart);
+                        }
+                    });
                 }
             }
 
@@ -836,7 +826,7 @@
 
             const oIds = [];
             oPositions.forEach((pos, oIdx) => {
-                const proj = project3DTo2D(pos.x, pos.y, pos.z, w, h, 1.05);
+                const proj = project3DTo2D(pos.x, pos.y, pos.z, w, h, latticeZoom);
                 const oId = id++;
                 oIds[oIdx] = oId;
                 sbParticles.push({
@@ -867,7 +857,7 @@
                 const hx = oDon.x + (dx / len) * oHLen;
                 const hy = oDon.y + (dy / len) * oHLen;
                 const hz = oDon.z + (dz / len) * oHLen;
-                const proj = project3DTo2D(hx, hy, hz, w, h, 1.05);
+                const proj = project3DTo2D(hx, hy, hz, w, h, latticeZoom);
                 const hId = id++;
                 sbParticles.push({
                     id: hId,
@@ -927,10 +917,6 @@
                     slider.min = "25"; slider.max = "1200"; slider.value = "25";
                     sandboxTemp = 25; valText.innerText = `25 °C`;
                     limStr = `25 °C - 1200 °C`;
-                } else if (currentSandboxMode === 'ice') {
-                    slider.min = "-50"; slider.max = "0"; slider.value = "-10";
-                    sandboxTemp = -10; valText.innerText = `-10 °C`;
-                    limStr = `-50 °C - 0 °C`;
                 } else if (currentSandboxMode === 'metal') {
                     slider.min = "25"; slider.max = "1500"; slider.value = "25";
                     sandboxTemp = 25; valText.innerText = `25 °C`;
@@ -1048,9 +1034,6 @@
                 if (sandboxTemp >= 645) stateZh = '熔融態游離離子 (Molten Free Ions)';
                 titleZh = `氯化銫 (CsCl) — 巨型離子晶格 [目前狀態：${stateZh}]`;
                 titleEn = `Cesium Chloride (CsCl) — Giant Ionic Lattice [State: ${sandboxTemp >= 645 ? 'Molten Liquid' : 'Solid Lattice'}]`;
-            } else if (currentSandboxMode === 'ice') {
-                titleZh = '冰 (Ice Iₕ) — 開放型氫鍵晶格結構';
-                titleEn = 'Ice (H₂O) — Open hydrogen-bonded crystal lattice';
             } else if (currentSandboxMode === 'sio2') {
                 titleZh = '二氧化矽 (SiO₂) — 巨型共價網絡結構 (石英)';
                 titleEn = 'Silicon Dioxide (SiO₂) — Giant covalent network (quartz)';
@@ -1145,16 +1128,6 @@
                 html += formatItem(lineSpan('rgba(148, 163, 184, 0.35)', true), '晶胞輔助線', 'Unit Cell Wireframe');
                 if (sbHammerAnimating && sbHammerOffset > 8) {
                     html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '同性電荷排斥 (錯位碎裂)', 'Like-charge Repulsion (Shatter)');
-                }
-            } else if (currentSandboxMode === 'ice') {
-                html += formatItem(circleSpan('#ef4444', '#f87171', 'O'), '氧原子 (O)', 'Oxygen (O)');
-                html += formatItem(circleSpan('#00f0ff', '#22d3ee', 'H', '#0b1126'), '氫原子 (H)', 'Hydrogen (H)');
-                html += formatItem(lineSpan('#ffffff'), 'O–H 共價鍵 (分子內)', 'O–H Covalent Bond (intramolecular)');
-                if (sbShowIMF) {
-                    html += formatItem(lineSpan('rgba(0, 240, 255, 0.95)', true), '氫鍵 (分子間，開放結構)', 'Hydrogen Bond (intermolecular, open lattice)');
-                }
-                if (sbHammerAnimating && sbHammerOffset > 8) {
-                    html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '氫鍵斷裂 (晶體碎裂)', 'H-bond breakage (crystal shatter)');
                 }
             } else if (currentSandboxMode === 'sio2') {
                 html += formatItem(circleSpan('#38bdf8', '#7dd3fc', 'Si'), '矽原子 (Si)', 'Silicon (Si)');
@@ -1553,8 +1526,6 @@
                         }
                     }
                 }
-            } else if (currentSandboxMode === 'ice') {
-                buildIceIhLattice3D(w, h);
             } else if (currentSandboxMode === 'sio2') {
                 sbSio2Bonds = [];
                 let id = 0;
@@ -1812,9 +1783,6 @@
                     resolveCollisions(sbParticles);
                     drawCsClMolten(ctx, speedMult, w, h, dt);
                 }
-            } else if (currentSandboxMode === 'ice') {
-                speedMult = 0.12 + ((sandboxTemp + 50) / 50) * 0.3;
-                drawIceLattice(ctx, speedMult, dt);
             } else if (currentSandboxMode === 'sio2') {
                 speedMult = 0.2 + (sandboxTemp / 3000) * 1.5;
                 drawSio2Lattice(ctx, speedMult, dt);
@@ -1928,7 +1896,7 @@
                 if (sbHammerAnimating && sbHammerOffset > 8 && p.oy3d > 0) {
                     y3d += cleaveShift;
                 }
-                const proj = project3DTo2D(x3d, y3d, z3d, sandboxCanvas.width, sandboxCanvas.height, 1.05);
+                const proj = project3DTo2D(x3d, y3d, z3d, sandboxCanvas.width, sandboxCanvas.height, 1.25);
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
@@ -2762,12 +2730,8 @@
         }
 
         // ==========================================
-        // 10.5 ICE, SiO2 & METAL LATTICE ANIMATORS
+        // 10.5 SiO2 & METAL LATTICE ANIMATORS
         // ==========================================
-        function drawIceLattice(ctx, vFactor, dt) {
-            drawIceIhLattice3D(ctx, vFactor, dt);
-        }
-
         function drawSio2Lattice(ctx, vFactor, dt) {
             if (!window.sbUserInteracted || !window.sbUserInteracted()) {
                 sbRotationTheta += 0.003 * vFactor * dt * 0.06;
@@ -3002,11 +2966,6 @@
                     toastZh = '熔融態氯化銫具有流動性，無法被敲碎！';
                     toastEn = 'Molten CsCl is fluid and cannot be shattered!';
                 }
-            } else if (currentSandboxMode === 'ice') {
-                targetMax = 20;
-                isShattered = true;
-                toastZh = '敲擊碎裂！冰的開放型氫鍵晶格受外力時氫鍵斷裂，晶體結構崩解！';
-                toastEn = 'Shattered! The open hydrogen-bonded ice lattice breaks apart when struck — H-bonds cleave and the crystal collapses!';
             } else if (currentSandboxMode === 'sio2') {
                 toastZh = '敲擊失敗！二氧化矽擁有巨型共價網絡結構，所有 Si–O 鍵極為牢固，硬度極高！';
                 toastEn = 'Hammer failed! SiO₂ has a giant covalent network with extremely strong Si–O bonds throughout.';
@@ -3019,7 +2978,7 @@
                 toastEn = 'Metal deformed! Copper ion layers slip under the hammer — delocalized electrons allow plastic deformation without shattering (malleable)!';
             }
 
-            if (isShattered && (currentSandboxMode === 'nacl' || currentSandboxMode === 'cscl' || currentSandboxMode === 'ice' || (currentSandboxMode === 'water' && sandboxTemp <= 0))) {
+            if (isShattered && (currentSandboxMode === 'nacl' || currentSandboxMode === 'cscl' || (currentSandboxMode === 'water' && sandboxTemp <= 0))) {
                 spawnShatterFragments(sandboxCanvas.width / 2, sandboxCanvas.height / 2, 18);
             }
 
@@ -3125,8 +3084,12 @@
                     toastZh = '導電成功！熔融狀態下的氯化銫離子完全解離成帶電游離陰陽離子，可定向移動！';
                     toastEn = 'Conducting! Molten CsCl has free dissolved ions that easily drift to electrodes!';
                 } else if (currentSandboxMode === 'water') {
-                    toastZh = '導電失敗。純水中分子均為電中性，沒有自由移動的帶電離子或電子！';
-                    toastEn = 'No conduction. Pure water molecules are electrically neutral (no mobile charges).';
+                    toastZh = sandboxTemp <= 0
+                        ? '導電失敗。冰晶中水分子為電中性，無自由移動的帶電粒子！'
+                        : '導電失敗。純水中分子均為電中性，沒有自由移動的帶電離子或電子！';
+                    toastEn = sandboxTemp <= 0
+                        ? 'No conduction. Water molecules in ice are electrically neutral with no mobile charges.'
+                        : 'No conduction. Pure water molecules are electrically neutral (no mobile charges).';
                 } else if (currentSandboxMode === 'co2') {
                     toastZh = '導電失敗。二氧化碳分子均為電中性，沒有自由移動的帶電離子或電子！';
                     toastEn = 'No conduction. CO2 molecules are electrically neutral (no mobile charges).';
@@ -3136,9 +3099,6 @@
                 } else if (currentSandboxMode === 'sio2') {
                     toastZh = '導電失敗。二氧化矽中所有電子均被牢固鎖定於 Si–O 共價鍵，無自由移動電子！';
                     toastEn = 'No conduction. All electrons in SiO₂ are localized in strong Si–O covalent bonds.';
-                } else if (currentSandboxMode === 'ice') {
-                    toastZh = '導電失敗。冰晶中水分子為電中性，無自由移動的帶電粒子！';
-                    toastEn = 'No conduction. Water molecules in ice are electrically neutral with no mobile charges.';
                 } else if (currentSandboxMode === 'nacl' && sandboxTemp < 801) {
                     toastZh = '導電失敗。固態離子晶格中，陰陽離子被牢牢束縛在固定位置，無法移動！';
                     toastEn = 'No conduction. Ions in solid lattice are locked in fixed positions.';
