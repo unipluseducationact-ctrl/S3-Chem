@@ -9,6 +9,7 @@ const WEBP_QUALITY = 82;
 
 const GLOB_PATTERNS = [
   path.join(ROOT, "public/tools/lab-hazard-match/assets"),
+  path.join(ROOT, "public/summary"),
   path.join(ROOT, "images"),
 ];
 
@@ -35,10 +36,11 @@ async function collectPngFiles(dir) {
     } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".png")) {
       const relFromRoot = path.relative(ROOT, full).replace(/\\/g, "/");
       const isLabAsset = relFromRoot.startsWith("public/tools/lab-hazard-match/assets/");
+      const isSummaryAsset = relFromRoot.startsWith("public/summary/");
       const isImagesPreview =
         relFromRoot.startsWith("images/") &&
         IMAGE_NAME_PATTERNS.some((re) => re.test(entry.name));
-      if (isLabAsset || isImagesPreview) {
+      if (isLabAsset || isSummaryAsset || isImagesPreview) {
         results.push(full);
       }
     }

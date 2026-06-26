@@ -27,6 +27,11 @@
   --search-field-text: #1d1d1f;
   --search-panel-bg: rgba(255, 255, 255, 0.97);
   --search-panel-border: rgba(255, 255, 255, 0.5);
+  --vp-pad: clamp(12px, 2vw, 24px);
+  --nav-offset: calc(12px + 56px * var(--global-nav-scale) + 12px);
+  --content-max-w: min(1440px, calc(100dvw - var(--vp-pad) * 2));
+  --modal-w: min(1300px, calc(100dvw - var(--vp-pad) * 2));
+  --modal-h: min(750px, calc(100dvh - var(--vp-pad) * 2));
 }
 
 * {
@@ -83,7 +88,7 @@ body {
   display: none;
   align-items: flex-start; /* Prevent vertical center clipping on overflow */
   justify-content: center;
-  padding-top: 60px;
+  padding-top: var(--nav-offset);
 }
 
 .blank-page.active {
@@ -103,8 +108,8 @@ body {
 /* Main container - full viewport, single layout mode */
 #main-container {
   height: 100%;
-  min-width: 1280px;
-  padding: 80px 20px 20px;
+  min-width: 0;
+  padding: calc(var(--nav-offset) + 8px) var(--vp-pad) var(--vp-pad);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -112,6 +117,12 @@ body {
   /* Start from top to prevent clipping, centering handled by JS/Padding */
   overflow: visible;
   box-sizing: border-box;
+}
+
+@media (max-height: 820px) {
+  #main-container {
+    padding-top: calc(var(--nav-offset) + 8px);
+  }
 }
 
 /* ============================================================
@@ -669,6 +680,12 @@ body.hide-nav .floating-about-btn {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+body.hide-nav #eit-controller,
+body.hide-nav #eit-mobile-root {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 #settings-page.active ~ .floating-about-btn,
 #notes-page.active ~ .floating-about-btn,
 #flashcards-page.active ~ .floating-about-btn {
@@ -949,6 +966,18 @@ body.hide-nav .version-dropdown {
    ========================================= */
 .nav-hide-brand .nav-brand {
   display: none !important;
+}
+
+.nav-compact-pills .nav-pill-btn {
+  min-width: calc(40px * var(--global-nav-scale));
+  padding: calc(8px * var(--global-nav-scale)) calc(10px * var(--global-nav-scale));
+  font-size: calc(0.78rem * var(--global-nav-scale));
+}
+
+@media (max-height: 700px) {
+  .global-nav {
+    top: 8px;
+  }
 }
 
 /* =========================================

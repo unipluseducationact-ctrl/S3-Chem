@@ -311,10 +311,26 @@
       white-space: pre-line;
     }
 
+    @media (max-width: 960px) {
+      .fc-element-panel { grid-template-columns: 1fr; }
+      .fc-element-info { max-height: min(280px, 38dvh); }
+      .fc-info-row { grid-template-columns: 120px 1fr; }
+    }
+
     @media (max-width: 720px) {
       .fc-element-panel { grid-template-columns: 1fr; }
       .fc-element-info { max-height: 280px; }
       .fc-info-row { grid-template-columns: 120px 1fr; }
+    }
+
+    @media (max-height: 820px) {
+      .fc-element-atom {
+        min-height: min(220px, 32dvh);
+      }
+
+      .fc-element-info {
+        max-height: min(280px, 34dvh);
+      }
     }
 
     .card-hint {
@@ -635,6 +651,15 @@
       background: rgba(17, 24, 39, 0.82);
       color: #fff;
       border-color: rgba(0, 0, 0, 0.18);
+    }
+
+    @media (max-width: 960px) {
+      .fc-set5-back {
+        grid-template-columns: 1fr;
+      }
+      .fc-set5-atom {
+        min-height: 240px;
+      }
     }
 
     @media (max-width: 720px) {

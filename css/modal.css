@@ -14,7 +14,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 3000;
+  z-index: 12000;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -34,11 +34,11 @@
 
 .modal-content {
   background: var(--modal-bg-glass);
-  width: calc(100vw - clamp(10px, 6vw, 200px));
-  min-width: 800px;
-  height: calc(100vh - clamp(10px, 10vh, 200px));
-  max-width: 1300px;
-  max-height: 750px;
+  width: var(--modal-w);
+  height: var(--modal-h);
+  min-width: 0;
+  max-width: none;
+  max-height: none;
   border-radius: 32px;
   box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.12);
   display: flex;
@@ -257,8 +257,8 @@
 }
 
 .modal-info-pane {
-  flex: 0 0 480px;
-  min-width: 320px;
+  flex: 0 0 clamp(280px, 38%, 480px);
+  min-width: 0;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -615,7 +615,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--modal-text-main);
-  overflow: visible;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   box-sizing: border-box;
@@ -2163,6 +2163,28 @@
     opacity: 1;
     pointer-events: auto;
     transform: translateX(-50%) translateY(50%);
+  }
+}
+
+/* Stack info + 3D panes on narrow or tall-narrow viewports */
+@media (max-width: 960px), (max-aspect-ratio: 5/4) and (max-width: 1200px) {
+  .modal-content:not(.welcome-redesign):not(.changelog-modal-content) {
+    flex-direction: column;
+    width: min(var(--modal-w), calc(100dvw - 16px));
+    height: min(var(--modal-h), calc(100dvh - 16px));
+  }
+
+  .modal-info-pane {
+    flex: 0 0 auto;
+    max-height: 45dvh;
+    width: 100%;
+  }
+
+  .modal-visual-pane {
+    flex: 1;
+    min-height: 240px;
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
   }
 }
 

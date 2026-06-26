@@ -52,6 +52,12 @@
   gap: calc(var(--tvmin, 1vmin) * 1.45);
 }
 
+@media (max-height: 820px) {
+  #periodic-table.s3-mode {
+    padding-top: calc(var(--nav-offset, 80px) + 48px + env(safe-area-inset-top, 0px));
+  }
+}
+
 #periodic-table.s3-mode #table-legend {
   display: none !important;
 }
@@ -902,6 +908,12 @@ html[lang="ar"] .eit-mode-btn {
   .eit-controller {
     gap: 4px;
     padding: 0 2px;
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .eit-chip-group {
+    min-width: 120px;
   }
 
   .eit-property-trigger {

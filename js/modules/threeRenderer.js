@@ -36,6 +36,40 @@ let _v3 = null;
 // Direct references to avoid getObjectByName() every frame
 let _nucleusGroupRef = null;
 let _wobbleGroupRef = null;
+let paneResizeObserver = null;
+let visibilityListenerBound = false;
+
+function attachPaneResizeObserver() {
+  if (paneResizeObserver || !_container) return;
+  const pane = _container.closest(".modal-visual-pane");
+  if (!pane) return;
+  paneResizeObserver = new ResizeObserver(() => {
+    onWindowResize();
+  });
+  paneResizeObserver.observe(pane);
+}
+
+function detachPaneResizeObserver() {
+  paneResizeObserver?.disconnect();
+  paneResizeObserver = null;
+}
+
+function bindVisibilityPause() {
+  if (visibilityListenerBound || typeof document === "undefined") return;
+  visibilityListenerBound = true;
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+      return;
+    }
+    if (renderer && atomGroup && !animationId) {
+      animateAtom();
+    }
+  });
+}
 
 // ===== Quality profile (segment counts only — trails are always 10) =====
 function getQualityProfile(atomicNumber) {
@@ -187,6 +221,7 @@ export function init3DScene(container) {
         renderer.setSize(_container.clientWidth, _container.clientHeight);
       }
     }
+    attachPaneResizeObserver();
     return;
   }
   if (!_container) {
@@ -226,6 +261,9 @@ export function init3DScene(container) {
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     _container.appendChild(renderer.domElement);
+
+    bindVisibilityPause();
+    attachPaneResizeObserver();
 
     scene.add(new THREE.AmbientLight(0xffffff, 1.0));
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.4);
@@ -605,6 +643,10 @@ export function reset3DView() {
 // ===== Animation Loop =====
 export function animateAtom() {
   if (!renderer) return;
+  if (document.hidden) {
+    animationId = null;
+    return;
+  }
   animationId = requestAnimationFrame(animateAtom);
 
   const isPaused = window._uniplusAnimPaused || false;
@@ -774,6 +816,7 @@ export function animateAtom() {
 export function cleanup3D(full) {
   if (animationId) cancelAnimationFrame(animationId);
   animationId = null;
+  detachPaneResizeObserver();
   if (full && eventAbortController) {
     eventAbortController.abort();
     eventAbortController = null;

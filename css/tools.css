@@ -8,8 +8,7 @@
 .chemistry-tools-page {
   padding: 0;
   position: relative;
-  overflow: hidden;
-  /* STRICT NO-SCROLL POLICY */
+  overflow-y: auto;
   height: 100%;
 }
 
@@ -53,7 +52,7 @@ html.dark-theme .chemistry-tools-page::before {
   justify-content: flex-start;
   min-height: 0;
   /* Extra top space so "Interactive Tools" clears the fixed global nav (pill bar). */
-  padding-top: clamp(52px, 7vh, 84px);
+  padding-top: var(--nav-offset);
 }
 
 .chemistry-tools-page .chem-tools-container {
@@ -116,12 +115,24 @@ html.dark-theme .chemistry-tools-page::before {
 .chem-tool-card--preview-tall {
   padding: clamp(12px, 1.8vh, 18px);
   gap: clamp(10px, 1.5vh, 14px);
-  min-height: min(52vh, 520px);
+  min-height: clamp(220px, 40dvh, 520px);
 }
 
 @media (min-width: 900px) {
   .chem-tool-card--preview-tall {
-    min-height: min(62vh, 640px);
+    min-height: clamp(260px, 48dvh, 640px);
+  }
+}
+
+@media (max-height: 820px) {
+  .chem-tool-card--preview-tall {
+    min-height: clamp(180px, 34dvh, 420px);
+  }
+
+  @media (min-width: 900px) {
+    .chem-tool-card--preview-tall {
+      min-height: clamp(200px, 38dvh, 480px);
+    }
   }
 }
 
@@ -868,7 +879,7 @@ html.dark-theme .feature-tag {
 
 
 .feature-modal-body {
-  padding: 60px;
+  padding: clamp(16px, 4vw, 60px);
   height: 100%;
   overflow: auto;
   display: flex;
@@ -880,7 +891,7 @@ html.dark-theme .feature-tag {
 .tool-padding-label {
   position: absolute;
   top: 20px;
-  left: 60px;
+  left: clamp(16px, 4vw, 60px);
   font-size: 1.25rem;
   font-weight: 700;
   color: #1e293b;

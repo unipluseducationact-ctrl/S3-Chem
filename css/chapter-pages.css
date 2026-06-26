@@ -5,7 +5,7 @@
 .chapter-page {
   align-items: stretch;
   justify-content: flex-start;
-  padding-top: 56px;
+  padding-top: var(--nav-offset);
   overflow: hidden;
 }
 
@@ -106,6 +106,21 @@
   display: block;
   width: 100%;
   height: auto;
+}
+
+@media (max-height: 820px) {
+  .summary-infographic-media {
+    max-height: min(52dvh, 560px);
+    overflow: auto;
+  }
+
+  .summary-infographic-img {
+    max-height: min(52dvh, 560px);
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    object-fit: contain;
+  }
 }
 
 .summary-infographic-actions {
@@ -221,6 +236,13 @@ html[lang="zh"] .summary-lang--zh-hant {
   .notes-pdf-frame-wrap {
     min-height: min(70dvh, 720px);
     height: min(82dvh, 900px);
+  }
+}
+
+@media (max-height: 900px) {
+  .notes-pdf-frame-wrap {
+    min-height: min(50dvh, 480px);
+    height: min(55dvh, 600px);
   }
 }
 

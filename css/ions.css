@@ -220,7 +220,7 @@ html[lang|="zh"] .ions-table-page .element .name.name-short {
 
 /* Ion Info Card Style */
 .ion-info-card {
-  min-height: 300px;
+  min-height: min(300px, 40dvh);
   display: flex;
   flex-direction: column;
   justify-content: center;

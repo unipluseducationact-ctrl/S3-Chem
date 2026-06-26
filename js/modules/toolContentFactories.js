@@ -59,7 +59,7 @@ function generateBalancerToolContent() {
                 border-radius: 16px;
                 padding: 10px 0;
                 width: 100%;
-                min-width: 480px;
+                min-width: 0;
                 flex: 1;
                 display: flex;
                 align-items: center;
@@ -80,7 +80,7 @@ function generateBalancerToolContent() {
             .physics-scale-container {
                 perspective: 1000px;
                 width: 100%;
-                min-width: 460px;
+                min-width: 0;
                 min-height: 200px;
                 flex: 1;
                 position: relative;

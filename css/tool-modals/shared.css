@@ -357,6 +357,12 @@
   align-items: start;
 }
 
+@media (max-width: 900px) {
+  .lego-tool-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 .lego-input-panel {
   display: flex;
   flex-direction: column;

@@ -716,6 +716,77 @@ function clearHeadlineResizeHandler() {
   headlineResizeHandler = null;
 }
 
+function resetElementHeadlineName(headlineName) {
+  if (!headlineName) return;
+  headlineName.classList.remove("scrolling-name");
+  headlineName.onmouseenter = null;
+  headlineName.onmouseleave = null;
+  headlineName.style.removeProperty("font-size");
+  headlineName.style.removeProperty("margin-left");
+  headlineName.style.removeProperty("margin-right");
+}
+
+function applyElementHeadlineScrolling(headlineName, fullName) {
+  headlineName.classList.add("scrolling-name");
+  headlineName.innerHTML = `<span class="scrolling-text"><span>${fullName}</span><span>${fullName}</span></span>`;
+  headlineName.style.fontSize = "1.5rem";
+
+  setTimeout(() => {
+    const textEl = headlineName.querySelector(".scrolling-text");
+    if (!textEl) return;
+
+    const halfWidth = textEl.scrollWidth / 2;
+    const targetX = -halfWidth;
+    const speed = halfWidth / 8000;
+    let player = textEl.animate(
+      [
+        { transform: "translateX(0)", offset: 0 },
+        { transform: "translateX(0)", offset: 0.05 },
+        { transform: `translateX(${targetX}px)`, offset: 0.95 },
+        { transform: `translateX(${targetX}px)`, offset: 1 },
+      ],
+      {
+        duration: 8000,
+        easing: "ease-in-out",
+        fill: "forwards",
+        delay: 250,
+      },
+    );
+
+    headlineName.onmouseenter = () => {
+      const style = window.getComputedStyle(textEl);
+      const matrix = new DOMMatrix(style.transform);
+      const currentX = matrix.m41;
+      player.cancel();
+      const dist = Math.abs(targetX - currentX);
+      const duration = dist / speed;
+      player = textEl.animate(
+        [{ transform: `translateX(${currentX}px)` }, { transform: `translateX(${targetX}px)` }],
+        { duration: duration > 0 ? duration : 0, easing: "linear" },
+      );
+      player.onfinish = () => {
+        player = textEl.animate(
+          [{ transform: "translateX(0)" }, { transform: `translateX(${targetX}px)` }],
+          { duration: 8000, easing: "linear", iterations: Infinity },
+        );
+      };
+    };
+
+    headlineName.onmouseleave = () => {
+      const style = window.getComputedStyle(textEl);
+      const matrix = new DOMMatrix(style.transform);
+      const currentX = matrix.m41;
+      player.cancel();
+      const dist = Math.abs(targetX - currentX);
+      const duration = dist / speed;
+      player = textEl.animate(
+        [{ transform: `translateX(${currentX}px)` }, { transform: `translateX(${targetX}px)` }],
+        { duration: duration > 0 ? duration : 0, easing: "linear", fill: "forwards" },
+      );
+    };
+  }, 50);
+}
+
 function getRepresentativeMassNumber(atomicNumber, fallback = null) {
   if (atomicNumber < 1 || atomicNumber > REPRESENTATIVE_MASS_NUMBERS.length) {
     return fallback;
@@ -2544,13 +2615,15 @@ export function showModal(element) {
     if (annotation) {
       displayHeadline = `${displayHeadline} ${annotation}`;
     }
+    resetElementHeadlineName(headlineName);
     headlineName.textContent = displayHeadline;
     const resizeFont = () => {
+      resetElementHeadlineName(headlineName);
+      headlineName.textContent = displayHeadline;
       const container = headlineName.parentElement;
       const leftGroup = container.querySelector(".headline-left-group");
       if (!container || !leftGroup) return;
       const containerWidth = container.offsetWidth;
-      // Cap left group to 55% of container so name always gets space
       const leftGroupWidth = Math.min(leftGroup.offsetWidth, containerWidth * 0.55);
       let margins = 80;
       let fontSize = 2.5;
@@ -2573,6 +2646,12 @@ export function showModal(element) {
           fontSize -= 0.1;
           headlineName.style.fontSize = fontSize + "rem";
         }
+      }
+      if (
+        displayHeadline.length > 14 ||
+        headlineName.scrollWidth > availableWidth
+      ) {
+        applyElementHeadlineScrolling(headlineName, displayHeadline);
       }
     };
     setTimeout(resizeFont, 0);
@@ -3280,6 +3359,7 @@ export function initModalUI() {
     document.body.classList.remove("hide-nav");
     document.title = "Uni+";
     clearHeadlineResizeHandler();
+    resetElementHeadlineName(document.getElementById("headline-name"));
     cleanup3D(true);
     atomContainer.classList.remove("visible");
     if (window._uniplusAtomPauseBtn) window._uniplusAtomPauseBtn.style.display = "none";

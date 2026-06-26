@@ -1,36 +1,24 @@
-import { getChemToolContent } from "./js/modules/chemToolContent.js";
-import { attachToolEventListeners } from "./js/modules/chemToolInteractions.js";
 import {
   buildPeriodicTable,
   eitController,
   initModalUI,
-  reRenderCurrentAtomModal,
   setGlobalUnit,
   l3UnitState
 } from "./js/modules/uiController.js";
 import { syncEitMobileMount } from "./js/modules/ui/eitMobileController.js";
 import { initPageController } from "./js/modules/pageController.js";
-import { initChemFlashcard } from "./js/modules/chemFlashcardApp.js";
-import { createToolsModalController } from "./js/modules/toolsModalController.js";
 import {
   applyAnimationPauseState,
   getSavedAnimationState,
   initSettingsController,
 } from "./js/modules/settingsController.js";
-import { initMascotController } from "./js/modules/mascotController.js";
 import { initElementSearch } from "./js/modules/elementSearchController.js";
 import {
   initLangController,
   onLangChange,
   registerCacheCleanup,
-  t
 } from "./js/modules/langController.js";
 import { initEntryLanding } from "./js/modules/onboardingController.js";
-import {
-  initWorksheetHub,
-  applyWorksheetEmbedIframesLang,
-} from "./js/modules/worksheetHubController.js";
-import { initChapterDrawOverlays } from "./js/modules/chapterDrawOverlay.js";
 
 function isRealMobileDevice() {
   // Wide viewports (> 1024px) get the full desktop app, even on touch devices like iPad.
@@ -122,6 +110,65 @@ async function ensureWorksheetReady() {
 }
 
 window.ensureWorksheetReady = ensureWorksheetReady;
+
+let toolsBundlePromise = null;
+let toolsModalController = null;
+
+async function ensureToolsReady() {
+  if (!toolsBundlePromise) {
+    toolsBundlePromise = Promise.all([
+      import("./js/modules/toolsModalController.js"),
+      import("./js/modules/chemToolContent.js"),
+      import("./js/modules/chemToolInteractions.js"),
+    ]).then(([toolsMod, contentMod, interactionsMod]) => {
+      toolsModalController = toolsMod.createToolsModalController({
+        getToolContent: contentMod.getChemToolContent,
+        attachToolEventListeners: interactionsMod.attachToolEventListeners,
+      });
+      toolsModalController.init();
+      registerCacheCleanup(() => toolsModalController.clearToolContentCache());
+      return toolsModalController;
+    });
+  }
+  return toolsBundlePromise;
+}
+
+let worksheetHubPromise = null;
+let worksheetHubApi = null;
+
+async function ensureWorksheetHubReady() {
+  if (!worksheetHubPromise) {
+    worksheetHubPromise = import("./js/modules/worksheetHubController.js");
+  }
+  const hubMod = await worksheetHubPromise;
+  if (!worksheetHubApi) {
+    worksheetHubApi = hubMod.initWorksheetHub();
+  }
+  return { hubMod, api: worksheetHubApi };
+}
+
+let flashcardsPromise = null;
+
+async function ensureFlashcardsReady() {
+  if (!flashcardsPromise) {
+    flashcardsPromise = import("./js/modules/chemFlashcardApp.js").then((mod) => {
+      mod.initChemFlashcard();
+    });
+  }
+  return flashcardsPromise;
+}
+
+function scheduleIdleDeferredModules() {
+  const run = () => {
+    void import("./js/modules/mascotController.js").then((m) => m.initMascotController());
+    void import("./js/modules/chapterDrawOverlay.js").then((m) => m.initChapterDrawOverlays());
+  };
+  if (typeof requestIdleCallback === "function") {
+    requestIdleCallback(run, { timeout: 4000 });
+  } else {
+    setTimeout(run, 2000);
+  }
+}
 
 function loadHeroAtomModule() {
   if (heroAtomModulePromise) return heroAtomModulePromise;
@@ -222,6 +269,7 @@ function initPeriodicTableScale() {
 
       const MIN_READABLE_SCALE = 0.65;
       const SCROLL_THRESHOLD = 1150; // Below this, always scroll
+      const ULTRAWIDE_WIDTH_CAP = 1600;
 
       // 2. Smart width decision: try fitting at current window width first
       let tableWidth;
@@ -232,7 +280,11 @@ function initPeriodicTableScale() {
         useScrollMode = true;
       } else {
         // Try fitting at current window width
-        const tryWidth = window.innerWidth - 40;
+        let tryWidth = window.innerWidth - 40;
+        const aspectRatio = window.innerWidth / Math.max(window.innerHeight, 1);
+        if (window.innerWidth > 1700 && aspectRatio > 1.7) {
+          tryWidth = Math.min(tryWidth, ULTRAWIDE_WIDTH_CAP);
+        }
         const tryTvmin = computeTvmin(tryWidth);
         table.style.setProperty("--tvmin", `${tryTvmin}px`);
         table.style.width = `${tryWidth}px`;
@@ -356,6 +408,42 @@ function initNavResponsive() {
 
   const SAFETY_GAP = 32;
 
+  function restoreNavPillLabels() {
+    nav.querySelectorAll(".nav-pill-btn").forEach((btn) => {
+      if (btn.dataset.fullLabel) {
+        btn.textContent = btn.dataset.fullLabel;
+      }
+    });
+  }
+
+  function compactNavPillLabels() {
+    nav.querySelectorAll(".nav-pill-btn").forEach((btn) => {
+      if (!btn.dataset.fullLabel) {
+        btn.dataset.fullLabel = btn.textContent.trim();
+      }
+      const match = btn.dataset.fullLabel.match(/^(\d+)\./);
+      btn.textContent = match ? match[1] : btn.dataset.fullLabel.slice(0, 2);
+    });
+  }
+
+  function getNavContentWidth(includeBrand) {
+    const navInnerWidth = nav.clientWidth - 40;
+    const logo = nav.querySelector(".nav-logo-link");
+    const brand = nav.querySelector(".nav-brand");
+    const pill = nav.querySelector(".global-nav-pill");
+    const rightSection = nav.querySelector(".nav-right-section");
+
+    const logoW = logo ? logo.offsetWidth : 0;
+    const brandW = includeBrand && brand ? brand.offsetWidth : 0;
+    const pillW = pill ? pill.offsetWidth : 0;
+    const rightW = rightSection ? rightSection.offsetWidth : 0;
+    const navGap = 12;
+    const brandGap = includeBrand && brandW > 0 ? 10 : 0;
+
+    const totalNeeded = logoW + brandGap + brandW + navGap + pillW + navGap + rightW + SAFETY_GAP * 2;
+    return { navInnerWidth, totalNeeded };
+  }
+
   function syncGlobalNavScale() {
     const width = window.innerWidth;
     const height = Math.max(window.innerHeight, 1);
@@ -374,30 +462,34 @@ function initNavResponsive() {
       scale -= aspectReduction + widthReduction;
     }
 
-    scale = Math.max(0.86, Math.min(1, scale));
+    if (height <= 700) {
+      scale = Math.min(scale, 0.82);
+    }
+
+    const scaleFloor = height <= 700 ? 0.82 : 0.86;
+    scale = Math.max(scaleFloor, Math.min(1, scale));
     root.style.setProperty("--global-nav-scale", scale.toFixed(3));
   }
 
   function checkNavCollision() {
     syncGlobalNavScale();
-    nav.classList.remove("nav-hide-brand");
+    nav.classList.remove("nav-hide-brand", "nav-compact-pills");
+    restoreNavPillLabels();
     void nav.offsetWidth;
 
-    const navInnerWidth = nav.clientWidth - 40;
-    const logo = nav.querySelector(".nav-logo-link");
-    const brand = nav.querySelector(".nav-brand");
-    const pill = nav.querySelector(".global-nav-pill");
-
-    const logoW = logo ? logo.offsetWidth : 0;
-    const brandW = brand ? brand.offsetWidth : 0;
-    const pillW = pill ? pill.offsetWidth : 0;
-    const navGap = 12;
-    const brandGap = brand && brandW > 0 ? 10 : 0;
-
-    const totalNeeded = logoW + brandGap + brandW + navGap + pillW + SAFETY_GAP * 2;
+    let { navInnerWidth, totalNeeded } = getNavContentWidth(true);
 
     if (totalNeeded > navInnerWidth) {
       nav.classList.add("nav-hide-brand");
+      void nav.offsetWidth;
+      ({ navInnerWidth, totalNeeded } = getNavContentWidth(false));
+    }
+
+    if (totalNeeded > navInnerWidth) {
+      nav.classList.add("nav-compact-pills");
+      compactNavPillLabels();
+      void nav.offsetWidth;
+      ({ navInnerWidth, totalNeeded } = getNavContentWidth(false));
     }
   }
 
@@ -434,37 +526,28 @@ function initMainApp() {
   }
   initModalUI();
 
-  const toolsModalController = createToolsModalController({
-    getToolContent: getChemToolContent,
-    attachToolEventListeners,
-  });
-  toolsModalController.init();
-
-  // Register tool cache cleanup when language changes
-  registerCacheCleanup(() => {
-    toolsModalController.clearToolContentCache();
-  });
-
-  const worksheetHub = initWorksheetHub();
-
   const pageCtrl = initPageController({
     onTablePageShown: () => {
       if (window._scalePeriodicTable) window._scalePeriodicTable(true);
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onToolsPageShown: () => {
-      setTimeout(() => toolsModalController.initChemToolCards(), 100);
+      void ensureToolsReady()
+        .then((ctrl) => setTimeout(() => ctrl.initChemToolCards(), 100))
+        .catch((e) => console.error("Tools lazy init error:", e));
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onLabPageShown: () => {
-      setTimeout(() => toolsModalController.initChemToolCards(), 100);
+      void ensureToolsReady()
+        .then((ctrl) => setTimeout(() => ctrl.initChemToolCards(), 100))
+        .catch((e) => console.error("Tools lazy init error:", e));
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onWorksheetPageShown: () => {
-      void ensureWorksheetReady()
-        .then(() => {
-          worksheetHub.resetWorksheetHub();
-          applyWorksheetEmbedIframesLang();
+      void Promise.all([ensureWorksheetHubReady(), ensureWorksheetReady()])
+        .then(({ hubMod, api }) => {
+          api.resetWorksheetHub();
+          hubMod.applyWorksheetEmbedIframesLang();
         })
         .catch((e) => console.error("Worksheet lazy init error:", e));
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
@@ -476,7 +559,7 @@ function initMainApp() {
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onFlashcardsPageShown: () => {
-      requestAnimationFrame(() => initChemFlashcard());
+      void ensureFlashcardsReady().catch((e) => console.error("Flashcards lazy init error:", e));
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
   });
@@ -503,10 +586,7 @@ function initMainApp() {
     setGlobalUnit,
   });
 
-  // Initialize mascot chemistry assistant
-  initMascotController();
-
-  initChapterDrawOverlays();
+  scheduleIdleDeferredModules();
 }
 
 function bootstrapApp() {
