@@ -1182,7 +1182,6 @@ function openIonModal(ion) {
                         <div class="ion-item">
                             <span class="ion-symbol"><sup>${iso.name.split("-")[1]}</sup>${ion.symbol}</span>
                             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; line-height: 1;">
-                                <span style="font-weight: 600; font-size: 0.95rem; margin-bottom: 2px;">${iso.neutron.replace("n", " n⁰")}</span>
                                 <span style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.6; font-weight: 700; letter-spacing: 0.5px; ${iso.percent === "Radioactive" ? "color: #B91C1C;" : ""}">${iso.percent}</span>
                             </div>
                         </div>

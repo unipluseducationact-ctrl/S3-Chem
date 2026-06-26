@@ -2107,10 +2107,6 @@ function populateSimplifiedView(element) {
     if (window.uniplusVersion === 'new' && v2Data && v2Data.level2_atomic.mass.standard) {
       avgMass = v2Data.level2_atomic.mass.standard;
     }
-    const representativeMass = getRepresentativeMassNumber(element.number);
-    const neutronCount = representativeMass !== null
-      ? representativeMass - element.number
-      : "—";
     let level2Config = finallyElementData.level3_properties?.electronic?.configuration || "—";
     if (window.uniplusVersion === 'new' && v2Data && v2Data.level3_properties?.electronic?.configuration) {
       level2Config = v2Data.level3_properties.electronic.configuration;
@@ -2118,7 +2114,6 @@ function populateSimplifiedView(element) {
 
     setText("#l2-avg-mass-value", formatAverageAtomicMass(avgMass, element.number, element.weight));
     setText("#l2-protons-value", element.number.toString());
-    setText("#l2-neutrons-value", String(neutronCount));
     setText("#l2-electrons-value", element.number.toString());
     const level2ConfigNode = yellowCard.querySelector("#l2-configuration-value");
     if (level2ConfigNode) {
@@ -2163,7 +2158,6 @@ function populateSimplifiedView(element) {
         if (!massNumber) return;
         const percent = (iso.percent || "").toLowerCase();
         const isStable = percent && !percent.includes("trace") && !percent.includes("radioactive");
-        const neutronNumber = iso.neutron?.replace("n", "").replace("⁰", "0") || "";
         const isoItem = createExpandablePill({
           container: isotopesSection,
           detailMarkup: buildIsotopeDetailMarkup(
@@ -2173,7 +2167,6 @@ function populateSimplifiedView(element) {
           summaryHtml: `
             <span class="ion-symbol ion-symbol-isotope"><span class="isotope-mass-number">${escapeHtml(massNumber)}</span><span class="isotope-element-symbol">${escapeHtml(element.symbol)}</span></span>
             <div class="ion-isotope-meta">
-                              <span class="ion-isotope-neutron" style="line-height: 1; margin-bottom: 2px;">${neutronNumber} n⁰</span>
               <span class="ion-isotope-stability ${isStable ? "stable" : "radioactive"}" style="line-height: 1;">${isStable ? t("elementModal.stable") : t("elementModal.radioactive")}</span>
             </div>
           `,
@@ -2785,7 +2778,6 @@ export function showModal(element) {
             (iso) => `
                           <tr>
                               <td class="iso-name">${iso.name}</td>
-                              <td class="iso-detail"><span class="n-badge">${iso.neutron}n</span></td>
                               <td class="iso-percent">${iso.percent}</td>
                           </tr>
                       `,
@@ -3113,16 +3105,11 @@ function populateLevel1(element, eduData) {
   const finallyElementData = finallyData[element.number] || {};
   const level1Protons = document.getElementById("level1-protons");
   const level1Electrons = document.getElementById("level1-electrons");
-  const level1Neutrons = document.getElementById("level1-neutrons");
   const level1Mass = document.getElementById("level1-mass");
   const level1Density = document.getElementById("level1-density");
   const level1Melt = document.getElementById("level1-melt");
   if (level1Protons) level1Protons.textContent = element.number;
   if (level1Electrons) level1Electrons.textContent = element.number;
-  if (level1Neutrons) {
-    const massNumber = getRepresentativeMassNumber(element.number);
-    level1Neutrons.textContent = massNumber !== null ? (massNumber - element.number) : "—";
-  }
   if (level1Mass) level1Mass.textContent = finallyElementData.level2_atomic?.mass?.highSchool || "—";
   if (level1Density) {
     level1Density.textContent = finallyElementData.level3_properties?.physical?.density || "—";

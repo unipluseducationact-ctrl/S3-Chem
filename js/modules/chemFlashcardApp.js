@@ -417,9 +417,8 @@ export function initChemFlashcard() {
         $("backSub").textContent = row.isotopes
           .map((iso) => {
             const nm = iso.name != null ? String(iso.name) : "";
-            const nn = iso.neutron != null ? String(iso.neutron) : "";
             const pct = iso.percent != null ? String(iso.percent) : "";
-            return [nm, nn, pct].filter(Boolean).join(" · ");
+            return [nm, pct].filter(Boolean).join(" · ");
           })
           .join("\n");
       }
