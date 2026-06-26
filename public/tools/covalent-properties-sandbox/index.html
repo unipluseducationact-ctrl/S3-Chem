@@ -468,6 +468,12 @@
                         </label>
                     </div>
 
+                    <div id="sb-rotate-hint" style="display:none; position:absolute; bottom:15px; right:15px; pointer-events:none; background:rgba(11,17,38,0.75); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.08); padding:6px 10px; border-radius:8px; z-index:10; font-size:0.72em; color:var(--text-secondary);">
+                        <i class="fa-solid fa-rotate" style="margin-right:6px; color:var(--accent-blue);"></i>
+                        <span class="lang-zh">拖曳以調整視角</span>
+                        <span class="lang-en" style="display:none;">Drag to rotate view</span>
+                    </div>
+
                     <!-- Bottom-left Legend Overlay inside canvas -->
                     <div id="sb-legend-overlay" style="position: absolute; bottom: 15px; left: 15px; background:rgba(11,17,38,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.06); padding:10px 14px; border-radius:10px; z-index:10; pointer-events:none; display:flex; flex-direction:column; gap:6px; min-width: 150px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
                         <div style="font-size: 0.72em; color: var(--text-secondary); text-transform: uppercase; letter-spacing:0.5px; margin-bottom: 2px; font-weight: 700;">
@@ -745,6 +751,145 @@
             return { x, y, z: rotated.z };
         }
 
+        function isIceIhView() {
+            return currentSandboxMode === 'ice' || (currentSandboxMode === 'water' && sandboxTemp <= 0);
+        }
+
+        function updateRotateHint() {
+            const hint = document.getElementById('sb-rotate-hint');
+            if (!hint) return;
+            const rotatable3d = isIceIhView() || ['diamond', 'graphite', 'nacl', 'cscl', 'sio2', 'metal'].includes(currentSandboxMode);
+            hint.style.display = rotatable3d ? 'block' : 'none';
+        }
+
+        // Ice Ih (P6₃/mmc): oxygen sub-lattice with tetrahedral H-bonding — open hexagonal structure
+        function buildIceIhLattice3D(w, h) {
+            sbParticles = [];
+            sbIceCovalentBonds = [];
+            sbIceHBonds = [];
+            let id = 0;
+
+            const a = 34;
+            const c = a * 1.628;
+            const oCutoff = a * 0.92;
+            const oHLen = a * 0.22;
+
+            function fracToCart(u, v, ww) {
+                return {
+                    x: a * (u - 0.5 * v) - a * 1.0,
+                    y: c * ww - c * 0.55,
+                    z: a * (Math.sqrt(3) / 2 * v) - a * 1.0
+                };
+            }
+
+            const baseFracs = [
+                [1 / 3, 2 / 3, 0.0625],
+                [2 / 3, 1 / 3, 0.5625],
+                [1 / 3, 2 / 3, 0.4375],
+                [2 / 3, 1 / 3, 0.9375]
+            ];
+
+            const oPositions = [];
+            const seen = new Set();
+            for (let du = -1; du <= 1; du++) {
+                for (let dv = -1; dv <= 1; dv++) {
+                    for (let dw = -1; dw <= 1; dw++) {
+                        baseFracs.forEach(([fu, fv, fw]) => {
+                            const cart = fracToCart(fu + du, fv + dv, fw + dw);
+                            const key = `${Math.round(cart.x * 3)},${Math.round(cart.y * 3)},${Math.round(cart.z * 3)}`;
+                            if (!seen.has(key)) {
+                                seen.add(key);
+                                oPositions.push(cart);
+                            }
+                        });
+                    }
+                }
+            }
+
+            const neighbors = oPositions.map((o, i) => {
+                const list = [];
+                oPositions.forEach((p, j) => {
+                    if (i === j) return;
+                    const dx = p.x - o.x;
+                    const dy = p.y - o.y;
+                    const dz = p.z - o.z;
+                    const d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                    if (d < oCutoff) list.push({ j, d, dx, dy, dz });
+                });
+                list.sort((a, b) => a.d - b.d);
+                return list;
+            });
+
+            const pairUsed = new Set();
+            const hBondMeta = [];
+            for (let i = 0; i < oPositions.length; i++) {
+                let donated = 0;
+                for (const n of neighbors[i]) {
+                    if (donated >= 2) break;
+                    const key = `${Math.min(i, n.j)}-${Math.max(i, n.j)}`;
+                    if (pairUsed.has(key)) continue;
+                    pairUsed.add(key);
+                    hBondMeta.push({ donor: i, acceptor: n.j });
+                    donated++;
+                }
+            }
+
+            const oIds = [];
+            oPositions.forEach((pos, oIdx) => {
+                const proj = project3DTo2D(pos.x, pos.y, pos.z, w, h, 1.05);
+                const oId = id++;
+                oIds[oIdx] = oId;
+                sbParticles.push({
+                    id: oId,
+                    type: 'O',
+                    oIdx,
+                    ox3d: pos.x,
+                    oy3d: pos.y,
+                    oz3d: pos.z,
+                    ox: proj.x,
+                    oy: proj.y,
+                    x: proj.x,
+                    y: proj.y,
+                    z: proj.z,
+                    vx: 0,
+                    vy: 0,
+                    r: 10
+                });
+            });
+
+            hBondMeta.forEach((bond) => {
+                const oDon = oPositions[bond.donor];
+                const oAcc = oPositions[bond.acceptor];
+                const dx = oAcc.x - oDon.x;
+                const dy = oAcc.y - oDon.y;
+                const dz = oAcc.z - oDon.z;
+                const len = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+                const hx = oDon.x + (dx / len) * oHLen;
+                const hy = oDon.y + (dy / len) * oHLen;
+                const hz = oDon.z + (dz / len) * oHLen;
+                const proj = project3DTo2D(hx, hy, hz, w, h, 1.05);
+                const hId = id++;
+                sbParticles.push({
+                    id: hId,
+                    type: 'H',
+                    parentO: oIds[bond.donor],
+                    ox3d: hx,
+                    oy3d: hy,
+                    oz3d: hz,
+                    ox: proj.x,
+                    oy: proj.y,
+                    x: proj.x,
+                    y: proj.y,
+                    z: proj.z,
+                    vx: 0,
+                    vy: 0,
+                    r: 5
+                });
+                sbIceCovalentBonds.push({ u: oIds[bond.donor], v: hId });
+                sbIceHBonds.push({ u: oIds[bond.donor], v: oIds[bond.acceptor] });
+            });
+        }
+
         // ==========================================
         // 4. MAIN PROPERTIES SANDBOX ENGINE
         // ==========================================
@@ -837,6 +982,7 @@
 
             // Update legend overlay
             updateSandboxLegend();
+            updateRotateHint();
         }
 
         function switchSandboxMode(mode) {
@@ -846,11 +992,21 @@
         }
 
         function onSandboxTempChange(val) {
+            const prevTemp = sandboxTemp;
             sandboxTemp = parseFloat(val);
             document.getElementById('sb-temp-text').innerText = `${sandboxTemp.toFixed(0)} °C`;
-            
-            // Water states label updates
+
+            if (currentSandboxMode === 'water') {
+                const wasIce = prevTemp <= 0;
+                const isIce = sandboxTemp <= 0;
+                if (wasIce !== isIce) {
+                    buildSandboxParticles();
+                }
+            }
+
             updateSandboxInfoBanner();
+            updateSandboxLegend();
+            updateRotateHint();
         }
 
         function updateSandboxInfoBanner() {
@@ -862,10 +1018,15 @@
 
             if (currentSandboxMode === 'water') {
                 let stateZh = '液態 (Liquid)';
-                if (sandboxTemp <= 0) stateZh = '固態冰 (Solid Ice)';
+                if (sandboxTemp <= 0) stateZh = '固態冰 Ih (Solid Ice Ih)';
                 else if (sandboxTemp >= 100) stateZh = '氣態水蒸氣 (Water Vapor)';
-                titleZh = `水 (H₂O) — 簡單分子物質 [目前狀態：${stateZh}]`;
-                titleEn = `Water (H₂O) — Simple Molecular Structure [State: ${sandboxTemp <= 0 ? 'Solid Ice' : sandboxTemp >= 100 ? 'Gas Vapor' : 'Liquid'}]`;
+                if (sandboxTemp <= 0) {
+                    titleZh = `水 (H₂O) — 冰 Ih 開放型氫鍵晶格 [目前狀態：${stateZh}]`;
+                    titleEn = `Water (H₂O) — Ice Ih open H-bonded lattice [State: Solid Ice Ih]`;
+                } else {
+                    titleZh = `水 (H₂O) — 簡單分子物質 [目前狀態：${stateZh}]`;
+                    titleEn = `Water (H₂O) — Simple Molecular Structure [State: ${sandboxTemp >= 100 ? 'Gas Vapor' : 'Liquid'}]`;
+                }
             } else if (currentSandboxMode === 'co2') {
                 let stateZh = '氣態 (Gas)';
                 if (sandboxTemp <= -78) stateZh = '固態乾冰 (Solid Dry Ice)';
@@ -932,11 +1093,23 @@
             };
 
             if (currentSandboxMode === 'water') {
-                html += formatItem(circleSpan('#ef4444', '#f87171', 'O'), '氧原子 (O, 帶偏負電荷 δ⁻)', 'Oxygen (O, δ⁻)');
-                html += formatItem(circleSpan('#00f0ff', '#22d3ee', 'H', '#0b1126'), '氫原子 (H, 帶偏正電荷 δ⁺)', 'Hydrogen (H, δ⁺)');
-                html += formatItem(lineSpan('#ffffff'), '共價鍵 (分子內強化學鍵)', 'Covalent Bond (Strong)');
-                if (sbShowIMF) {
-                    html += formatItem(lineSpan('rgba(0, 240, 255, 0.95)', true), '氫鍵 (分子間作用力，弱)', 'Hydrogen Bond (Weak IMF)');
+                if (sandboxTemp <= 0) {
+                    html += formatItem(circleSpan('#ef4444', '#f87171', 'O'), '氧原子 (O)', 'Oxygen (O)');
+                    html += formatItem(circleSpan('#00f0ff', '#22d3ee', 'H', '#0b1126'), '氫原子 (H)', 'Hydrogen (H)');
+                    html += formatItem(lineSpan('#ffffff'), 'O–H 共價鍵 (分子內)', 'O–H Covalent Bond (intramolecular)');
+                    if (sbShowIMF) {
+                        html += formatItem(lineSpan('rgba(0, 240, 255, 0.95)', true), '氫鍵 (分子間，開放 Ice Ih 晶格)', 'Hydrogen Bond (intermolecular, open Ice Ih lattice)');
+                    }
+                    if (sbHammerAnimating && sbHammerOffset > 8) {
+                        html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '氫鍵斷裂 (晶體碎裂)', 'H-bond breakage (crystal shatter)');
+                    }
+                } else {
+                    html += formatItem(circleSpan('#ef4444', '#f87171', 'O'), '氧原子 (O, 帶偏負電荷 δ⁻)', 'Oxygen (O, δ⁻)');
+                    html += formatItem(circleSpan('#00f0ff', '#22d3ee', 'H', '#0b1126'), '氫原子 (H, 帶偏正電荷 δ⁺)', 'Hydrogen (H, δ⁺)');
+                    html += formatItem(lineSpan('#ffffff'), '共價鍵 (分子內強化學鍵)', 'Covalent Bond (Strong)');
+                    if (sbShowIMF) {
+                        html += formatItem(lineSpan('rgba(0, 240, 255, 0.95)', true), '氫鍵 (分子間作用力，弱)', 'Hydrogen Bond (Weak IMF)');
+                    }
                 }
             } else if (currentSandboxMode === 'co2') {
                 html += formatItem(circleSpan('#94a3b8', '#cbd5e1', 'C'), '碳原子 (C)', 'Carbon (C)');
@@ -975,7 +1148,7 @@
                 }
             } else if (currentSandboxMode === 'ice') {
                 html += formatItem(circleSpan('#ef4444', '#f87171', 'O'), '氧原子 (O)', 'Oxygen (O)');
-                html += formatItem(circleSpan('#94a3b8', '#cbd5e1', 'H', '#0b1126'), '氫原子 (H)', 'Hydrogen (H)');
+                html += formatItem(circleSpan('#00f0ff', '#22d3ee', 'H', '#0b1126'), '氫原子 (H)', 'Hydrogen (H)');
                 html += formatItem(lineSpan('#ffffff'), 'O–H 共價鍵 (分子內)', 'O–H Covalent Bond (intramolecular)');
                 if (sbShowIMF) {
                     html += formatItem(lineSpan('rgba(0, 240, 255, 0.95)', true), '氫鍵 (分子間，開放結構)', 'Hydrogen Bond (intermolecular, open lattice)');
@@ -1013,6 +1186,9 @@
             const h = sandboxCanvas.height;
 
             if (currentSandboxMode === 'water') {
+                if (sandboxTemp <= 0) {
+                    buildIceIhLattice3D(w, h);
+                } else {
                 // Build 16 water molecules
                 for (let i = 0; i < 16; i++) {
                     let col = i % 4;
@@ -1032,6 +1208,7 @@
                         spinSpeed: (Math.random() - 0.5) * 0.04,
                         r: 18 // effective radius of H2O molecule
                     });
+                }
                 }
             } else if (currentSandboxMode === 'co2') {
                 // Build 12 CO2 molecules
@@ -1377,51 +1554,7 @@
                     }
                 }
             } else if (currentSandboxMode === 'ice') {
-                sbIceCovalentBonds = [];
-                sbIceHBonds = [];
-                let id = 0;
-                const hexR = 42;
-                const ringCenters = [
-                    { x: w * 0.38, y: h * 0.48 },
-                    { x: w * 0.62, y: h * 0.52 }
-                ];
-                ringCenters.forEach((center, ringIdx) => {
-                    for (let i = 0; i < 6; i++) {
-                        const angle = (i * Math.PI / 3) - Math.PI / 6;
-                        const ox = center.x + hexR * Math.cos(angle);
-                        const oy = center.y + hexR * Math.sin(angle);
-                        const oId = id++;
-                        sbParticles.push({
-                            id: oId, type: 'O', ring: ringIdx,
-                            ox, oy, x: ox, y: oy, vx: 0, vy: 0, r: 10
-                        });
-                        for (let h = 0; h < 2; h++) {
-                            const hAngle = angle + (h === 0 ? -0.55 : 0.55);
-                            const hx = ox + 14 * Math.cos(hAngle);
-                            const hy = oy + 14 * Math.sin(hAngle);
-                            const hId = id++;
-                            sbParticles.push({
-                                id: hId, type: 'H', parentO: oId, ring: ringIdx,
-                                ox: hx, oy: hy, x: hx, y: hy, vx: 0, vy: 0, r: 5
-                            });
-                            sbIceCovalentBonds.push({ u: oId, v: hId });
-                        }
-                    }
-                });
-                for (let i = 0; i < sbParticles.length; i++) {
-                    const p1 = sbParticles[i];
-                    if (p1.type !== 'O') continue;
-                    for (let j = i + 1; j < sbParticles.length; j++) {
-                        const p2 = sbParticles[j];
-                        if (p2.type !== 'O') continue;
-                        const dx = p2.ox - p1.ox;
-                        const dy = p2.oy - p1.oy;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist > 55 && dist < 95) {
-                            sbIceHBonds.push({ u: p1.id, v: p2.id });
-                        }
-                    }
-                }
+                buildIceIhLattice3D(w, h);
             } else if (currentSandboxMode === 'sio2') {
                 sbSio2Bonds = [];
                 let id = 0;
@@ -1775,33 +1908,88 @@
             ctx.shadowBlur = 0; // Reset shadow blur!
         }
 
-        function drawWaterSolidIce(ctx, vFactor, dt) {
-            const offsetAmp = vFactor * 3;
+        function drawIceIhLattice3D(ctx, vFactor, dt) {
+            if (!window.sbUserInteracted || !window.sbUserInteracted()) {
+                sbRotationTheta += 0.002 * vFactor * dt * 0.06;
+            }
+            const amp = vFactor * 2;
+            let cleaveShift = 0;
+            if (sbHammerAnimating && sbHammerOffset > 8) {
+                cleaveShift = Math.min(45, sbHammerOffset * 2.5);
+            }
 
             sbParticles.forEach(p => {
-                let vx = Math.sin(sbTimeAccumulator * 0.2 + p.id) * offsetAmp;
-                let vy = Math.cos(sbTimeAccumulator * 0.24 + p.id) * offsetAmp;
-
-                let cleaveShiftY = 0;
-                if (sbHammerAnimating) {
-                    let col = p.id % 4;
-                    if (col >= 2) {
-                        cleaveShiftY = Math.min(65, sbHammerOffset * 3);
-                    }
+                const vx = Math.sin(sbTimeAccumulator * 0.2 + p.id) * amp;
+                const vy = Math.cos(sbTimeAccumulator * 0.18 + p.id) * amp;
+                const vz = Math.sin(sbTimeAccumulator * 0.16 + p.id) * amp * 0.4;
+                let x3d = p.ox3d + vx;
+                let y3d = p.oy3d + vy;
+                let z3d = p.oz3d + vz;
+                if (sbHammerAnimating && sbHammerOffset > 8 && p.oy3d > 0) {
+                    y3d += cleaveShift;
                 }
-
-                p.x = p.ox + vx;
-                p.y = p.oy + vy + cleaveShiftY;
-                p.angle += p.spinSpeed * vFactor * dt * 0.1;
+                const proj = project3DTo2D(x3d, y3d, z3d, sandboxCanvas.width, sandboxCanvas.height, 1.05);
+                p.x = proj.x;
+                p.y = proj.y;
+                p.z = proj.z;
             });
 
-            // Draw hydrogen bonds
-            drawWaterHBonds(ctx);
+            if (sbShowIMF) {
+                ctx.setLineDash([4, 4]);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgba(0, 240, 255, 0.75)';
+                ctx.shadowColor = 'rgba(0, 240, 255, 0.5)';
+                ctx.shadowBlur = 6;
+                sbIceHBonds.forEach(bond => {
+                    if (sbHammerAnimating && sbHammerOffset > 10) return;
+                    const p1 = sbParticles[bond.u];
+                    const p2 = sbParticles[bond.v];
+                    if (p1 && p2) {
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+                ctx.setLineDash([]);
+                ctx.shadowBlur = 0;
+            }
 
-            // Draw molecules
-            sbParticles.forEach(p => {
-                drawSingleWaterMolecule(ctx, p.x, p.y, p.angle);
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.5;
+            sbIceCovalentBonds.forEach(bond => {
+                if (sbHammerAnimating && sbHammerOffset > 10) return;
+                const p1 = sbParticles[bond.u];
+                const p2 = sbParticles[bond.v];
+                if (p1 && p2) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
             });
+
+            if (sbHammerAnimating && sbHammerOffset > 8) {
+                drawCrackLine(ctx, sandboxCanvas.width / 2, sandboxCanvas.height * 0.2, sandboxCanvas.height * 0.75);
+            }
+
+            const sorted = [...sbParticles].sort((a, b) => a.z - b.z);
+            sorted.forEach(p => {
+                ctx.beginPath();
+                const r = p.type === 'O' ? 10 : 5;
+                ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+                ctx.fillStyle = p.type === 'O' ? '#ef4444' : '#00f0ff';
+                ctx.fill();
+                if (p.type === 'O') {
+                    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            });
+        }
+
+        function drawWaterSolidIce(ctx, vFactor, dt) {
+            drawIceIhLattice3D(ctx, vFactor, dt);
         }
 
         function drawWaterLiquid(ctx, vFactor, w, h, dt) {
@@ -2577,66 +2765,7 @@
         // 10.5 ICE, SiO2 & METAL LATTICE ANIMATORS
         // ==========================================
         function drawIceLattice(ctx, vFactor, dt) {
-            if (!window.sbUserInteracted || !window.sbUserInteracted()) {
-                sbRotationTheta += 0.002 * vFactor * dt * 0.06;
-            }
-            const amp = vFactor * 2.5;
-            let cleaveShiftY = 0;
-            if (sbHammerAnimating && sbHammerOffset > 8) {
-                cleaveShiftY = Math.min(55, sbHammerOffset * 3);
-            }
-            sbParticles.forEach(p => {
-                const vx = Math.sin(sbTimeAccumulator * 0.2 + p.id) * amp;
-                const vy = Math.cos(sbTimeAccumulator * 0.18 + p.id) * amp;
-                p.x = p.ox + vx;
-                p.y = p.oy + vy + cleaveShiftY;
-            });
-            if (sbShowIMF) {
-                ctx.setLineDash([4, 4]);
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = 'rgba(0, 240, 255, 0.7)';
-                sbIceHBonds.forEach(bond => {
-                    if (sbHammerAnimating && sbHammerOffset > 10) return;
-                    const p1 = sbParticles[bond.u];
-                    const p2 = sbParticles[bond.v];
-                    if (p1 && p2) {
-                        ctx.beginPath();
-                        ctx.moveTo(p1.x, p1.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
-                });
-                ctx.setLineDash([]);
-            }
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
-            sbIceCovalentBonds.forEach(bond => {
-                if (sbHammerAnimating && sbHammerOffset > 10) return;
-                const p1 = sbParticles[bond.u];
-                const p2 = sbParticles[bond.v];
-                if (p1 && p2) {
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                }
-            });
-            if (sbHammerAnimating && sbHammerOffset > 8) {
-                drawCrackLine(ctx, sandboxCanvas.width / 2, sandboxCanvas.height * 0.25, sandboxCanvas.height * 0.75);
-            }
-            const sorted = [...sbParticles].sort((a, b) => (a.type === 'H' ? 1 : 0) - (b.type === 'H' ? 1 : 0));
-            sorted.forEach(p => {
-                ctx.beginPath();
-                const r = p.type === 'O' ? 10 : 5;
-                ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-                ctx.fillStyle = p.type === 'O' ? '#ef4444' : '#94a3b8';
-                ctx.fill();
-                ctx.fillStyle = '#fff';
-                ctx.font = `bold ${p.type === 'O' ? 9 : 7}px system-ui,sans-serif`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(p.type, p.x, p.y);
-            });
+            drawIceIhLattice3D(ctx, vFactor, dt);
         }
 
         function drawSio2Lattice(ctx, vFactor, dt) {
@@ -2827,8 +2956,8 @@
                 if (sandboxTemp <= 0) {
                     targetMax = 15;
                     isShattered = true;
-                    toastZh = '敲擊成功！冰晶體中分子間僅由弱氫鍵連接，受外力時極易碎裂！';
-                    toastEn = 'Shattered! Ice molecules are held only by weak hydrogen bonds, which are easily broken by external force!';
+                    toastZh = '敲擊碎裂！冰 Ih 開放型氫鍵晶格受外力時氫鍵斷裂，晶體結構崩解！';
+                    toastEn = 'Shattered! The open Ice Ih hydrogen-bonded lattice breaks apart when struck — H-bonds cleave and the crystal collapses!';
                 } else {
                     toastZh = '液態/氣態水具有流動性，無法被敲碎！';
                     toastEn = 'Liquid/Gas water is fluid and cannot be shattered!';
@@ -2890,7 +3019,7 @@
                 toastEn = 'Metal deformed! Copper ion layers slip under the hammer — delocalized electrons allow plastic deformation without shattering (malleable)!';
             }
 
-            if (isShattered && (currentSandboxMode === 'nacl' || currentSandboxMode === 'cscl' || currentSandboxMode === 'ice')) {
+            if (isShattered && (currentSandboxMode === 'nacl' || currentSandboxMode === 'cscl' || currentSandboxMode === 'ice' || (currentSandboxMode === 'water' && sandboxTemp <= 0))) {
                 spawnShatterFragments(sandboxCanvas.width / 2, sandboxCanvas.height / 2, 18);
             }
 
