@@ -856,9 +856,14 @@
     box-sizing: border-box !important;
     height: 100dvh !important;
     max-height: 100dvh !important;
-    /* Symmetric padding so centering is visually true with fixed nav */
-    padding-top: clamp(12px, 3dvh, var(--nav-offset)) !important;
+    /* Clear fixed global nav (z-index 10000); 3dvh was too small and hid the back bar under the nav */
+    padding-top: var(--nav-offset) !important;
     padding-bottom: clamp(12px, 3dvh, 60px) !important;
+}
+
+/* Detail panels: back bar must sit below nav; fill viewport from that point */
+#blank-page-2:has(#worksheet-shell.worksheet-shell--detail) {
+    justify-content: flex-start !important;
 }
 
 .worksheet-root-page {
@@ -954,6 +959,8 @@
     flex-shrink: 0;
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 6;
     padding: 14px 20px 12px;
     border-bottom: 1px solid var(--border-color);
     background: var(--element-bg);
