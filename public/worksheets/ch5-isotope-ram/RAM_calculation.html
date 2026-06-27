@@ -4,505 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HKDSE Chemistry — 同位素與相對原子質量（Uni+）</title>
-    <style>
-        /* Soft pastel UI — aligned with Uni+ periodic table */
-        :root {
-            --bg: #f0f2f5;
-            --bg-elevated: #f8f9fa;
-            --card: #ffffff;
-            --text: #2d3436;
-            --muted: #636e72;
-            --border: #e9ecef;
-            --shadow: 0 4px 14px rgba(45, 52, 54, 0.06);
-            --shadow-hover: 0 8px 24px rgba(45, 52, 54, 0.1);
-            --accent: #7c9ce0;
-            --accent-soft: #dfe6fb;
-            --accent2: #7bc9a8;
-            --accent2-soft: #d5f4e6;
-            --accent3: #e8b4d4;
-            --accent3-soft: #fce8f2;
-            --accent4: #f4c27a;
-            --accent4-soft: #fff3e0;
-            --danger: #e5989b;
-            --danger-soft: #ffe5e5;
-            --ok: #8fbc8f;
-            --ok-soft: #e8f5e9;
-            --radius-lg: 20px;
-            --radius-md: 14px;
-            --radius-pill: 9999px;
-            font-family: system-ui, "Segoe UI", "Microsoft JhengHei", 微軟正黑體, sans-serif;
-        }
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.55;
-        }
-        /* Slim top bar: language only (parent site already has nav + logo) */
-        .app-header {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 0.75rem 1.25rem 0.35rem;
-            max-width: 960px;
-            margin: 0 auto;
-        }
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .lang-select {
-            appearance: none;
-            padding: 0.5rem 2rem 0.5rem 0.95rem;
-            font-size: 0.88rem;
-            font-weight: 500;
-            color: var(--text);
-            background: var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23636e72' d='M3 4.5L6 8l3-3.5'/%3E%3C/svg%3E") no-repeat right 0.65rem center;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-pill);
-            box-shadow: var(--shadow);
-            cursor: pointer;
-        }
-        .lang-select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-soft);
-        }
-        .container {
-            max-width: 960px;
-            margin: 0 auto 2.5rem;
-            padding: 0 1.25rem 1.25rem;
-        }
-        .page-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem 1.65rem 2rem;
-            box-shadow: var(--shadow);
-        }
-        h1 {
-            margin: 0 0 1.25rem;
-            text-align: center;
-            font-size: 1.35rem;
-            font-weight: 650;
-            letter-spacing: -0.02em;
-            color: var(--text);
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-        .controls {
-            background: var(--bg-elevated);
-            padding: 1.15rem 1.2rem;
-            border-radius: var(--radius-md);
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-        .control-group {
-            display: flex;
-            flex-direction: column;
-        }
-        .control-group label {
-            font-weight: 600;
-            margin-bottom: 0.35rem;
-            font-size: 0.84rem;
-            color: var(--muted);
-        }
-        .controls select,
-        .controls input[type="number"] {
-            padding: 0.55rem 0.85rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            font-size: 0.95rem;
-            background: var(--card);
-            color: var(--text);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .controls select:focus,
-        .controls input[type="number"]:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-soft);
-        }
-        .btn-group {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.55rem;
-            margin-top: 0.35rem;
-        }
-        button {
-            padding: 0.6rem 1.2rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border: none;
-            border-radius: var(--radius-pill);
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
-        }
-        button.primary,
-        #ui-btn-gen {
-            background: linear-gradient(135deg, #a8d4f0 0%, #b8b5f0 100%);
-            border: 1px solid rgba(124, 156, 224, 0.35);
-            color: var(--text);
-            box-shadow: 0 2px 10px rgba(124, 156, 224, 0.25);
-        }
-        button.primary:hover,
-        #ui-btn-gen:hover {
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-1px);
-        }
-        .btn-print {
-            background: var(--accent2-soft);
-            border: 1px solid rgba(123, 201, 168, 0.45);
-            color: #2d5a45;
-        }
-        .btn-print:hover {
-            background: #c5ecd8;
-            transform: translateY(-1px);
-        }
-        .btn-solutions {
-            background: var(--accent3-soft);
-            border: 1px solid rgba(232, 180, 212, 0.5);
-            color: #6b4a5c;
-        }
-        .btn-solutions:hover {
-            background: #f5d6e8;
-            transform: translateY(-1px);
-        }
-        .btn-doc {
-            background: var(--accent4-soft);
-            border: 1px solid rgba(244, 194, 122, 0.55);
-            color: #6b4a20;
-        }
-        .btn-doc:hover {
-            background: #ffe8cc;
-            transform: translateY(-1px);
-        }
-        .worksheet-note {
-            font-style: italic;
-            font-size: 0.9rem;
-            color: var(--muted);
-            margin: 0 0 1rem;
-        }
-        #summary-panel {
-            display: none;
-            margin-top: 1.25rem;
-            padding: 1.1rem 1.2rem;
-            border-radius: var(--radius-md);
-            border: 1px solid rgba(143, 188, 143, 0.55);
-            background: var(--ok-soft);
-            box-shadow: 0 2px 10px rgba(45, 52, 54, 0.04);
-        }
-        #summary-panel.visible { display: block; }
-        #summary-panel h2 {
-            margin-top: 0;
-            color: #2d5a2d;
-            font-size: 1.1rem;
-            font-weight: 650;
-        }
-        #summary-panel p { margin: 0.5rem 0; color: var(--text); }
-        #progress-line {
-            margin: 1rem 0 0;
-            padding: 0.65rem 1rem;
-            background: var(--accent-soft);
-            border: 1px solid rgba(124, 156, 224, 0.25);
-            border-radius: var(--radius-md);
-            font-size: 0.92rem;
-            color: var(--text);
-        }
-        .question-box {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 1.1rem 1.15rem;
-            margin-bottom: 0.9rem;
-            box-shadow: 0 2px 8px rgba(45, 52, 54, 0.04);
-        }
-        .question-text {
-            font-size: 0.96rem;
-            line-height: 1.6;
-            margin-bottom: 0.85rem;
-            color: var(--text);
-        }
-        .interaction-area {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.55rem;
-        }
-        .interaction-area input[type="number"] {
-            width: 8.5rem;
-            padding: 0.55rem 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            background: var(--card);
-            font-size: 0.95rem;
-        }
-        .interaction-area input[type="number"]:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-soft);
-        }
-        .interaction-area button {
-            background: linear-gradient(135deg, #a8d4f0 0%, #b8b5f0 100%);
-            border: 1px solid rgba(124, 156, 224, 0.35);
-            color: var(--text);
-            box-shadow: 0 2px 8px rgba(124, 156, 224, 0.2);
-        }
-        .interaction-area button:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-hover);
-        }
-        .hint {
-            color: #8b5a2b;
-            background: var(--accent4-soft);
-            padding: 0.75rem 0.9rem;
-            border: 1px solid rgba(244, 194, 122, 0.45);
-            border-radius: var(--radius-md);
-            margin-top: 0.65rem;
-            display: none;
-            font-style: normal;
-            line-height: 1.5;
-            font-size: 0.9rem;
-        }
-        .feedback {
-            font-weight: 600;
-            margin-top: 0.55rem;
-            font-size: 0.9rem;
-            padding: 0.35rem 0;
-        }
-
-        .summary-actions {
-            margin: 0.75rem 0 0;
-        }
-        .summary-actions button {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 0.55rem 1.1rem;
-            border-radius: var(--radius-pill);
-            cursor: pointer;
-            font-size: 0.86rem;
-            font-weight: 500;
-            box-shadow: 0 1px 4px rgba(45, 52, 54, 0.04);
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-        .summary-actions button:hover {
-            background: var(--bg-elevated);
-            box-shadow: var(--shadow);
-        }
-        .session-analysis-panel {
-            margin-top: 1rem;
-            padding: 1rem 1.1rem;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border);
-            background: var(--bg-elevated);
-            box-shadow: 0 2px 10px rgba(45, 52, 54, 0.04);
-        }
-        .session-analysis-panel[hidden] { display: none !important; }
-        .session-analysis-panel h3 {
-            margin: 0 0 0.65rem;
-            font-size: 1rem;
-            font-weight: 650;
-            color: var(--text);
-        }
-        .session-analysis-panel .summary-score {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 0.35rem;
-        }
-        .session-analysis-panel .summary-sub {
-            font-size: 0.86rem;
-            color: var(--muted);
-            margin: 0 0 0.85rem;
-        }
-        .summary-by-type-title {
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--text);
-            margin: 1rem 0 0.5rem;
-        }
-        .summary-type-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.86rem;
-            margin: 0 0 0.5rem;
-        }
-        .summary-type-table th,
-        .summary-type-table td {
-            padding: 0.45rem 0.5rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        .summary-type-table th {
-            color: var(--muted);
-            font-weight: 600;
-            font-size: 0.78rem;
-        }
-        .summary-type-table td.num {
-            text-align: right;
-            white-space: nowrap;
-            font-variant-numeric: tabular-nums;
-        }
-        .summary-type-table tr:last-child td { border-bottom: none; }
-        .summary-type-table .type-name { font-weight: 600; color: var(--text); }
-        .summary-type-table .type-code-cell {
-            font-size: 0.78rem;
-            color: var(--muted);
-            font-weight: 500;
-        }
-        .summary-wrong-title {
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--text);
-            margin: 0.75rem 0 0.45rem;
-        }
-        .summary-wrong-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        .summary-wrong-list li {
-            margin-bottom: 0.45rem;
-            padding: 0.55rem 0.75rem;
-            border-radius: var(--radius-md);
-            background: var(--danger-soft);
-            border: 1px solid rgba(229, 152, 155, 0.45);
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #7a3d42;
-        }
-        .summary-wrong-list li .type-code {
-            font-weight: 500;
-            font-size: 0.82rem;
-            color: var(--muted);
-        }
-        .summary-none {
-            font-size: 0.88rem;
-            color: var(--ok);
-            font-weight: 600;
-            margin: 0.25rem 0 0;
-        }
-        .summary-revision {
-            margin-top: 1rem;
-            padding: 0.95rem 1.05rem;
-            border-radius: var(--radius-md);
-            border: 1px solid rgba(124, 156, 224, 0.38);
-            background: var(--accent-soft);
-        }
-        .summary-revision h4 {
-            margin: 0 0 0.55rem;
-            font-size: 0.92rem;
-            font-weight: 650;
-            color: var(--text);
-        }
-        .summary-revision ul {
-            margin: 0;
-            padding-left: 1.2rem;
-        }
-        .summary-revision li {
-            margin-bottom: 0.4rem;
-            font-size: 0.86rem;
-            line-height: 1.48;
-            color: var(--text);
-        }
-        .summary-revision li:last-child { margin-bottom: 0; }
-
-        @media print {
-            body { background-color: #fff; padding: 0; }
-            .app-header, .controls, .interaction-area, .btn-group, .hint, .feedback, #progress-line, #summary-panel, .summary-actions, #session-analysis-panel {
-                display: none !important;
-            }
-            .container { padding: 0; max-width: 100%; }
-            .page-card { box-shadow: none; border: none; padding: 0; }
-            .question-box {
-                border: none;
-                border-bottom: 1px dashed #ccc;
-                background: #fff;
-                box-shadow: none;
-                padding: 0 0 100px 0;
-                margin-bottom: 20px;
-                page-break-inside: avoid;
-            }
-            h1::after {
-                content: "\A 姓名 (Name): _________________  班別 (Class): ____  日期 (Date): _________";
-                white-space: pre;
-                display: block;
-                font-size: 14px;
-                text-align: right;
-                margin-top: 20px;
-                color: #000;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../../../css/worksheet-styles.css?v=2.1.5">
+    <link rel="stylesheet" href="isotope-ram-worksheet.css?v=1">
 </head>
 <body>
 
-<header class="app-header" role="banner">
-    <div class="header-actions">
-        <select id="lang" class="lang-select" onchange="updateUI()" aria-label="語言 Language">
-            <option value="zh">繁體中文</option>
-            <option value="en">English</option>
-        </select>
-    </div>
-</header>
+<div class="worksheet-generator-page isotope-ram-page">
+    <div class="worksheet-container">
+        <aside class="worksheet-controls">
+            <div class="controls-header">
+                <h2 id="ui-title">同位素與相對原子質量工作紙</h2>
+                <p id="ui-subtitle">同位素與相對原子質量 · 雙語 繁體中文 / English</p>
+            </div>
 
-<div class="container">
-<div class="page-card">
-    <h1 id="ui-title">同位素與相對原子質量工作紙</h1>
-    
-    <div class="controls">
-        <div class="control-group">
-            <label id="ui-label-type">題目類型:</label>
-            <select id="qType">
-                <option value="all">混合所有類型 (Mixed)</option>
-                <option value="1">類型 1: 計算相對原子質量 (RAM)</option>
-                <option value="2">類型 2: 計算百分比豐度 (%)</option>
-                <option value="3">類型 3: 計算同位素質量 (Mass)</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label id="ui-label-diff">難度:</label>
-            <select id="diff">
-                <option value="easy">簡單</option>
-                <option value="medium">中等</option>
-                <option value="hard">困難</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label id="ui-label-num">題目數量:</label>
-            <input type="number" id="numQs" value="5" min="1" max="20">
-        </div>
-        <div class="btn-group">
-            <button type="button" id="ui-btn-gen" onclick="generateWorksheet()">生成工作紙</button>
-            <button id="ui-btn-print" class="btn-print" onclick="window.print()">工作紙 PDF</button>
-            <button type="button" id="ui-btn-solutions-pdf" class="btn-solutions" onclick="openSolutionsPdf()">完整題解 PDF</button>
-            <button type="button" id="ui-btn-solutions-doc" class="btn-doc" onclick="downloadSolutionsDoc()">完整題解 Word</button>
-            <button type="button" id="ui-btn-worksheet-doc" class="btn-doc" onclick="downloadWorksheetDoc()">工作紙 Word</button>
-        </div>
-    </div>
+            <div class="control-group">
+                <label id="ui-label-type">題目類型:</label>
+                <select id="qType" class="control-input">
+                    <option value="all">混合所有類型 (Mixed)</option>
+                    <option value="1">類型 1: 計算相對原子質量 (RAM)</option>
+                    <option value="2">類型 2: 計算百分比豐度 (%)</option>
+                    <option value="3">類型 3: 計算同位素質量 (Mass)</option>
+                </select>
+            </div>
 
-    <div id="worksheet"></div>
-    <div class="summary-actions">
-        <button type="button" id="btn-session-summary">學習摘要</button>
+            <div class="control-group">
+                <label id="ui-label-diff">難度:</label>
+                <input type="hidden" id="diff" value="easy">
+                <div class="button-group" id="difficulty-group">
+                    <button type="button" class="option-btn active" data-value="easy">簡單</button>
+                    <button type="button" class="option-btn" data-value="medium">中等</button>
+                    <button type="button" class="option-btn" data-value="hard">困難</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label id="ui-label-num">題目數量:</label>
+                <div class="button-group" id="question-count-group">
+                    <button type="button" class="option-btn active" data-value="5">5</button>
+                    <button type="button" class="option-btn" data-value="10">10</button>
+                    <button type="button" class="option-btn" data-value="15">15</button>
+                    <button type="button" class="option-btn" data-value="20">20</button>
+                </div>
+                <input type="number" id="numQs" class="control-input" value="5" min="1" max="20">
+            </div>
+
+            <button type="button" class="generate-btn" id="ui-btn-gen" onclick="generateWorksheet()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v1m0 16v1m-9-9h1m16 0h1m-2.64-6.36l-.7.7m-12.02 12.02l-.7.7m0-12.72l.7.7m12.02 12.02l.7.7" />
+                    <circle cx="12" cy="12" r="4" />
+                </svg>
+                <span id="ui-btn-gen-label">生成工作紙</span>
+            </button>
+            <div class="trust-text" id="ui-trust">註：如有需要，請將最終答案四捨五入至兩位小數。</div>
+        </aside>
+
+        <section class="worksheet-preview">
+            <div class="preview-header">
+                <div class="preview-tabs">
+                    <button type="button" class="preview-tab active" id="tab-practice">練習</button>
+                    <button type="button" class="preview-tab" id="btn-session-summary">學習摘要與分析</button>
+                </div>
+                <div class="export-buttons">
+                    <select id="lang" class="lang-select" onchange="updateUI()" aria-label="語言 Language">
+                        <option value="zh">繁體中文</option>
+                        <option value="en">English</option>
+                    </select>
+                    <button type="button" class="export-btn" id="ui-btn-print" onclick="window.print()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                        <span id="ui-btn-print-label">工作紙 PDF</span>
+                    </button>
+                    <button type="button" class="export-btn" id="ui-btn-solutions-pdf" onclick="openSolutionsPdf()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <span id="ui-btn-solutions-pdf-label">完整題解 PDF</span>
+                    </button>
+                    <button type="button" class="export-btn" id="ui-btn-solutions-doc" onclick="downloadSolutionsDoc()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <span id="ui-btn-solutions-doc-label">完整題解 Word</span>
+                    </button>
+                    <button type="button" class="export-btn" id="ui-btn-worksheet-doc" onclick="downloadWorksheetDoc()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <span id="ui-btn-worksheet-doc-label">工作紙 Word</span>
+                    </button>
+                </div>
+            </div>
+            <div class="preview-content">
+                <div id="progress-line" style="display:none;"></div>
+                <div id="summary-panel"></div>
+                <div id="session-analysis-panel" class="session-analysis-panel" hidden role="region" aria-live="polite"></div>
+                <div id="worksheet"></div>
+            </div>
+        </section>
     </div>
-    <div id="session-analysis-panel" class="session-analysis-panel" hidden role="region" aria-live="polite"></div>
-    <div id="progress-line" style="display:none;"></div>
-    <div id="summary-panel"></div>
-</div>
 </div>
 
 <script>
     const i18n = {
         zh: {
             title: "同位素與相對原子質量工作紙",
+            subtitle: "同位素與相對原子質量 · 雙語 繁體中文 / English",
             labelType: "題目類型:",
             labelDiff: "難度:",
             labelNum: "題目數量:",
@@ -512,6 +125,8 @@
             btnSolutionsDoc: "完整題解 Word",
             btnWorksheetDoc: "工作紙 Word",
             note: "註：如有需要，請將最終答案四捨五入至兩位小數。",
+            trustText: "註：如有需要，請將最終答案四捨五入至兩位小數。",
+            tabPractice: "練習",
             check: "檢查答案",
             correct: "正確！ ✓",
             wrong1: "錯誤。請參閱提示再試一次！",
@@ -554,6 +169,7 @@
         },
         en: {
             title: "Isotopes & Relative Atomic Mass Worksheet",
+            subtitle: "Isotopes & relative atomic mass · bilingual EN / 繁體中文",
             labelType: "Question Type:",
             labelDiff: "Difficulty:",
             labelNum: "Number of Questions:",
@@ -563,6 +179,8 @@
             btnSolutionsDoc: "Full solutions Word",
             btnWorksheetDoc: "Worksheet Word",
             note: "Note: Round final answers to 2 decimal places if necessary.",
+            trustText: "Note: Round final answers to 2 decimal places if necessary.",
+            tabPractice: "Practice",
             check: "Check Answer",
             correct: "Correct! ✓",
             wrong1: "Incorrect. Check the hint and try again!",
@@ -611,21 +229,41 @@
         const l = document.getElementById('lang').value;
         document.documentElement.lang = l === 'en' ? 'en' : 'zh-Hant';
         document.getElementById('ui-title').innerText = i18n[l].title;
+        document.getElementById('ui-subtitle').innerText = i18n[l].subtitle;
         document.getElementById('ui-label-type').innerText = i18n[l].labelType;
         document.getElementById('ui-label-diff').innerText = i18n[l].labelDiff;
         document.getElementById('ui-label-num').innerText = i18n[l].labelNum;
-        document.getElementById('ui-btn-gen').innerText = i18n[l].btnGen;
-        document.getElementById('ui-btn-print').innerText = i18n[l].btnPrint;
-        document.getElementById('ui-btn-solutions-pdf').innerText = i18n[l].btnSolutionsPdf;
-        document.getElementById('ui-btn-solutions-doc').innerText = i18n[l].btnSolutionsDoc;
-        document.getElementById('ui-btn-worksheet-doc').innerText = i18n[l].btnWorksheetDoc;
+        document.getElementById('ui-btn-gen-label').innerText = i18n[l].btnGen;
+        document.getElementById('ui-trust').innerText = i18n[l].trustText;
+        document.getElementById('ui-btn-print-label').innerText = i18n[l].btnPrint;
+        document.getElementById('ui-btn-solutions-pdf-label').innerText = i18n[l].btnSolutionsPdf;
+        document.getElementById('ui-btn-solutions-doc-label').innerText = i18n[l].btnSolutionsDoc;
+        document.getElementById('ui-btn-worksheet-doc-label').innerText = i18n[l].btnWorksheetDoc;
+        document.getElementById('tab-practice').innerText = i18n[l].tabPractice;
         document.getElementById('btn-session-summary').innerText = i18n[l].btnSessionSummary;
 
         const qSelect = document.getElementById('qType');
         for(let i=0; i<qSelect.options.length; i++) qSelect.options[i].text = i18n[l].types[i];
-        
-        const dSelect = document.getElementById('diff');
-        for(let i=0; i<dSelect.options.length; i++) dSelect.options[i].text = i18n[l].diffs[i];
+
+        const diffMap = { easy: 0, medium: 1, hard: 2 };
+        document.querySelectorAll('#difficulty-group .option-btn').forEach((btn) => {
+            const idx = diffMap[btn.dataset.value];
+            if (idx !== undefined) btn.textContent = i18n[l].diffs[idx];
+        });
+    }
+
+    function setDifficulty(value) {
+        document.getElementById('diff').value = value;
+        document.querySelectorAll('#difficulty-group .option-btn').forEach((btn) => {
+            btn.classList.toggle('active', btn.dataset.value === value);
+        });
+    }
+
+    function syncCountPills() {
+        const val = String(document.getElementById('numQs').value);
+        document.querySelectorAll('#question-count-group .option-btn').forEach((btn) => {
+            btn.classList.toggle('active', btn.dataset.value === val);
+        });
     }
 
     function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -964,6 +602,9 @@
         const panel = document.getElementById('session-analysis-panel');
         panel.hidden = false;
         panel.innerHTML = html;
+
+        document.getElementById('tab-practice').classList.remove('active');
+        document.getElementById('btn-session-summary').classList.add('active');
     }
 
     function hasWorksheetData() {
@@ -1302,7 +943,28 @@
             else if (q === 'zh' || q === 'zh-hant' || q === 'zh-tw' || q === 'zh-hk') sel.value = 'zh';
             document.documentElement.lang = sel.value === 'en' ? 'en' : 'zh-Hant';
         }
+
+        document.querySelectorAll('#difficulty-group .option-btn').forEach((btn) => {
+            btn.addEventListener('click', () => setDifficulty(btn.dataset.value));
+        });
+
+        document.querySelectorAll('#question-count-group .option-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                document.getElementById('numQs').value = btn.dataset.value;
+                syncCountPills();
+            });
+        });
+
+        document.getElementById('numQs').addEventListener('input', syncCountPills);
+
+        document.getElementById('tab-practice').addEventListener('click', function () {
+            document.getElementById('tab-practice').classList.add('active');
+            document.getElementById('btn-session-summary').classList.remove('active');
+        });
+
         updateUI();
+        setDifficulty(document.getElementById('diff').value);
+        syncCountPills();
         document.getElementById('btn-session-summary').addEventListener('click', renderSessionAnalysis);
     });
 </script>

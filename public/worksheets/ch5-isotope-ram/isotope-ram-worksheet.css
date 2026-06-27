@@ -1,0 +1,369 @@
+/* Isotopes & RAM worksheet — Uni+ tokens + iframe layout (matches equation practice) */
+:root {
+  --bg-color: #fdfbf7;
+  --element-bg: #f5efe6;
+  --element-hover: #ebe0d0;
+  --text-primary: #2c2420;
+  --text-secondary: #5d544f;
+  --text-muted: #9ca3af;
+  --text-highlight: #78350f;
+  --border-color: rgba(0, 0, 0, 0.06);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: system-ui, "Segoe UI", "Microsoft JhengHei", 微軟正黑體, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-primary);
+}
+
+.isotope-ram-page {
+  height: 100%;
+  min-height: 0;
+  padding: 12px;
+}
+
+.isotope-ram-page .worksheet-container {
+  height: 100%;
+  max-height: 100%;
+}
+
+.isotope-ram-page .worksheet-controls {
+  max-height: 100%;
+  overflow-y: auto;
+  align-self: stretch;
+}
+
+.isotope-ram-page .controls-header h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  line-height: 1.25;
+}
+
+.isotope-ram-page .controls-header p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.isotope-ram-page .control-input {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.isotope-ram-page .control-input:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 3px rgba(44, 36, 32, 0.08);
+}
+
+.isotope-ram-page .export-buttons {
+  flex-wrap: wrap;
+}
+
+.isotope-ram-page .lang-select {
+  appearance: none;
+  padding: 6px 28px 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-color) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235d544f' d='M3 4.5L6 8l3-3.5'/%3E%3C/svg%3E") no-repeat right 0.55rem center;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.isotope-ram-page .lang-select:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+}
+
+.isotope-ram-page .worksheet-note {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 0 0 1rem;
+  line-height: 1.45;
+}
+
+.isotope-ram-page .question-box {
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: var(--bg-color);
+}
+
+.isotope-ram-page .question-text {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.isotope-ram-page .interaction-area {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.isotope-ram-page .interaction-area input[type="number"] {
+  width: 8.5rem;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  background: #fff;
+  font-size: 0.9rem;
+}
+
+.isotope-ram-page .interaction-area input[type="number"]:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 3px rgba(44, 36, 32, 0.08);
+}
+
+.isotope-ram-page .interaction-area button {
+  padding: 8px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--element-bg);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.isotope-ram-page .interaction-area button:hover {
+  background: #fff;
+  border-color: var(--text-secondary);
+}
+
+.isotope-ram-page .hint {
+  color: #92400e;
+  background: #fffbeb;
+  padding: 8px 12px;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  margin-top: 0.65rem;
+  display: none;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.isotope-ram-page .feedback {
+  font-weight: 600;
+  margin-top: 0.55rem;
+  font-size: 0.85rem;
+}
+
+.isotope-ram-page #progress-line {
+  margin: 0 0 1rem;
+  padding: 8px 12px;
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.isotope-ram-page #summary-panel {
+  display: none;
+  margin-bottom: 1rem;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #a7f3d0;
+  background: #ecfdf5;
+}
+
+.isotope-ram-page #summary-panel.visible {
+  display: block;
+}
+
+.isotope-ram-page #summary-panel h2 {
+  margin-top: 0;
+  color: #047857;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.isotope-ram-page .session-analysis-panel {
+  margin-bottom: 1rem;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  background: var(--element-bg);
+}
+
+.isotope-ram-page .session-analysis-panel[hidden] {
+  display: none !important;
+}
+
+.isotope-ram-page .session-analysis-panel h3 {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.isotope-ram-page .summary-score {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.isotope-ram-page .summary-sub {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.85rem;
+}
+
+.isotope-ram-page .summary-by-type-title,
+.isotope-ram-page .summary-wrong-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin: 0.75rem 0 0.45rem;
+}
+
+.isotope-ram-page .summary-type-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.isotope-ram-page .summary-type-table th,
+.isotope-ram-page .summary-type-table td {
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.isotope-ram-page .summary-type-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.isotope-ram-page .summary-wrong-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.isotope-ram-page .summary-wrong-list li {
+  margin-bottom: 0.45rem;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.isotope-ram-page .summary-none {
+  font-size: 0.88rem;
+  color: #047857;
+  font-weight: 600;
+}
+
+.isotope-ram-page .summary-revision {
+  margin-top: 1rem;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: #fff;
+}
+
+.isotope-ram-page .summary-revision h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.isotope-ram-page .summary-revision ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.isotope-ram-page .summary-revision li {
+  margin-bottom: 0.35rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  html,
+  body {
+    overflow: auto;
+  }
+
+  .isotope-ram-page {
+    height: auto;
+    min-height: 100%;
+  }
+
+  .isotope-ram-page .worksheet-container {
+    grid-template-columns: 1fr;
+    height: auto;
+    max-height: none;
+  }
+
+  .isotope-ram-page .preview-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media print {
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .isotope-ram-page {
+    padding: 0;
+  }
+
+  .isotope-ram-page .worksheet-controls,
+  .isotope-ram-page .preview-header,
+  .isotope-ram-page .interaction-area,
+  .isotope-ram-page .hint,
+  .isotope-ram-page .feedback,
+  .isotope-ram-page #progress-line,
+  .isotope-ram-page #summary-panel,
+  .isotope-ram-page .session-analysis-panel {
+    display: none !important;
+  }
+
+  .isotope-ram-page .worksheet-container {
+    display: block;
+  }
+
+  .isotope-ram-page .question-box {
+    border: none;
+    border-bottom: 1px dashed #ccc;
+    background: #fff;
+    page-break-inside: avoid;
+    padding-bottom: 80px;
+  }
+}
