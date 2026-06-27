@@ -236,6 +236,50 @@
             transform: scale(1.2);
         }
 
+        #sb-ice-controls {
+            display: none;
+            grid-column: 1 / -1;
+            flex-direction: column;
+            gap: 10px;
+            height: auto;
+        }
+
+        .ice-slider-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .ice-slider-row input[type=range] {
+            flex-grow: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .ice-slider-row input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--accent-blue);
+        }
+
+        .ice-val-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--accent-blue);
+            min-width: 90px;
+            text-align: right;
+        }
+
         .temp-val-text {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.4em;
@@ -493,6 +537,33 @@
                         <div class="temp-val-text" id="sb-temp-text">25 °C</div>
                     </div>
 
+                    <!-- Ice Ih lattice controls (visible only at <= 0°C) -->
+                    <div id="sb-ice-controls" class="temp-slider-container">
+                        <i class="fa-solid fa-snowflake" style="font-size:1.4em; color:#00f0ff; filter:drop-shadow(0 0 5px #00f0ff); align-self:flex-start; margin-top:4px;"></i>
+                        <div style="flex-grow:1; display:flex; flex-direction:column; gap:10px;">
+                            <div class="ice-slider-row">
+                                <div style="flex-grow:1; display:flex; flex-direction:column; gap:4px;">
+                                    <div style="font-size:0.8em; color:var(--text-secondary);">
+                                        <span class="lang-zh">晶格單元大小 (Lattice Size)</span>
+                                        <span class="lang-en" style="display:none;">Lattice Size (N×N unit cells)</span>
+                                    </div>
+                                    <input type="range" id="sb-ice-size-slider" min="1" max="4" step="1" value="2" oninput="onIceLatticeSettingsChange()">
+                                </div>
+                                <div class="ice-val-text" id="sb-ice-size-text">2×2 (16)</div>
+                            </div>
+                            <div class="ice-slider-row">
+                                <div style="flex-grow:1; display:flex; flex-direction:column; gap:4px;">
+                                    <div style="font-size:0.8em; color:var(--text-secondary);">
+                                        <span class="lang-zh">視角縮放 (View Zoom)</span>
+                                        <span class="lang-en" style="display:none;">View Zoom</span>
+                                    </div>
+                                    <input type="range" id="sb-ice-zoom-slider" min="60" max="180" step="5" value="100" oninput="onIceLatticeSettingsChange()">
+                                </div>
+                                <div class="ice-val-text" id="sb-ice-zoom-text">100%</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Macro Properties Tests -->
                     <div class="glass-card" style="padding:10px 15px; display:flex; flex-direction:column; gap:8px; justify-content:center; height:100%; box-sizing:border-box;">
                         <div style="font-size: 0.72em; color: var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Macro Properties Tests</div>
@@ -689,6 +760,9 @@
         var sbConductivityEnabled = false;
         var sbDelocalizedElectrons = [];
         var sbShowIMF = true;
+        var iceIhSupercellSize = 2;
+        var iceIhViewZoom = 1.0;
+        var iceIhLatticeZoom = 1.08;
         var lastTime = 0;
         var sbTimeAccumulator = 0;
         var sbShatterFragments = [];
@@ -752,12 +826,52 @@
             hint.style.display = rotatable3d ? 'block' : 'none';
         }
 
-        const ICE_IH_NX = 4;
-        const ICE_IH_NY = 4;
-        const ICE_IH_LATTICE_ZOOM = 0.55;
+        function computeIceIhBaseZoom(n) {
+            return 1.08 * (2 / n);
+        }
+
+        function updateIceIhLatticeZoom() {
+            iceIhLatticeZoom = computeIceIhBaseZoom(iceIhSupercellSize) * iceIhViewZoom;
+        }
+
+        function updateIceLatticeControlLabels() {
+            const sizeText = document.getElementById('sb-ice-size-text');
+            const zoomText = document.getElementById('sb-ice-zoom-text');
+            const n = iceIhSupercellSize;
+            const waters = n * n * 4;
+            if (sizeText) sizeText.innerText = `${n}×${n} (${waters})`;
+            if (zoomText) zoomText.innerText = `${Math.round(iceIhViewZoom * 100)}%`;
+        }
+
+        function updateIceLatticeControlsVisibility() {
+            const panel = document.getElementById('sb-ice-controls');
+            if (!panel) return;
+            const show = isIceIhView();
+            panel.style.display = show ? 'flex' : 'none';
+            if (show) {
+                const sizeSlider = document.getElementById('sb-ice-size-slider');
+                const zoomSlider = document.getElementById('sb-ice-zoom-slider');
+                if (sizeSlider) sizeSlider.value = iceIhSupercellSize;
+                if (zoomSlider) zoomSlider.value = Math.round(iceIhViewZoom * 100);
+                updateIceIhLatticeZoom();
+                updateIceLatticeControlLabels();
+            }
+        }
+
+        function onIceLatticeSettingsChange() {
+            const sizeSlider = document.getElementById('sb-ice-size-slider');
+            const zoomSlider = document.getElementById('sb-ice-zoom-slider');
+            if (sizeSlider) iceIhSupercellSize = parseInt(sizeSlider.value, 10);
+            if (zoomSlider) iceIhViewZoom = parseInt(zoomSlider.value, 10) / 100;
+            updateIceIhLatticeZoom();
+            updateIceLatticeControlLabels();
+            updateSandboxInfoBanner();
+            if (isIceIhView()) buildSandboxParticles();
+        }
 
         // Ice Ih (P6₃/mmc): oxygen sub-lattice with tetrahedral H-bonding — open hexagonal structure
         function buildIceIhLattice3D(w, h) {
+            updateIceIhLatticeZoom();
             sbParticles = [];
             sbIceCovalentBonds = [];
             sbIceHBonds = [];
@@ -785,10 +899,11 @@
 
             const oPositions = [];
             const seen = new Set();
-            // 16 Ice Ih unit cells (4×4 basal supercell; Z = 4 waters per cell → 64 O atoms)
+            // N×N basal supercell (Z = 4 waters per cell → N²×4 O atoms)
+            const n = iceIhSupercellSize;
             const unitCellOffsets = [];
-            for (let du = 0; du < ICE_IH_NX; du++) {
-                for (let dv = 0; dv < ICE_IH_NY; dv++) {
+            for (let du = 0; du < n; du++) {
+                for (let dv = 0; dv < n; dv++) {
                     unitCellOffsets.push([du, dv]);
                 }
             }
@@ -803,7 +918,7 @@
                 });
             });
 
-            // Re-centre the 4×4 supercell in the viewport
+            // Re-centre the supercell in the viewport
             if (oPositions.length) {
                 const cx = oPositions.reduce((s, p) => s + p.x, 0) / oPositions.length;
                 const cy = oPositions.reduce((s, p) => s + p.y, 0) / oPositions.length;
@@ -845,7 +960,7 @@
 
             const oIds = [];
             oPositions.forEach((pos, oIdx) => {
-                const proj = project3DTo2D(pos.x, pos.y, pos.z, w, h, ICE_IH_LATTICE_ZOOM);
+                const proj = project3DTo2D(pos.x, pos.y, pos.z, w, h, iceIhLatticeZoom);
                 const oId = id++;
                 oIds[oIdx] = oId;
                 sbParticles.push({
@@ -876,7 +991,7 @@
                 const hx = oDon.x + (dx / len) * oHLen;
                 const hy = oDon.y + (dy / len) * oHLen;
                 const hz = oDon.z + (dz / len) * oHLen;
-                const proj = project3DTo2D(hx, hy, hz, w, h, ICE_IH_LATTICE_ZOOM);
+                const proj = project3DTo2D(hx, hy, hz, w, h, iceIhLatticeZoom);
                 const hId = id++;
                 sbParticles.push({
                     id: hId,
@@ -988,6 +1103,7 @@
             // Update legend overlay
             updateSandboxLegend();
             updateRotateHint();
+            updateIceLatticeControlsVisibility();
         }
 
         function switchSandboxMode(mode) {
@@ -1012,6 +1128,7 @@
             updateSandboxInfoBanner();
             updateSandboxLegend();
             updateRotateHint();
+            updateIceLatticeControlsVisibility();
         }
 
         function updateSandboxInfoBanner() {
@@ -1026,8 +1143,10 @@
                 if (sandboxTemp <= 0) stateZh = '固態冰 Ih (Solid Ice Ih)';
                 else if (sandboxTemp >= 100) stateZh = '氣態水蒸氣 (Water Vapor)';
                 if (sandboxTemp <= 0) {
-                    titleZh = `水 (H₂O) — 冰 Ih 開放型氫鍵晶格 [目前狀態：${stateZh}]`;
-                    titleEn = `Water (H₂O) — Ice Ih open H-bonded lattice [State: Solid Ice Ih]`;
+                    const iceN = iceIhSupercellSize;
+                    const iceWaters = iceN * iceN * 4;
+                    titleZh = `水 (H₂O) — 冰 Ih 開放型氫鍵晶格 [${iceN}×${iceN} 晶格, ${iceWaters} 水分子; 目前狀態：${stateZh}]`;
+                    titleEn = `Water (H₂O) — Ice Ih open H-bonded lattice [${iceN}×${iceN} lattice, ${iceWaters} waters; State: Solid Ice Ih]`;
                 } else {
                     titleZh = `水 (H₂O) — 簡單分子物質 [目前狀態：${stateZh}]`;
                     titleEn = `Water (H₂O) — Simple Molecular Structure [State: ${sandboxTemp >= 100 ? 'Gas Vapor' : 'Liquid'}]`;
@@ -1915,7 +2034,7 @@
                 if (sbHammerAnimating && sbHammerOffset > 8 && p.oy3d > 0) {
                     y3d += cleaveShift;
                 }
-                const proj = project3DTo2D(x3d, y3d, z3d, sandboxCanvas.width, sandboxCanvas.height, ICE_IH_LATTICE_ZOOM);
+                const proj = project3DTo2D(x3d, y3d, z3d, sandboxCanvas.width, sandboxCanvas.height, iceIhLatticeZoom);
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
