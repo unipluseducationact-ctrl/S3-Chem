@@ -1,15 +1,15 @@
 /* Atomic structure quiz — Uni+ worksheet theme (matches equation practice) */
 :root {
-  --text: #2c2420;
-  --text-muted: #5d544f;
-  --bg: #fdfbf7;
-  --surface: #f5efe6;
-  --border: rgba(0, 0, 0, 0.06);
-  --border-soft: rgba(0, 0, 0, 0.1);
-  --primary: #2c2420;
-  --primary-hover: #1a1512;
-  --ok: #047857;
-  --bad: #b91c1c;
+  --text: #2c2420 !important;
+  --text-muted: #5d544f !important;
+  --bg: #fdfbf7 !important;
+  --surface: #f5efe6 !important;
+  --border: rgba(0, 0, 0, 0.06) !important;
+  --border-soft: rgba(0, 0, 0, 0.1) !important;
+  --primary: #2c2420 !important;
+  --primary-hover: #1a1512 !important;
+  --ok: #047857 !important;
+  --bad: #b91c1c !important;
 }
 
 html,
@@ -17,40 +17,42 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg) !important;
+  color: var(--text) !important;
 }
 
 #root {
-  max-width: none;
+  max-width: none !important;
   min-height: 100%;
   height: 100%;
-  margin: 0;
+  margin: 0 !important;
   padding: 12px;
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: var(--bg) !important;
 }
 
 .app-header {
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border) !important;
   margin-bottom: 0;
   padding: 0 0 12px;
-  background: transparent;
+  background: transparent !important;
 }
 
 .app-header__titles h1 {
   font-size: 1.35rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--text);
+  color: var(--text) !important;
+  border-bottom: none !important;
 }
 
 .app-header__sub {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--text-muted) !important;
 }
 
 .lang-switch__label {
@@ -58,30 +60,30 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-muted);
+  color: var(--text-muted) !important;
 }
 
 .lang-btn {
   padding: 7px 14px;
-  border: 1.5px solid var(--border-soft);
+  border: 1.5px solid var(--border-soft) !important;
   border-radius: 12px;
-  background: var(--bg);
-  color: var(--text-muted);
+  background: var(--bg) !important;
+  color: var(--text-muted) !important;
   font-size: 0.8rem;
   font-weight: 600;
   transition: all 0.2s ease;
 }
 
 .lang-btn:hover {
-  border-color: var(--text-muted);
-  background: #fff;
-  color: var(--text);
+  border-color: var(--text-muted) !important;
+  background: #fff !important;
+  color: var(--text) !important;
 }
 
 .lang-btn--active {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--bg);
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--bg) !important;
   font-weight: 600;
 }
 

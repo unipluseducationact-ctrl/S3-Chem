@@ -1,0 +1,75 @@
+﻿/* Shared Ch.5 iframe worksheet base */
+:root {
+  --bg-color: #fdfbf7;
+  --element-bg: #f5efe6;
+  --text-primary: #2c2420;
+  --text-secondary: #5d544f;
+  --border-color: rgba(0, 0, 0, 0.06);
+}
+* { box-sizing: border-box; }
+html, body {
+  height: 100%; margin: 0; overflow: hidden;
+  font-family: system-ui, "Segoe UI", "Microsoft JhengHei", 微軟正黑體, sans-serif;
+  background: var(--bg-color); color: var(--text-primary);
+}
+.ch5-embed-page { height: 100%; min-height: 0; padding: 20px; display: flex; flex-direction: column; background: var(--bg-color); }
+.ch5-embed-page .worksheet-container {
+  flex: 1 1 0%; display: grid !important; grid-template-columns: 300px 1fr;
+  grid-template-rows: minmax(0, 1fr); gap: 20px; height: 100%; max-height: 100%; min-height: 0; align-items: stretch;
+}
+@media (min-width: 600px) {
+  .ch5-embed-page .worksheet-container { grid-template-columns: 300px 1fr !important; grid-template-rows: minmax(0, 1fr) !important; }
+  .ch5-embed-page .worksheet-container > .worksheet-controls { order: 0 !important; max-height: 100% !important; overflow-y: auto; }
+}
+.ch5-embed-page .worksheet-controls {
+  align-self: stretch !important; max-height: 100%; overflow-y: auto;
+  background: var(--element-bg); border: 1px solid var(--border-color); border-radius: 24px;
+  padding: 12px 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+.ch5-embed-page .worksheet-preview {
+  background: var(--element-bg); border: 1px solid var(--border-color); border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); min-height: 0; height: 100%;
+}
+.ch5-embed-page .count-input-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.ch5-embed-page .control-input:not(.count-input-hidden) {
+  width: 100%; margin-top: 0.25rem; padding: 8px 12px; border-radius: 12px;
+  border: 1.5px solid var(--border-color); background: var(--bg-color); color: var(--text-primary);
+  font-size: 0.9rem; font-weight: 500;
+}
+.ch5-embed-page .preview-mode-panel[hidden] { display: none !important; }
+.ch5-embed-page .sheet-preview-body { max-width: 680px; margin: 0 auto; }
+.ch5-embed-page .sheet-preview-body .print-q {
+  padding: 8px 12px; margin-bottom: 8px; background: var(--element-bg);
+  border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.88rem; line-height: 1.5;
+}
+.ch5-embed-page .practice-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 0.75rem; }
+.ch5-embed-page .session-summary-btn {
+  padding: 6px 14px; border: 1.5px solid var(--border-color); border-radius: 12px;
+  background: var(--bg-color); color: var(--text-secondary); font-size: 0.78rem; font-weight: 600; cursor: pointer;
+}
+.ch5-embed-page .practice-hint { font-size: 0.82rem; color: var(--text-secondary); margin: 0; flex: 1 1 auto; }
+.ch5-embed-page .session-analysis-panel, .ch5-embed-page .summary-panel {
+  margin-bottom: 1rem; padding: 14px 16px; border-radius: 14px;
+  border: 1px solid var(--border-color); background: var(--element-bg);
+}
+.ch5-embed-page .session-analysis-panel[hidden], .ch5-embed-page .summary-panel[hidden] { display: none !important; }
+.ch5-embed-page .summary-score { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.35rem; }
+.ch5-embed-page .summary-sub { font-size: 0.86rem; color: var(--text-secondary); margin: 0 0 0.85rem; }
+.ch5-embed-page .summary-type-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.ch5-embed-page .summary-type-table th, .ch5-embed-page .summary-type-table td {
+  padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid var(--border-color);
+}
+.ch5-embed-page .summary-type-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.ch5-embed-page .summary-wrong-list { list-style: none; margin: 0; padding: 0; }
+.ch5-embed-page .summary-wrong-list li {
+  margin-bottom: 0.45rem; padding: 8px 12px; border-radius: 12px;
+  background: #fef2f2; border: 1px solid #fecaca; font-size: 0.88rem; font-weight: 600; color: #991b1b;
+}
+.ch5-embed-page .summary-none { font-size: 0.88rem; color: #047857; font-weight: 600; }
+.ch5-embed-page .summary-revision {
+  margin-top: 1rem; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid var(--border-color); background: #fff;
+}

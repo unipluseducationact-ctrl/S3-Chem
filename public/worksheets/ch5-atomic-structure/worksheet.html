@@ -4,8 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HKDSE Chem — Atomic structure worksheet (HTML)</title>
-  <link rel="stylesheet" href="../../../css/worksheet-styles.css?v=2.1.5">
-  <link rel="stylesheet" href="atomic-worksheet.css?v=3">
+  <link rel="stylesheet" href="../../css/worksheet-styles.css?v=2.1.6">
+  <link rel="stylesheet" href="../ch5-shared/ch5-embed-base.css?v=1">
+  <link rel="stylesheet" href="atomic-worksheet.css?v=4">
+  <script src="../ch5-shared/ch5-embed-ui.js?v=1"></script>
   <style>
     @media print {
       @page {
@@ -45,7 +47,7 @@
   </style>
 </head>
 <body>
-  <div class="worksheet-generator-page atomic-worksheet-page">
+  <div class="worksheet-generator-page atomic-worksheet-page ch5-embed-page">
     <div class="worksheet-container">
       <aside class="worksheet-controls">
         <div class="controls-header">
@@ -1084,12 +1086,7 @@
   }
 
   /* ——— UI ——— */
-  let lang = (() => {
-    const q = (new URLSearchParams(window.location.search).get("lang") || "").toLowerCase();
-    if (q === "zh" || q === "zh-hant" || q === "zh-tw" || q === "zh-hk") return "zh";
-    if (q === "en") return "en";
-    return "en";
-  })();
+  let lang = window.Ch5EmbedUI.readLangFromQuery("en");
   let lastQuestions = [];
   const attemptMap = new Map();
   let currentViewMode = "print";
@@ -1100,10 +1097,10 @@
   }
 
   function setExportButtonsEnabled(enabled) {
-    ["btnExportPrint", "btnToday", "btnDocQ", "btnDocA"].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.disabled = !enabled;
-    });
+    window.Ch5EmbedUI.setExportButtonsEnabled(
+      ["btnExportPrint", "btnToday", "btnDocQ", "btnDocA"],
+      enabled
+    );
   }
 
   function applyLang() {
@@ -1739,10 +1736,12 @@
   document.getElementById("numCount").addEventListener("input", syncCountPills);
   document.getElementById("btnLangEn").addEventListener("click", () => {
     lang = "en";
+    window.Ch5EmbedUI.setLangInQuery("en");
     applyLang();
   });
   document.getElementById("btnLangZh").addEventListener("click", () => {
     lang = "zh";
+    window.Ch5EmbedUI.setLangInQuery("zh");
     applyLang();
   });
   document.getElementById("btnGenerate").addEventListener("click", generate);
