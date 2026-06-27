@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HKDSE Chem — Atomic structure worksheet (HTML)</title>
   <link rel="stylesheet" href="../../../css/worksheet-styles.css?v=2.1.5">
-  <link rel="stylesheet" href="atomic-worksheet.css?v=2">
+  <link rel="stylesheet" href="atomic-worksheet.css?v=3">
   <style>
     @media print {
       @page {
@@ -50,24 +50,32 @@
       <aside class="worksheet-controls">
         <div class="controls-header">
           <h2 id="appTitle">Worksheet Generator</h2>
-          <p id="appSubtitle">Atomic structure · bilingual EN / 繁體中文</p>
+          <p id="appSubtitle">Create atomic structure worksheets for your class</p>
         </div>
 
         <div class="control-group">
-          <label id="lblTypes">Question types</label>
-          <div id="typeChecks" class="checkbox-group"></div>
-        </div>
-
-        <div class="control-group">
-          <label id="lblCount">Number of questions (1–50)</label>
+          <label id="lblCount">Number of Questions</label>
           <div class="button-group" id="question-count-group"></div>
-          <input type="number" id="numCount" class="control-input" min="1" max="50" value="10" aria-label="Custom question count" />
+          <input type="number" id="numCount" class="control-input count-input-hidden" min="1" max="50" value="10" aria-label="Custom question count" tabindex="-1" />
+        </div>
+
+        <div class="control-group">
+          <label id="lblTypes">Question Types</label>
+          <div id="typeChecks" class="checkbox-group"></div>
         </div>
 
         <div class="control-group">
           <label id="lblDiff">Difficulty</label>
           <input type="hidden" id="selDiff" value="medium" />
           <div class="button-group" id="difficulty-group"></div>
+        </div>
+
+        <div class="control-group">
+          <label id="lblLang">Language</label>
+          <div class="button-group" id="lang-group">
+            <button type="button" class="option-btn active" id="btnLangEn">English</button>
+            <button type="button" class="option-btn" id="btnLangZh">繁體中文</button>
+          </div>
         </div>
 
         <div class="control-group">
@@ -93,10 +101,6 @@
             <button type="button" class="preview-tab" data-mode="answer" id="tabAnswer">Answer Key</button>
           </div>
           <div class="export-buttons">
-            <div class="button-group lang-switch-group">
-              <button type="button" class="option-btn active" id="btnLangEn">English</button>
-              <button type="button" class="option-btn" id="btnLangZh">繁體中文</button>
-            </div>
             <button type="button" class="export-btn" id="btnExportPrint" disabled>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -187,12 +191,12 @@
   ];
 
   const QUESTION_TYPES = [
-    { id: "mcq", label_en: "Multiple choice", label_zh: "選擇題" },
-    { id: "short", label_en: "Short / structured answer", label_zh: "短答／結構題" },
-    { id: "calc", label_en: "Calculation (Z, A, particles)", label_zh: "計算題（原子序、質量數、粒子數）" },
-    { id: "symbol", label_en: "Atomic symbol & notation", label_zh: "原子符號與表示法" },
-    { id: "concept", label_en: "Definitions & concepts", label_zh: "定義與概念" },
-    { id: "isotope", label_en: "Isotopes (no RAM calculation)", label_zh: "同位素（不含相對原子質量計算）" },
+    { id: "mcq", label_en: "Multiple choice", label_zh: "選擇題", subtitle_en: "4 options · pick one", subtitle_zh: "四選一" },
+    { id: "short", label_en: "Short / structured answer", label_zh: "短答／結構題", subtitle_en: "Written answer", subtitle_zh: "書面作答" },
+    { id: "calc", label_en: "Calculation (Z, A, particles)", label_zh: "計算題（原子序、質量數、粒子數）", subtitle_en: "Z, A, n, e, p", subtitle_zh: "原子序、質量數、粒子" },
+    { id: "symbol", label_en: "Atomic symbol & notation", label_zh: "原子符號與表示法", subtitle_en: "e.g. ²³₁₁Na", subtitle_zh: "如 ²³₁₁Na" },
+    { id: "concept", label_en: "Definitions & concepts", label_zh: "定義與概念", subtitle_en: "Key terms", subtitle_zh: "名詞與概念" },
+    { id: "isotope", label_en: "Isotopes (no RAM calculation)", label_zh: "同位素（不含相對原子質量計算）", subtitle_en: "Same Z, different A", subtitle_zh: "同 Z 不同 A" },
   ];
 
   const DIFFICULTIES = [
@@ -204,10 +208,11 @@
   const UI = {
     en: {
       appTitle: "Worksheet Generator",
-      appSubtitle: "Atomic structure · bilingual EN / 繁體中文",
-      lblTypes: "Question types",
-      lblCount: "Number of questions (1–50)",
+      appSubtitle: "Create atomic structure worksheets for your class",
+      lblTypes: "Question Types",
+      lblCount: "Number of Questions",
       lblDiff: "Difficulty",
+      lblLang: "Language",
       lblSeed: "Random seed (optional)",
       btnGenerate: "Generate Worksheet",
       trustText: "Questions cover atomic structure, Z, A, symbols, and isotopes — HKDSE-style.",
@@ -249,10 +254,11 @@
     },
     zh: {
       appTitle: "工作紙產生器",
-      appSubtitle: "原子結構 · 雙語 英文／繁體中文",
+      appSubtitle: "為你的班別建立原子結構工作紙",
       lblTypes: "題型",
-      lblCount: "題數（1–50）",
+      lblCount: "題目數量",
       lblDiff: "難度",
+      lblLang: "語言",
       lblSeed: "隨機種子（可留空）",
       btnGenerate: "產生工作紙",
       trustText: "題目涵蓋原子結構、原子序、質量數、符號及同位素等 DSE 風格練習。",
@@ -1107,6 +1113,7 @@
     document.getElementById("lblTypes").textContent = t("lblTypes");
     document.getElementById("lblCount").textContent = t("lblCount");
     document.getElementById("lblDiff").textContent = t("lblDiff");
+    document.getElementById("lblLang").textContent = t("lblLang");
     document.getElementById("lblSeed").textContent = t("lblSeed");
     document.getElementById("btnGenerateLabel").textContent = t("btnGenerate");
     document.getElementById("trustText").textContent = t("trustText");
@@ -1202,7 +1209,11 @@
       wrap.className = "checkbox-text-wrapper";
       const span = document.createElement("span");
       span.textContent = lang === "zh" ? qt.label_zh : qt.label_en;
+      const sub = document.createElement("span");
+      sub.className = "checkbox-subtitle";
+      sub.textContent = lang === "zh" ? qt.subtitle_zh : qt.subtitle_en;
       wrap.appendChild(span);
+      wrap.appendChild(sub);
       lab.appendChild(cb);
       lab.appendChild(wrap);
       tc.appendChild(lab);
