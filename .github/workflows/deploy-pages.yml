@@ -42,8 +42,8 @@ jobs:
           grep -q 'flashcards-page' dist/index.html
           grep -q 'worksheet-hub' dist/index.html
           grep -q 'data-page="flashcards"' dist/index.html
-          grep -q 'notes-coming-soon' dist/index.html
-          ! grep -q 'notes-pdf-frame' dist/index.html
+          test -f dist/public/notes/topic-01-planet-earth.pdf
+          grep -q 'notes-pdf-frame' dist/index.html
           test -f dist/public/summary/infographic.png
           test -f dist/public/tools/chem-catch/index.html
           test -f dist/public/worksheets/cursor-chem/index.html

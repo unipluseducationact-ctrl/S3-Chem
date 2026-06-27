@@ -172,20 +172,99 @@ html[lang="zh"] .summary-lang--zh-hant {
   box-sizing: border-box;
 }
 
-.notes-coming-soon {
-  min-height: 12rem;
-  flex-direction: column;
+.notes-section-stack {
+  gap: 2.25rem;
 }
 
-.notes-coming-soon__inner {
+.notes-topic .chapter-section-title {
+  font-size: 1.15rem;
+}
+
+.notes-pdf-hint {
+  margin: 0 0 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-secondary, #64748b);
+}
+
+.notes-pdf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(0.5rem, 1.5vw, 1.25rem);
+  align-items: stretch;
+  width: 100%;
+}
+
+.notes-pdf-grid--single {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 900px) {
+  .notes-pdf-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notes-pdf-card {
+  border-radius: 16px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  overflow: hidden;
+  background: var(--bg-color, #fff);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
+  min-width: 0;
+  width: 100%;
 }
 
-.notes-coming-soon__inner p {
-  margin: 0;
+.notes-pdf-frame-wrap {
+  position: relative;
+  width: 100%;
+  min-height: min(78dvh, 900px);
+  height: min(88dvh, 1100px);
+  background: #f1f5f9;
+}
+
+@media (max-width: 900px) {
+  .notes-pdf-frame-wrap {
+    min-height: min(70dvh, 720px);
+    height: min(82dvh, 900px);
+  }
+}
+
+@media (max-height: 900px) {
+  .notes-pdf-frame-wrap {
+    min-height: min(50dvh, 480px);
+    height: min(55dvh, 600px);
+  }
+}
+
+.notes-pdf-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.notes-pdf-actions {
+  padding: 0.5rem 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+  background: var(--element-bg, #f8fafc);
+}
+
+.notes-pdf-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-highlight, #6366f1);
+  text-decoration: none;
+}
+
+.notes-pdf-link:hover {
+  text-decoration: underline;
 }
 
 /* Flashcards */
