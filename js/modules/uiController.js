@@ -3,23 +3,13 @@
 // Extracted from script.js: grid generation, modal population, level system
 // =============================================================================
 
-import { finallyData, elements } from "../data/elementsData.js";
+import { elements } from "../data/elementsIndex.js";
 import { getElectronArrangementByZ } from "../utils/electronArrangement.js";
 import { translations } from "../data/translations.js";
-import {
-  ensureThreeLibLoaded,
-  init3DScene,
-  updateAtomStructure,
-  onWindowResize,
-  reset3DView,
-  animateAtom,
-  cleanup3D,
-  clearCurrentAtom,
-  renderScene,
-} from "./threeRenderer.js";
 import { initCardSlider } from "./cardSliderController.js";
 import { createEITController } from "./ui/eitController.js";
-import { initElementTutorial } from "./tutorialController.js";
+import { loadStylesheet } from "./assetLoader.js";
+import { getFinallyData } from "./elementDetailLoader.js";
 import {
   t,
   onLangChange,
@@ -36,6 +26,41 @@ import {
 
 // v2 dataset stub — file removed; branches gated by uniplusVersion === 'new' are inert.
 const elementsData_v2 = [];
+let cachedFinallyData = null;
+let threeRendererModule = null;
+let tutorialInitialized = false;
+const elementsByNumber = new Map(elements.map((el) => [el.number, el]));
+
+async function getThreeRenderer() {
+  if (!threeRendererModule) {
+    threeRendererModule = await import("./threeRenderer.js");
+  }
+  return threeRendererModule;
+}
+
+async function ensureElementDetailCache() {
+  if (!cachedFinallyData) {
+    cachedFinallyData = await getFinallyData();
+  }
+  return cachedFinallyData;
+}
+
+function getFinallyElementData(element) {
+  const data = cachedFinallyData || {};
+  return data[element.number] || data[String(element.number)] || {};
+}
+
+async function ensureElementTutorial(force = false) {
+  const mod = await import("./tutorialController.js");
+  if (!tutorialInitialized || force) {
+    mod.initElementTutorial(force);
+    tutorialInitialized = true;
+  }
+}
+
+function getElementRelativeMass(element) {
+  return element.mass || "";
+}
 const REPRESENTATIVE_MASS_NUMBERS = [
   1, 4, 7, 9, 11, 12, 14, 16, 19, 20,
   23, 24, 27, 28, 31, 32, 35, 40, 39, 40,
@@ -1190,7 +1215,8 @@ function updatePeriodicTableLocalizedText(tableContainer) {
 }
 
 // ===== Periodic Table Grid Generation =====
-export function buildPeriodicTable(tableContainer) {
+export async function buildPeriodicTable(tableContainer) {
+  await ensureElementDetailCache();
   eitController.resetEITRegistry();
   eitController.resetEITState();
 
@@ -1256,6 +1282,38 @@ export function buildPeriodicTable(tableContainer) {
     }, { passive: false });
   };
 
+  const bindPeriodicTableDelegation = () => {
+    if (tableContainer.dataset.delegatedClick) return;
+    tableContainer.dataset.delegatedClick = "true";
+    let lastTouchUpAt = 0;
+
+    tableContainer.addEventListener("click", (e) => {
+      if (lastTouchUpAt && (performance.now() - lastTouchUpAt) < 650) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      const cell = e.target.closest(".element:not(.range-block)");
+      if (!cell || !tableContainer.contains(cell)) return;
+      const num = Number.parseInt(cell.dataset.elementNumber, 10);
+      const targetElement = elementsByNumber.get(num);
+      if (targetElement) void showModal(targetElement);
+    }, true);
+
+    tableContainer.addEventListener("pointerup", (e) => {
+      if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
+      if (window._uniplusIsDragging) return;
+      const cell = e.target.closest(".element:not(.range-block)");
+      if (!cell || !tableContainer.contains(cell)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      lastTouchUpAt = performance.now();
+      const num = Number.parseInt(cell.dataset.elementNumber, 10);
+      const targetElement = elementsByNumber.get(num);
+      if (targetElement) void showModal(targetElement);
+    }, { passive: false });
+  };
+
   const grid = {};
   elements.forEach((element) => {
     if (element.row && element.column) {
@@ -1267,7 +1325,7 @@ export function buildPeriodicTable(tableContainer) {
       const element = grid[`${r}-${c}`];
       const cell = document.createElement("div");
       if (element) {
-        const relMass = finallyData?.[element.number]?.level2_atomic?.mass?.highSchool || "";
+        const relMass = getElementRelativeMass(element);
         const relMassHtml = relMass
           ? `<span class="rel-mass" aria-hidden="true" style="position:absolute;left:calc(var(--tvmin, 1vmin) * 0.6);bottom:calc(var(--tvmin, 1vmin) * 0.35);font-size:9cqi;font-weight:700;opacity:0.42;letter-spacing:-0.01em;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none;">${escapeHtml(relMass)}</span>`
           : `<span class="rel-mass" aria-hidden="true" style="display:none;"></span>`;
@@ -1328,14 +1386,11 @@ export function buildPeriodicTable(tableContainer) {
           bindTouchActivate(cell, toggleRangeHighlight);
           bindKeyboardActivation(cell, toggleRangeHighlight);
         } else {
-          const openElementModal = () => showModal(element);
           cell.setAttribute(
             "aria-label",
             `${localizeElementName(element)} (${element.symbol}), atomic number ${element.number}`,
           );
-          cell.addEventListener("click", openElementModal);
-          bindTouchActivate(cell, openElementModal);
-          bindKeyboardActivation(cell, openElementModal);
+          bindKeyboardActivation(cell, () => { void showModal(element); });
           eitController.registerEITElementCell(cell, element);
 
         }
@@ -1357,7 +1412,7 @@ export function buildPeriodicTable(tableContainer) {
   lanthanides.forEach((element, index) => {
     const cell = document.createElement("div");
     cell.classList.add("element", "lanthanide");
-    const relMass = finallyData?.[element.number]?.level2_atomic?.mass?.highSchool || "";
+    const relMass = getElementRelativeMass(element);
     const relMassHtml = relMass
       ? `<span class="rel-mass" aria-hidden="true" style="position:absolute;left:calc(var(--tvmin, 1vmin) * 0.6);bottom:calc(var(--tvmin, 1vmin) * 0.35);font-size:9cqi;font-weight:700;opacity:0.42;letter-spacing:-0.01em;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none;">${escapeHtml(relMass)}</span>`
       : `<span class="rel-mass" aria-hidden="true" style="display:none;"></span>`;
@@ -1393,10 +1448,7 @@ export function buildPeriodicTable(tableContainer) {
                 }
               </span>
           `;
-    const openElementModal = () => showModal(element);
-    cell.addEventListener("click", openElementModal);
-    bindTouchActivate(cell, openElementModal);
-    bindKeyboardActivation(cell, openElementModal);
+    bindKeyboardActivation(cell, () => { void showModal(element); });
     eitController.registerEITElementCell(cell, element);
 
     // After adding header row: periods occupy rows 2–8, gap is row 9.
@@ -1408,7 +1460,7 @@ export function buildPeriodicTable(tableContainer) {
   actinides.forEach((element, index) => {
     const cell = document.createElement("div");
     cell.classList.add("element", "actinide");
-    const relMass = finallyData?.[element.number]?.level2_atomic?.mass?.highSchool || "";
+    const relMass = getElementRelativeMass(element);
     const relMassHtml = relMass
       ? `<span class="rel-mass" aria-hidden="true" style="position:absolute;left:calc(var(--tvmin, 1vmin) * 0.6);bottom:calc(var(--tvmin, 1vmin) * 0.35);font-size:9cqi;font-weight:700;opacity:0.42;letter-spacing:-0.01em;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none;">${escapeHtml(relMass)}</span>`
       : `<span class="rel-mass" aria-hidden="true" style="display:none;"></span>`;
@@ -1444,10 +1496,7 @@ export function buildPeriodicTable(tableContainer) {
                 }
               </span>
           `;
-    const openElementModal = () => showModal(element);
-    cell.addEventListener("click", openElementModal);
-    bindTouchActivate(cell, openElementModal);
-    bindKeyboardActivation(cell, openElementModal);
+    bindKeyboardActivation(cell, () => { void showModal(element); });
     eitController.registerEITElementCell(cell, element);
 
     // Place Ac–Lr on the second row after the gap.
@@ -1455,6 +1504,7 @@ export function buildPeriodicTable(tableContainer) {
     cell.style.gridColumn = 5 + index;
     tableContainer.appendChild(cell);
   });
+  bindPeriodicTableDelegation();
   
   // Apply text cramping and correct language classes initially
   updatePeriodicTableLocalizedText(tableContainer);
@@ -1907,7 +1957,7 @@ function setupL3UnitConversion(blueCard, rawData, extData) {
 
 // ===== Simplified View Population =====
 function populateSimplifiedView(element) {
-  const finallyElementData = finallyData[element.number] || {};
+  const finallyElementData = getFinallyElementData(element);
   const v2Data = elementsData_v2[element.number];
   const eduData = element.educational || {};
   const numberToSuperscript = (num) => {
@@ -2536,7 +2586,7 @@ export function scrollPeriodicTableToElement(element) {
 }
 
 // ===== Show Modal (main element modal) =====
-export function showModal(element) {
+export async function showModal(element) {
   // Blur the focused element cell so that subsequent space presses
   // don't re-trigger bindKeyboardActivation → showModal → 3D refresh
   if (document.activeElement && document.activeElement !== document.body) {
@@ -2544,7 +2594,11 @@ export function showModal(element) {
   }
   window.currentAtomElement = element;
   clearHeadlineResizeHandler();
-  const finallyElementData = finallyData[element.number] || {};
+  await Promise.all([
+    loadStylesheet("css/modal.css?v=2.1.2"),
+    ensureElementDetailCache(),
+  ]);
+  const finallyElementData = getFinallyElementData(element);
   element.educational = element.educational || {};
   element.phase = element.phase || finallyElementData.level1_basic?.phaseAtSTP || "";
   element.electronConfig =
@@ -3066,7 +3120,7 @@ export function showModal(element) {
     );
   }
   modal.classList.add("active");
-  initElementTutorial();
+  void ensureElementTutorial();
   document.title = `Uni+ - ${localizeElementName(element)}`;
   document.body.classList.add("hide-nav");
   if (isSimplifiedView) {
@@ -3083,13 +3137,14 @@ export function showModal(element) {
   }
   if (element.number <= 118) {
     atomContainer.classList.add("visible");
-    cleanup3D();
-    clearCurrentAtom();
-    renderScene();
+    const three = await getThreeRenderer();
+    three.cleanup3D();
+    three.clearCurrentAtom();
+    three.renderScene();
     void atomContainer.offsetWidth;
     setTimeout(async () => {
       try {
-        await ensureThreeLibLoaded();
+        await three.ensureThreeLibLoaded();
         const contentHeight =
           modal.querySelector(".modal-content").clientHeight;
         if (atomContainer.clientHeight === 0) {
@@ -3103,11 +3158,11 @@ export function showModal(element) {
             atomContainer.style.height = visualPane.clientHeight + "px";
           }
         }
-        init3DScene(atomContainer);
-        updateAtomStructure(element);
-        onWindowResize();
-        reset3DView();
-        animateAtom();
+        three.init3DScene(atomContainer);
+        three.updateAtomStructure(element);
+        three.onWindowResize();
+        three.reset3DView();
+        three.animateAtom();
         requestAnimationFrame(() => {
           atomContainer.style.opacity = "1";
         });
@@ -3117,7 +3172,7 @@ export function showModal(element) {
     }, 100);
   } else {
     atomContainer.classList.remove("visible");
-    cleanup3D();
+    void getThreeRenderer().then((three) => three.cleanup3D()).catch(() => {});
   }
 }
 
@@ -3181,7 +3236,7 @@ function populateLevelContent(level, element) {
   }
 }
 function populateLevel1(element, eduData) {
-  const finallyElementData = finallyData[element.number] || {};
+  const finallyElementData = getFinallyElementData(element);
   const level1Protons = document.getElementById("level1-protons");
   const level1Electrons = document.getElementById("level1-electrons");
   const level1Mass = document.getElementById("level1-mass");
@@ -3360,7 +3415,7 @@ export function initModalUI() {
     document.title = "Uni+";
     clearHeadlineResizeHandler();
     resetElementHeadlineName(document.getElementById("headline-name"));
-    cleanup3D(true);
+    void getThreeRenderer().then((three) => three.cleanup3D(true)).catch(() => {});
     atomContainer.classList.remove("visible");
     if (window._uniplusAtomPauseBtn) window._uniplusAtomPauseBtn.style.display = "none";
     resetModalUI();
@@ -3404,7 +3459,7 @@ export function initModalUI() {
   const tutorialBtn = document.getElementById("element-tutorial-btn");
   if (tutorialBtn) {
     tutorialBtn.addEventListener("click", () => {
-      initElementTutorial(true); // pass true to force the tutorial
+      void ensureElementTutorial(true);
     });
   }
 
@@ -3475,6 +3530,7 @@ export async function mountElementDetailsInline(targetContainer, element) {
   wrapper.appendChild(visualPane);
 
   // Populate the same simplified UI (fills IDs inside the moved subtree).
+  await ensureElementDetailCache();
   populateSimplifiedView(element);
 
   // Flashcards embed only shows the first simplified "page".
@@ -3498,21 +3554,22 @@ export async function mountElementDetailsInline(targetContainer, element) {
 
   // Init 3D atom inside embedded visual pane.
   try {
-    await ensureThreeLibLoaded();
-    cleanup3D(true);
-    clearCurrentAtom();
-    renderScene();
+    const three = await getThreeRenderer();
+    await three.ensureThreeLibLoaded();
+    three.cleanup3D(true);
+    three.clearCurrentAtom();
+    three.renderScene();
 
     // Give the embedded pane a deterministic size so init3DScene can measure.
     visualPane.style.height = "100%";
     atomHost.style.height = "100%";
     atomHost.style.opacity = "1";
 
-    init3DScene(atomHost);
-    updateAtomStructure(element);
-    onWindowResize();
-    reset3DView();
-    animateAtom();
+    three.init3DScene(atomHost);
+    three.updateAtomStructure(element);
+    three.onWindowResize();
+    three.reset3DView();
+    three.animateAtom();
   } catch (e) {
     console.error("Inline element 3D init failed:", e);
   }
@@ -3523,7 +3580,7 @@ export function unmountElementDetailsInline() {
   if (!st) return;
 
   try {
-    cleanup3D(true);
+    void getThreeRenderer().then((three) => three.cleanup3D(true)).catch(() => {});
   } catch {
     /* ignore */
   }
@@ -3620,20 +3677,21 @@ export async function mountAtom3DInline(targetContainer, element) {
   _inlineAtomOnlyState.renderPauseBtn = renderPauseBtn;
 
   try {
-    await ensureThreeLibLoaded();
-    cleanup3D(true);
-    clearCurrentAtom();
-    renderScene();
+    const three = await getThreeRenderer();
+    await three.ensureThreeLibLoaded();
+    three.cleanup3D(true);
+    three.clearCurrentAtom();
+    three.renderScene();
 
     visualPane.style.height = "100%";
     atomHost.style.height = "100%";
     atomHost.style.opacity = "1";
 
-    init3DScene(atomHost);
-    updateAtomStructure(element);
-    onWindowResize();
-    reset3DView();
-    animateAtom();
+    three.init3DScene(atomHost);
+    three.updateAtomStructure(element);
+    three.onWindowResize();
+    three.reset3DView();
+    three.animateAtom();
   } catch (e) {
     console.error("Inline atom-only 3D init failed:", e);
   }
@@ -3644,7 +3702,7 @@ export function unmountAtom3DInline() {
   if (!st) return;
 
   try {
-    cleanup3D(true);
+    void getThreeRenderer().then((three) => three.cleanup3D(true)).catch(() => {});
   } catch {
     /* ignore */
   }

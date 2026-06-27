@@ -8,7 +8,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          if (id.includes('elementsDetail')) return 'elements-detail';
+          if (id.includes('elementsIndex') || id.includes('elementShells')) return 'elements-index';
           if (id.includes('elementsData')) return 'elements-data';
+          if (id.includes('threeRenderer')) return 'three-renderer';
+          if (id.includes('tutorialController')) return 'tutorial';
           if (id.includes('uiController')) return 'ui-controller';
           if (id.includes('toolContentFactories')) return 'tool-content';
           if (id.includes('chemFlashcardApp')) return 'flashcards';

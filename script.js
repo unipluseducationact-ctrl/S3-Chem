@@ -220,6 +220,28 @@ function initPeriodicTableScale() {
     return table.getBoundingClientRect().height;
   }
 
+  function measureGapHeights() {
+    table.style.transition = "none";
+    table.style.transform = "none";
+    table.style.setProperty("--series-gap", `${MIN_GAP}px`);
+    void table.offsetHeight;
+    const hMin = table.getBoundingClientRect().height;
+    if (MAX_GAP === MIN_GAP) {
+      return { hMin, hMax: hMin };
+    }
+    table.style.setProperty("--series-gap", `${MAX_GAP}px`);
+    void table.offsetHeight;
+    const hMax = table.getBoundingClientRect().height;
+    return { hMin, hMax };
+  }
+
+  function estimateHeightForGap(hMin, hMax, gap) {
+    if (gap <= MIN_GAP) return hMin;
+    if (gap >= MAX_GAP) return hMax;
+    const ratio = (gap - MIN_GAP) / (MAX_GAP - MIN_GAP);
+    return hMin + (hMax - hMin) * ratio;
+  }
+
   function applyLayout(gap, scale, marginTop) {
     table.style.setProperty("--series-gap", `${gap}px`);
     table.style.transformOrigin = "top center";
@@ -314,8 +336,8 @@ function initPeriodicTableScale() {
       table.style.setProperty("--tvmin", `${tvmin}px`);
       table.style.width = `${tableWidth}px`;
 
-      // 4. Measure base height with MIN gap
-      const hMin = measureHeight(MIN_GAP);
+      // 4. Measure base height with MIN/MAX gap once
+      const { hMin, hMax } = measureGapHeights();
 
       // 5. Adaptive Gap: expand gap to fill available height, maximizing the table
       let currentGap;
@@ -331,7 +353,7 @@ function initPeriodicTableScale() {
         // Table fits. Expand gap to fill remaining space.
         const extraSpace = availH - hMin;
         currentGap = Math.min(MAX_GAP, MIN_GAP + extraSpace);
-        height = measureHeight(currentGap);
+        height = estimateHeightForGap(hMin, hMax, currentGap);
         // Fine-tune: if somehow still doesn't fit, clamp
         if (height > availH) {
           currentGap = MIN_GAP;
@@ -392,10 +414,15 @@ function initPeriodicTableScale() {
   };
   window._uniplusGetUserScale = () => userScale;
   let resizeTimer;
-  window.addEventListener("resize", () => {
+  const scheduleScaleTable = () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => requestAnimationFrame(() => scaleTable(true)), 50);
-  });
+  };
+  window.addEventListener("resize", scheduleScaleTable);
+  if (typeof ResizeObserver !== "undefined") {
+    const containerObserver = new ResizeObserver(scheduleScaleTable);
+    containerObserver.observe(container);
+  }
   window.addEventListener("load", () => scaleTable(true));
   // Also run immediately
   requestAnimationFrame(() => scaleTable(true));
@@ -514,8 +541,9 @@ function initMainApp() {
 
   const tableContainer = document.getElementById("periodic-table");
   if (tableContainer) {
-    buildPeriodicTable(tableContainer);
-    syncEitMobileMount(tableContainer, eitController);
+    void buildPeriodicTable(tableContainer).then(() => {
+      syncEitMobileMount(tableContainer, eitController);
+    });
     let eitMobileResizeTimer;
     window.addEventListener("resize", () => {
       clearTimeout(eitMobileResizeTimer);

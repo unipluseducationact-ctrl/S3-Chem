@@ -1,4 +1,4 @@
-import { finallyData } from "../../data/elementsData.js";
+import { getFinallyData, getFinallyDataSync, preloadElementDetail } from "../elementDetailLoader.js";
 import { t, onLangChange } from "../langController.js";
 
 function defaultNormalizeCategoryClass(catClass) {
@@ -372,12 +372,14 @@ function parseNumericMetric(rawValue, metricKey) {
 }
 
 function getMetricValue(elementNumber, metricKey) {
+  const finallyData = getFinallyDataSync() || {};
   const physical = finallyData[elementNumber]?.level3_properties?.physical || {};
   return parseNumericMetric(physical[metricKey], metricKey);
 }
 
 function registerEITElementCell(cell, element) {
   if (!cell || !element || typeof element.number !== "number") return;
+  const finallyData = getFinallyDataSync() || {};
   const metrics = {};
   const ranges = {};
   const catClass = normalizeCategoryLabel(element.category);

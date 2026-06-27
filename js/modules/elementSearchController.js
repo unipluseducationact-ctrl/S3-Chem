@@ -2,7 +2,7 @@
 // Element Search Controller - Navbar element search with autocomplete
 // =============================================================================
 
-import { elements } from "../data/elementsData.js";
+import { elements } from "../data/elementsIndex.js";
 import { showModal, scrollPeriodicTableToElement } from "./uiController.js";
 import {
   t,

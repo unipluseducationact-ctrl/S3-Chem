@@ -1,5 +1,5 @@
 // Chemistry flashcards — embedded app, scoped to #flashcards-page
-import { finallyData } from "../data/elementsData.js";
+import { finallyData } from "../data/elementsDetail.js";
 
 function formatShellElectronsLabel(shells, label = "Shell electrons") {
   return shells?.length ? `${label}: ${shells.join(", ")}` : "—";
