@@ -9,7 +9,9 @@ const dist = join(root, 'dist');
 cpSync(join(root, 'public'), join(dist, 'public'), { recursive: true });
 writeFileSync(join(dist, '.nojekyll'), '');
 
-// Embedded worksheet iframes link to ../../css/worksheet-styles.css — copy unhashed file for Pages.
-const distCssDir = join(dist, 'css');
-mkdirSync(distCssDir, { recursive: true });
-cpSync(join(root, 'css', 'worksheet-styles.css'), join(distCssDir, 'worksheet-styles.css'));
+// Embedded worksheet iframes link to ../../../css/worksheet-styles.css from public/worksheets/ch5-*.
+const worksheetStyles = join(root, 'css', 'worksheet-styles.css');
+for (const cssDir of [join(dist, 'css'), join(dist, 'public', 'css')]) {
+  mkdirSync(cssDir, { recursive: true });
+  cpSync(worksheetStyles, join(cssDir, 'worksheet-styles.css'));
+}
