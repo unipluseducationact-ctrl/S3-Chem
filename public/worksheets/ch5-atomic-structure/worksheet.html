@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HKDSE Chem — Atomic structure worksheet (HTML)</title>
   <link rel="stylesheet" href="../../../css/worksheet-styles.css?v=2.1.5">
-  <link rel="stylesheet" href="atomic-worksheet.css?v=1">
+  <link rel="stylesheet" href="atomic-worksheet.css?v=2">
   <style>
     @media print {
       @page {
@@ -49,8 +49,8 @@
     <div class="worksheet-container">
       <aside class="worksheet-controls">
         <div class="controls-header">
-          <h2 id="appTitle">HKDSE Chemistry — Atomic structure worksheet</h2>
-          <p id="appSubtitle">Standalone HTML · bilingual EN / 繁體中文</p>
+          <h2 id="appTitle">Worksheet Generator</h2>
+          <p id="appSubtitle">Atomic structure · bilingual EN / 繁體中文</p>
         </div>
 
         <div class="control-group">
@@ -80,32 +80,78 @@
             <path d="M12 3v1m0 16v1m-9-9h1m16 0h1m-2.64-6.36l-.7.7m-12.02 12.02l-.7.7m0-12.72l.7.7m12.02 12.02l.7.7" />
             <circle cx="12" cy="12" r="4" />
           </svg>
-          <span id="btnGenerateLabel">Generate questions</span>
+          <span id="btnGenerateLabel">Generate Worksheet</span>
         </button>
+        <div class="trust-text" id="trustText">Questions cover atomic structure, Z, A, symbols, and isotopes — HKDSE-style.</div>
       </aside>
 
       <section class="worksheet-preview">
         <div class="preview-header">
           <div class="preview-tabs">
-            <button type="button" class="preview-tab active" id="tabPractice">Practice</button>
-            <button type="button" class="preview-tab" id="btnSummary">Session summary</button>
+            <button type="button" class="preview-tab active" data-mode="print" id="tabPrint">Print</button>
+            <button type="button" class="preview-tab" data-mode="practice" id="tabPractice">Practice</button>
+            <button type="button" class="preview-tab" data-mode="answer" id="tabAnswer">Answer Key</button>
           </div>
           <div class="export-buttons">
             <div class="button-group lang-switch-group">
               <button type="button" class="option-btn active" id="btnLangEn">English</button>
               <button type="button" class="option-btn" id="btnLangZh">繁體中文</button>
             </div>
-            <button type="button" class="export-btn" id="btnDocQ">Word — Questions</button>
-            <button type="button" class="export-btn" id="btnDocA">Word — Answers</button>
-            <button type="button" class="export-btn" id="btnPrint">Print / Save as PDF</button>
+            <button type="button" class="export-btn" id="btnExportPrint" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span id="btnExportPrintLabel">Print</span>
+            </button>
+            <button type="button" class="export-btn" id="btnToday" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span id="btnTodayLabel">Today</span>
+            </button>
+            <button type="button" class="export-btn" id="btnDocQ" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              <span id="btnDocQLabel">Word — Questions</span>
+            </button>
+            <button type="button" class="export-btn" id="btnDocA" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              <span id="btnDocALabel">Word — Answers</span>
+            </button>
           </div>
         </div>
-        <div class="preview-content">
-          <p class="preview-export-hint" id="txtExportHint">Word: .doc for Microsoft Word. Use Print → Save as PDF for a PDF copy.</p>
-          <p class="practice-hint" id="txtPracticeHint">First wrong: hint only. Second wrong: model answer.</p>
-          <div id="summaryPanel" class="summary-panel" hidden role="region" aria-live="polite"></div>
-          <div id="quizArea" class="quiz-empty"></div>
-          <p class="footer-note" id="footerNote">Topic: atomic structure, Z, A, symbols — HKDSE-style practice.</p>
+        <div class="preview-content" id="previewContent">
+          <div id="previewPlaceholder" class="preview-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <line x1="10" y1="9" x2="8" y2="9"></line>
+            </svg>
+            <p id="placeholderText">Click 'Generate Worksheet' to create practice problems</p>
+          </div>
+          <div id="printView" class="preview-mode-panel sheet-preview-body" hidden></div>
+          <div id="practiceView" class="preview-mode-panel" hidden>
+            <div class="practice-toolbar">
+              <p class="practice-hint" id="txtPracticeHint">First wrong: hint only. Second wrong: model answer.</p>
+              <button type="button" class="session-summary-btn" id="btnSummary">Session summary</button>
+            </div>
+            <div id="summaryPanel" class="summary-panel" hidden role="region" aria-live="polite"></div>
+            <div id="quizArea" class="quiz-empty"></div>
+          </div>
+          <div id="answerView" class="preview-mode-panel sheet-preview-body" hidden></div>
         </div>
       </section>
     </div>
@@ -157,22 +203,23 @@
 
   const UI = {
     en: {
-      appTitle: "HKDSE Chemistry — Atomic structure worksheet",
-      appSubtitle: "Standalone HTML · bilingual EN / 繁體中文",
-      hSettings: "Worksheet settings",
+      appTitle: "Worksheet Generator",
+      appSubtitle: "Atomic structure · bilingual EN / 繁體中文",
       lblTypes: "Question types",
       lblCount: "Number of questions (1–50)",
       lblDiff: "Difficulty",
       lblSeed: "Random seed (optional)",
-      btnGenerate: "Generate questions",
-      hExport: "Export",
-      txtExportHint: "Word: .doc for Microsoft Word. Use Print → Save as PDF for a PDF copy.",
+      btnGenerate: "Generate Worksheet",
+      trustText: "Questions cover atomic structure, Z, A, symbols, and isotopes — HKDSE-style.",
+      tabPrint: "Print",
+      tabPractice: "Practice",
+      tabAnswerKey: "Answer Key",
+      btnExportPrint: "Print",
+      btnToday: "Today",
       btnDocQ: "Word — Questions",
       btnDocA: "Word — Answers",
-      btnPrint: "Print / Save as PDF",
-      hPractice: "On-screen practice",
       txtPracticeHint: "First wrong: hint only. Second wrong: model answer.",
-      footerNote: "Topic: atomic structure, Z, A, symbols — HKDSE-style practice.",
+      placeholder: "Click 'Generate Worksheet' to create practice problems",
       quizCheck: "Check answer",
       empty: "Generate questions first.",
       btnSummary: "Session summary",
@@ -201,24 +248,25 @@
       revBalanced: "No single type dominated the errors—continue balanced practice across the types you selected.",
     },
     zh: {
-      appTitle: "香港中學文憑試 化學 — 原子結構工作紙（純 HTML）",
-      appSubtitle: "無需伺服器 · 雙語（英文／繁體中文）",
-      hSettings: "工作紙設定",
+      appTitle: "工作紙產生器",
+      appSubtitle: "原子結構 · 雙語 英文／繁體中文",
       lblTypes: "題型",
       lblCount: "題數（1–50）",
       lblDiff: "難度",
       lblSeed: "隨機種子（可留空）",
-      btnGenerate: "產生題目",
-      hExport: "匯出",
-      txtExportHint: "Word：下載 .doc 以 Word 開啟。需要 PDF 時請使用「列印」→「另存 PDF」。",
+      btnGenerate: "產生工作紙",
+      trustText: "題目涵蓋原子結構、原子序、質量數、符號及同位素等 DSE 風格練習。",
+      tabPrint: "列印",
+      tabPractice: "練習",
+      tabAnswerKey: "答案",
+      btnExportPrint: "列印",
+      btnToday: "今天",
       btnDocQ: "Word — 試題",
       btnDocA: "Word — 答案",
-      btnPrint: "列印／另存 PDF",
-      hPractice: "互動練習",
       txtPracticeHint: "第一次答錯只顯示提示；第二次答錯顯示參考答案。",
-      footerNote: "課題：原子結構、原子序、質量數、符號等。",
+      placeholder: "按「產生工作紙」以建立練習題目",
       quizCheck: "檢查答案",
-      empty: "請先按「產生題目」。",
+      empty: "請先按「產生工作紙」。",
       btnSummary: "學習摘要",
       summaryTitle: "摘要",
       summaryScoreLabel: "得分（答對／總題數）",
@@ -1038,9 +1086,18 @@
   })();
   let lastQuestions = [];
   const attemptMap = new Map();
+  let currentViewMode = "print";
+  let sheetDate = "";
 
   function t(key) {
     return (UI[lang] && UI[lang][key]) || UI.en[key] || key;
+  }
+
+  function setExportButtonsEnabled(enabled) {
+    ["btnExportPrint", "btnToday", "btnDocQ", "btnDocA"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = !enabled;
+    });
   }
 
   function applyLang() {
@@ -1052,18 +1109,27 @@
     document.getElementById("lblDiff").textContent = t("lblDiff");
     document.getElementById("lblSeed").textContent = t("lblSeed");
     document.getElementById("btnGenerateLabel").textContent = t("btnGenerate");
-    document.getElementById("txtExportHint").textContent = t("txtExportHint");
-    document.getElementById("btnDocQ").textContent = t("btnDocQ");
-    document.getElementById("btnDocA").textContent = t("btnDocA");
-    document.getElementById("btnPrint").textContent = t("btnPrint");
-    document.getElementById("tabPractice").textContent = t("hPractice");
+    document.getElementById("trustText").textContent = t("trustText");
+    document.getElementById("tabPrint").textContent = t("tabPrint");
+    document.getElementById("tabPractice").textContent = t("tabPractice");
+    document.getElementById("tabAnswer").textContent = t("tabAnswerKey");
+    document.getElementById("btnExportPrintLabel").textContent = t("btnExportPrint");
+    document.getElementById("btnTodayLabel").textContent = t("btnToday");
+    document.getElementById("btnDocQLabel").textContent = t("btnDocQ");
+    document.getElementById("btnDocALabel").textContent = t("btnDocA");
     document.getElementById("txtPracticeHint").textContent = t("txtPracticeHint");
+    document.getElementById("placeholderText").textContent = t("placeholder");
     document.getElementById("btnSummary").textContent = t("btnSummary");
-    document.getElementById("footerNote").textContent = t("footerNote");
     document.getElementById("btnLangEn").classList.toggle("active", lang === "en");
     document.getElementById("btnLangZh").classList.toggle("active", lang === "zh");
     initMeta();
-    renderQuiz();
+    if (lastQuestions.length) {
+      renderSheetPreviews();
+      renderQuiz();
+    } else {
+      renderQuiz();
+    }
+    renderViewMode();
     const sp = document.getElementById("summaryPanel");
     if (!sp.hidden && lastQuestions.length) renderSummary();
   }
@@ -1162,7 +1228,43 @@
     const sp = document.getElementById("summaryPanel");
     sp.hidden = true;
     sp.innerHTML = "";
+    sheetDate = "";
+    renderSheetPreviews();
     renderQuiz();
+    setExportButtonsEnabled(true);
+    currentViewMode = "print";
+    document.querySelectorAll(".preview-tab").forEach((tab) => {
+      tab.classList.toggle("active", tab.dataset.mode === "print");
+    });
+    renderViewMode();
+  }
+
+  function renderViewMode() {
+    const hasQuestions = lastQuestions.length > 0;
+    const placeholder = document.getElementById("previewPlaceholder");
+    const printView = document.getElementById("printView");
+    const practiceView = document.getElementById("practiceView");
+    const answerView = document.getElementById("answerView");
+
+    if (!hasQuestions) {
+      placeholder.hidden = false;
+      printView.hidden = true;
+      practiceView.hidden = true;
+      answerView.hidden = true;
+      return;
+    }
+
+    placeholder.hidden = true;
+    printView.hidden = currentViewMode !== "print";
+    practiceView.hidden = currentViewMode !== "practice";
+    answerView.hidden = currentViewMode !== "answer";
+  }
+
+  function renderSheetPreviews() {
+    if (!lastQuestions.length) return;
+    document.getElementById("printView").innerHTML = buildPdfInnerHtml(false);
+    document.getElementById("answerView").innerHTML = buildPdfInnerHtml(true);
+    fillPdfSheet(currentViewMode === "answer");
   }
 
   function qtypeLabel(typeId) {
@@ -1255,6 +1357,11 @@
       alert(t("alertNoQuiz"));
       return;
     }
+    currentViewMode = "practice";
+    document.querySelectorAll(".preview-tab").forEach((tab) => {
+      tab.classList.toggle("active", tab.dataset.mode === "practice");
+    });
+    renderViewMode();
     const total = lastQuestions.length;
     let correct = 0;
     let firstTry = 0;
@@ -1505,7 +1612,11 @@
       ? "HKDSE Chemistry — Atomic structure (Answers & hints)"
       : "HKDSE Chemistry — Atomic structure (Questions)";
     const titleZh = answersMode ? "化學 — 原子結構（答案及提示）" : "化學 — 原子結構（試題）";
-    let html = "<h1>" + escHtml(titleEn) + "</h1><div class=\"meta\">" + escHtml(titleZh) + "</div>";
+    let html = "<h1>" + escHtml(titleEn) + "</h1><div class=\"meta\">" + escHtml(titleZh);
+    if (sheetDate) {
+      html += " · " + escHtml(sheetDate);
+    }
+    html += "</div>";
     lastQuestions.forEach((q, i) => {
       html += "<div class=\"pdf-q\"><strong>Q" + (i + 1) + "</strong> [" + escHtml(q.qtype) + "]<br/>";
       html += "<strong>EN:</strong> " + escHtml(q.stem_en) + "<br/>";
@@ -1599,6 +1710,21 @@
     window.print();
   }
 
+  function fillTodayDate() {
+    if (!lastQuestions.length) return;
+    if (sheetDate) {
+      sheetDate = "";
+    } else {
+      const today = new Date();
+      if (lang === "zh") {
+        sheetDate = today.getFullYear() + "年" + (today.getMonth() + 1) + "月" + today.getDate() + "日";
+      } else {
+        sheetDate = today.toLocaleDateString("en", { year: "numeric", month: "short", day: "numeric" });
+      }
+    }
+    renderSheetPreviews();
+  }
+
   document.getElementById("numCount").addEventListener("input", syncCountPills);
   document.getElementById("btnLangEn").addEventListener("click", () => {
     lang = "en";
@@ -1609,18 +1735,27 @@
     applyLang();
   });
   document.getElementById("btnGenerate").addEventListener("click", generate);
+  document.querySelectorAll(".preview-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".preview-tab").forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      currentViewMode = tab.dataset.mode || "print";
+      renderViewMode();
+      if (lastQuestions.length) {
+        fillPdfSheet(currentViewMode === "answer");
+      }
+    });
+  });
   document.getElementById("btnSummary").addEventListener("click", renderSummary);
   document.getElementById("btnDocQ").addEventListener("click", () => downloadWord(false));
   document.getElementById("btnDocA").addEventListener("click", () => downloadWord(true));
-  document.getElementById("btnPrint").addEventListener("click", () => {
-    if (!lastQuestions.length) {
-      alert(lang === "zh" ? "請先產生題目。" : "Generate questions first.");
-      return;
-    }
-    const want = confirm(lang === "zh" ? "要列印「答案版」嗎？（取消 = 試題版）" : "Print ANSWER sheet? (Cancel = questions only)");
-    printSheet(!!want);
+  document.getElementById("btnExportPrint").addEventListener("click", () => {
+    const answersMode = currentViewMode === "answer";
+    printSheet(answersMode);
   });
+  document.getElementById("btnToday").addEventListener("click", fillTodayDate);
 
+  setExportButtonsEnabled(false);
   applyLang();
 })();
   </script>

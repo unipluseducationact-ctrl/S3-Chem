@@ -29,18 +29,97 @@ body {
 .atomic-worksheet-page {
   height: 100%;
   min-height: 0;
-  padding: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .atomic-worksheet-page .worksheet-container {
+  flex: 1 1 0%;
   height: 100%;
   max-height: 100%;
+  min-height: 0;
+}
+
+/* Keep two-column layout inside iframe (override shared 1100px collapse) */
+@media (min-width: 768px) {
+  .atomic-worksheet-page .worksheet-container {
+    grid-template-columns: 300px 1fr !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+  }
+
+  .atomic-worksheet-page .worksheet-container > .worksheet-controls {
+    order: 0;
+    max-height: 100%;
+  }
 }
 
 .atomic-worksheet-page .worksheet-controls {
   max-height: 100%;
   overflow-y: auto;
   align-self: stretch;
+}
+
+.atomic-worksheet-page .preview-mode-panel[hidden] {
+  display: none !important;
+}
+
+.atomic-worksheet-page .preview-mode-panel {
+  min-height: 0;
+}
+
+.atomic-worksheet-page .sheet-preview-body {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.atomic-worksheet-page .sheet-preview-body .pdf-q {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.atomic-worksheet-page .sheet-preview-body h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+}
+
+.atomic-worksheet-page .sheet-preview-body .meta {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.atomic-worksheet-page .practice-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.atomic-worksheet-page .session-summary-btn {
+  padding: 6px 14px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-color);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.atomic-worksheet-page .session-summary-btn:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+  background: #fff;
 }
 
 .atomic-worksheet-page .controls-header h2 {
@@ -361,7 +440,7 @@ body {
   margin-bottom: 12pt;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 767px) {
   html,
   body {
     overflow: auto;
@@ -370,12 +449,19 @@ body {
   .atomic-worksheet-page {
     height: auto;
     min-height: 100%;
+    padding: 12px;
   }
 
   .atomic-worksheet-page .worksheet-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
     height: auto;
     max-height: none;
+  }
+
+  .atomic-worksheet-page .worksheet-container > .worksheet-controls {
+    order: -1;
+    max-height: min(42dvh, 420px);
   }
 
   .atomic-worksheet-page .preview-header {
