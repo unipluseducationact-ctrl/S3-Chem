@@ -4,372 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HKDSE Chem — Atomic structure worksheet (HTML)</title>
+  <link rel="stylesheet" href="../../../css/worksheet-styles.css?v=2.1.5">
+  <link rel="stylesheet" href="atomic-worksheet.css?v=1">
   <style>
-    /* Soft UI / pastel — aligned with Uni+ periodic table style */
-    :root {
-      --bg: #f0f2f5;
-      --bg-elevated: #f8f9fa;
-      --card: #ffffff;
-      --text: #2d3436;
-      --muted: #636e72;
-      --border: #e9ecef;
-      --shadow: 0 4px 14px rgba(45, 52, 54, 0.06);
-      --shadow-hover: 0 8px 24px rgba(45, 52, 54, 0.1);
-      /* Pastel accents (periodic-table palette) */
-      --accent: #7c9ce0;
-      --accent-soft: #dfe6fb;
-      --accent2: #7bc9a8;
-      --accent2-soft: #d5f4e6;
-      --danger: #e5989b;
-      --danger-soft: #ffe5e5;
-      --ok: #8fbc8f;
-      --ok-soft: #e8f5e9;
-      --pill-active-bg: #636e72;
-      --pill-active-text: #ffffff;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --radius-pill: 9999px;
-      font-family: system-ui, "Segoe UI", "Microsoft JhengHei", 微軟正黑體, sans-serif;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-      min-height: 100vh;
-    }
-    .header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 1.25rem;
-      padding: 1.35rem 1.75rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .header > div:first-child {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      padding: 1.1rem 1.35rem;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    .header h1 { margin: 0 0 0.35rem; font-size: 1.28rem; font-weight: 650; letter-spacing: -0.02em; color: var(--text); }
-    .subtitle { margin: 0; color: var(--muted); font-size: 0.92rem; }
-    .lang-switch {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      background: var(--card);
-      padding: 0.4rem;
-      border-radius: var(--radius-pill);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    .lang-switch button {
-      background: transparent;
-      color: var(--muted);
-      border: none;
-      padding: 0.5rem 1.1rem;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      font-size: 0.88rem;
-      font-weight: 500;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    }
-    .lang-switch button:hover {
-      background: var(--bg-elevated);
-      color: var(--text);
-    }
-    .lang-switch button.active {
-      background: var(--pill-active-bg);
-      color: var(--pill-active-text);
-      box-shadow: 0 2px 8px rgba(99, 110, 114, 0.25);
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(280px, 380px) 1fr;
-      gap: 1.35rem;
-      padding: 0.25rem 1.5rem 2.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem 1.35rem;
-      box-shadow: var(--shadow);
-    }
-    .card h2 { margin: 0 0 0.85rem; font-size: 1.08rem; font-weight: 650; color: var(--text); }
-    .card h3 { margin: 1.15rem 0 0.4rem; font-size: 0.9rem; color: var(--muted); font-weight: 600; }
-    label { display: block; margin-top: 0.8rem; font-size: 0.84rem; color: var(--muted); font-weight: 500; }
-    input[type="number"], input[type="text"], select {
-      width: 100%;
-      margin-top: 0.3rem;
-      padding: 0.55rem 0.85rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      background: var(--bg-elevated);
-      color: var(--text);
-      font-size: 0.95rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    input[type="number"]:focus, input[type="text"]:focus, select:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-    .checks { display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.4rem; }
-    .checks label.row {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      margin: 0;
-      padding: 0.45rem 0.65rem;
-      border-radius: var(--radius-md);
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 0.9rem;
-    }
-    .actions { margin-top: 1.1rem; display: flex; gap: 0.55rem; flex-wrap: wrap; }
-    button.primary {
-      background: linear-gradient(135deg, #a8d4f0 0%, #b8b5f0 100%);
-      border: 1px solid rgba(124, 156, 224, 0.35);
-      color: #2d3436;
-      padding: 0.6rem 1.35rem;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.92rem;
-      box-shadow: 0 2px 10px rgba(124, 156, 224, 0.25);
-      transition: transform 0.15s, box-shadow 0.2s;
-    }
-    button.primary:hover {
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-1px);
-    }
-    .actions button:not(.primary) {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.55rem 1.1rem;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      font-size: 0.86rem;
-      font-weight: 500;
-      box-shadow: 0 1px 4px rgba(45, 52, 54, 0.04);
-      transition: background 0.2s, box-shadow 0.2s;
-    }
-    .actions button:not(.primary):hover {
-      background: var(--bg-elevated);
-      box-shadow: var(--shadow);
-    }
-    .hint { font-size: 0.82rem; color: var(--muted); margin: 0.35rem 0 0.55rem; line-height: 1.45; }
-    .quiz-empty { color: var(--muted); padding: 1.25rem 0; text-align: center; font-size: 0.92rem; }
-    .q-block {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 1rem 1.1rem;
-      margin-bottom: 0.9rem;
-      background: var(--bg-elevated);
-      box-shadow: 0 2px 8px rgba(45, 52, 54, 0.04);
-    }
-    .q-head { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
-    .stem { margin: 0.3rem 0; }
-    .stem-zh { color: #4a5568; font-size: 0.93rem; }
-    .options label { margin: 0.4rem 0 0; color: var(--text); cursor: pointer; padding: 0.35rem 0; }
-    .feedback { margin-top: 0.65rem; font-size: 0.88rem; padding: 0.5rem 0.75rem; border-radius: var(--radius-md); }
-    .feedback.hint { color: #2d6a4f; background: var(--accent2-soft); }
-    .feedback.bad { color: #9d4e52; background: var(--danger-soft); }
-    .feedback.ok { color: #2d5a2d; background: var(--ok-soft); }
-    .text-ans {
-      width: 100%;
-      margin-top: 0.35rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      background: var(--card);
-      padding: 0.55rem 0.85rem;
-    }
-    .text-ans:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-    input[type="radio"], input[type="checkbox"] {
-      accent-color: #7c9ce0;
-      width: 1.05em;
-      height: 1.05em;
-    }
-    .options label:hover { color: var(--text); }
-    .q-block .primary { margin-top: 0.65rem; }
-    .summary-actions { margin-top: 0.75rem; }
-    .summary-actions button {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.55rem 1.1rem;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      font-size: 0.86rem;
-      font-weight: 500;
-      box-shadow: 0 1px 4px rgba(45, 52, 54, 0.04);
-      transition: background 0.2s, box-shadow 0.2s;
-    }
-    .summary-actions button:hover {
-      background: var(--bg-elevated);
-      box-shadow: var(--shadow);
-    }
-    .summary-panel {
-      margin-top: 1rem;
-      padding: 1rem 1.1rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      background: var(--bg-elevated);
-      box-shadow: 0 2px 10px rgba(45, 52, 54, 0.04);
-    }
-    .summary-panel[hidden] { display: none !important; }
-    .summary-panel h3 {
-      margin: 0 0 0.65rem;
-      font-size: 1rem;
-      font-weight: 650;
-      color: var(--text);
-    }
-    .summary-score {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 0.35rem;
-    }
-    .summary-sub {
-      font-size: 0.86rem;
-      color: var(--muted);
-      margin: 0 0 0.85rem;
-    }
-    .summary-wrong-title {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text);
-      margin: 0.75rem 0 0.45rem;
-    }
-    .summary-wrong-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .summary-wrong-list li {
-      margin-bottom: 0.45rem;
-      padding: 0.55rem 0.75rem;
-      border-radius: var(--radius-md);
-      background: var(--danger-soft);
-      border: 1px solid rgba(229, 152, 155, 0.45);
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #7a3d42;
-    }
-    .summary-wrong-list li .type-code {
-      font-weight: 500;
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-    .summary-none {
-      font-size: 0.88rem;
-      color: var(--ok);
-      font-weight: 600;
-      margin: 0.25rem 0 0;
-    }
-    .summary-by-type-title {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text);
-      margin: 1rem 0 0.5rem;
-    }
-    .summary-type-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.86rem;
-      margin: 0 0 0.5rem;
-    }
-    .summary-type-table th,
-    .summary-type-table td {
-      padding: 0.45rem 0.5rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    .summary-type-table th {
-      color: var(--muted);
-      font-weight: 600;
-      font-size: 0.78rem;
-      text-transform: none;
-    }
-    .summary-type-table td.num {
-      text-align: right;
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-    }
-    .summary-type-table tr:last-child td { border-bottom: none; }
-    .summary-type-table .type-name { font-weight: 600; color: var(--text); }
-    .summary-type-table .type-code-cell {
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-weight: 500;
-    }
-    .summary-revision {
-      margin-top: 1rem;
-      padding: 0.95rem 1.05rem;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(124, 156, 224, 0.38);
-      background: var(--accent-soft);
-    }
-    .summary-revision h4 {
-      margin: 0 0 0.55rem;
-      font-size: 0.92rem;
-      font-weight: 650;
-      color: var(--text);
-    }
-    .summary-revision ul {
-      margin: 0;
-      padding-left: 1.2rem;
-    }
-    .summary-revision li {
-      margin-bottom: 0.4rem;
-      font-size: 0.86rem;
-      line-height: 1.48;
-      color: var(--text);
-    }
-    .summary-revision li:last-child { margin-bottom: 0; }
-    .footer { padding: 1rem 1.5rem 2rem; max-width: 1200px; margin: 0 auto; font-size: 0.8rem; color: var(--muted); }
-    /* Print sheet: collapsed on screen; expanded in @media print */
-    #pdfSheet {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      max-width: 210mm;
-      margin: 0 auto;
-      padding: 12mm;
-      box-sizing: border-box;
-      background: #fff;
-      color: #111;
-      font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
-      font-size: 10pt;
-      line-height: 1.35;
-      visibility: hidden;
-      height: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    #pdfSheet h1 { font-size: 14pt; margin: 0 0 6pt; }
-    #pdfSheet .pdf-q { margin-bottom: 10pt; }
-    #pdfSheet .meta { font-size: 9pt; color: #444; margin-bottom: 12pt; }
-    /*
-      Print / Save as PDF: do NOT use visibility:hidden on the whole body — hidden nodes
-      still consume layout height, which creates extra blank pages. Hide UI with display:none.
-    */
     @media print {
       @page {
         size: auto;
@@ -383,10 +20,11 @@
         padding: 0 !important;
         background: #fff !important;
         color: #111 !important;
+        overflow: visible !important;
       }
-      .header,
-      .grid,
-      .footer {
+      .worksheet-generator-page,
+      .worksheet-controls,
+      .worksheet-preview {
         display: none !important;
       }
       #pdfSheet {
@@ -407,53 +45,71 @@
   </style>
 </head>
 <body>
-  <header class="header">
-    <div>
-      <h1 id="appTitle">HKDSE Chemistry — Atomic structure worksheet</h1>
-      <p class="subtitle" id="appSubtitle">Standalone HTML · English / 繁體中文</p>
-    </div>
-    <div class="lang-switch">
-      <button type="button" id="btnLangEn" class="active">English</button>
-      <button type="button" id="btnLangZh">繁體中文</button>
-    </div>
-  </header>
+  <div class="worksheet-generator-page atomic-worksheet-page">
+    <div class="worksheet-container">
+      <aside class="worksheet-controls">
+        <div class="controls-header">
+          <h2 id="appTitle">HKDSE Chemistry — Atomic structure worksheet</h2>
+          <p id="appSubtitle">Standalone HTML · bilingual EN / 繁體中文</p>
+        </div>
 
-  <main class="grid">
-    <section class="card">
-      <h2 id="hSettings">Worksheet settings</h2>
-      <label id="lblTypes">Question types</label>
-      <div id="typeChecks" class="checks"></div>
-      <label for="numCount" id="lblCount">Number of questions</label>
-      <input type="number" id="numCount" min="1" max="50" value="10" />
-      <label for="selDiff" id="lblDiff">Difficulty</label>
-      <select id="selDiff"></select>
-      <label for="txtSeed" id="lblSeed">Random seed (optional)</label>
-      <input type="text" id="txtSeed" placeholder="e.g. classA-2026" />
-      <div class="actions">
-        <button type="button" id="btnGenerate" class="primary">Generate</button>
-      </div>
-      <h3 id="hExport">Export</h3>
-      <p class="hint" id="txtExportHint">Word: opens in Microsoft Word. Use Print → Save as PDF for a PDF copy.</p>
-      <div class="actions wrap">
-        <button type="button" id="btnDocQ">Word — Questions</button>
-        <button type="button" id="btnDocA">Word — Answers</button>
-        <button type="button" id="btnPrint">Print / Save as PDF</button>
-      </div>
-    </section>
-    <section class="card">
-      <h2 id="hPractice">On-screen practice</h2>
-      <p class="hint" id="txtPracticeHint">First wrong attempt: hint only. Second wrong: model answer.</p>
-      <div class="summary-actions">
-        <button type="button" id="btnSummary">Session summary</button>
-      </div>
-      <div id="summaryPanel" class="summary-panel" hidden role="region" aria-live="polite"></div>
-      <div id="quizArea" class="quiz-empty"></div>
-    </section>
-  </main>
+        <div class="control-group">
+          <label id="lblTypes">Question types</label>
+          <div id="typeChecks" class="checkbox-group"></div>
+        </div>
 
-  <footer class="footer">
-    <span id="footerNote">HKDSE-style atomic structure practice.</span>
-  </footer>
+        <div class="control-group">
+          <label id="lblCount">Number of questions (1–50)</label>
+          <div class="button-group" id="question-count-group"></div>
+          <input type="number" id="numCount" class="control-input" min="1" max="50" value="10" aria-label="Custom question count" />
+        </div>
+
+        <div class="control-group">
+          <label id="lblDiff">Difficulty</label>
+          <input type="hidden" id="selDiff" value="medium" />
+          <div class="button-group" id="difficulty-group"></div>
+        </div>
+
+        <div class="control-group">
+          <label for="txtSeed" id="lblSeed">Random seed (optional)</label>
+          <input type="text" id="txtSeed" class="control-input" placeholder="e.g. classA-2026" />
+        </div>
+
+        <button type="button" class="generate-btn" id="btnGenerate">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3v1m0 16v1m-9-9h1m16 0h1m-2.64-6.36l-.7.7m-12.02 12.02l-.7.7m0-12.72l.7.7m12.02 12.02l.7.7" />
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+          <span id="btnGenerateLabel">Generate questions</span>
+        </button>
+      </aside>
+
+      <section class="worksheet-preview">
+        <div class="preview-header">
+          <div class="preview-tabs">
+            <button type="button" class="preview-tab active" id="tabPractice">Practice</button>
+            <button type="button" class="preview-tab" id="btnSummary">Session summary</button>
+          </div>
+          <div class="export-buttons">
+            <div class="button-group lang-switch-group">
+              <button type="button" class="option-btn active" id="btnLangEn">English</button>
+              <button type="button" class="option-btn" id="btnLangZh">繁體中文</button>
+            </div>
+            <button type="button" class="export-btn" id="btnDocQ">Word — Questions</button>
+            <button type="button" class="export-btn" id="btnDocA">Word — Answers</button>
+            <button type="button" class="export-btn" id="btnPrint">Print / Save as PDF</button>
+          </div>
+        </div>
+        <div class="preview-content">
+          <p class="preview-export-hint" id="txtExportHint">Word: .doc for Microsoft Word. Use Print → Save as PDF for a PDF copy.</p>
+          <p class="practice-hint" id="txtPracticeHint">First wrong: hint only. Second wrong: model answer.</p>
+          <div id="summaryPanel" class="summary-panel" hidden role="region" aria-live="polite"></div>
+          <div id="quizArea" class="quiz-empty"></div>
+          <p class="footer-note" id="footerNote">Topic: atomic structure, Z, A, symbols — HKDSE-style practice.</p>
+        </div>
+      </section>
+    </div>
+  </div>
 
   <div id="pdfSheet" aria-hidden="true"></div>
 
@@ -1391,18 +1047,16 @@
     document.documentElement.lang = lang === "zh" ? "zh-Hant" : "en";
     document.getElementById("appTitle").textContent = t("appTitle");
     document.getElementById("appSubtitle").textContent = t("appSubtitle");
-    document.getElementById("hSettings").textContent = t("hSettings");
     document.getElementById("lblTypes").textContent = t("lblTypes");
     document.getElementById("lblCount").textContent = t("lblCount");
     document.getElementById("lblDiff").textContent = t("lblDiff");
     document.getElementById("lblSeed").textContent = t("lblSeed");
-    document.getElementById("btnGenerate").textContent = t("btnGenerate");
-    document.getElementById("hExport").textContent = t("hExport");
+    document.getElementById("btnGenerateLabel").textContent = t("btnGenerate");
     document.getElementById("txtExportHint").textContent = t("txtExportHint");
     document.getElementById("btnDocQ").textContent = t("btnDocQ");
     document.getElementById("btnDocA").textContent = t("btnDocA");
     document.getElementById("btnPrint").textContent = t("btnPrint");
-    document.getElementById("hPractice").textContent = t("hPractice");
+    document.getElementById("tabPractice").textContent = t("hPractice");
     document.getElementById("txtPracticeHint").textContent = t("txtPracticeHint");
     document.getElementById("btnSummary").textContent = t("btnSummary");
     document.getElementById("footerNote").textContent = t("footerNote");
@@ -1414,28 +1068,77 @@
     if (!sp.hidden && lastQuestions.length) renderSummary();
   }
 
-  function initMeta() {
-    const diff = document.getElementById("selDiff");
-    diff.innerHTML = "";
-    DIFFICULTIES.forEach((d) => {
-      const o = document.createElement("option");
-      o.value = d.id;
-      o.textContent = lang === "zh" ? d.label_zh : d.label_en;
-      diff.appendChild(o);
+  function setDifficulty(value) {
+    document.getElementById("selDiff").value = value;
+    document.querySelectorAll("#difficulty-group .option-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.value === value);
     });
+  }
+
+  function syncCountPills() {
+    const val = String(document.getElementById("numCount").value);
+    document.querySelectorAll("#question-count-group .option-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.value === val);
+    });
+  }
+
+  function initMeta() {
+    const currentDiff = document.getElementById("selDiff").value || "medium";
+    const diffGroup = document.getElementById("difficulty-group");
+    if (!diffGroup.dataset.wired) {
+      diffGroup.innerHTML = "";
+      DIFFICULTIES.forEach((d) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn";
+        btn.dataset.value = d.id;
+        btn.textContent = lang === "zh" ? d.label_zh : d.label_en;
+        btn.addEventListener("click", () => setDifficulty(d.id));
+        diffGroup.appendChild(btn);
+      });
+      diffGroup.dataset.wired = "1";
+    } else {
+      diffGroup.querySelectorAll(".option-btn").forEach((btn, i) => {
+        btn.textContent = lang === "zh" ? DIFFICULTIES[i].label_zh : DIFFICULTIES[i].label_en;
+      });
+    }
+    setDifficulty(currentDiff);
+
+    const countGroup = document.getElementById("question-count-group");
+    if (!countGroup.dataset.wired) {
+      [5, 10, 20, 30, 50].forEach((n) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn";
+        btn.dataset.value = String(n);
+        btn.textContent = String(n);
+        btn.addEventListener("click", () => {
+          document.getElementById("numCount").value = n;
+          syncCountPills();
+        });
+        countGroup.appendChild(btn);
+      });
+      countGroup.dataset.wired = "1";
+    }
+    syncCountPills();
+
+    const checked = new Set(selectedTypes());
     const tc = document.getElementById("typeChecks");
     tc.innerHTML = "";
     QUESTION_TYPES.forEach((qt) => {
       const lab = document.createElement("label");
-      lab.className = "row";
+      lab.className = "checkbox-option";
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.value = qt.id;
-      cb.checked = ["mcq", "calc", "isotope"].includes(qt.id);
+      cb.checked = checked.size ? checked.has(qt.id) : ["mcq", "calc", "isotope"].includes(qt.id);
+      const wrap = document.createElement("div");
+      wrap.className = "checkbox-text-wrapper";
       const span = document.createElement("span");
       span.textContent = lang === "zh" ? qt.label_zh : qt.label_en;
+      wrap.appendChild(span);
       lab.appendChild(cb);
-      lab.appendChild(span);
+      lab.appendChild(wrap);
       tc.appendChild(lab);
     });
   }
@@ -1750,7 +1453,7 @@
       const btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = t("quizCheck");
-      btn.className = "primary";
+      btn.className = "quiz-check-btn";
       const fb = document.createElement("div");
       fb.className = "feedback";
       fb.style.display = "none";
@@ -1896,6 +1599,7 @@
     window.print();
   }
 
+  document.getElementById("numCount").addEventListener("input", syncCountPills);
   document.getElementById("btnLangEn").addEventListener("click", () => {
     lang = "en";
     applyLang();

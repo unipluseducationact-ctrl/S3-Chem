@@ -1,0 +1,389 @@
+/* Atomic structure worksheet — Uni+ tokens + iframe layout (matches equation practice) */
+:root {
+  --bg-color: #fdfbf7;
+  --element-bg: #f5efe6;
+  --element-hover: #ebe0d0;
+  --text-primary: #2c2420;
+  --text-secondary: #5d544f;
+  --text-muted: #9ca3af;
+  --text-highlight: #78350f;
+  --border-color: rgba(0, 0, 0, 0.06);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: system-ui, "Segoe UI", "Microsoft JhengHei", 微軟正黑體, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-primary);
+}
+
+.atomic-worksheet-page {
+  height: 100%;
+  min-height: 0;
+  padding: 12px;
+}
+
+.atomic-worksheet-page .worksheet-container {
+  height: 100%;
+  max-height: 100%;
+}
+
+.atomic-worksheet-page .worksheet-controls {
+  max-height: 100%;
+  overflow-y: auto;
+  align-self: stretch;
+}
+
+.atomic-worksheet-page .controls-header h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  line-height: 1.25;
+}
+
+.atomic-worksheet-page .controls-header p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.atomic-worksheet-page .control-input {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.atomic-worksheet-page .control-input:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 3px rgba(44, 36, 32, 0.08);
+}
+
+.atomic-worksheet-page .lang-switch-group {
+  flex-shrink: 0;
+}
+
+.atomic-worksheet-page .preview-export-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.atomic-worksheet-page .practice-hint {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.75rem;
+  line-height: 1.45;
+}
+
+.atomic-worksheet-page .footer-note {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.atomic-worksheet-page .quiz-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 200px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.atomic-worksheet-page .q-block {
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: var(--bg-color);
+}
+
+.atomic-worksheet-page .q-head {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.atomic-worksheet-page .stem {
+  margin: 0.25rem 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.atomic-worksheet-page .stem-zh {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin: 0.15rem 0 0.5rem;
+}
+
+.atomic-worksheet-page .options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 0.35rem;
+}
+
+.atomic-worksheet-page .options label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.atomic-worksheet-page .options label:hover {
+  border-color: var(--text-secondary);
+  background: var(--element-bg);
+}
+
+.atomic-worksheet-page .text-ans {
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  background: #fff;
+  font-size: 0.9rem;
+}
+
+.atomic-worksheet-page .text-ans:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 3px rgba(44, 36, 32, 0.08);
+}
+
+.atomic-worksheet-page .quiz-check-btn {
+  margin-top: 0.65rem;
+  padding: 8px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--element-bg);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.atomic-worksheet-page .quiz-check-btn:hover {
+  background: #fff;
+  border-color: var(--text-secondary);
+}
+
+.atomic-worksheet-page .feedback {
+  margin-top: 0.65rem;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+
+.atomic-worksheet-page .feedback.hint {
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.atomic-worksheet-page .feedback.bad {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.atomic-worksheet-page .feedback.ok {
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.atomic-worksheet-page .summary-panel {
+  margin-bottom: 1rem;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  background: var(--element-bg);
+}
+
+.atomic-worksheet-page .summary-panel[hidden] {
+  display: none !important;
+}
+
+.atomic-worksheet-page .summary-score {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.atomic-worksheet-page .summary-sub {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.85rem;
+}
+
+.atomic-worksheet-page .summary-by-type-title,
+.atomic-worksheet-page .summary-wrong-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin: 0.75rem 0 0.45rem;
+}
+
+.atomic-worksheet-page .summary-type-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.atomic-worksheet-page .summary-type-table th,
+.atomic-worksheet-page .summary-type-table td {
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.atomic-worksheet-page .summary-type-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.atomic-worksheet-page .summary-wrong-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.atomic-worksheet-page .summary-wrong-list li {
+  margin-bottom: 0.45rem;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.atomic-worksheet-page .summary-none {
+  font-size: 0.88rem;
+  color: #047857;
+  font-weight: 600;
+}
+
+.atomic-worksheet-page .summary-revision {
+  margin-top: 1rem;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: #fff;
+}
+
+.atomic-worksheet-page .summary-revision h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.atomic-worksheet-page .summary-revision ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.atomic-worksheet-page .summary-revision li {
+  margin-bottom: 0.35rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+#pdfSheet {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 12mm;
+  box-sizing: border-box;
+  background: #fff;
+  color: #111;
+  font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+  font-size: 10pt;
+  line-height: 1.35;
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#pdfSheet h1 {
+  font-size: 14pt;
+  margin: 0 0 6pt;
+}
+
+#pdfSheet .pdf-q {
+  margin-bottom: 10pt;
+}
+
+#pdfSheet .meta {
+  font-size: 9pt;
+  color: #444;
+  margin-bottom: 12pt;
+}
+
+@media (max-width: 900px) {
+  html,
+  body {
+    overflow: auto;
+  }
+
+  .atomic-worksheet-page {
+    height: auto;
+    min-height: 100%;
+  }
+
+  .atomic-worksheet-page .worksheet-container {
+    grid-template-columns: 1fr;
+    height: auto;
+    max-height: none;
+  }
+
+  .atomic-worksheet-page .preview-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .atomic-worksheet-page .export-buttons {
+    flex-wrap: wrap;
+  }
+}
