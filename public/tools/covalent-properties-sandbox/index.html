@@ -752,6 +752,10 @@
             hint.style.display = rotatable3d ? 'block' : 'none';
         }
 
+        const ICE_IH_NX = 4;
+        const ICE_IH_NY = 4;
+        const ICE_IH_LATTICE_ZOOM = 0.55;
+
         // Ice Ih (P6₃/mmc): oxygen sub-lattice with tetrahedral H-bonding — open hexagonal structure
         function buildIceIhLattice3D(w, h) {
             sbParticles = [];
@@ -763,7 +767,6 @@
             const c = a * 1.628;
             const oCutoff = a * 0.92;
             const oHLen = a * 0.22;
-            const latticeZoom = 1.08;
 
             function fracToCart(u, v, ww) {
                 return {
@@ -782,8 +785,13 @@
 
             const oPositions = [];
             const seen = new Set();
-            // Exactly 4 Ice Ih unit cells (2×2 basal supercell; Z = 4 waters per cell → 16 O atoms)
-            const unitCellOffsets = [[0, 0], [1, 0], [0, 1], [1, 1]];
+            // 16 Ice Ih unit cells (4×4 basal supercell; Z = 4 waters per cell → 64 O atoms)
+            const unitCellOffsets = [];
+            for (let du = 0; du < ICE_IH_NX; du++) {
+                for (let dv = 0; dv < ICE_IH_NY; dv++) {
+                    unitCellOffsets.push([du, dv]);
+                }
+            }
             unitCellOffsets.forEach(([du, dv]) => {
                 baseFracs.forEach(([fu, fv, fw]) => {
                     const cart = fracToCart(fu + du, fv + dv, fw);
@@ -795,7 +803,7 @@
                 });
             });
 
-            // Re-centre the 2×2 supercell in the viewport
+            // Re-centre the 4×4 supercell in the viewport
             if (oPositions.length) {
                 const cx = oPositions.reduce((s, p) => s + p.x, 0) / oPositions.length;
                 const cy = oPositions.reduce((s, p) => s + p.y, 0) / oPositions.length;
@@ -837,7 +845,7 @@
 
             const oIds = [];
             oPositions.forEach((pos, oIdx) => {
-                const proj = project3DTo2D(pos.x, pos.y, pos.z, w, h, latticeZoom);
+                const proj = project3DTo2D(pos.x, pos.y, pos.z, w, h, ICE_IH_LATTICE_ZOOM);
                 const oId = id++;
                 oIds[oIdx] = oId;
                 sbParticles.push({
@@ -868,7 +876,7 @@
                 const hx = oDon.x + (dx / len) * oHLen;
                 const hy = oDon.y + (dy / len) * oHLen;
                 const hz = oDon.z + (dz / len) * oHLen;
-                const proj = project3DTo2D(hx, hy, hz, w, h, latticeZoom);
+                const proj = project3DTo2D(hx, hy, hz, w, h, ICE_IH_LATTICE_ZOOM);
                 const hId = id++;
                 sbParticles.push({
                     id: hId,
@@ -1907,7 +1915,7 @@
                 if (sbHammerAnimating && sbHammerOffset > 8 && p.oy3d > 0) {
                     y3d += cleaveShift;
                 }
-                const proj = project3DTo2D(x3d, y3d, z3d, sandboxCanvas.width, sandboxCanvas.height, 1.08);
+                const proj = project3DTo2D(x3d, y3d, z3d, sandboxCanvas.width, sandboxCanvas.height, ICE_IH_LATTICE_ZOOM);
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
