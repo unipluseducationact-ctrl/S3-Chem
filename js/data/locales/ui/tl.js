@@ -21,7 +21,7 @@ export const tlUI = {
     "slotHint": "Lugar ng nilalaman (placeholder).",
     "notesEyebrow": "Kabanata",
     "notesTitle": "Mga Tala",
-    "notesLead": "Mga tala sa Kabanata 5 (PDF). English at Traditional Chinese magkatabi.",
+    "notesLead": "Mga tala sa Kabanata 5 — malapit nang idagdag.",
     "notesTopic1Title": "1. Atomic structure at atomic symbol",
     "notesTopic2Title": "2. Isotope",
     "notesLangEn": "English",

@@ -21,7 +21,7 @@ export const enUI = {
     "slotHint": "Content area (placeholder).",
     "notesEyebrow": "Chapter",
     "notesTitle": "Notes",
-    "notesLead": "Chapter 5 study notes (PDF). English and Traditional Chinese versions side by side.",
+    "notesLead": "Chapter 5 study notes — coming soon.",
     "notesTopic1Title": "1. Atomic structure & atomic symbol",
     "notesTopic2Title": "2. Isotope",
     "notesLangEn": "English",

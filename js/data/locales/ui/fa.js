@@ -21,7 +21,7 @@ export const faUI = {
     "slotHint": "ناحیه محتوا (نگهدارنده).",
     "notesEyebrow": "فصل",
     "notesTitle": "یادداشت‌ها",
-    "notesLead": "یادداشت فصل ۵ (PDF). نسخه انگلیسی و چینی سنتی کنار هم.",
+    "notesLead": "یادداشت فصل ۵ — به‌زودی.",
     "notesTopic1Title": "۱. ساختار اتم و نماد اتمی",
     "notesTopic2Title": "۲. ایزوتوپ",
     "notesLangEn": "انگلیسی",

@@ -21,7 +21,7 @@ export const urUI = {
     "slotHint": "مواد کا علاقہ (placeholder)۔",
     "notesEyebrow": "باب",
     "notesTitle": "نوٹس",
-    "notesLead": "باب 5 نوٹس (PDF)۔ انگریزی اور روایتی چینی ساتھ۔",
+    "notesLead": "باب 5 نوٹس — جلد دستیاب ہوں گے۔",
     "notesTopic1Title": "1. ایٹمی ساختار اور ایٹمی علامت",
     "notesTopic2Title": "2. ہم جا",
     "notesLangEn": "انگریزی",

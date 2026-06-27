@@ -21,7 +21,7 @@ export const zhUI = {
     "slotHint": "内容区域（占位）。",
     "notesEyebrow": "章节",
     "notesTitle": "笔记",
-    "notesLead": "第 5 章笔记（PDF），英文与繁体中文版并列。",
+    "notesLead": "第 5 章笔记 — 即将推出。",
     "notesTopic1Title": "1. 原子结构与原子符号",
     "notesTopic2Title": "2. 同位素",
     "notesLangEn": "英文",

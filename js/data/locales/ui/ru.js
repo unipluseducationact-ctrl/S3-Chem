@@ -21,7 +21,7 @@ export const ruUI = {
     "slotHint": "Область контента (заглушка).",
     "notesEyebrow": "Глава",
     "notesTitle": "Заметки",
-    "notesLead": "Конспект главы 5 (PDF). Английский и традиционный китайский рядом.",
+    "notesLead": "Конспект главы 5 — скоро.",
     "notesTopic1Title": "1. Строение атома и атомный символ",
     "notesTopic2Title": "2. Изотопы",
     "notesLangEn": "Английский",

@@ -21,7 +21,7 @@ export const frUI = {
     "slotHint": "Zone de contenu (placeholder).",
     "notesEyebrow": "Chapitre",
     "notesTitle": "Notes",
-    "notesLead": "Notes du chapitre 5 (PDF). Versions anglais et chinois traditionnel cote a cote.",
+    "notesLead": "Notes du chapitre 5 — bientot disponibles.",
     "notesTopic1Title": "1. Structure atomique et symbole atomique",
     "notesTopic2Title": "2. Isotope",
     "notesLangEn": "Anglais",

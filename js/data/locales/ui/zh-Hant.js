@@ -21,7 +21,7 @@ export const zhHantUI = {
     "slotHint": "內容區域（占位）。",
     "notesEyebrow": "章節",
     "notesTitle": "筆記",
-    "notesLead": "第 5 章筆記（PDF），英文與繁體中文版並列。",
+    "notesLead": "第 5 章筆記 — 即將推出。",
     "notesTopic1Title": "1. 原子結構與原子符號",
     "notesTopic2Title": "2. 同位素",
     "notesLangEn": "英文",
