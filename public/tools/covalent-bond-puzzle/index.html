@@ -1526,6 +1526,24 @@ const DB_ELEMENTS = {
     'I': { name_zh: '碘', name_en: 'Iodine', sym: 'I', num: 53, val: 7, config: '2, 8, 18, 18, 7', en: 2.66, color: '#a855f7', colorShadow: 'rgba(168, 85, 247, 0.4)', shells: [2, 8, 18, 18, 7] }
 };
 
+const IONIC_THRESHOLD = 1.7;
+const POLAR_MIN = 0.4;
+
+const HIGHLY_COVALENT_PAIRS = new Set(['B-F', 'F-H', 'F-Si']);
+
+function isHighlyCovalentPair(elA, elB) {
+    const pair = [elA.sym, elB.sym].sort().join('-');
+    return HIGHLY_COVALENT_PAIRS.has(pair);
+}
+
+function classifyBondType(elA, elB) {
+    const diff = Math.abs(elA.en - elB.en);
+    if (isHighlyCovalentPair(elA, elB)) return { diff, bondType: 'highly_covalent' };
+    if (diff < POLAR_MIN) return { diff, bondType: 'nonpolar' };
+    if (diff <= IONIC_THRESHOLD) return { diff, bondType: 'polar' };
+    return { diff, bondType: 'ionic' };
+}
+
 const QUEST_LEVELS_DB = [
     {
         formula: 'H_2',
@@ -3917,13 +3935,8 @@ function drawCovalentBondFormationBohr(symA, symB) {
     const valB = elB.val;
     
     // Determine electronegativity and bonding type
-    const diff = Math.abs(elA.en - elB.en);
-    let bondType = 'nonpolar'; // 'nonpolar', 'polar', 'ionic'
-    if (diff >= 0.4 && diff <= 1.7) {
-        bondType = 'polar';
-    } else if (diff > 1.7) {
-        bondType = 'ionic';
-    }
+    const { diff, bondType: rawBondType } = classifyBondType(elA, elB);
+    const bondType = rawBondType === 'highly_covalent' ? 'polar' : rawBondType;
     
     const isAMoreEN = elA.en >= elB.en;
     
@@ -4417,12 +4430,15 @@ function updateElectronegativityCalculator() {
     if (calculatorAtomA && calculatorAtomB) {
         const elA = DB_ELEMENTS[calculatorAtomA];
         const elB = DB_ELEMENTS[calculatorAtomB];
-        const diff = Math.abs(elA.en - elB.en);
+        const { diff, bondType } = classifyBondType(elA, elB);
 
         diffText.innerText = diff.toFixed(2);
 
         // Gauge pin positioning (0 to 3.3 scale maps to 0% to 100% width)
-        let percent = (diff / 3.3) * 100;
+        const pinDiff = (bondType === 'highly_covalent' || (bondType === 'polar' && diff > IONIC_THRESHOLD))
+            ? IONIC_THRESHOLD - 0.06
+            : diff;
+        let percent = (pinDiff / 3.3) * 100;
         percent = Math.max(0, Math.min(100, percent));
         pin.style.left = `${percent}%`;
 
@@ -4433,16 +4449,22 @@ function updateElectronegativityCalculator() {
         let descEn = '';
         let typeColor = '';
 
-        if (diff < 0.4) {
+        if (bondType === 'nonpolar') {
             bondTypeZh = '非極性共債鍵 (Non-polar Covalent Bond)';
             bondTypeEn = 'Non-polar Covalent Bond';
             descZh = `電負性差值極小 (Δχ = ${diff.toFixed(2)} < 0.40)。電子對被均勻共享，形成電中性的共債鍵。`;
             descEn = `Electronegativity difference is very small (Δχ = ${diff.toFixed(2)} < 0.40). The electron pair is shared equally, forming an electrically neutral bond.`;
             typeColor = 'var(--neon-green)';
-        } else if (diff <= 1.7) {
-            bondTypeZh = '極性共債鍵 (Polar Covalent Bond)';
+        } else if (bondType === 'highly_covalent') {
+            bondTypeZh = '高度共價鍵 (Highly Covalent Bond)';
+            bondTypeEn = 'Highly Covalent Bond';
+            descZh = `雖然 Δχ = ${diff.toFixed(2)} 較大，但 ${calculatorAtomA}–${calculatorAtomB} 以共價鍵結合，電子對由兩原子共用，而非完全轉移成離子。`;
+            descEn = `Although Δχ = ${diff.toFixed(2)} is large, the ${calculatorAtomA}–${calculatorAtomB} bond is highly covalent: electrons are shared between atoms, not fully transferred as in an ionic bond.`;
+            typeColor = 'var(--neon-green)';
+        } else if (bondType === 'polar') {
+            bondTypeZh = '極性共價鍵 (Polar Covalent Bond)';
             bondTypeEn = 'Polar Covalent Bond';
-            descZh = `電負性差值中等 (0.40 ≤ Δχ = ${diff.toFixed(2)} ≤ 1.70)。吸寉力較強的原子 (${elA.en >= elB.en ? elA.sym : elB.sym}) 將共享電子對拉向自己，帶微負電 (\u03B4\u207B)，另一端帶微正電 (\u03B4\u207A)。`;
+            descZh = `電負性差值中等 (0.40 ≤ Δχ = ${diff.toFixed(2)} ≤ 1.70)。吸電力較強的原子 (${elA.en >= elB.en ? elA.sym : elB.sym}) 將共享電子對拉向自己，帶微負電 (\u03B4\u207B)，另一端帶微正電 (\u03B4\u207A)。`;
             descEn = `Moderate difference (0.40 ≤ Δχ = ${diff.toFixed(2)} ≤ 1.70). The more electronegative atom (${elA.en >= elB.en ? elA.sym : elB.sym}) pulls electrons closer, acquiring a partial negative charge (\u03B4\u207B) and leaving the other with a partial positive charge (\u03B4\u207A).`;
             typeColor = 'var(--accent-blue)';
         } else {
