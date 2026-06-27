@@ -4,108 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HKDSE Chemistry — 同位素與相對原子質量（Uni+）</title>
-    <link rel="stylesheet" href="../../../css/worksheet-styles.css?v=2.1.5">
-    <link rel="stylesheet" href="isotope-ram-worksheet.css?v=1">
+    <link rel="stylesheet" href="../../css/worksheet-styles.css?v=2.1.6">
+    <link rel="stylesheet" href="../ch5-shared/ch5-embed-base.css?v=1">
+    <link rel="stylesheet" href="isotope-ram-worksheet.css?v=2">
+    <script src="../ch5-shared/ch5-embed-ui.js?v=1"></script>
 </head>
 <body>
 
-<div class="worksheet-generator-page isotope-ram-page">
+<div class="worksheet-generator-page isotope-ram-page ch5-embed-page">
     <div class="worksheet-container">
         <aside class="worksheet-controls">
             <div class="controls-header">
-                <h2 id="ui-title">同位素與相對原子質量工作紙</h2>
-                <p id="ui-subtitle">同位素與相對原子質量 · 雙語 繁體中文 / English</p>
+                <h2 id="ui-generator-title">Worksheet Generator</h2>
+                <p id="ui-subtitle">Create isotope &amp; RAM worksheets for your class</p>
             </div>
 
             <div class="control-group">
-                <label id="ui-label-type">題目類型:</label>
+                <label id="ui-label-type">Question Type:</label>
                 <select id="qType" class="control-input">
-                    <option value="all">混合所有類型 (Mixed)</option>
-                    <option value="1">類型 1: 計算相對原子質量 (RAM)</option>
-                    <option value="2">類型 2: 計算百分比豐度 (%)</option>
-                    <option value="3">類型 3: 計算同位素質量 (Mass)</option>
+                    <option value="all">Mix of All Types</option>
+                    <option value="1">Type 1: Calculate RAM</option>
+                    <option value="2">Type 2: Calculate % Abundance</option>
+                    <option value="3">Type 3: Calculate Isotopic Mass</option>
                 </select>
             </div>
 
             <div class="control-group">
-                <label id="ui-label-diff">難度:</label>
+                <label id="ui-label-diff">Difficulty:</label>
                 <input type="hidden" id="diff" value="easy">
                 <div class="button-group" id="difficulty-group">
-                    <button type="button" class="option-btn active" data-value="easy">簡單</button>
-                    <button type="button" class="option-btn" data-value="medium">中等</button>
-                    <button type="button" class="option-btn" data-value="hard">困難</button>
+                    <button type="button" class="option-btn active" data-value="easy">Easy</button>
+                    <button type="button" class="option-btn" data-value="medium">Medium</button>
+                    <button type="button" class="option-btn" data-value="hard">Hard</button>
                 </div>
             </div>
 
             <div class="control-group">
-                <label id="ui-label-num">題目數量:</label>
+                <label id="ui-label-num">Number of Questions:</label>
                 <div class="button-group" id="question-count-group">
                     <button type="button" class="option-btn active" data-value="5">5</button>
                     <button type="button" class="option-btn" data-value="10">10</button>
                     <button type="button" class="option-btn" data-value="15">15</button>
                     <button type="button" class="option-btn" data-value="20">20</button>
                 </div>
-                <input type="number" id="numQs" class="control-input" value="5" min="1" max="20">
+                <input type="number" id="numQs" class="control-input count-input-hidden" value="5" min="1" max="20" tabindex="-1" aria-hidden="true">
             </div>
 
-            <button type="button" class="generate-btn" id="ui-btn-gen" onclick="generateWorksheet()">
+            <div class="control-group">
+                <label id="ui-label-lang">Language</label>
+                <div class="button-group" id="lang-group">
+                    <button type="button" class="option-btn" id="btnLangEn">English</button>
+                    <button type="button" class="option-btn active" id="btnLangZh">繁體中文</button>
+                </div>
+            </div>
+
+            <button type="button" class="generate-btn" id="ui-btn-gen">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 3v1m0 16v1m-9-9h1m16 0h1m-2.64-6.36l-.7.7m-12.02 12.02l-.7.7m0-12.72l.7.7m12.02 12.02l.7.7" />
                     <circle cx="12" cy="12" r="4" />
                 </svg>
-                <span id="ui-btn-gen-label">生成工作紙</span>
+                <span id="ui-btn-gen-label">Generate Worksheet</span>
             </button>
-            <div class="trust-text" id="ui-trust">註：如有需要，請將最終答案四捨五入至兩位小數。</div>
+            <div class="trust-text" id="ui-trust">Note: Round final answers to 2 decimal places if necessary.</div>
         </aside>
 
         <section class="worksheet-preview">
             <div class="preview-header">
                 <div class="preview-tabs">
-                    <button type="button" class="preview-tab active" id="tab-practice">練習</button>
-                    <button type="button" class="preview-tab" id="btn-session-summary">學習摘要與分析</button>
+                    <button type="button" class="preview-tab active" data-mode="print" id="tab-print">Print</button>
+                    <button type="button" class="preview-tab" data-mode="practice" id="tab-practice">Practice</button>
+                    <button type="button" class="preview-tab" data-mode="answer" id="tab-answer">Answer Key</button>
                 </div>
                 <div class="export-buttons">
-                    <select id="lang" class="lang-select" onchange="updateUI()" aria-label="語言 Language">
-                        <option value="zh">繁體中文</option>
-                        <option value="en">English</option>
-                    </select>
-                    <button type="button" class="export-btn" id="ui-btn-print" onclick="window.print()">
+                    <button type="button" class="export-btn" id="ui-btn-print" disabled>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
                             <line x1="16" y1="13" x2="8" y2="13"></line>
                             <line x1="16" y1="17" x2="8" y2="17"></line>
                         </svg>
-                        <span id="ui-btn-print-label">工作紙 PDF</span>
+                        <span id="ui-btn-print-label">Print</span>
                     </button>
-                    <button type="button" class="export-btn" id="ui-btn-solutions-pdf" onclick="openSolutionsPdf()">
+                    <button type="button" class="export-btn" id="ui-btn-solutions-pdf" disabled>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
                         </svg>
-                        <span id="ui-btn-solutions-pdf-label">完整題解 PDF</span>
+                        <span id="ui-btn-solutions-pdf-label">Full solutions PDF</span>
                     </button>
-                    <button type="button" class="export-btn" id="ui-btn-solutions-doc" onclick="downloadSolutionsDoc()">
+                    <button type="button" class="export-btn" id="ui-btn-solutions-doc" disabled>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
                         </svg>
-                        <span id="ui-btn-solutions-doc-label">完整題解 Word</span>
+                        <span id="ui-btn-solutions-doc-label">Full solutions Word</span>
                     </button>
-                    <button type="button" class="export-btn" id="ui-btn-worksheet-doc" onclick="downloadWorksheetDoc()">
+                    <button type="button" class="export-btn" id="ui-btn-worksheet-doc" disabled>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
                         </svg>
-                        <span id="ui-btn-worksheet-doc-label">工作紙 Word</span>
+                        <span id="ui-btn-worksheet-doc-label">Worksheet Word</span>
                     </button>
                 </div>
             </div>
-            <div class="preview-content">
-                <div id="progress-line" style="display:none;"></div>
-                <div id="summary-panel"></div>
-                <div id="session-analysis-panel" class="session-analysis-panel" hidden role="region" aria-live="polite"></div>
-                <div id="worksheet"></div>
+            <div class="preview-content" id="previewContent">
+                <div id="previewPlaceholder" class="preview-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    <p id="placeholderText">Click 'Generate Worksheet' to create practice problems</p>
+                </div>
+                <div id="printView" class="preview-mode-panel sheet-preview-body" hidden></div>
+                <div id="practiceView" class="preview-mode-panel" hidden>
+                    <div class="practice-toolbar">
+                        <p class="practice-hint" id="practice-hint-text">Three wrong attempts: hints then model answer.</p>
+                        <button type="button" class="session-summary-btn" id="btn-session-summary">Session summary</button>
+                    </div>
+                    <div id="progress-line" style="display:none;"></div>
+                    <div id="summary-panel" class="summary-panel" hidden></div>
+                    <div id="session-analysis-panel" class="session-analysis-panel" hidden role="region" aria-live="polite"></div>
+                    <div id="worksheet"></div>
+                </div>
+                <div id="answerView" class="preview-mode-panel sheet-preview-body" hidden></div>
             </div>
         </section>
     </div>
@@ -114,19 +138,27 @@
 <script>
     const i18n = {
         zh: {
+            generatorTitle: "工作紙產生器",
+            generatorSubtitle: "為你的課堂建立同位素與相對原子質量練習",
             title: "同位素與相對原子質量工作紙",
             subtitle: "同位素與相對原子質量 · 雙語 繁體中文 / English",
             labelType: "題目類型:",
             labelDiff: "難度:",
             labelNum: "題目數量:",
+            labelLang: "語言",
             btnGen: "生成工作紙",
-            btnPrint: "工作紙 PDF",
+            btnPrint: "列印",
+            btnExportPrint: "列印",
             btnSolutionsPdf: "完整題解 PDF",
             btnSolutionsDoc: "完整題解 Word",
             btnWorksheetDoc: "工作紙 Word",
             note: "註：如有需要，請將最終答案四捨五入至兩位小數。",
             trustText: "註：如有需要，請將最終答案四捨五入至兩位小數。",
+            tabPrint: "列印",
             tabPractice: "練習",
+            tabAnswer: "參考答案",
+            placeholder: "按「生成工作紙」以建立練習題",
+            practiceHint: "三次錯誤：提示 → 詳細步驟 → 顯示答案。",
             check: "檢查答案",
             correct: "正確！ ✓",
             wrong1: "錯誤。請參閱提示再試一次！",
@@ -168,19 +200,27 @@
             revBalanced: "錯誤分散在三類題型中，宜均衡練習並針對上表較低答對率者加強。"
         },
         en: {
+            generatorTitle: "Worksheet Generator",
+            generatorSubtitle: "Create isotope & relative atomic mass worksheets for your class",
             title: "Isotopes & Relative Atomic Mass Worksheet",
             subtitle: "Isotopes & relative atomic mass · bilingual EN / 繁體中文",
             labelType: "Question Type:",
             labelDiff: "Difficulty:",
             labelNum: "Number of Questions:",
+            labelLang: "Language",
             btnGen: "Generate Worksheet",
-            btnPrint: "Worksheet PDF",
+            btnPrint: "Print",
+            btnExportPrint: "Print",
             btnSolutionsPdf: "Full solutions PDF",
             btnSolutionsDoc: "Full solutions Word",
             btnWorksheetDoc: "Worksheet Word",
             note: "Note: Round final answers to 2 decimal places if necessary.",
             trustText: "Note: Round final answers to 2 decimal places if necessary.",
+            tabPrint: "Print",
             tabPractice: "Practice",
+            tabAnswer: "Answer Key",
+            placeholder: "Click 'Generate Worksheet' to create practice problems",
+            practiceHint: "Three wrong attempts: hints then model answer.",
             check: "Check Answer",
             correct: "Correct! ✓",
             wrong1: "Incorrect. Check the hint and try again!",
@@ -224,32 +264,65 @@
     };
 
     window.questionData = [];
+    let lang = window.Ch5EmbedUI.readLangFromQuery("zh");
+    let previewTabsCtrl = null;
+
+    function getLang() {
+        return lang;
+    }
+
+    function setExportButtonsEnabled(enabled) {
+        window.Ch5EmbedUI.setExportButtonsEnabled(
+            ["ui-btn-print", "ui-btn-solutions-pdf", "ui-btn-solutions-doc", "ui-btn-worksheet-doc"],
+            enabled
+        );
+    }
 
     function updateUI() {
-        const l = document.getElementById('lang').value;
-        document.documentElement.lang = l === 'en' ? 'en' : 'zh-Hant';
-        document.getElementById('ui-title').innerText = i18n[l].title;
-        document.getElementById('ui-subtitle').innerText = i18n[l].subtitle;
-        document.getElementById('ui-label-type').innerText = i18n[l].labelType;
-        document.getElementById('ui-label-diff').innerText = i18n[l].labelDiff;
-        document.getElementById('ui-label-num').innerText = i18n[l].labelNum;
-        document.getElementById('ui-btn-gen-label').innerText = i18n[l].btnGen;
-        document.getElementById('ui-trust').innerText = i18n[l].trustText;
-        document.getElementById('ui-btn-print-label').innerText = i18n[l].btnPrint;
-        document.getElementById('ui-btn-solutions-pdf-label').innerText = i18n[l].btnSolutionsPdf;
-        document.getElementById('ui-btn-solutions-doc-label').innerText = i18n[l].btnSolutionsDoc;
-        document.getElementById('ui-btn-worksheet-doc-label').innerText = i18n[l].btnWorksheetDoc;
-        document.getElementById('tab-practice').innerText = i18n[l].tabPractice;
-        document.getElementById('btn-session-summary').innerText = i18n[l].btnSessionSummary;
+        const l = getLang();
+        document.documentElement.lang = l === "en" ? "en" : "zh-Hant";
+        document.getElementById("ui-generator-title").innerText = i18n[l].generatorTitle;
+        document.getElementById("ui-subtitle").innerText = i18n[l].generatorSubtitle;
+        document.getElementById("ui-label-type").innerText = i18n[l].labelType;
+        document.getElementById("ui-label-diff").innerText = i18n[l].labelDiff;
+        document.getElementById("ui-label-num").innerText = i18n[l].labelNum;
+        document.getElementById("ui-label-lang").innerText = i18n[l].labelLang;
+        document.getElementById("ui-btn-gen-label").innerText = i18n[l].btnGen;
+        document.getElementById("ui-trust").innerText = i18n[l].trustText;
+        document.getElementById("ui-btn-print-label").innerText = i18n[l].btnExportPrint;
+        document.getElementById("ui-btn-solutions-pdf-label").innerText = i18n[l].btnSolutionsPdf;
+        document.getElementById("ui-btn-solutions-doc-label").innerText = i18n[l].btnSolutionsDoc;
+        document.getElementById("ui-btn-worksheet-doc-label").innerText = i18n[l].btnWorksheetDoc;
+        document.getElementById("tab-print").innerText = i18n[l].tabPrint;
+        document.getElementById("tab-practice").innerText = i18n[l].tabPractice;
+        document.getElementById("tab-answer").innerText = i18n[l].tabAnswer;
+        document.getElementById("placeholderText").innerText = i18n[l].placeholder;
+        document.getElementById("practice-hint-text").innerText = i18n[l].practiceHint;
+        document.getElementById("btn-session-summary").innerText = i18n[l].btnSessionSummary;
+        document.getElementById("btnLangEn").classList.toggle("active", l === "en");
+        document.getElementById("btnLangZh").classList.toggle("active", l === "zh");
 
-        const qSelect = document.getElementById('qType');
-        for(let i=0; i<qSelect.options.length; i++) qSelect.options[i].text = i18n[l].types[i];
+        const qSelect = document.getElementById("qType");
+        for (let i = 0; i < qSelect.options.length; i++) qSelect.options[i].text = i18n[l].types[i];
 
         const diffMap = { easy: 0, medium: 1, hard: 2 };
-        document.querySelectorAll('#difficulty-group .option-btn').forEach((btn) => {
+        document.querySelectorAll("#difficulty-group .option-btn").forEach((btn) => {
             const idx = diffMap[btn.dataset.value];
             if (idx !== undefined) btn.textContent = i18n[l].diffs[idx];
         });
+
+        if (hasWorksheetData()) {
+            renderPrintPreview();
+            renderAnswerPreview();
+            rebuildPracticeQuestions();
+        }
+        if (previewTabsCtrl) previewTabsCtrl.refresh();
+    }
+
+    function setLang(next) {
+        lang = next;
+        window.Ch5EmbedUI.setLangInQuery(next);
+        updateUI();
     }
 
     function setDifficulty(value) {
@@ -384,7 +457,7 @@
             return;
         }
         const panel = document.getElementById('summary-panel');
-        panel.classList.add('visible');
+        panel.hidden = false;
         const subs = totalCheckSubmissions();
         panel.innerHTML =
             '<h2>' + i18n[l].summaryTitle + '</h2>' +
@@ -403,7 +476,7 @@
     }
 
     function T(key, langOpt) {
-        const l = langOpt != null ? langOpt : document.getElementById('lang').value;
+        const l = langOpt != null ? langOpt : getLang();
         return (i18n[l] && i18n[l][key]) || i18n.en[key] || key;
     }
 
@@ -486,7 +559,7 @@
     }
 
     function renderSessionAnalysis() {
-        const l = document.getElementById('lang').value;
+        const l = getLang();
         const qs = window.questionData;
         if (!qs || !qs.length || !qs[0]) {
             alert(T('alertNoSheet'));
@@ -603,8 +676,79 @@
         panel.hidden = false;
         panel.innerHTML = html;
 
-        document.getElementById('tab-practice').classList.remove('active');
-        document.getElementById('btn-session-summary').classList.add('active');
+        if (previewTabsCtrl) previewTabsCtrl.setMode('practice');
+    }
+
+    function renderPrintPreview() {
+        const l = getLang();
+        const el = document.getElementById('printView');
+        if (!hasWorksheetData()) {
+            el.innerHTML = '';
+            return;
+        }
+        let html = '<h1>' + escapeHtml(i18n[l].title) + '</h1>';
+        html += '<p class="meta">' + escapeHtml(i18n[l].note) + '</p>';
+        window.questionData.forEach((d, i) => {
+            if (!d) return;
+            html += '<div class="print-q"><strong>Q' + (i + 1) + '.</strong> ' + escapeHtml(d.qText) + '</div>';
+        });
+        el.innerHTML = html;
+    }
+
+    function renderAnswerPreview() {
+        const l = getLang();
+        const el = document.getElementById('answerView');
+        if (!hasWorksheetData()) {
+            el.innerHTML = '';
+            return;
+        }
+        let html = '<h1>' + escapeHtml(getSolutionsTitle(l)) + '</h1>';
+        window.questionData.forEach((d, i) => {
+            if (!d) return;
+            html +=
+                '<div class="answer-block">' +
+                '<h3>Q' + (i + 1) + '</h3>' +
+                '<p>' + escapeHtml(d.qText) + '</p>' +
+                '<div class="solution-body">' + d.fullSolution + '</div>' +
+                '<p><strong>' + (l === 'zh' ? '參考答案：' : 'Answer key: ') + '</strong>' + d.ans + '</p>' +
+                '</div>';
+        });
+        el.innerHTML = html;
+    }
+
+    function rebuildPracticeQuestions() {
+        const l = getLang();
+        const container = document.getElementById('worksheet');
+        container.innerHTML = '';
+        window.questionData.forEach((d, index) => {
+            if (!d) return;
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-box';
+            qDiv.innerHTML =
+                '<div class="question-text"><strong>Q' + (index + 1) + '.</strong> ' + d.qText + '</div>' +
+                '<div class="interaction-area">' +
+                '<input type="number" id="ans_' + index + '" step="0.01" placeholder="' + i18n[l].placeholder + '">' +
+                '<button type="button" data-check="' + index + '">' + i18n[l].check + '</button>' +
+                '</div>' +
+                '<div id="hint_' + index + '" class="hint"></div>' +
+                '<div id="fb_' + index + '" class="feedback"></div>';
+            container.appendChild(qDiv);
+            qDiv.querySelector('[data-check]').addEventListener('click', () => checkAnswer(index, l));
+        });
+    }
+
+    function printCurrentView() {
+        const l = getLang();
+        if (!hasWorksheetData()) {
+            alert(i18n[l].alertNoSheet);
+            return;
+        }
+        const mode = previewTabsCtrl ? previewTabsCtrl.getMode() : 'print';
+        if (mode === 'answer') {
+            openSolutionsPdf();
+            return;
+        }
+        window.print();
     }
 
     function hasWorksheetData() {
@@ -731,7 +875,7 @@
     }
 
     function downloadSolutionsDoc() {
-        const l = document.getElementById('lang').value;
+        const l = getLang();
         if (!hasWorksheetData()) {
             alert(i18n[l].alertNoSheet);
             return;
@@ -740,7 +884,7 @@
     }
 
     function downloadWorksheetDoc() {
-        const l = document.getElementById('lang').value;
+        const l = getLang();
         if (!hasWorksheetData()) {
             alert(i18n[l].alertNoSheet);
             return;
@@ -749,7 +893,7 @@
     }
 
     function openSolutionsPdf() {
-        const l = document.getElementById('lang').value;
+        const l = getLang();
         if (!hasWorksheetData()) {
             alert(i18n[l].alertNoSheet);
             return;
@@ -774,15 +918,13 @@
     }
 
     function generateWorksheet() {
-        const l = document.getElementById('lang').value;
-        const numQs = parseInt(document.getElementById('numQs').value);
+        const l = getLang();
+        const numQs = parseInt(document.getElementById('numQs').value, 10);
         const typeSelect = document.getElementById('qType').value;
         const diff = document.getElementById('diff').value;
-        const container = document.getElementById('worksheet');
         
-        container.innerHTML = `<p class="worksheet-note">${i18n[l].note}</p>`;
         window.questionData = [];
-        document.getElementById('summary-panel').classList.remove('visible');
+        document.getElementById('summary-panel').hidden = true;
         document.getElementById('summary-panel').innerHTML = '';
         const sap = document.getElementById('session-analysis-panel');
         sap.hidden = true;
@@ -793,13 +935,19 @@
         const elements = ["X", "Y", "Z", "A", "B", "M", "Q"];
 
         for (let i = 0; i < numQs; i++) {
-            let currentType = typeSelect === 'all' ? randInt(1, 3) : parseInt(typeSelect);
-            createQuestion(currentType, diff, i, elements[i % elements.length], container, l);
+            let currentType = typeSelect === 'all' ? randInt(1, 3) : parseInt(typeSelect, 10);
+            createQuestionData(currentType, diff, i, elements[i % elements.length], l);
         }
+
+        renderPrintPreview();
+        renderAnswerPreview();
+        rebuildPracticeQuestions();
+        setExportButtonsEnabled(true);
+        if (previewTabsCtrl) previewTabsCtrl.setMode('print');
         updateProgressUI(l);
     }
 
-    function createQuestion(type, diff, index, elName, container, l) {
+    function createQuestionData(type, diff, index, elName, l) {
         let m1, m2, m3, p1, p2, p3, ram, qText, ans, hint1, hint2;
 
         m1 = randInt(10, 80);
@@ -880,19 +1028,6 @@
             qText,
             fullSolution
         };
-
-        const qDiv = document.createElement('div');
-        qDiv.className = 'question-box';
-        qDiv.innerHTML = `
-            <div class="question-text"><strong>Q${index + 1}.</strong> ${qText}</div>
-            <div class="interaction-area">
-                <input type="number" id="ans_${index}" step="0.01" placeholder="${i18n[l].placeholder}">
-                <button onclick="checkAnswer(${index}, '${l}')">${i18n[l].check}</button>
-            </div>
-            <div id="hint_${index}" class="hint"></div>
-            <div id="fb_${index}" class="feedback"></div>
-        `;
-        container.appendChild(qDiv);
     }
 
     function checkAnswer(index, l) {
@@ -936,36 +1071,39 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        const q = (new URLSearchParams(window.location.search).get('lang') || '').toLowerCase();
-        const sel = document.getElementById('lang');
-        if (q && sel) {
-            if (q === 'en') sel.value = 'en';
-            else if (q === 'zh' || q === 'zh-hant' || q === 'zh-tw' || q === 'zh-hk') sel.value = 'zh';
-            document.documentElement.lang = sel.value === 'en' ? 'en' : 'zh-Hant';
-        }
-
-        document.querySelectorAll('#difficulty-group .option-btn').forEach((btn) => {
-            btn.addEventListener('click', () => setDifficulty(btn.dataset.value));
+        previewTabsCtrl = window.Ch5EmbedUI.bindPreviewTabs('.preview-tab', {
+            panels: {
+                print: document.getElementById('printView'),
+                practice: document.getElementById('practiceView'),
+                answer: document.getElementById('answerView'),
+            },
+            placeholder: document.getElementById('previewPlaceholder'),
+            hasContent: hasWorksheetData,
+            defaultMode: 'print',
         });
 
-        document.querySelectorAll('#question-count-group .option-btn').forEach((btn) => {
-            btn.addEventListener('click', () => {
-                document.getElementById('numQs').value = btn.dataset.value;
-                syncCountPills();
-            });
+        window.Ch5EmbedUI.bindOptionGroup(document.getElementById('difficulty-group'), {
+            hiddenInput: document.getElementById('diff'),
+            onChange: setDifficulty,
         });
 
-        document.getElementById('numQs').addEventListener('input', syncCountPills);
-
-        document.getElementById('tab-practice').addEventListener('click', function () {
-            document.getElementById('tab-practice').classList.add('active');
-            document.getElementById('btn-session-summary').classList.remove('active');
+        window.Ch5EmbedUI.bindOptionGroup(document.getElementById('question-count-group'), {
+            hiddenInput: document.getElementById('numQs'),
         });
 
+        document.getElementById('ui-btn-gen').addEventListener('click', generateWorksheet);
+        document.getElementById('btnLangEn').addEventListener('click', () => setLang('en'));
+        document.getElementById('btnLangZh').addEventListener('click', () => setLang('zh'));
+        document.getElementById('btn-session-summary').addEventListener('click', renderSessionAnalysis);
+        document.getElementById('ui-btn-print').addEventListener('click', printCurrentView);
+        document.getElementById('ui-btn-solutions-pdf').addEventListener('click', openSolutionsPdf);
+        document.getElementById('ui-btn-solutions-doc').addEventListener('click', downloadSolutionsDoc);
+        document.getElementById('ui-btn-worksheet-doc').addEventListener('click', downloadWorksheetDoc);
+
+        setExportButtonsEnabled(false);
         updateUI();
         setDifficulty(document.getElementById('diff').value);
         syncCountPills();
-        document.getElementById('btn-session-summary').addEventListener('click', renderSessionAnalysis);
     });
 </script>
 </body>
