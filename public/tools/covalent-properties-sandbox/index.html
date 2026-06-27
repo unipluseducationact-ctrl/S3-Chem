@@ -238,27 +238,37 @@
 
         #sb-ice-controls {
             display: none;
-            grid-column: 1 / -1;
             flex-direction: column;
-            gap: 10px;
-            height: auto;
+            gap: 8px;
+            margin-top: 4px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            min-width: 210px;
         }
 
         .ice-slider-row {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             width: 100%;
+        }
+
+        .ice-slider-row label {
+            font-size: 0.68em;
+            color: var(--text-secondary);
+            min-width: 72px;
+            line-height: 1.2;
         }
 
         .ice-slider-row input[type=range] {
             flex-grow: 1;
-            height: 6px;
-            background: rgba(255,255,255,0.1);
+            height: 4px;
+            background: rgba(255,255,255,0.12);
             border-radius: 3px;
             outline: none;
             -webkit-appearance: none;
             cursor: pointer;
+            min-width: 60px;
         }
 
         .ice-slider-row input[type=range]::-webkit-slider-thumb {
@@ -273,11 +283,12 @@
 
         .ice-val-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.95em;
+            font-size: 0.72em;
             font-weight: 700;
             color: var(--accent-blue);
-            min-width: 90px;
+            min-width: 58px;
             text-align: right;
+            white-space: nowrap;
         }
 
         .temp-val-text {
@@ -502,6 +513,25 @@
                             <span class="lang-zh">顯示分子間作用力 / 氫鍵</span>
                             <span class="lang-en" style="display:none;">Show IMF / Hydrogen Bonds</span>
                         </label>
+                        <!-- Ice Ih lattice controls (visible only at <= 0°C) -->
+                        <div id="sb-ice-controls">
+                            <div class="ice-slider-row">
+                                <label>
+                                    <span class="lang-zh">晶格大小</span>
+                                    <span class="lang-en" style="display:none;">Lattice</span>
+                                </label>
+                                <input type="range" id="sb-ice-size-slider" min="1" max="6" step="1" value="4" oninput="onIceLatticeSettingsChange()">
+                                <div class="ice-val-text" id="sb-ice-size-text">4×4 (64)</div>
+                            </div>
+                            <div class="ice-slider-row">
+                                <label>
+                                    <span class="lang-zh">視角縮放</span>
+                                    <span class="lang-en" style="display:none;">Zoom</span>
+                                </label>
+                                <input type="range" id="sb-ice-zoom-slider" min="60" max="180" step="5" value="100" oninput="onIceLatticeSettingsChange()">
+                                <div class="ice-val-text" id="sb-ice-zoom-text">100%</div>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="sb-rotate-hint" style="display:none; position:absolute; bottom:15px; right:15px; pointer-events:none; background:rgba(11,17,38,0.75); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.08); padding:6px 10px; border-radius:8px; z-index:10; font-size:0.72em; color:var(--text-secondary);">
@@ -535,33 +565,6 @@
                             <input type="range" id="sb-temp-slider" min="0" max="3000" value="25" oninput="onSandboxTempChange(this.value)">
                         </div>
                         <div class="temp-val-text" id="sb-temp-text">25 °C</div>
-                    </div>
-
-                    <!-- Ice Ih lattice controls (visible only at <= 0°C) -->
-                    <div id="sb-ice-controls" class="temp-slider-container">
-                        <i class="fa-solid fa-snowflake" style="font-size:1.4em; color:#00f0ff; filter:drop-shadow(0 0 5px #00f0ff); align-self:flex-start; margin-top:4px;"></i>
-                        <div style="flex-grow:1; display:flex; flex-direction:column; gap:10px;">
-                            <div class="ice-slider-row">
-                                <div style="flex-grow:1; display:flex; flex-direction:column; gap:4px;">
-                                    <div style="font-size:0.8em; color:var(--text-secondary);">
-                                        <span class="lang-zh">晶格單元大小 (Lattice Size)</span>
-                                        <span class="lang-en" style="display:none;">Lattice Size (N×N unit cells)</span>
-                                    </div>
-                                    <input type="range" id="sb-ice-size-slider" min="1" max="4" step="1" value="2" oninput="onIceLatticeSettingsChange()">
-                                </div>
-                                <div class="ice-val-text" id="sb-ice-size-text">2×2 (16)</div>
-                            </div>
-                            <div class="ice-slider-row">
-                                <div style="flex-grow:1; display:flex; flex-direction:column; gap:4px;">
-                                    <div style="font-size:0.8em; color:var(--text-secondary);">
-                                        <span class="lang-zh">視角縮放 (View Zoom)</span>
-                                        <span class="lang-en" style="display:none;">View Zoom</span>
-                                    </div>
-                                    <input type="range" id="sb-ice-zoom-slider" min="60" max="180" step="5" value="100" oninput="onIceLatticeSettingsChange()">
-                                </div>
-                                <div class="ice-val-text" id="sb-ice-zoom-text">100%</div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Macro Properties Tests -->
@@ -760,9 +763,9 @@
         var sbConductivityEnabled = false;
         var sbDelocalizedElectrons = [];
         var sbShowIMF = true;
-        var iceIhSupercellSize = 2;
+        var iceIhSupercellSize = 4;
         var iceIhViewZoom = 1.0;
-        var iceIhLatticeZoom = 1.08;
+        var iceIhLatticeZoom = 0.54;
         var lastTime = 0;
         var sbTimeAccumulator = 0;
         var sbShatterFragments = [];
