@@ -236,7 +236,7 @@
             transform: scale(1.2);
         }
 
-        #sb-ice-controls {
+        #sb-lattice-controls {
             display: none;
             flex-direction: column;
             gap: 8px;
@@ -513,23 +513,23 @@
                             <span class="lang-zh">顯示分子間作用力 / 氫鍵</span>
                             <span class="lang-en" style="display:none;">Show IMF / Hydrogen Bonds</span>
                         </label>
-                        <!-- Ice Ih lattice controls (visible only at <= 0°C) -->
-                        <div id="sb-ice-controls">
-                            <div class="ice-slider-row">
+                        <!-- Lattice / zoom controls -->
+                        <div id="sb-lattice-controls">
+                            <div class="ice-slider-row" id="sb-lattice-size-row">
                                 <label>
-                                    <span class="lang-zh">晶格大小</span>
+                                    <span class="lang-zh">晶格分子數</span>
                                     <span class="lang-en" style="display:none;">Lattice</span>
                                 </label>
-                                <input type="range" id="sb-ice-size-slider" min="1" max="6" step="1" value="4" oninput="onIceLatticeSettingsChange()">
-                                <div class="ice-val-text" id="sb-ice-size-text">4×4 (64)</div>
+                                <input type="range" id="sb-lattice-size-slider" min="1" max="100" step="1" value="12" oninput="onLatticeSettingsChange()">
+                                <div class="ice-val-text" id="sb-lattice-size-text">12</div>
                             </div>
                             <div class="ice-slider-row">
                                 <label>
                                     <span class="lang-zh">視角縮放</span>
                                     <span class="lang-en" style="display:none;">Zoom</span>
                                 </label>
-                                <input type="range" id="sb-ice-zoom-slider" min="100" max="1000" step="10" value="100" oninput="onIceLatticeSettingsChange()">
-                                <div class="ice-val-text" id="sb-ice-zoom-text">100%</div>
+                                <input type="range" id="sb-lattice-zoom-slider" min="100" max="500" step="5" value="100" oninput="onLatticeSettingsChange()">
+                                <div class="ice-val-text" id="sb-lattice-zoom-text">100%</div>
                             </div>
                         </div>
                     </div>
@@ -763,8 +763,10 @@
         var sbConductivityEnabled = false;
         var sbDelocalizedElectrons = [];
         var sbShowIMF = true;
+        var sbLatticeMoleculeCount = 12;
+        var sbLatticeViewZoom = 1.0;
+        var sbLatticeGridCols = 4;
         var iceIhSupercellSize = 4;
-        var iceIhViewZoom = 1.0;
         var iceIhLatticeZoom = 0.54;
         var lastTime = 0;
         var sbTimeAccumulator = 0;
@@ -829,47 +831,99 @@
             hint.style.display = rotatable3d ? 'block' : 'none';
         }
 
+        function isMolecularSandboxMode() {
+            return currentSandboxMode === 'water' || currentSandboxMode === 'co2';
+        }
+
+        function isCrystal3dSandboxMode() {
+            return ['diamond', 'graphite', 'nacl', 'cscl', 'sio2', 'metal'].includes(currentSandboxMode);
+        }
+
+        function syncIceSupercellFromMoleculeCount() {
+            iceIhSupercellSize = Math.max(1, Math.round(Math.sqrt(sbLatticeMoleculeCount / 4)));
+        }
+
+        function getSandbox3DZoom(baseZoom = 1.2) {
+            return baseZoom * sbLatticeViewZoom;
+        }
+
+        function layoutMolecularGrid(count, w, h, zoom) {
+            const cols = Math.max(1, Math.ceil(Math.sqrt(count)));
+            const rows = Math.max(1, Math.ceil(count / cols));
+            const spacingX = Math.min(Math.max(48, w / (cols + 2)), 96);
+            const spacingY = Math.min(Math.max(40, h / (rows + 2)), 82);
+            const positions = [];
+            for (let i = 0; i < count; i++) {
+                const col = i % cols;
+                const row = Math.floor(i / cols);
+                const baseX = w / 2 + (col - (cols - 1) / 2) * spacingX;
+                const baseY = h / 2 + (row - (rows - 1) / 2) * spacingY;
+                positions.push({
+                    col,
+                    row,
+                    cols,
+                    x: w / 2 + (baseX - w / 2) * zoom,
+                    y: h / 2 + (baseY - h / 2) * zoom,
+                });
+            }
+            sbLatticeGridCols = cols;
+            return positions;
+        }
+
         function computeIceIhBaseZoom(n) {
             return 1.08 * (2 / n);
         }
 
         function updateIceIhLatticeZoom() {
-            iceIhLatticeZoom = computeIceIhBaseZoom(iceIhSupercellSize) * iceIhViewZoom;
+            syncIceSupercellFromMoleculeCount();
+            iceIhLatticeZoom = computeIceIhBaseZoom(iceIhSupercellSize) * sbLatticeViewZoom;
         }
 
-        function updateIceLatticeControlLabels() {
-            const sizeText = document.getElementById('sb-ice-size-text');
-            const zoomText = document.getElementById('sb-ice-zoom-text');
-            const n = iceIhSupercellSize;
-            const waters = n * n * 4;
-            if (sizeText) sizeText.innerText = `${n}×${n} (${waters})`;
-            if (zoomText) zoomText.innerText = `${Math.round(iceIhViewZoom * 100)}%`;
+        function updateLatticeControlLabels() {
+            const sizeText = document.getElementById('sb-lattice-size-text');
+            const zoomText = document.getElementById('sb-lattice-zoom-text');
+            if (sizeText) {
+                if (isIceIhView()) {
+                    const n = iceIhSupercellSize;
+                    sizeText.innerText = `${sbLatticeMoleculeCount} (${n}×${n})`;
+                } else {
+                    sizeText.innerText = `${sbLatticeMoleculeCount}`;
+                }
+            }
+            if (zoomText) zoomText.innerText = `${Math.round(sbLatticeViewZoom * 100)}%`;
         }
 
-        function updateIceLatticeControlsVisibility() {
-            const panel = document.getElementById('sb-ice-controls');
+        function updateLatticeControlsVisibility() {
+            const panel = document.getElementById('sb-lattice-controls');
+            const sizeRow = document.getElementById('sb-lattice-size-row');
             if (!panel) return;
-            const show = isIceIhView();
+            const molecular = isMolecularSandboxMode();
+            const show = molecular || isIceIhView() || isCrystal3dSandboxMode();
             panel.style.display = show ? 'flex' : 'none';
+            if (sizeRow) sizeRow.style.display = molecular ? 'flex' : 'none';
             if (show) {
-                const sizeSlider = document.getElementById('sb-ice-size-slider');
-                const zoomSlider = document.getElementById('sb-ice-zoom-slider');
-                if (sizeSlider) sizeSlider.value = iceIhSupercellSize;
-                if (zoomSlider) zoomSlider.value = Math.round(iceIhViewZoom * 100);
-                updateIceIhLatticeZoom();
-                updateIceLatticeControlLabels();
+                const sizeSlider = document.getElementById('sb-lattice-size-slider');
+                const zoomSlider = document.getElementById('sb-lattice-zoom-slider');
+                if (sizeSlider) sizeSlider.value = sbLatticeMoleculeCount;
+                if (zoomSlider) zoomSlider.value = Math.round(sbLatticeViewZoom * 100);
+                if (isIceIhView()) updateIceIhLatticeZoom();
+                updateLatticeControlLabels();
             }
         }
 
-        function onIceLatticeSettingsChange() {
-            const sizeSlider = document.getElementById('sb-ice-size-slider');
-            const zoomSlider = document.getElementById('sb-ice-zoom-slider');
-            if (sizeSlider) iceIhSupercellSize = parseInt(sizeSlider.value, 10);
-            if (zoomSlider) iceIhViewZoom = parseInt(zoomSlider.value, 10) / 100;
-            updateIceIhLatticeZoom();
-            updateIceLatticeControlLabels();
+        function onLatticeSettingsChange() {
+            const sizeSlider = document.getElementById('sb-lattice-size-slider');
+            const zoomSlider = document.getElementById('sb-lattice-zoom-slider');
+            if (sizeSlider) {
+                sbLatticeMoleculeCount = Math.max(1, Math.min(100, parseInt(sizeSlider.value, 10) || 1));
+            }
+            if (zoomSlider) {
+                sbLatticeViewZoom = Math.max(1, Math.min(5, parseInt(zoomSlider.value, 10) / 100));
+            }
+            if (isIceIhView()) updateIceIhLatticeZoom();
+            updateLatticeControlLabels();
             updateSandboxInfoBanner();
-            if (isIceIhView()) buildSandboxParticles();
+            buildSandboxParticles();
         }
 
         // Ice Ih (P6₃/mmc): oxygen sub-lattice with tetrahedral H-bonding — open hexagonal structure
@@ -1094,6 +1148,13 @@
             sbRotationTheta = 0.5;
             sbRotationPhi = 0.35;
 
+            if (currentSandboxMode === 'water') {
+                sbLatticeMoleculeCount = 16;
+            } else if (currentSandboxMode === 'co2') {
+                sbLatticeMoleculeCount = 12;
+            }
+            sbLatticeViewZoom = 1.0;
+
             // Build particles
             buildSandboxParticles();
 
@@ -1106,7 +1167,7 @@
             // Update legend overlay
             updateSandboxLegend();
             updateRotateHint();
-            updateIceLatticeControlsVisibility();
+            updateLatticeControlsVisibility();
         }
 
         function switchSandboxMode(mode) {
@@ -1131,7 +1192,7 @@
             updateSandboxInfoBanner();
             updateSandboxLegend();
             updateRotateHint();
-            updateIceLatticeControlsVisibility();
+            updateLatticeControlsVisibility();
         }
 
         function updateSandboxInfoBanner() {
@@ -1147,18 +1208,18 @@
                 else if (sandboxTemp >= 100) stateZh = '氣態水蒸氣 (Water Vapor)';
                 if (sandboxTemp <= 0) {
                     const iceN = iceIhSupercellSize;
-                    const iceWaters = iceN * iceN * 4;
-                    titleZh = `水 (H₂O) — 冰 Ih 開放型氫鍵晶格 [${iceN}×${iceN} 晶格, ${iceWaters} 水分子; 目前狀態：${stateZh}]`;
-                    titleEn = `Water (H₂O) — Ice Ih open H-bonded lattice [${iceN}×${iceN} lattice, ${iceWaters} waters; State: Solid Ice Ih]`;
+                    const iceWaters = sbLatticeMoleculeCount;
+                    titleZh = `水 (H₂O) — 冰 Ih 開放型氫鍵晶格 [${iceWaters} 水分子, ${iceN}×${iceN} 晶格; 目前狀態：${stateZh}]`;
+                    titleEn = `Water (H₂O) — Ice Ih open H-bonded lattice [${iceWaters} waters, ${iceN}×${iceN} lattice; State: Solid Ice Ih]`;
                 } else {
-                    titleZh = `水 (H₂O) — 簡單分子物質 [目前狀態：${stateZh}]`;
-                    titleEn = `Water (H₂O) — Simple Molecular Structure [State: ${sandboxTemp >= 100 ? 'Gas Vapor' : 'Liquid'}]`;
+                    titleZh = `水 (H₂O) — 簡單分子物質 [${sbLatticeMoleculeCount} 分子; 目前狀態：${stateZh}]`;
+                    titleEn = `Water (H₂O) — Simple Molecular Structure [${sbLatticeMoleculeCount} molecules; State: ${sandboxTemp >= 100 ? 'Gas Vapor' : 'Liquid'}]`;
                 }
             } else if (currentSandboxMode === 'co2') {
                 let stateZh = '氣態 (Gas)';
                 if (sandboxTemp <= -78) stateZh = '固態乾冰 (Solid Dry Ice)';
-                titleZh = `二氧化碳 (CO₂) — 簡單分子物質 [目前狀態：${stateZh}]`;
-                titleEn = `Carbon Dioxide (CO₂) — Simple Molecular Structure [State: ${sandboxTemp <= -78 ? 'Solid Dry Ice' : 'Gas'}]`;
+                titleZh = `二氧化碳 (CO₂) — 簡單分子物質 [${sbLatticeMoleculeCount} 分子; 目前狀態：${stateZh}]`;
+                titleEn = `Carbon Dioxide (CO₂) — Simple Molecular Structure [${sbLatticeMoleculeCount} molecules; State: ${sandboxTemp <= -78 ? 'Solid Dry Ice' : 'Gas'}]`;
             } else if (currentSandboxMode === 'diamond') {
                 titleZh = '金剛石 (Diamond) — 巨型共價網絡結構';
                 titleEn = 'Diamond (Carbon) — Giant Covalent Network';
@@ -1303,50 +1364,41 @@
                 if (sandboxTemp <= 0) {
                     buildIceIhLattice3D(w, h);
                 } else {
-                // Build 16 water molecules
-                for (let i = 0; i < 16; i++) {
-                    let col = i % 4;
-                    let row = Math.floor(i / 4);
-                    let x = w/4 + col * (w/8) + (Math.random() - 0.5) * 15;
-                    let y = h/4 + row * (h/6) + (Math.random() - 0.5) * 15;
-                    
+                const positions = layoutMolecularGrid(sbLatticeMoleculeCount, w, h, sbLatticeViewZoom);
+                positions.forEach((pos, i) => {
                     sbParticles.push({
                         id: i,
-                        ox: x,
-                        oy: y,
-                        x: x,
-                        y: y,
+                        ox: pos.x,
+                        oy: pos.y,
+                        x: pos.x,
+                        y: pos.y,
                         vx: (Math.random() - 0.5) * 3,
                         vy: (Math.random() - 0.5) * 3,
                         angle: Math.random() * Math.PI * 2,
                         spinSpeed: (Math.random() - 0.5) * 0.04,
                         r: 18 // effective radius of H2O molecule
                     });
-                }
+                });
                 }
             } else if (currentSandboxMode === 'co2') {
-                // Build 12 CO2 molecules
-                for (let i = 0; i < 12; i++) {
-                    let col = i % 4;
-                    let row = Math.floor(i / 4);
-                    let x = w/4 + col * (w/8) + (Math.random() - 0.5) * 15;
-                    let y = h/4 + row * (h/6) + (Math.random() - 0.5) * 15;
-                    
+                const positions = layoutMolecularGrid(sbLatticeMoleculeCount, w, h, sbLatticeViewZoom);
+                positions.forEach((pos, i) => {
                     sbParticles.push({
                         id: i,
-                        c: col,
-                        r_row: row,
-                        ox: x,
-                        oy: y,
-                        x: x,
-                        y: y,
+                        c: pos.col,
+                        r_row: pos.row,
+                        gridCols: pos.cols,
+                        ox: pos.x,
+                        oy: pos.y,
+                        x: pos.x,
+                        y: pos.y,
                         vx: (Math.random() - 0.5) * 3,
                         vy: (Math.random() - 0.5) * 3,
-                        angle: (col + row) % 2 === 0 ? Math.PI / 4 : -Math.PI / 4,
+                        angle: (pos.col + pos.row) % 2 === 0 ? Math.PI / 4 : -Math.PI / 4,
                         spinSpeed: (Math.random() - 0.5) * 0.04,
                         r: 20 // effective radius of CO2 molecule
                     });
-                }
+                });
             } else if (currentSandboxMode === 'diamond') {
                 // Diamond 3D network: textbook face-centered cubic (FCC) unit cell with 4 tetrahedral carbon atoms inside
                 // This matches the attached diagram exactly, showing the full interlocking cage structure!
@@ -1379,7 +1431,7 @@
                 const scale = 80;
                 atoms.forEach((a, i) => {
                     // Calculate initial projected coordinates
-                    const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, 1.2);
+                    const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, getSandbox3DZoom());
                     sbParticles.push({
                         id: i,
                         ox3d: a.x * scale,
@@ -1447,7 +1499,7 @@
                             z += L * 0.5;
                         }
 
-                        const proj = project3DTo2D(x, y, z, w, h, 1.2);
+                        const proj = project3DTo2D(x, y, z, w, h, getSandbox3DZoom());
                         sbParticles.push({
                             id: id++,
                             layer: layer,
@@ -1528,7 +1580,7 @@
                             const y3d = gy * scale;
                             const z3d = gz * scale;
                             
-                            const proj = project3DTo2D(x3d, y3d, z3d, w, h, 1.2);
+                            const proj = project3DTo2D(x3d, y3d, z3d, w, h, getSandbox3DZoom());
                             sbParticles.push({
                                 id: id++,
                                 gx: gx,
@@ -1582,7 +1634,7 @@
                             const y3d = gy * scale * 2;
                             const z3d = gz * scale * 2;
                             
-                            const proj = project3DTo2D(x3d, y3d, z3d, w, h, 1.2);
+                            const proj = project3DTo2D(x3d, y3d, z3d, w, h, getSandbox3DZoom());
                             sbParticles.push({
                                 id: id++,
                                 gx: gx,
@@ -1613,7 +1665,7 @@
                             const y3d = gy * scale * 2;
                             const z3d = gz * scale * 2;
                             
-                            const proj = project3DTo2D(x3d, y3d, z3d, w, h, 1.2);
+                            const proj = project3DTo2D(x3d, y3d, z3d, w, h, getSandbox3DZoom());
                             sbParticles.push({
                                 id: id++,
                                 gx: gx,
@@ -1684,7 +1736,7 @@
                 ];
                 const siIds = [];
                 siNodes.forEach((a) => {
-                    const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, 1.15);
+                    const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, getSandbox3DZoom(1.15));
                     const sid = id++;
                     siIds.push(sid);
                     sbParticles.push({
@@ -1693,7 +1745,7 @@
                     });
                 });
                 oNodes.forEach((a) => {
-                    const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, 1.15);
+                    const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, getSandbox3DZoom(1.15));
                     const oid = id++;
                     sbParticles.push({
                         id: oid, type: 'O', ox3d: a.x * scale, oy3d: a.y * scale, oz3d: a.z * scale,
@@ -1727,7 +1779,7 @@
                     const x3d = (a.x - 0.5) * scale * 2;
                     const y3d = (a.y - 0.5) * scale * 2;
                     const z3d = (a.z - 0.5) * scale * 2;
-                    const proj = project3DTo2D(x3d, y3d, z3d, w, h, 1.2);
+                    const proj = project3DTo2D(x3d, y3d, z3d, w, h, getSandbox3DZoom());
                     sbParticles.push({
                         id: id++, type: 'Cu', ox3d: x3d, oy3d: y3d, oz3d: z3d,
                         ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 12
@@ -2200,6 +2252,7 @@
         // ==========================================
         function drawCO2Solid(ctx, vFactor, dt) {
             const offsetAmp = vFactor * 3;
+            const splitCol = Math.ceil(sbLatticeGridCols / 2);
 
             sbParticles.forEach(p => {
                 let vx = Math.sin(sbTimeAccumulator * 0.2 + p.id) * offsetAmp;
@@ -2207,7 +2260,7 @@
 
                 let cleaveShiftY = 0;
                 if (sbHammerAnimating) {
-                    if (p.c >= 3) {
+                    if (p.c >= splitCol) {
                         cleaveShiftY = Math.min(65, sbHammerOffset * 3);
                     }
                 }
@@ -2224,6 +2277,7 @@
                 ctx.setLineDash([3, 3]);
                 ctx.shadowColor = 'rgba(255, 100, 100, 0.9)';
                 ctx.shadowBlur = 8;
+                const bondDist = 120 * sbLatticeViewZoom;
                 for (let i = 0; i < sbParticles.length; i++) {
                     let p1 = sbParticles[i];
                     for (let j = i + 1; j < sbParticles.length; j++) {
@@ -2231,7 +2285,7 @@
 
                         // If split is high, do NOT draw bonds crossing the split
                         if (sbHammerAnimating && sbHammerOffset > 10) {
-                            if ((p1.c < 3 && p2.c >= 3) || (p1.c >= 3 && p2.c < 3)) {
+                            if ((p1.c < splitCol && p2.c >= splitCol) || (p1.c >= splitCol && p2.c < splitCol)) {
                                 continue;
                             }
                         }
@@ -2239,7 +2293,7 @@
                         let dx = p2.x - p1.x;
                         let dy = p2.y - p1.y;
                         let dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
+                        if (dist < bondDist) {
                             ctx.beginPath();
                             ctx.moveTo(p1.x, p1.y);
                             ctx.lineTo(p2.x, p2.y);
@@ -2354,7 +2408,7 @@
                 let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
 
                 // Project 3D coordinates (with vibration) to 2D
-                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.2);
+                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
@@ -2489,7 +2543,7 @@
                 }
 
                 // Project 3D coordinates (with vibration and shear) to 2D
-                let proj = project3DTo2D(p.ox3d + shear + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.2);
+                let proj = project3DTo2D(p.ox3d + shear + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
@@ -2611,7 +2665,7 @@
                 }
 
                 // Project 3D coordinates (with vibration and cleave shift) to 2D
-                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy + cleaveShiftY, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.2);
+                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy + cleaveShiftY, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
@@ -2740,7 +2794,7 @@
                 }
 
                 // Project 3D coordinates (with vibration and cleave shift) to 2D
-                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy + cleaveShiftY, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.2);
+                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy + cleaveShiftY, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
@@ -2881,7 +2935,7 @@
                 const vx = Math.sin(sbTimeAccumulator * 0.22 + p.id) * vFactor * 2;
                 const vy = Math.cos(sbTimeAccumulator * 0.19 + p.id) * vFactor * 2;
                 const vz = Math.sin(sbTimeAccumulator * 0.17 + p.id) * vFactor * 2;
-                const proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.15);
+                const proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom(1.15));
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
@@ -2926,7 +2980,7 @@
                 const vx = Math.sin(sbTimeAccumulator * 0.2 + p.id) * vFactor * 2.5;
                 const vy = Math.cos(sbTimeAccumulator * 0.18 + p.id) * vFactor * 2.5;
                 const vz = Math.sin(sbTimeAccumulator * 0.16 + p.id) * vFactor * 2.5;
-                const proj = project3DTo2D(p.ox3d + shear + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, 1.2);
+                const proj = project3DTo2D(p.ox3d + shear + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
