@@ -570,7 +570,7 @@
                     <!-- Macro Properties Tests -->
                     <div class="glass-card" style="padding:10px 15px; display:flex; flex-direction:column; gap:8px; justify-content:center; height:100%; box-sizing:border-box;">
                         <div style="font-size: 0.72em; color: var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Macro Properties Tests</div>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <div style="display:flex; gap:10px;">
                             <button class="cyber-btn cyber-btn-secondary" style="flex:1; font-size:0.8em; padding:8px 12px;" onclick="applyShearForceSandbox()">
                                 <i class="fa-solid fa-hammer"></i>
                                 <span class="lang-zh">外力敲擊</span>
@@ -581,12 +581,12 @@
                                 <span class="lang-zh">導電測試</span>
                                 <span class="lang-en" style="display:none;">Conductivity</span>
                             </button>
-                            <button class="cyber-btn cyber-btn-secondary" id="btn-sb-graphite-reset" style="display:none; flex:1 1 100%; font-size:0.8em; padding:8px 12px;" onclick="resetGraphiteStructure()">
-                                <i class="fa-solid fa-rotate-left"></i>
-                                <span class="lang-zh">重置結構</span>
-                                <span class="lang-en" style="display:none;">Reset Structure</span>
-                            </button>
                         </div>
+                        <button class="cyber-btn cyber-btn-secondary" style="display:none; width:100%; font-size:0.8em; padding:8px 12px;" id="btn-sb-graphite-reset" onclick="resetGraphiteLayers()">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span class="lang-zh">重設結構</span>
+                            <span class="lang-en" style="display:none;">Reset Structure</span>
+                        </button>
                     </div>
                 </div>
             </main>
@@ -778,9 +778,9 @@
         var sbShatterFragments = [];
         var sbDeformationShear = 0;
         var sbMalleableDeformed = false;
-        var sbGraphiteDetachedOffsets = {};
-        var sbGraphitePeelAnim = null;
-        var sbGraphitePeelTargetLayer = null;
+        var sbGraphiteLayerOffset = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
+        var sbGraphiteLayerDetached = [false, false, false];
+        var sbGraphiteSlipAnim = null;
 
         // 3D Projection variables & helpers for realistic crystal structures
         var sbRotationTheta = 0.5;
@@ -1142,11 +1142,7 @@
             sbShatterFragments = [];
             sbDeformationShear = 0;
             sbMalleableDeformed = false;
-            sbGraphiteDetachedOffsets = {};
-            sbGraphitePeelAnim = null;
-            sbGraphitePeelTargetLayer = null;
-            
-            // Reset Conductivity button style
+            resetGraphiteLayerState();
             const condBtn = document.getElementById('btn-sb-conductivity');
             if (condBtn) {
                 condBtn.style.backgroundColor = '';
@@ -1179,8 +1175,10 @@
             updateSandboxLegend();
             updateRotateHint();
             updateLatticeControlsVisibility();
-            updateGraphiteResetButton();
+            updateGraphiteResetButtonVisibility();
         }
+
+        function switchSandboxMode(mode) {
             currentSandboxMode = mode;
             initPropertiesSandbox();
             sfx.playClick();
@@ -1325,13 +1323,6 @@
                 }
                 if (sbConductivityEnabled) {
                     html += formatItem(electronSpan('#00f0ff'), '離域自由電子 (定向移動導電)', 'Delocalized Electron (Conductive)');
-                }
-                const peeledCount = Object.keys(sbGraphiteDetachedOffsets).length;
-                if (peeledCount > 0) {
-                    html += formatItem(lineSpan('rgba(251, 191, 36, 0.85)', true), `已剝離 ${peeledCount} 層（仍保留於視圖）`, `${peeledCount} layer(s) peeled off (remain in view)`);
-                }
-                if (sbGraphitePeelAnim) {
-                    html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)', true), '層間范德華力斷裂（剝離中）', 'Interlayer VdW breaking (peeling)');
                 }
             } else if (currentSandboxMode === 'nacl') {
                 html += formatItem(circleSpan('#a855f7', '#c084fc', '+'), '鈉離子 (Na⁺)', 'Sodium Ion (Na⁺)');
@@ -2537,113 +2528,101 @@
         // 9. GRAPHITE LATTICE ANIMATORS
         // ==========================================
         function easeOutCubic(t) {
+            t = Math.max(0, Math.min(1, t));
             return 1 - Math.pow(1 - t, 3);
         }
 
-        function easeInCubic(t) {
-            return t * t * t;
+        function lerpValue(a, b, t) {
+            return a + (b - a) * t;
         }
 
-        function getNextGraphiteLayerToPeel() {
+        function resetGraphiteLayerState() {
+            sbGraphiteLayerOffset = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
+            sbGraphiteLayerDetached = [false, false, false];
+            sbGraphiteSlipAnim = null;
+        }
+
+        function findNextGraphiteLayerToDetach() {
             for (let layer = 2; layer >= 0; layer--) {
-                if (!sbGraphiteDetachedOffsets[layer]) return layer;
+                if (!sbGraphiteLayerDetached[layer]) return layer;
             }
-            return null;
+            return -1;
         }
 
-        function isGraphiteLayerDetached(layer) {
-            return Object.prototype.hasOwnProperty.call(sbGraphiteDetachedOffsets, layer);
+        function getGraphiteSlipProgress() {
+            if (!sbGraphiteSlipAnim || !sbGraphiteSlipAnim.started) return 0;
+            const elapsed = performance.now() - sbGraphiteSlipAnim.startTime;
+            return Math.min(1, elapsed / sbGraphiteSlipAnim.duration);
         }
 
-        function getGraphiteLayerTransform(layer) {
-            if (sbGraphitePeelAnim && sbGraphitePeelAnim.layer === layer) {
+        function getGraphiteLayerShift(layer) {
+            const base = sbGraphiteLayerOffset[layer];
+            if (sbGraphiteSlipAnim && sbGraphiteSlipAnim.layer === layer && sbGraphiteSlipAnim.started) {
+                const t = easeOutCubic(getGraphiteSlipProgress());
                 return {
-                    slideX: sbGraphitePeelAnim.currentSlide,
-                    fallY: sbGraphitePeelAnim.currentFall
+                    x: lerpValue(sbGraphiteSlipAnim.fromX, sbGraphiteSlipAnim.toX, t),
+                    y: lerpValue(sbGraphiteSlipAnim.fromY, sbGraphiteSlipAnim.toY, t)
                 };
             }
-            if (isGraphiteLayerDetached(layer)) {
-                return sbGraphiteDetachedOffsets[layer];
-            }
-            return { slideX: 0, fallY: 0 };
+            return base;
         }
 
-        function shouldDrawGraphiteVdWLink(p1, p2) {
-            if (isGraphiteLayerDetached(p1.layer) || isGraphiteLayerDetached(p2.layer)) return false;
-            if (sbGraphitePeelAnim) {
-                const peelLayer = sbGraphitePeelAnim.layer;
-                if (p1.layer === peelLayer || p2.layer === peelLayer) return false;
-            }
-            return true;
-        }
+        function updateGraphiteSlipAnim() {
+            if (!sbGraphiteSlipAnim) return;
 
-        function updateGraphitePeelAnimation(now) {
-            if (!sbGraphitePeelAnim) return;
-
-            const progress = Math.min(1, (now - sbGraphitePeelAnim.startTime) / sbGraphitePeelAnim.duration);
-
-            if (progress < 0.48) {
-                const p = easeOutCubic(progress / 0.48);
-                sbGraphitePeelAnim.currentSlide = p * sbGraphitePeelAnim.slideDist;
-                sbGraphitePeelAnim.currentFall = -p * 10;
-            } else {
-                const p = easeInCubic((progress - 0.48) / 0.52);
-                sbGraphitePeelAnim.currentSlide = sbGraphitePeelAnim.slideDist;
-                sbGraphitePeelAnim.currentFall = -10 + p * (sbGraphitePeelAnim.fallDist + 10);
+            if (!sbGraphiteSlipAnim.started && sbHammerOffset > 8) {
+                sbGraphiteSlipAnim.started = true;
+                sbGraphiteSlipAnim.startTime = performance.now();
             }
 
-            if (progress >= 1) {
-                sbGraphiteDetachedOffsets[sbGraphitePeelAnim.layer] = {
-                    slideX: sbGraphitePeelAnim.slideDist,
-                    fallY: sbGraphitePeelAnim.fallDist
+            if (!sbGraphiteSlipAnim.started) return;
+
+            if (getGraphiteSlipProgress() >= 1) {
+                const layer = sbGraphiteSlipAnim.layer;
+                sbGraphiteLayerOffset[layer] = {
+                    x: sbGraphiteSlipAnim.toX,
+                    y: sbGraphiteSlipAnim.toY
                 };
-                sbDelocalizedElectrons = sbDelocalizedElectrons.filter(e => e.layer !== sbGraphitePeelAnim.layer);
-                sbGraphitePeelAnim = null;
-                updateGraphiteResetButton();
+                sbGraphiteLayerDetached[layer] = true;
+                sbGraphiteSlipAnim = null;
                 updateSandboxLegend();
             }
         }
 
-        function startGraphiteLayerPeel(layer) {
-            sbGraphitePeelAnim = {
-                layer: layer,
-                startTime: performance.now(),
-                duration: 1500,
-                slideDist: 42 + (2 - layer) * 8,
-                fallDist: 50 + (2 - layer) * 22,
-                currentSlide: 0,
-                currentFall: 0
-            };
-            sbMalleableDeformed = true;
-            updateGraphiteResetButton();
-            updateSandboxLegend();
+        function shouldDrawGraphiteVdWLink(p1, p2) {
+            const upperLayer = Math.max(p1.layer, p2.layer);
+            if (sbGraphiteLayerDetached[upperLayer]) return false;
+            if (sbGraphiteSlipAnim && sbGraphiteSlipAnim.layer === upperLayer) {
+                const progress = sbGraphiteSlipAnim.started ? getGraphiteSlipProgress() : 0;
+                if (progress > 0.3) return false;
+            }
+            return true;
         }
 
-        function resetGraphiteStructure() {
-            sbGraphiteDetachedOffsets = {};
-            sbGraphitePeelAnim = null;
-            sbGraphitePeelTargetLayer = null;
-            sbDeformationShear = 0;
-            sbMalleableDeformed = false;
+        function updateGraphiteResetButtonVisibility() {
+            const resetBtn = document.getElementById('btn-sb-graphite-reset');
+            if (resetBtn) {
+                resetBtn.style.display = currentSandboxMode === 'graphite' ? 'flex' : 'none';
+            }
+        }
+
+        function resetGraphiteLayers() {
+            if (currentSandboxMode !== 'graphite') return;
+            resetGraphiteLayerState();
             sbHammerAnimating = false;
             sbHammerOffset = 0;
-            buildSandboxParticles();
-            updateGraphiteResetButton();
+            sbDelocalizedElectrons.forEach(e => {
+                delete e._anchorAvgX;
+            });
             updateSandboxLegend();
             sfx.playClick();
-            showToast('結構已重置！石墨恢復三層堆疊。', 'Structure reset! Graphite restored to three stacked layers.');
-        }
-
-        function updateGraphiteResetButton() {
-            const btn = document.getElementById('btn-sb-graphite-reset');
-            if (!btn) return;
-            const hasChange = Object.keys(sbGraphiteDetachedOffsets).length > 0 || sbGraphitePeelAnim;
-            btn.style.display = (currentSandboxMode === 'graphite' && hasChange) ? 'flex' : 'none';
+            showToast('石墨結構已還原。', 'Graphite structure restored.');
         }
 
         function drawGraphiteLattice(ctx, vFactor, w, dt) {
-            updateGraphitePeelAnimation(performance.now());
             let amp = vFactor * 3.5;
+
+            updateGraphiteSlipAnim();
 
             // Rotate theta slowly over time only if the user is not dragging/interacting
             if (!window.sbUserInteracted || !window.sbUserInteracted()) {
@@ -2651,28 +2630,16 @@
             }
 
             sbParticles.forEach(p => {
-                const layerTransform = getGraphiteLayerTransform(p.layer);
-                const detached = isGraphiteLayerDetached(p.layer);
-                const peeling = sbGraphitePeelAnim && sbGraphitePeelAnim.layer === p.layer;
-                const motionAmp = (detached || peeling) ? amp * 0.25 : amp;
+                let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * amp;
+                let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
+                let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
+                const shift = getGraphiteLayerShift(p.layer);
 
-                let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * motionAmp;
-                let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * motionAmp;
-                let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * motionAmp;
-
-                // Project 3D coordinates (with vibration and layer peel offset) to 2D
-                let proj = project3DTo2D(
-                    p.ox3d + layerTransform.slideX + vx,
-                    p.oy3d + layerTransform.fallY + vy,
-                    p.oz3d + vz,
-                    sandboxCanvas.width,
-                    sandboxCanvas.height,
-                    getSandbox3DZoom()
-                );
+                // Project 3D coordinates (with vibration and per-layer slip) to 2D
+                let proj = project3DTo2D(p.ox3d + shift.x + vx, p.oy3d + shift.y + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
-                p._detached = detached || peeling;
             });
 
             // 1. Draw weak interlayer Van der Waals forces (dashed lines)
@@ -2717,11 +2684,11 @@
             sorted.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
-                ctx.fillStyle = p._detached ? '#64748b' : '#475569';
-                ctx.strokeStyle = p._detached ? '#cbd5e1' : '#94a3b8';
-                ctx.lineWidth = p._detached ? 1.5 : 1;
-                ctx.shadowColor = p._detached ? 'rgba(148, 163, 184, 0.55)' : 'rgba(71, 85, 105, 0.4)';
-                ctx.shadowBlur = p._detached ? 8 : 5;
+                ctx.fillStyle = '#475569'; // charcoal black
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1;
+                ctx.shadowColor = 'rgba(71, 85, 105, 0.4)';
+                ctx.shadowBlur = 5;
                 ctx.fill();
                 ctx.stroke();
 
@@ -2736,16 +2703,19 @@
 
             // 4. Animate delocalized electron dots if conductivity mode is on!
             if (sbConductivityEnabled) {
-                // Update electron Y coordinates to match the current projected layer Y coordinates
                 for (let layer = 0; layer < 3; layer++) {
-                    if (isGraphiteLayerDetached(layer)) continue;
-                    if (sbGraphitePeelAnim && sbGraphitePeelAnim.layer === layer) continue;
                     let layerAtoms = sbParticles.filter(p => p.layer === layer);
                     if (layerAtoms.length > 0) {
+                        let avgX = layerAtoms.reduce((sum, p) => sum + p.x, 0) / layerAtoms.length;
                         let avgY = layerAtoms.reduce((sum, p) => sum + p.y, 0) / layerAtoms.length;
                         sbDelocalizedElectrons.forEach(e => {
                             if (e.layer === layer) {
-                                e.y = avgY + 10; // slightly offset from the layer plane
+                                if (e._anchorAvgX == null) {
+                                    e._anchorAvgX = avgX;
+                                }
+                                e.x += avgX - e._anchorAvgX;
+                                e._anchorAvgX = avgX;
+                                e.y = avgY + 10;
                             }
                         });
                     }
@@ -3227,21 +3197,9 @@
         // 11. SHIER FORCE / HAMMER TESTING & ANIMATIONS
         // ==========================================
         function applyShearForceSandbox() {
-            if (sbHammerAnimating) return;
-            if (currentSandboxMode === 'graphite' && sbGraphitePeelAnim) return;
-
-            if (currentSandboxMode === 'graphite') {
-                const nextLayer = getNextGraphiteLayerToPeel();
-                if (nextLayer === null) {
-                    sfx.playClick();
-                    showToast('所有石墨層已剝離！按「重置結構」恢復原始堆疊。', 'All graphite layers peeled! Press Reset Structure to restore.');
-                    return;
-                }
-            }
-
+            if (sbHammerAnimating || sbGraphiteSlipAnim) return;
             sbHammerAnimating = true;
             sbHammerOffset = 0;
-            sbGraphitePeelTargetLayer = null;
 
             // Update legend overlay to show repulsion if applicable
             updateSandboxLegend();
@@ -3275,12 +3233,28 @@
                 toastZh = '敲擊失敗！金剛石擁有巨型共價網絡結構，所有碳原子均以極強的共價單鍵鎖定，硬度極高！';
                 toastEn = 'Hammer failed! Diamond has a giant covalent network where all carbon atoms are locked by extremely strong single covalent bonds.';
             } else if (currentSandboxMode === 'graphite') {
-                targetMax = 18;
+                const slipLayer = findNextGraphiteLayerToDetach();
+                if (slipLayer === -1) {
+                    sbHammerAnimating = false;
+                    sfx.playClick();
+                    showToast('所有層已剝離！按「重設結構」可還原。', 'All layers detached! Use Reset Structure to restore.');
+                    return;
+                }
+                targetMax = 22;
                 isShattered = true;
-                sbGraphitePeelTargetLayer = getNextGraphiteLayerToPeel();
-                const layerLabel = sbGraphitePeelTargetLayer + 1;
-                toastZh = `第 ${layerLabel} 層滑動剝離！石墨層與層之間僅有微弱范德華力，受剪切力時層與層極易滑動（具潤滑性）！`;
-                toastEn = `Layer ${layerLabel} is peeling off! Weak van der Waals forces between graphite layers allow easy sliding (lubrication).`;
+                const from = sbGraphiteLayerOffset[slipLayer];
+                sbGraphiteSlipAnim = {
+                    layer: slipLayer,
+                    started: false,
+                    startTime: 0,
+                    duration: 900,
+                    fromX: from.x,
+                    fromY: from.y,
+                    toX: from.x + 65,
+                    toY: from.y - 22
+                };
+                toastZh = '層間滑動！石墨層與層之間僅有微弱的范德華力，受剪切力時層與層極易滑動（具潤滑性與延展性）！';
+                toastEn = 'Layers slipped! Graphite layers slide past each other easily — malleable lubrication effect!';
             } else if (currentSandboxMode === 'nacl') {
                 if (sandboxTemp < 801) {
                     targetMax = 25;
@@ -3331,12 +3305,8 @@
                 } else {
                     // Hammer retract after a short pause
                     setTimeout(() => {
-                        if (currentSandboxMode === 'graphite' && sbGraphitePeelTargetLayer !== null) {
-                            startGraphiteLayerPeel(sbGraphitePeelTargetLayer);
-                            sbGraphitePeelTargetLayer = null;
-                        }
                         retractHammer();
-                    }, 350);
+                    }, 600);
                 }
             }
             animateHammer();
@@ -3351,8 +3321,13 @@
                     sbHammerOffset = 0;
                     sbHammerAnimating = false;
 
-                    const isMalleable = currentSandboxMode === 'graphite' || currentSandboxMode === 'metal';
-                    if (isMalleable && (sbMalleableDeformed || Object.keys(sbGraphiteDetachedOffsets).length > 0 || sbGraphitePeelAnim)) {
+                    if (currentSandboxMode === 'graphite') {
+                        updateSandboxLegend();
+                        return;
+                    }
+
+                    const isMalleable = currentSandboxMode === 'metal';
+                    if (isMalleable && sbMalleableDeformed) {
                         updateSandboxLegend();
                         return;
                     }
