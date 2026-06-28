@@ -122,7 +122,7 @@ export const enUI = {
     "backToHub": "Back to Summary",
     "downloadImage": "Download image",
     "topic2Eyebrow": "Topic 2",
-    "topic2Title": "Topic 2: Microscopic world 1",
+    "topic2Title": "Microscopic world 1",
     "topic2Desc": "Atoms, isotopes, ions, bonding, and structure & properties.",
     "topic2S1Title": "Atoms, elements & isotopes",
     "topic2S2Title": "Isotopic mass & relative abundance",

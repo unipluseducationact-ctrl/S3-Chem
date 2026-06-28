@@ -122,7 +122,7 @@ export const zhUI = {
     "backToHub": "返回总结",
     "downloadImage": "下载图片",
     "topic2Eyebrow": "Topic 2",
-    "topic2Title": "Topic 2: 微观世界 1",
+    "topic2Title": "微观世界 1",
     "topic2Desc": "原子、同位素、离子、化学键，以及物质结构与性质。",
     "topic2S1Title": "原子、元素与同位素",
     "topic2S2Title": "同位素质量与相对丰度",

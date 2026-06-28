@@ -122,7 +122,7 @@ export const zhHantUI = {
     "backToHub": "返回總結",
     "downloadImage": "下載圖片",
     "topic2Eyebrow": "Topic 2",
-    "topic2Title": "Topic 2: 微觀世界 1",
+    "topic2Title": "微觀世界 1",
     "topic2Desc": "原子、同位素、離子、化學鍵，以及物質結構與性質。",
     "topic2S1Title": "原子、元素與同位素",
     "topic2S2Title": "同位素質量與相對豐度",

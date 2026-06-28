@@ -649,22 +649,22 @@ html[lang="zh"] .summary-lang--zh-hant {
   box-sizing: border-box;
 }
 
-.summary-hub-hero {
-  margin-bottom: 1.5rem;
-}
-
-.summary-hub-lead {
-  margin: 0.35rem 0 0;
-  font-size: 0.95rem;
-  color: var(--text-secondary, #64748b);
-}
-
 .summary-hub-grid {
   max-width: 520px;
 }
 
+button.summary-topic-card {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
 .summary-topic-card {
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .summary-topic-card:focus-visible {

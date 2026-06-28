@@ -176,6 +176,7 @@ function scheduleIdleDeferredModules() {
   const run = () => {
     void import("./js/modules/mascotController.js").then((m) => m.initMascotController());
     void import("./js/modules/chapterDrawOverlay.js").then((m) => m.initChapterDrawOverlays());
+    void ensureSummaryHubReady().catch((e) => console.error("Summary preload error:", e));
   };
   if (typeof requestIdleCallback === "function") {
     requestIdleCallback(run, { timeout: 4000 });

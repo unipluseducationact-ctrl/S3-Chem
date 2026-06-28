@@ -2,6 +2,8 @@
 // Summary hub — topic picker vs detail panels (Topic 2 infographics)
 // =============================================================================
 
+import { applyStaticTranslations } from "./langController.js";
+
 const SUMMARY_TOPICS = ["2"];
 
 const PANEL_ID_BY_TOPIC = {
@@ -75,21 +77,21 @@ function showDetail(topic) {
   });
 }
 
-function bindSummaryTopicCard(card) {
-  if (!card || card.dataset.summaryHubBound === "true") return;
-  const topic = card.dataset.summaryTopic;
-  if (!topic || !SUMMARY_TOPICS.includes(topic)) return;
+function bindShellDelegation(shell) {
+  if (!shell || shell.dataset.summaryHubBound === "true") return;
 
-  const open = () => showDetail(topic);
-
-  card.addEventListener("click", open);
-  card.addEventListener("keydown", (e) => {
-    if (e.key !== "Enter" && e.key !== " ") return;
-    e.preventDefault();
-    open();
+  shell.addEventListener("click", (e) => {
+    const card = e.target.closest(".summary-topic-card[data-summary-topic]");
+    if (card) {
+      showDetail(card.dataset.summaryTopic);
+      return;
+    }
+    if (e.target.closest(".summary-back-btn")) {
+      showHub();
+    }
   });
 
-  card.dataset.summaryHubBound = "true";
+  shell.dataset.summaryHubBound = "true";
 }
 
 /**
@@ -98,17 +100,10 @@ function bindSummaryTopicCard(card) {
  */
 export function initSummaryHub() {
   const shell = getShell();
-  if (shell) {
-    shell.querySelectorAll(".summary-back-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        showHub();
-      });
-    });
-  }
-
-  document.querySelectorAll(".summary-topic-card[data-summary-topic]").forEach(bindSummaryTopicCard);
+  bindShellDelegation(shell);
 
   showHub();
+  applyStaticTranslations();
 
   return {
     resetSummaryHub: showHub,
