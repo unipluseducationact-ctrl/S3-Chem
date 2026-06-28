@@ -284,14 +284,19 @@ body {
 
 .app:has(.quiz) .bohr-nucleus-q {
   font-size: 22px !important;
+  fill: var(--text-primary) !important;
 }
 
 .app:has(.quiz) .bohr-electron {
   font-size: 32px !important;
+  fill: var(--text-primary) !important;
+  font-weight: 800 !important;
 }
 
 .app:has(.quiz) .bohr-shell {
+  stroke: #475569 !important;
   stroke-width: 2.5px;
+  opacity: 0.85;
 }
 
 .app:has(.quiz) .shell-boxes {
@@ -424,9 +429,19 @@ body {
   border-color: #fecaca;
 }
 
+.app:has(.quiz) .shell-box__e {
+  color: var(--text-primary) !important;
+  border: 2px solid var(--text-primary) !important;
+  background: var(--bg-color);
+  font-weight: 900;
+}
+
 .shell-box__e {
-  border: 1.5px solid var(--border-color);
+  color: var(--text-primary);
+  border: 2px solid var(--text-primary);
   border-radius: 8px;
+  background: var(--bg-color);
+  font-weight: 900;
 }
 
 .feedback--ok {
