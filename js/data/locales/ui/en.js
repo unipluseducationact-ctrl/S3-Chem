@@ -135,8 +135,7 @@ export const enUI = {
     "topic2S2Alt": "Calculating isotopic mass and relative abundance",
     "topic2S3Alt": "Element groups in the periodic table",
     "topic2S4Alt": "Common cations and anions",
-    "topic2S5Alt1": "Ion migration experiment using filter paper",
-    "topic2S5Alt2": "Ion migration experiment using a U-tube",
+    "topic2S5Alt": "Ion migration experiments (filter paper and U-tube)",
     "topic2S6Alt": "Ionic, covalent, and metallic bonding",
     "topic2S7Alt": "Structure and properties of ionic, covalent, metallic, and molecular substances"
   },

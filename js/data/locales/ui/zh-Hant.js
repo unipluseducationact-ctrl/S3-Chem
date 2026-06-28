@@ -135,8 +135,7 @@ export const zhHantUI = {
     "topic2S2Alt": "同位素質量與相對豐度計算",
     "topic2S3Alt": "週期表中的元素族",
     "topic2S4Alt": "常見陽離子與陰離子",
-    "topic2S5Alt1": "使用濾紙的離子遷移實驗",
-    "topic2S5Alt2": "使用 U 形管的離子遷移實驗",
+    "topic2S5Alt": "離子遷移實驗（濾紙法與 U 形管法）",
     "topic2S6Alt": "離子鍵、共價鍵與金屬鍵",
     "topic2S7Alt": "離子、共價、金屬及簡單分子物質的結構與性質"
   },

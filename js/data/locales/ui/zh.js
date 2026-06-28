@@ -135,8 +135,7 @@ export const zhUI = {
     "topic2S2Alt": "同位素质量与相对丰度计算",
     "topic2S3Alt": "周期表中的元素族",
     "topic2S4Alt": "常见阳离子与阴离子",
-    "topic2S5Alt1": "使用滤纸的离子迁移实验",
-    "topic2S5Alt2": "使用 U 形管的离子迁移实验",
+    "topic2S5Alt": "离子迁移实验（滤纸法与 U 形管法）",
     "topic2S6Alt": "离子键、共价键与金属键",
     "topic2S7Alt": "离子、共价、金属及简单分子物质的结构与性质"
   },
