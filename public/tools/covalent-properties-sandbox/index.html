@@ -768,6 +768,7 @@
         var sbCsClCleaveAnim = null;
         const SB_CSCL_CLEAVE_GX = 0;
         var sbSio2Bonds = [];
+        var sbSio2Wireframe = [];
         var sbIceCovalentBonds = [];
         var sbIceHBonds = [];
         var sbMetalBonds = [];
@@ -1363,7 +1364,7 @@
             } else if (currentSandboxMode === 'sio2') {
                 html += formatItem(circleSpan('#38bdf8', '#7dd3fc', 'Si'), '矽原子 (Si)', 'Silicon (Si)');
                 html += formatItem(circleSpan('#ef4444', '#f87171', 'O'), '氧原子 (O)', 'Oxygen (O)');
-                html += formatItem(lineSpan('rgba(56, 189, 248, 0.85)', false, false, true), 'Si–O 共價鍵 (巨型網絡)', 'Si–O Covalent Bond (giant network)');
+                html += formatItem(lineSpan('rgba(34, 197, 94, 0.85)', false, false, true), 'Si–O 共價鍵 (巨型網絡)', 'Si–O Covalent Bond (giant network)');
             } else if (currentSandboxMode === 'metal') {
                 html += formatItem(circleSpan('#fbbf24', '#fcd34d', 'Cu', '#0b1126'), '銅離子核心 (Cu²⁺)', 'Copper cation cores (Cu²⁺)');
                 html += formatItem(lineSpan('rgba(251, 191, 36, 0.55)', false, false, true), '金屬鍵 (離域電子海)', 'Metallic Bond (delocalized e⁻ sea)');
@@ -1753,15 +1754,18 @@
                 sbCsClBonds = sbCsClAttractionBonds.map(b => ({ u: b.u, v: b.v }));
             } else if (currentSandboxMode === 'sio2') {
                 sbSio2Bonds = [];
+                sbSio2Wireframe = [];
                 let id = 0;
-                const scale = 24;
+                const scale = 26;
+                const cellSize = scale * 2.2;
+                const bondLen = scale * 0.9;
                 const zoom = getSandbox3DZoom(1.05);
                 const oMap = new Map();
                 const tetOffsets = [
                     [1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]
                 ].map(v => {
                     const n = Math.sqrt(3);
-                    return v.map(c => (c / n) * scale * 0.88);
+                    return v.map(c => (c / n) * bondLen);
                 });
 
                 function getOrCreateO(x3d, y3d, z3d) {
@@ -1771,7 +1775,7 @@
                     const oid = id++;
                     sbParticles.push({
                         id: oid, type: 'O', ox3d: x3d, oy3d: y3d, oz3d: z3d,
-                        ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 7
+                        ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 8
                     });
                     oMap.set(key, oid);
                     return oid;
@@ -1780,9 +1784,9 @@
                 for (let ix = 0; ix < 2; ix++) {
                     for (let iy = 0; iy < 2; iy++) {
                         for (let iz = 0; iz < 2; iz++) {
-                            const sx = (ix - 0.5) * scale * 2.6;
-                            const sy = (iy - 0.5) * scale * 2.6;
-                            const sz = (iz - 0.5) * scale * 2.6;
+                            const sx = (ix - 0.5) * cellSize * 2;
+                            const sy = (iy - 0.5) * cellSize * 2;
+                            const sz = (iz - 0.5) * cellSize * 2;
                             const proj = project3DTo2D(sx, sy, sz, w, h, zoom);
                             const sid = id++;
                             sbParticles.push({
@@ -1796,6 +1800,23 @@
                         }
                     }
                 }
+
+                const boxHalf = cellSize * 1.05 + bondLen * 0.35;
+                const corners = [
+                    [-boxHalf, -boxHalf, -boxHalf], [boxHalf, -boxHalf, -boxHalf],
+                    [boxHalf, boxHalf, -boxHalf], [-boxHalf, boxHalf, -boxHalf],
+                    [-boxHalf, -boxHalf, boxHalf], [boxHalf, -boxHalf, boxHalf],
+                    [boxHalf, boxHalf, boxHalf], [-boxHalf, boxHalf, boxHalf]
+                ];
+                const edgePairs = [
+                    [0, 1], [1, 2], [2, 3], [3, 0],
+                    [4, 5], [5, 6], [6, 7], [7, 4],
+                    [0, 4], [1, 5], [2, 6], [3, 7]
+                ];
+                sbSio2Wireframe = edgePairs.map(([u, v]) => ({
+                    x1: corners[u][0], y1: corners[u][1], z1: corners[u][2],
+                    x2: corners[v][0], y2: corners[v][1], z2: corners[v][2]
+                }));
             } else if (currentSandboxMode === 'metal') {
                 sbMetalBonds = [];
                 let id = 0;
@@ -3541,38 +3562,69 @@
         // 10.5 SiO2 & METAL LATTICE ANIMATORS
         // ==========================================
         function drawSio2Lattice(ctx, vFactor, dt) {
+            const amp = vFactor * 1.2;
+            const zoom = getSandbox3DZoom(1.05);
+            const canvasW = sandboxCanvas.width;
+            const canvasH = sandboxCanvas.height;
+
             if (!window.sbUserInteracted || !window.sbUserInteracted()) {
                 sbRotationTheta += 0.003 * vFactor * dt * 0.06;
             }
+
             sbParticles.forEach(p => {
-                const vx = Math.sin(sbTimeAccumulator * 0.22 + p.id) * vFactor * 2;
-                const vy = Math.cos(sbTimeAccumulator * 0.19 + p.id) * vFactor * 2;
-                const vz = Math.sin(sbTimeAccumulator * 0.17 + p.id) * vFactor * 2;
-                const proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom(1.05));
+                const vx = Math.sin(sbTimeAccumulator * 0.22 + p.id) * amp;
+                const vy = Math.cos(sbTimeAccumulator * 0.19 + p.id) * amp;
+                const vz = Math.sin(sbTimeAccumulator * 0.17 + p.id) * amp;
+                const proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, canvasW, canvasH, zoom);
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
             });
-            const hammerFlash = sbHammerAnimating ? 0.35 + 0.25 * Math.sin(sbTimeAccumulator * 0.8) : 0;
-            ctx.strokeStyle = `rgba(56, 189, 248, ${0.75 + hammerFlash})`;
-            ctx.lineWidth = 2.8;
-            ctx.shadowColor = 'rgba(56, 189, 248, 0.7)';
-            ctx.shadowBlur = sbHammerAnimating ? 10 : 6;
-            sbSio2Bonds.forEach(bond => {
+
+            const wireVib = Math.sin(sbTimeAccumulator * 0.15) * amp * 0.15;
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+            ctx.lineWidth = 1.2;
+            ctx.setLineDash([3, 3]);
+            sbSio2Wireframe.forEach(edge => {
+                const p1 = project3DTo2D(edge.x1 + wireVib, edge.y1 + wireVib, edge.z1 + wireVib, canvasW, canvasH, zoom);
+                const p2 = project3DTo2D(edge.x2 + wireVib, edge.y2 + wireVib, edge.z2 + wireVib, canvasW, canvasH, zoom);
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            });
+            ctx.setLineDash([]);
+
+            const hammerFlash = sbHammerAnimating ? 0.2 + 0.2 * Math.sin(sbTimeAccumulator * 0.8) : 0;
+            const bondAlpha = 0.75 + hammerFlash;
+            const sortedBonds = [...sbSio2Bonds].sort((a, b) => {
+                const pa = sbParticles[a.u];
+                const pb = sbParticles[a.v];
+                const pc = sbParticles[b.u];
+                const pd = sbParticles[b.v];
+                if (!pa || !pb || !pc || !pd) return 0;
+                return ((pc.z + pd.z) / 2) - ((pa.z + pb.z) / 2);
+            });
+
+            ctx.lineWidth = sbHammerAnimating ? 3.2 : 2.8;
+            ctx.shadowColor = 'rgba(34, 197, 94, 0.6)';
+            ctx.shadowBlur = sbHammerAnimating ? 12 : 6;
+            sortedBonds.forEach(bond => {
                 const p1 = sbParticles[bond.u];
                 const p2 = sbParticles[bond.v];
-                if (p1 && p2) {
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                }
+                if (!p1 || !p2) return;
+                ctx.strokeStyle = `rgba(34, 197, 94, ${bondAlpha})`;
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
             });
             ctx.shadowBlur = 0;
+
             const sorted = [...sbParticles].sort((a, b) => b.z - a.z);
             sorted.forEach(p => {
                 ctx.beginPath();
-                const r = p.type === 'Si' ? 10 : 7;
+                const r = p.type === 'Si' ? 11 : 8;
                 ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
                 ctx.fillStyle = p.type === 'Si' ? '#38bdf8' : '#ef4444';
                 ctx.shadowColor = p.type === 'Si' ? 'rgba(56, 189, 248, 0.45)' : 'rgba(239, 68, 68, 0.45)';
