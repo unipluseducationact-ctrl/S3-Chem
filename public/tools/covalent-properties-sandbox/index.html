@@ -1367,11 +1367,12 @@
                 html += formatItem(lineSpan('rgba(34, 197, 94, 0.85)', false, false, true), 'Si–O 共價鍵 (巨型網絡)', 'Si–O Covalent Bond (giant network)');
                 html += formatItem(lineSpan('rgba(148, 163, 184, 0.25)', true), '晶胞輔助線', 'Unit Cell Wireframe');
             } else if (currentSandboxMode === 'metal') {
-                html += formatItem(circleSpan('#fbbf24', '#fcd34d', 'Cu', '#0b1126'), '銅離子核心 (Cu²⁺)', 'Copper cation cores (Cu²⁺)');
-                html += formatItem(lineSpan('rgba(251, 191, 36, 0.55)', false, false, true), '金屬鍵 (離域電子海)', 'Metallic Bond (delocalized e⁻ sea)');
-                html += formatItem(electronSpan('#fbbf24'), '離域電子海 (自由移動)', 'Delocalized e⁻ sea (free movement)');
+                const seaSpan = '<span style="display:inline-block; width:20px; height:12px; background:linear-gradient(135deg, rgba(167,139,250,0.5), rgba(139,92,246,0.15)); border-radius:3px; vertical-align:middle; margin-right:8px;"></span>';
+                html += formatItem(circleSpan('#94a3b8', '#cbd5e1', '+'), '金屬離子 (Cu²⁺，帶正電荷)', 'Metal ion (Cu²⁺, positively charged)');
+                html += formatItem(seaSpan, '離域電子海 (負電荷背景)', 'Delocalized electron sea (negative charge background)');
+                html += formatItem(electronSpan('#f472b6'), '離域電子 (e⁻，自由移動)', 'Delocalized electron (e⁻, free movement)');
                 if (sbConductivityEnabled) {
-                    html += formatItem(electronSpan('#00f0ff'), '離域自由電子 (定向移動導電)', 'Delocalized Electron (Conductive)');
+                    html += formatItem(electronSpan('#00f0ff'), '離域自由電子 (定向移動導電)', 'Delocalized electron (directional conduction)');
                 }
             }
 
@@ -1464,6 +1465,33 @@
             });
 
             return { particles, bonds, wireframe };
+        }
+
+        function spawnMetalSeaElectrons(particles, count = 45) {
+            if (particles.length === 0) return;
+            const xs = particles.map(p => p.ox3d);
+            const ys = particles.map(p => p.oy3d);
+            const zs = particles.map(p => p.oz3d);
+            const pad = 5;
+            const bounds = {
+                minX: Math.min(...xs) - pad,
+                maxX: Math.max(...xs) + pad,
+                minY: Math.min(...ys) - pad,
+                maxY: Math.max(...ys) + pad,
+                minZ: Math.min(...zs) - pad,
+                maxZ: Math.max(...zs) + pad
+            };
+            for (let i = 0; i < count; i++) {
+                sbDelocalizedElectrons.push({
+                    ox3d: bounds.minX + Math.random() * (bounds.maxX - bounds.minX),
+                    oy3d: bounds.minY + Math.random() * (bounds.maxY - bounds.minY),
+                    oz3d: bounds.minZ + Math.random() * (bounds.maxZ - bounds.minZ),
+                    vx: (Math.random() - 0.5) * 0.35,
+                    vy: (Math.random() - 0.5) * 0.35,
+                    vz: (Math.random() - 0.5) * 0.35,
+                    bounds
+                });
+            }
         }
 
         function buildSandboxParticles() {
@@ -1836,27 +1864,7 @@
                         }
                     }
                 }
-                for (let i = 0; i < sbParticles.length; i++) {
-                    for (let j = i + 1; j < sbParticles.length; j++) {
-                        const p1 = sbParticles[i];
-                        const p2 = sbParticles[j];
-                        const dx = p1.ox3d - p2.ox3d;
-                        const dy = p1.oy3d - p2.oy3d;
-                        const dz = p1.oz3d - p2.oz3d;
-                        const d2 = dx * dx + dy * dy + dz * dz;
-                        if (d2 < scale * scale * 1.35) {
-                            sbMetalBonds.push({ u: p1.id, v: p2.id });
-                        }
-                    }
-                }
-                for (let e = 0; e < 26; e++) {
-                    sbDelocalizedElectrons.push({
-                        x: Math.random() * w,
-                        y: Math.random() * h,
-                        vx: (Math.random() - 0.5) * 1.8 + 0.4,
-                        vy: (Math.random() - 0.5) * 1.2
-                    });
-                }
+                spawnMetalSeaElectrons(sbParticles, 45);
             }
 
             // Update legend overlay dynamically
@@ -3620,6 +3628,9 @@
         }
 
         function drawMetalLattice(ctx, vFactor, w, dt) {
+            const canvasH = sandboxCanvas.height;
+            const zoom = getSandbox3DZoom();
+
             if (!window.sbUserInteracted || !window.sbUserInteracted()) {
                 sbRotationTheta += 0.003 * vFactor * dt * 0.06;
             }
@@ -3631,43 +3642,53 @@
                 const vx = Math.sin(sbTimeAccumulator * 0.2 + p.id) * vFactor * 2.5;
                 const vy = Math.cos(sbTimeAccumulator * 0.18 + p.id) * vFactor * 2.5;
                 const vz = Math.sin(sbTimeAccumulator * 0.16 + p.id) * vFactor * 2.5;
-                const proj = project3DTo2D(p.ox3d + shear + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
+                const proj = project3DTo2D(p.ox3d + shear + vx, p.oy3d + vy, p.oz3d + vz, w, canvasH, zoom);
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
             });
-            const bondAlpha = sbHammerAnimating ? 0.65 + 0.2 * Math.sin(sbTimeAccumulator * 0.6) : 0.55;
-            ctx.strokeStyle = `rgba(251, 191, 36, ${bondAlpha})`;
-            ctx.lineWidth = sbHammerAnimating ? 3 : 2.5;
-            ctx.shadowColor = 'rgba(251, 191, 36, 0.8)';
-            ctx.shadowBlur = sbHammerAnimating ? 10 : 6;
-            sbMetalBonds.forEach(bond => {
-                const p1 = sbParticles[bond.u];
-                const p2 = sbParticles[bond.v];
-                if (p1 && p2) {
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                }
-            });
-            ctx.shadowBlur = 0;
+
+            if (sbParticles.length > 0) {
+                const cx = sbParticles.reduce((sum, p) => sum + p.x, 0) / sbParticles.length;
+                const cy = sbParticles.reduce((sum, p) => sum + p.y, 0) / sbParticles.length;
+                const glowRadius = Math.max(w, canvasH) * 0.22;
+                const gradient = ctx.createRadialGradient(cx, cy, 8, cx, cy, glowRadius);
+                gradient.addColorStop(0, 'rgba(167, 139, 250, 0.18)');
+                gradient.addColorStop(0.55, 'rgba(139, 92, 246, 0.1)');
+                gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(cx, cy, glowRadius, 0, Math.PI * 2);
+                ctx.fill();
+            }
 
             const electronSpeed = sbConductivityEnabled ? 2.2 : 0.9;
-            sbDelocalizedElectrons.forEach(e => {
-                e.x += e.vx * dt * electronSpeed;
-                e.y += (e.vy || 0) * dt * electronSpeed * 0.6;
-                if (e.x > w) e.x = 0;
-                if (e.x < 0) e.x = w;
-                if (e.y > sandboxCanvas.height) e.y = 0;
-                if (e.y < 0) e.y = sandboxCanvas.height;
-                if (sbConductivityEnabled) {
-                    e.x += 0.8 * dt;
+            const electronProjected = [];
+            sbDelocalizedElectrons.forEach((e, idx) => {
+                const b = e.bounds;
+                if (b) {
+                    e.ox3d += e.vx * dt * 0.04 * electronSpeed;
+                    e.oy3d += e.vy * dt * 0.04 * electronSpeed;
+                    e.oz3d += e.vz * dt * 0.04 * electronSpeed;
+                    if (e.ox3d < b.minX || e.ox3d > b.maxX) e.vx *= -1;
+                    if (e.oy3d < b.minY || e.oy3d > b.maxY) e.vy *= -1;
+                    if (e.oz3d < b.minZ || e.oz3d > b.maxZ) e.vz *= -1;
+                    e.ox3d = Math.max(b.minX, Math.min(b.maxX, e.ox3d));
+                    e.oy3d = Math.max(b.minY, Math.min(b.maxY, e.oy3d));
+                    e.oz3d = Math.max(b.minZ, Math.min(b.maxZ, e.oz3d));
                 }
+                const driftX = sbConductivityEnabled ? 0.8 * dt : 0;
+                const proj = project3DTo2D(e.ox3d + shear + driftX, e.oy3d, e.oz3d, w, canvasH, zoom);
+                electronProjected.push({ x: proj.x, y: proj.y, z: proj.z, idx });
+            });
+
+            electronProjected.sort((a, b) => a.z - b.z);
+            electronProjected.forEach((ep) => {
+                const e = sbDelocalizedElectrons[ep.idx];
                 ctx.beginPath();
-                ctx.arc(e.x, e.y, sbConductivityEnabled ? 4 : 3.5, 0, Math.PI * 2);
-                ctx.fillStyle = sbConductivityEnabled ? '#00f0ff' : '#fbbf24';
-                ctx.shadowColor = sbConductivityEnabled ? '#00f0ff' : '#fbbf24';
+                ctx.arc(ep.x, ep.y, sbConductivityEnabled ? 4 : 3.5, 0, Math.PI * 2);
+                ctx.fillStyle = sbConductivityEnabled ? '#00f0ff' : '#f472b6';
+                ctx.shadowColor = sbConductivityEnabled ? '#00f0ff' : '#f472b6';
                 ctx.shadowBlur = sbConductivityEnabled ? 10 : 7;
                 ctx.fill();
             });
@@ -3677,16 +3698,19 @@
             sorted.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 11, 0, Math.PI * 2);
-                ctx.fillStyle = '#fbbf24';
-                ctx.shadowColor = 'rgba(251, 191, 36, 0.5)';
+                ctx.fillStyle = '#94a3b8';
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 1;
+                ctx.shadowColor = 'rgba(148, 163, 184, 0.5)';
                 ctx.shadowBlur = 6;
                 ctx.fill();
+                ctx.stroke();
                 ctx.shadowBlur = 0;
-                ctx.fillStyle = '#0b1126';
-                ctx.font = 'bold 9px system-ui,sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 10px system-ui,sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('Cu', p.x, p.y);
+                ctx.fillText('+', p.x, p.y);
             });
         }
 
