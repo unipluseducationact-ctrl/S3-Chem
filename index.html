@@ -765,7 +765,183 @@
     <!-- Summary (uses settings-page id for existing CSS / nav mapping) -->
     <div id="settings-page" class="blank-page chapter-page">
         <div class="settings-viewport chapter-summary-shell" id="page-settings">
-            <div class="chapter-scroll" id="chapter-summary-root"></div>
+            <div id="summary-shell" class="summary-shell">
+                <div id="summary-hub" class="summary-hub">
+                    <div class="chem-tools-container summary-hub-inner">
+                        <header class="chapter-hero summary-hub-hero">
+                            <h1 class="chapter-title" data-i18n="summary.hubTitle">Summary</h1>
+                            <p class="chapter-lead summary-hub-lead" data-i18n="summary.hubSubtitle">Choose a topic to view infographic summaries</p>
+                        </header>
+                        <div class="chem-tools-grid summary-hub-grid">
+                            <div class="chem-tool-card summary-topic-card" data-summary-topic="2" role="button" tabindex="0">
+                                <div class="chem-tool-header">
+                                    <div class="chem-tool-icon-box balancer-icon">
+                                        <span class="chem-tool-number">2</span>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <circle cx="12" cy="12" r="3" />
+                                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                        </svg>
+                                    </div>
+                                    <span class="chem-tool-arrow" aria-hidden="true">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                            <polyline points="12 5 19 12 12 19"></polyline>
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="chem-tool-info">
+                                    <h3 class="chem-tool-name" data-i18n="summary.topic2Title">Topic 2: Microscopic world 1</h3>
+                                    <p class="chem-tool-desc" data-i18n="summary.topic2Desc">Atoms, isotopes, ions, bonding, and structure &amp; properties.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="summary-panel-topic-2" class="summary-panel" hidden aria-hidden="true">
+                    <div class="summary-panel-bar">
+                        <button type="button" class="summary-back-btn" data-i18n="summary.backToHub">Back to Summary</button>
+                    </div>
+                    <div class="chapter-scroll summary-panel-scroll">
+                        <header class="chapter-hero">
+                            <p class="chapter-eyebrow" data-i18n="summary.topic2Eyebrow">Topic 2</p>
+                            <h1 class="chapter-title" data-i18n="summary.topic2Title">Topic 2: Microscopic world 1</h1>
+                        </header>
+
+                        <div class="chapter-section-stack">
+                            <section class="chapter-section" aria-labelledby="summary-topic2-s1">
+                                <h2 id="summary-topic2-s1" class="chapter-section-title" data-i18n="summary.topic2S1Title">Atoms, elements &amp; isotopes</h2>
+                                <div class="summary-subtopic-stack">
+                                    <figure class="summary-infographic-card">
+                                        <div class="summary-infographic-media">
+                                            <picture>
+                                                <source type="image/webp" srcset="./public/summary/topic-02/01-elements-and-isotopes.webp" />
+                                                <img class="summary-infographic-img" loading="lazy" decoding="async" src="./public/summary/topic-02/01-elements-and-isotopes.png" data-i18n-alt="summary.topic2S1Alt" alt="Elements and isotopes: atomic structure and relative atomic mass" />
+                                            </picture>
+                                        </div>
+                                        <figcaption class="summary-infographic-actions">
+                                            <a class="summary-infographic-link" href="./public/summary/topic-02/01-elements-and-isotopes.png" download="topic2-01-elements-and-isotopes.png" rel="noopener noreferrer" data-i18n="summary.downloadImage">Download image</a>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </section>
+
+                            <section class="chapter-section" aria-labelledby="summary-topic2-s2">
+                                <h2 id="summary-topic2-s2" class="chapter-section-title" data-i18n="summary.topic2S2Title">Isotopic mass &amp; relative abundance</h2>
+                                <div class="summary-subtopic-stack">
+                                    <figure class="summary-infographic-card">
+                                        <div class="summary-infographic-media">
+                                            <picture>
+                                                <source type="image/webp" srcset="./public/summary/topic-02/02-isotopic-mass-calculations.webp" />
+                                                <img class="summary-infographic-img" loading="lazy" decoding="async" src="./public/summary/topic-02/02-isotopic-mass-calculations.png" data-i18n-alt="summary.topic2S2Alt" alt="Calculating isotopic mass and relative abundance" />
+                                            </picture>
+                                        </div>
+                                        <figcaption class="summary-infographic-actions">
+                                            <a class="summary-infographic-link" href="./public/summary/topic-02/02-isotopic-mass-calculations.png" download="topic2-02-isotopic-mass-calculations.png" rel="noopener noreferrer" data-i18n="summary.downloadImage">Download image</a>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </section>
+
+                            <section class="chapter-section" aria-labelledby="summary-topic2-s3">
+                                <h2 id="summary-topic2-s3" class="chapter-section-title" data-i18n="summary.topic2S3Title">Periodic table groups</h2>
+                                <div class="summary-subtopic-stack">
+                                    <figure class="summary-infographic-card">
+                                        <div class="summary-infographic-media">
+                                            <picture>
+                                                <source type="image/webp" srcset="./public/summary/topic-02/03-periodic-table-groups.webp" />
+                                                <img class="summary-infographic-img" loading="lazy" decoding="async" src="./public/summary/topic-02/03-periodic-table-groups.png" data-i18n-alt="summary.topic2S3Alt" alt="Element groups in the periodic table" />
+                                            </picture>
+                                        </div>
+                                        <figcaption class="summary-infographic-actions">
+                                            <a class="summary-infographic-link" href="./public/summary/topic-02/03-periodic-table-groups.png" download="topic2-03-periodic-table-groups.png" rel="noopener noreferrer" data-i18n="summary.downloadImage">Download image</a>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </section>
+
+                            <section class="chapter-section" aria-labelledby="summary-topic2-s4">
+                                <h2 id="summary-topic2-s4" class="chapter-section-title" data-i18n="summary.topic2S4Title">Common ions</h2>
+                                <div class="summary-subtopic-stack">
+                                    <figure class="summary-infographic-card">
+                                        <div class="summary-infographic-media">
+                                            <picture>
+                                                <source type="image/webp" srcset="./public/summary/topic-02/04-common-ions.webp" />
+                                                <img class="summary-infographic-img" loading="lazy" decoding="async" src="./public/summary/topic-02/04-common-ions.png" data-i18n-alt="summary.topic2S4Alt" alt="Common cations and anions" />
+                                            </picture>
+                                        </div>
+                                        <figcaption class="summary-infographic-actions">
+                                            <a class="summary-infographic-link" href="./public/summary/topic-02/04-common-ions.png" download="topic2-04-common-ions.png" rel="noopener noreferrer" data-i18n="summary.downloadImage">Download image</a>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </section>
+
+                            <section class="chapter-section" aria-labelledby="summary-topic2-s5">
+                                <h2 id="summary-topic2-s5" class="chapter-section-title" data-i18n="summary.topic2S5Title">Ion migration experiments</h2>
+                                <div class="summary-subtopic-stack">
+                                    <figure class="summary-infographic-card">
+                                        <div class="summary-infographic-media">
+                                            <picture>
+                                                <source type="image/webp" srcset="./public/summary/topic-02/05-ion-migration-filter-paper.webp" />
+                                                <img class="summary-infographic-img" loading="lazy" decoding="async" src="./public/summary/topic-02/05-ion-migration-filter-paper.png" data-i18n-alt="summary.topic2S5Alt1" alt="Ion migration experiment using filter paper" />
+                                            </picture>
+                                        </div>
+                                        <figcaption class="summary-infographic-actions">
+                                            <a class="summary-infographic-link" href="./public/summary/topic-02/05-ion-migration-filter-paper.png" download="topic2-05-ion-migration-filter-paper.png" rel="noopener noreferrer" data-i18n="summary.downloadImage">Download image</a>
+                                        </figcaption>
+                                    </figure>
+                                    <figure class="summary-infographic-card">
+                                        <div class="summary-infographic-media">
+                                            <picture>
+                                                <source type="image/webp" srcset="./public/summary/topic-02/05-ion-migration-u-tube.webp" />
+                                                <img class="summary-infographic-img" loading="lazy" decoding="async" src="./public/summary/topic-02/05-ion-migration-u-tube.png" data-i18n-alt="summary.topic2S5Alt2" alt="Ion migration experiment using a U-tube" />
+                                            </picture>
+                                        </div>
+                                        <figcaption class="summary-infographic-actions">
+                                            <a class="summary-infographic-link" href="./public/summary/topic-02/05-ion-migration-u-tube.png" download="topic2-05-ion-migration-u-tube.png" rel="noopener noreferrer" data-i18n="summary.downloadImage">Download image</a>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </section>
+
+                            <section class="chapter-section" aria-labelledby="summary-topic2-s6">
+                                <h2 id="summary-topic2-s6" class="chapter-section-title" data-i18n="summary.topic2S6Title">Chemical bonding</h2>
+                                <div class="summary-subtopic-stack">
+                                    <figure class="summary-infographic-card">
+                                        <div class="summary-infographic-media">
+                                            <picture>
+                                                <source type="image/webp" srcset="./public/summary/topic-02/06-chemical-bonds.webp" />
+                                                <img class="summary-infographic-img" loading="lazy" decoding="async" src="./public/summary/topic-02/06-chemical-bonds.png" data-i18n-alt="summary.topic2S6Alt" alt="Ionic, covalent, and metallic bonding" />
+                                            </picture>
+                                        </div>
+                                        <figcaption class="summary-infographic-actions">
+                                            <a class="summary-infographic-link" href="./public/summary/topic-02/06-chemical-bonds.png" download="topic2-06-chemical-bonds.png" rel="noopener noreferrer" data-i18n="summary.downloadImage">Download image</a>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </section>
+
+                            <section class="chapter-section" aria-labelledby="summary-topic2-s7">
+                                <h2 id="summary-topic2-s7" class="chapter-section-title" data-i18n="summary.topic2S7Title">Structure &amp; properties of substances</h2>
+                                <div class="summary-subtopic-stack">
+                                    <figure class="summary-infographic-card">
+                                        <div class="summary-infographic-media">
+                                            <picture>
+                                                <source type="image/webp" srcset="./public/summary/topic-02/07-structure-and-properties.webp" />
+                                                <img class="summary-infographic-img" loading="lazy" decoding="async" src="./public/summary/topic-02/07-structure-and-properties.png" data-i18n-alt="summary.topic2S7Alt" alt="Structure and properties of ionic, covalent, metallic, and molecular substances" />
+                                            </picture>
+                                        </div>
+                                        <figcaption class="summary-infographic-actions">
+                                            <a class="summary-infographic-link" href="./public/summary/topic-02/07-structure-and-properties.png" download="topic2-07-structure-and-properties.png" rel="noopener noreferrer" data-i18n="summary.downloadImage">Download image</a>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="chapter-draw-mount" data-chapter-draw-root aria-hidden="true"></div>
     </div>

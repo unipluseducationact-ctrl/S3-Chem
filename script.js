@@ -147,6 +147,20 @@ async function ensureWorksheetHubReady() {
   return { hubMod, api: worksheetHubApi };
 }
 
+let summaryHubPromise = null;
+let summaryHubApi = null;
+
+async function ensureSummaryHubReady() {
+  if (!summaryHubPromise) {
+    summaryHubPromise = import("./js/modules/summaryHubController.js");
+  }
+  const hubMod = await summaryHubPromise;
+  if (!summaryHubApi) {
+    summaryHubApi = hubMod.initSummaryHub();
+  }
+  return { hubMod, api: summaryHubApi };
+}
+
 let flashcardsPromise = null;
 
 async function ensureFlashcardsReady() {
@@ -581,6 +595,11 @@ function initMainApp() {
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onSettingsPageShown: () => {
+      void ensureSummaryHubReady()
+        .then(({ api }) => {
+          api.resetSummaryHub();
+        })
+        .catch((e) => console.error("Summary lazy init error:", e));
       requestAnimationFrame(() => {
          if (window._syncGlobalUnitButtons) window._syncGlobalUnitButtons(true);
       });

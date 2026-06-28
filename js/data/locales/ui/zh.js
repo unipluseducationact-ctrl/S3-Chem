@@ -116,6 +116,30 @@ export const zhUI = {
     "pendingName": "待定",
     "pendingDesc": "更多类型稍后推出。"
   },
+  "summary": {
+    "hubTitle": "总结",
+    "hubSubtitle": "选择主题以查看图像笔记",
+    "backToHub": "返回总结",
+    "downloadImage": "下载图片",
+    "topic2Eyebrow": "Topic 2",
+    "topic2Title": "Topic 2: 微观世界 1",
+    "topic2Desc": "原子、同位素、离子、化学键，以及物质结构与性质。",
+    "topic2S1Title": "原子、元素与同位素",
+    "topic2S2Title": "同位素质量与相对丰度",
+    "topic2S3Title": "周期表各族",
+    "topic2S4Title": "常见离子",
+    "topic2S5Title": "离子迁移实验",
+    "topic2S6Title": "化学键",
+    "topic2S7Title": "物质结构与性质",
+    "topic2S1Alt": "元素与同位素：原子结构与相对原子质量",
+    "topic2S2Alt": "同位素质量与相对丰度计算",
+    "topic2S3Alt": "周期表中的元素族",
+    "topic2S4Alt": "常见阳离子与阴离子",
+    "topic2S5Alt1": "使用滤纸的离子迁移实验",
+    "topic2S5Alt2": "使用 U 形管的离子迁移实验",
+    "topic2S6Alt": "离子键、共价键与金属键",
+    "topic2S7Alt": "离子、共价、金属及简单分子物质的结构与性质"
+  },
   "search": {
     "placeholder": "搜索...",
     "noResults": "未找到元素"

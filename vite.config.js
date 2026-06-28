@@ -22,6 +22,7 @@ export default defineConfig({
             return 'tools-bundle';
           }
           if (id.includes('worksheetHubController')) return 'worksheet-hub';
+          if (id.includes('summaryHubController')) return 'summary-hub';
         },
       },
     },

@@ -116,6 +116,30 @@ export const zhHantUI = {
     "pendingName": "待定",
     "pendingDesc": "更多類型稍後推出。"
   },
+  "summary": {
+    "hubTitle": "總結",
+    "hubSubtitle": "選擇主題以查看圖像筆記",
+    "backToHub": "返回總結",
+    "downloadImage": "下載圖片",
+    "topic2Eyebrow": "Topic 2",
+    "topic2Title": "Topic 2: 微觀世界 1",
+    "topic2Desc": "原子、同位素、離子、化學鍵，以及物質結構與性質。",
+    "topic2S1Title": "原子、元素與同位素",
+    "topic2S2Title": "同位素質量與相對豐度",
+    "topic2S3Title": "週期表各族",
+    "topic2S4Title": "常見離子",
+    "topic2S5Title": "離子遷移實驗",
+    "topic2S6Title": "化學鍵",
+    "topic2S7Title": "物質結構與性質",
+    "topic2S1Alt": "元素與同位素：原子結構與相對原子質量",
+    "topic2S2Alt": "同位素質量與相對豐度計算",
+    "topic2S3Alt": "週期表中的元素族",
+    "topic2S4Alt": "常見陽離子與陰離子",
+    "topic2S5Alt1": "使用濾紙的離子遷移實驗",
+    "topic2S5Alt2": "使用 U 形管的離子遷移實驗",
+    "topic2S6Alt": "離子鍵、共價鍵與金屬鍵",
+    "topic2S7Alt": "離子、共價、金屬及簡單分子物質的結構與性質"
+  },
   "search": {
     "placeholder": "搜尋...",
     "noResults": "未找到元素"

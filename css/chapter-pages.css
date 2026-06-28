@@ -630,6 +630,109 @@ html[lang="zh"] .summary-lang--zh-hant {
   color: var(--text-secondary, #475569);
 }
 
+/* Summary hub — topic picker vs detail panels */
+.summary-shell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+.summary-hub {
+  width: 100%;
+}
+
+.summary-hub-inner {
+  max-width: min(960px, 100%);
+  margin: 0 auto;
+  padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 2rem max(20px, env(safe-area-inset-left));
+  box-sizing: border-box;
+}
+
+.summary-hub-hero {
+  margin-bottom: 1.5rem;
+}
+
+.summary-hub-lead {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary, #64748b);
+}
+
+.summary-hub-grid {
+  max-width: 520px;
+}
+
+.summary-topic-card {
+  cursor: pointer;
+}
+
+.summary-topic-card:focus-visible {
+  outline: 2px solid var(--text-highlight, #6366f1);
+  outline-offset: 2px;
+}
+
+.summary-panel {
+  display: none;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+.summary-shell--detail .summary-panel:not([hidden]) {
+  display: flex;
+}
+
+.summary-shell--detail #summary-hub {
+  display: none;
+}
+
+.summary-panel-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 0.75rem max(20px, env(safe-area-inset-right)) 0.75rem max(20px, env(safe-area-inset-left));
+  background: rgba(248, 250, 252, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.summary-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid var(--border-color, #cbd5e1);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.summary-back-btn::before {
+  content: "←";
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.summary-back-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.summary-back-btn:focus-visible {
+  outline: 2px solid var(--text-highlight, #6366f1);
+  outline-offset: 2px;
+}
+
+.summary-panel-scroll {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 /* =============================================================================
    Chapter draw overlay (Notes + Summary)
    ============================================================================= */
