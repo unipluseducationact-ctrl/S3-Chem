@@ -78,7 +78,7 @@
       lblLang: "Language",
       lblSeed: "Random seed (optional)",
       btnGenerate: "Generate Worksheet",
-      trustText: "Questions cover classification of matter, separation techniques, particle theory, and physical vs chemical changes — HKDSE-style.",
+      trustText: "Questions are drawn primarily from Topic 02 Overall 1 (Unit Education) — atomic structure, periodic table, bonding, and properties.",
       tabPrint: "Print",
       tabPractice: "Practice",
       tabAnswerKey: "Answer Key",
@@ -124,7 +124,7 @@
       lblLang: "語言",
       lblSeed: "隨機種子（可留空）",
       btnGenerate: "產生工作紙",
-      trustText: "題目涵蓋物質分類、分離方法、粒子理論及物理與化學變化等 DSE 風格練習。",
+      trustText: "題目主要來自 Topic 02 Overall 1（薈進教育）— 原子結構、週期表、鍵結及物質性質。",
       tabPrint: "列印",
       tabPractice: "練習",
       tabAnswerKey: "答案",
@@ -490,9 +490,46 @@
     short: [shortDefineElement, shortFiltration],
   };
 
-  async function generateQuestions(count, types, difficulty, userSeed) {
-    const seed = await stableSeed(String(userSeed || ""), count, types, difficulty);
-    const rng = createRng(seed);
+  let PDF_BANK = [];
+  let pdfBankLoadPromise = null;
+
+  function loadPdfBank() {
+    if (!pdfBankLoadPromise) {
+      pdfBankLoadPromise = fetch("./pdf-question-bank.json?v=20260628")
+        .then((r) => (r.ok ? r.json() : []))
+        .then((data) => {
+          PDF_BANK = Array.isArray(data) ? data : [];
+          return PDF_BANK;
+        })
+        .catch(() => {
+          PDF_BANK = [];
+          return PDF_BANK;
+        });
+    }
+    return pdfBankLoadPromise;
+  }
+
+  function bankEntryToQuestion(entry, suffix) {
+    return {
+      id: entry.id + "_" + suffix,
+      qtype: entry.qtype,
+      difficulty: entry.difficulty,
+      stem_en: entry.stem_en,
+      stem_zh: entry.stem_zh,
+      options_en: entry.options_en,
+      options_zh: entry.options_zh,
+      correct_index: entry.correct_index,
+      accepted_answers_en: entry.accepted_answers_en || [],
+      accepted_answers_zh: entry.accepted_answers_zh || [],
+      hint_en: entry.hint_en,
+      hint_zh: entry.hint_zh,
+      answer_en: entry.answer_en,
+      answer_zh: entry.answer_zh,
+      marks: entry.marks || 1,
+    };
+  }
+
+  function generateFromBuilders(rng, types, difficulty, count) {
     let buildersFlat = [];
     types.forEach((t) => { (BUILDERS[t] || []).forEach((b) => buildersFlat.push(b)); });
     if (!buildersFlat.length) buildersFlat = [mcqCompoundDef];
@@ -506,10 +543,40 @@
         q = builder(rng, difficulty);
         guard++;
       }
-      q.id = q.id + "_" + i;
+      q.id = q.id + "_fb_" + i;
       out.push(q);
     }
     return out;
+  }
+
+  async function generateQuestions(count, types, difficulty, userSeed) {
+    await loadPdfBank();
+    const seed = await stableSeed(String(userSeed || ""), count, types, difficulty);
+    const rng = createRng(seed);
+
+    let pool = PDF_BANK.filter(
+      (q) => types.includes(q.qtype) && allowedByDifficulty(q, difficulty)
+    );
+    pool = rng.shuffle(pool);
+
+    const pdfTarget = pool.length
+      ? Math.min(count, pool.length, Math.max(1, Math.ceil(count * 0.85)))
+      : 0;
+
+    const out = [];
+    for (let i = 0; i < pdfTarget; i++) {
+      out.push(bankEntryToQuestion(pool[i], i));
+    }
+
+    if (out.length < count) {
+      const fallback = generateFromBuilders(rng, types, difficulty, count - out.length);
+      out.push(...fallback);
+    }
+
+    return rng.shuffle(out).map((q, i) => {
+      const base = q.id.replace(/_\d+$/, "").replace(/_fb_\d+$/, "");
+      return { ...q, id: base + "_" + i };
+    });
   }
 
   let lang = window.Ch5EmbedUI.readLangFromQuery("en");
@@ -607,7 +674,7 @@
       lab.className = "checkbox-option";
       const cb = document.createElement("input");
       cb.type = "checkbox"; cb.value = qt.id;
-      cb.checked = checked.size ? checked.has(qt.id) : ["mcq", "classification", "separation"].includes(qt.id);
+      cb.checked = checked.size ? checked.has(qt.id) : ["short", "particle", "classification"].includes(qt.id);
       const wrap = document.createElement("div");
       wrap.className = "checkbox-text-wrapper";
       const span = document.createElement("span");
@@ -920,5 +987,6 @@
   document.getElementById("btnToday").addEventListener("click", fillTodayDate);
 
   setExportButtonsEnabled(false);
+  void loadPdfBank();
   applyLang();
 })();
