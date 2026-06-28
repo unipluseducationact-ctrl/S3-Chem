@@ -506,7 +506,7 @@
       pdfBankLoadPromise = fetch("./pdf-question-bank.json?v=20260628")
         .then((r) => (r.ok ? r.json() : []))
         .then((data) => {
-          PDF_BANK = Array.isArray(data) ? data : [];
+          PDF_BANK = (Array.isArray(data) ? data : []).map((e) => window.Ch5EmbedUI.normalizeQuestion(e));
           return PDF_BANK;
         })
         .catch(() => {
@@ -518,7 +518,7 @@
   }
 
   function bankEntryToQuestion(entry, suffix) {
-    return {
+    return window.Ch5EmbedUI.normalizeQuestion({
       id: entry.id + "_" + suffix,
       qtype: entry.qtype,
       difficulty: entry.difficulty,
@@ -534,7 +534,7 @@
       answer_en: entry.answer_en,
       answer_zh: entry.answer_zh,
       marks: entry.marks || 1,
-    };
+    });
   }
 
   function generateFromBuilders(rng, types, difficulty, count) {
@@ -552,7 +552,7 @@
         guard++;
       }
       q.id = q.id + "_fb_" + i;
-      out.push(q);
+      out.push(window.Ch5EmbedUI.normalizeQuestion(q));
     }
     return out;
   }
@@ -583,7 +583,7 @@
 
     return rng.shuffle(out).map((q, i) => {
       const base = q.id.replace(/_\d+$/, "").replace(/_fb_\d+$/, "");
-      return { ...q, id: base + "_" + i };
+      return window.Ch5EmbedUI.normalizeQuestion({ ...q, id: base + "_" + i });
     });
   }
 
@@ -877,7 +877,7 @@
       const se = document.createElement("p"); se.className = "stem"; se.textContent = q.stem_en; wrap.appendChild(se);
       const sz = document.createElement("p"); sz.className = "stem stem-zh"; sz.textContent = q.stem_zh; wrap.appendChild(sz);
       let inputEl = null;
-      if (q.options_en && q.correct_index != null) {
+      if (window.Ch5EmbedUI.hasChoiceOptions(q)) {
         const og = document.createElement("div"); og.className = "options";
         q.options_en.forEach((opt, j) => {
           const lab = document.createElement("label");
@@ -902,7 +902,7 @@
         const st = attemptMap.get(q.id) || { wrong: 0, solved: false };
         if (st.solved) return;
         let ok = false;
-        if (q.options_en && q.correct_index != null) {
+        if (window.Ch5EmbedUI.hasChoiceOptions(q)) {
           const picked = wrap.querySelector('input[name="mcq_' + q.id + '"]:checked');
           ok = picked ? Number(picked.value) === q.correct_index : false;
         } else ok = checkText(q, inputEl ? inputEl.value : "");
@@ -941,13 +941,13 @@
     lastQuestions.forEach((q, i) => {
       html += "<div class=\"pdf-q\"><strong>Q" + (i + 1) + "</strong> [" + escHtml(q.qtype) + "]<br/>";
       html += "<strong>EN:</strong> " + escHtml(q.stem_en) + "<br/><strong>中文：</strong> " + escHtml(q.stem_zh) + "<br/>";
-      if (q.options_en && !answersMode) {
+      if (window.Ch5EmbedUI.hasChoiceOptions(q) && !answersMode) {
         q.options_en.forEach((op, j) => {
           html += "(" + (j + 1) + ") " + escHtml(op) + " / " + escHtml((q.options_zh || [])[j] || "") + "<br/>";
         });
       }
       if (answersMode) {
-        if (q.options_en && q.correct_index != null) {
+        if (window.Ch5EmbedUI.hasChoiceOptions(q)) {
           html += "<strong>Answer / 答案：</strong> (" + (q.correct_index + 1) + ") " + escHtml(q.options_en[q.correct_index]) + "<br/>";
         } else {
           html += "<strong>Answer (EN)：</strong> " + escHtml(q.answer_en) + "<br/><strong>答案（中文）：</strong> " + escHtml(q.answer_zh) + "<br/>";

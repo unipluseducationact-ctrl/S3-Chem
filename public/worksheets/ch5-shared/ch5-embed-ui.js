@@ -96,11 +96,36 @@
     });
   }
 
+  /** True when a question has at least two choices and a valid correct_index. */
+  function hasChoiceOptions(q) {
+    if (!q || !Array.isArray(q.options_en) || q.options_en.length < 2) return false;
+    const ci = q.correct_index;
+    return ci != null && ci >= 0 && ci < q.options_en.length;
+  }
+
+  /**
+   * Ensure qtype matches data: MCQ without real options becomes short answer.
+   * Call after loading from PDF bank or procedural builders.
+   */
+  function normalizeQuestion(q) {
+    if (!q) return q;
+    const out = { ...q };
+    if (out.qtype === "mcq" && !hasChoiceOptions(out)) {
+      out.qtype = "short";
+      out.options_en = null;
+      out.options_zh = null;
+      out.correct_index = null;
+    }
+    return out;
+  }
+
   global.Ch5EmbedUI = {
     readLangFromQuery,
     setLangInQuery,
     bindOptionGroup,
     bindPreviewTabs,
     setExportButtonsEnabled,
+    hasChoiceOptions,
+    normalizeQuestion,
   };
 })(typeof window !== "undefined" ? window : globalThis);

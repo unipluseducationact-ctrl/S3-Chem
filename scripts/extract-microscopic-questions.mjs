@@ -41,10 +41,25 @@ function inferQtype(stem) {
   if (/particle|solid|liquid|gas|vibrate|kinetic theory|states of matter|arrangement of particles/.test(s)) {
     return "particle";
   }
-  if (/which of the following|true or false|\(a\).*\(b\).*\(c\).*\(d\)/i.test(stem)) {
+  if (/draw|sketch|label the|electron diagram|dot-and-cross|structural formula|showing electrons/.test(s)) {
+    return "short";
+  }
+  if (/which of the following|true or false/.test(s)) {
     return "mcq";
   }
   return "short";
+}
+
+function finalizeEntry(entry) {
+  const hasOpts = Array.isArray(entry.options_en)
+    && entry.options_en.length >= 2
+    && entry.correct_index != null
+    && entry.correct_index >= 0
+    && entry.correct_index < entry.options_en.length;
+  if (entry.qtype === "mcq" && !hasOpts) {
+    entry.qtype = "short";
+  }
+  return entry;
 }
 
 function inferDifficulty(marks) {
@@ -183,7 +198,7 @@ function parseQuestions(text) {
       marks,
       source: "topic-02-overall-1.pdf",
     };
-    items.push(entry);
+    items.push(finalizeEntry(entry));
   }
   return items;
 }

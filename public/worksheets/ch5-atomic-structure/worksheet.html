@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="../../../css/worksheet-styles.css?v=2.1.7">
   <link rel="stylesheet" href="../ch5-shared/ch5-embed-base.css?v=2">
   <link rel="stylesheet" href="atomic-worksheet.css?v=4">
-  <script src="../ch5-shared/ch5-embed-ui.js?v=2"></script>
+  <script src="../ch5-shared/ch5-embed-ui.js?v=4"></script>
   <style>
     @media print {
       @page {
@@ -1080,7 +1080,7 @@
         guard++;
       }
       q.id = q.id + "_" + i;
-      out.push(q);
+      out.push(window.Ch5EmbedUI.normalizeQuestion(q));
     }
     return out;
   }
@@ -1543,7 +1543,7 @@
       sz.textContent = q.stem_zh;
       wrap.appendChild(sz);
       let inputEl = null;
-      if (q.options_en && q.correct_index != null) {
+      if (window.Ch5EmbedUI.hasChoiceOptions(q)) {
         const og = document.createElement("div");
         og.className = "options";
         q.options_en.forEach((opt, j) => {
@@ -1576,7 +1576,7 @@
         const st = attemptMap.get(q.id) || { wrong: 0, solved: false };
         if (st.solved) return;
         let ok = false;
-        if (q.options_en && q.correct_index != null) {
+        if (window.Ch5EmbedUI.hasChoiceOptions(q)) {
           const picked = wrap.querySelector('input[name="mcq_' + q.id + '"]:checked');
           const sel = picked ? Number(picked.value) : null;
           ok = sel === q.correct_index;
@@ -1629,14 +1629,14 @@
       html += "<div class=\"pdf-q\"><strong>Q" + (i + 1) + "</strong> [" + escHtml(q.qtype) + "]<br/>";
       html += "<strong>EN:</strong> " + escHtml(q.stem_en) + "<br/>";
       html += "<strong>中文：</strong> " + escHtml(q.stem_zh) + "<br/>";
-      if (q.options_en && !answersMode) {
+      if (window.Ch5EmbedUI.hasChoiceOptions(q) && !answersMode) {
         q.options_en.forEach((op, j) => {
           const oz = q.options_zh ? q.options_zh[j] : "";
           html += "(" + (j + 1) + ") " + escHtml(op) + " / " + escHtml(oz) + "<br/>";
         });
       }
       if (answersMode) {
-        if (q.options_en && q.correct_index != null) {
+        if (window.Ch5EmbedUI.hasChoiceOptions(q)) {
           const ce = q.options_en[q.correct_index];
           const cz = (q.options_zh || q.options_en)[q.correct_index];
           html += "<strong>Answer / 答案：</strong> (" + (q.correct_index + 1) + ") " + escHtml(ce) + " / " + escHtml(cz) + "<br/>";
@@ -1667,7 +1667,7 @@
       body += "<h2>Q" + (i + 1) + " [" + escHtml(q.qtype) + "]</h2>";
       body += "<p><b>EN:</b> " + escHtml(q.stem_en) + "</p>";
       body += "<p><b>中文：</b> " + escHtml(q.stem_zh) + "</p>";
-      if (q.options_en && !answersMode) {
+      if (window.Ch5EmbedUI.hasChoiceOptions(q) && !answersMode) {
         body += "<ul>";
         q.options_en.forEach((op, j) => {
           const oz = q.options_zh ? q.options_zh[j] : "";
@@ -1676,7 +1676,7 @@
         body += "</ul>";
       }
       if (answersMode) {
-        if (q.options_en && q.correct_index != null) {
+        if (window.Ch5EmbedUI.hasChoiceOptions(q)) {
           const ce = q.options_en[q.correct_index];
           const cz = (q.options_zh || q.options_en)[q.correct_index];
           body += "<p><b>Answer / 答案：</b> (" + (q.correct_index + 1) + ") " + escHtml(ce) + " / " + escHtml(cz) + "</p>";
