@@ -543,15 +543,6 @@
                         <span class="lang-en" style="display:none;">Drag to rotate view</span>
                     </div>
 
-                    <div id="sb-nacl-theory-mark" style="display:none; position:absolute; top:68px; left:50%; transform:translateX(-50%); pointer-events:none; background:rgba(127,29,29,0.82); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(248,113,113,0.55); padding:10px 14px; border-radius:10px; z-index:11; max-width:min(92%, 420px); box-shadow:0 0 24px rgba(239,68,68,0.35);">
-                        <div style="font-size:0.68em; color:#fecaca; text-transform:uppercase; letter-spacing:0.6px; font-weight:700; margin-bottom:4px;">
-                            <i class="fa-solid fa-bolt" style="margin-right:5px;"></i>
-                            <span class="lang-zh">靜電排斥理論</span>
-                            <span class="lang-en" style="display:none;">Electrostatic Repulsion</span>
-                        </div>
-                        <div id="sb-nacl-theory-mark-body" style="font-size:0.78em; line-height:1.45; color:#fff7f7; font-weight:600;"></div>
-                    </div>
-
                     <!-- Bottom-left Legend Overlay inside canvas -->
                     <div id="sb-legend-overlay" style="position: absolute; bottom: 15px; left: 15px; background:rgba(11,17,38,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.06); padding:10px 14px; border-radius:10px; z-index:10; pointer-events:none; display:flex; flex-direction:column; gap:6px; min-width: 150px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
                         <div style="font-size: 0.72em; color: var(--text-secondary); text-transform: uppercase; letter-spacing:0.5px; margin-bottom: 2px; font-weight: 700;">
@@ -1165,7 +1156,6 @@
             sbMalleableDeformed = false;
             resetGraphiteLayerState();
             resetNaClCleaveState();
-            hideNaClTheoryMark();
             const condBtn = document.getElementById('btn-sb-conductivity');
             if (condBtn) {
                 condBtn.style.backgroundColor = '';
@@ -2828,7 +2818,6 @@
         function resetNaClLattice() {
             if (currentSandboxMode !== 'nacl') return;
             resetNaClCleaveState();
-            hideNaClTheoryMark();
             sbHammerAnimating = false;
             sbHammerOffset = 0;
             sbShatterFragments = [];
@@ -2884,47 +2873,6 @@
                 }
             });
             return count ? sum / count : sandboxCanvas.width / 2;
-        }
-
-        function updateNaClTheoryMark(cleaveProgress) {
-            const mark = document.getElementById('sb-nacl-theory-mark');
-            const body = document.getElementById('sb-nacl-theory-mark-body');
-            if (!mark || !body) return;
-
-            if (currentSandboxMode !== 'nacl' || sandboxTemp >= 801) {
-                mark.style.display = 'none';
-                return;
-            }
-
-            const { slipEnd } = getNaClCleavePhaseBounds();
-            const active = sbNaClCleaveAnim || sbNaClCleaved;
-            if (!active) {
-                mark.style.display = 'none';
-                return;
-            }
-
-            mark.style.display = 'block';
-            let zh = '';
-            let en = '';
-
-            if (cleaveProgress <= slipEnd && !sbNaClCleaved) {
-                zh = '步驟 1：受敲擊時，離子層向下滑移，破壞原本異性離子交替排列。';
-                en = 'Step 1: The strike shears ion layers downward, breaking the alternating Na⁺/Cl⁻ pattern.';
-            } else {
-                zh = '步驟 2：同性電荷離子（Na⁺–Na⁺、Cl⁻–Cl⁻）相鄰而強烈排斥，晶格沿裂縫分離（易脆性）。';
-                en = 'Step 2: Like charges (Na⁺–Na⁺, Cl⁻–Cl⁻) become adjacent and strongly repel — brittle cleavage.';
-            }
-
-            body.innerHTML = `
-                <span class="lang-zh">${zh}</span>
-                <span class="lang-en" style="display:none;">${en}</span>
-            `;
-            refreshLanguageDisplay();
-        }
-
-        function hideNaClTheoryMark() {
-            const mark = document.getElementById('sb-nacl-theory-mark');
-            if (mark) mark.style.display = 'none';
         }
 
         function isNaClRepulsionInterfaceIon(p, cleaveProgress) {
@@ -3106,7 +3054,6 @@
                 ctx.fillText(p.isNa ? '+' : '-', p.x, p.y);
             });
             ctx.shadowBlur = 0;
-            updateNaClTheoryMark(cleaveProgress);
         }
 
         function drawNaClMolten(ctx, vFactor, w, h, dt) {
