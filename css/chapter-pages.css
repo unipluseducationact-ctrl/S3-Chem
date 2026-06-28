@@ -351,42 +351,11 @@ html[lang="zh"] .summary-lang--zh-hant {
   background: rgba(148, 163, 184, 0.05);
 }
 
-/*
- * Summary (reuses #settings-page): scroll the overlay itself — not a nested box.
- * base.css #settings-page uses align-items: stretch — that forces the summary column
- * to full viewport height and breaks scrollHeight / hides the hero; use flex-start.
- */
+/* Summary (reuses #settings-page): hub/detail modes override layout below. */
 #settings-page.blank-page.chapter-page {
-  align-items: flex-start;
-  justify-content: flex-start;
-  /* height:100% + padding-top without border-box makes the fixed overlay TALLER than
-     the viewport — the bottom of the scroll area (hero PNG + sections) is clipped. */
   box-sizing: border-box;
-  /* Single shorthand overrides base.css #settings-page { overflow: hidden } — longhands
-     alone can leave the shorthand’s block-axis behavior surprising in some engines. */
-  overflow: auto;
   min-height: 0;
   min-width: 0;
-  /* Fixed nav: top 12px + pill height (~56px × scale). .chapter-page’s 56px sat under the bar. */
-  padding-top: calc(12px + (56px * var(--global-nav-scale, 1)) + 12px);
-  padding-bottom: max(24px, env(safe-area-inset-bottom));
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  /* Avoid clipping the hero: 100vw-based columns can exceed the layout width when a
-     vertical scrollbar is present; hidden-x then cuts the right edge on GitHub Pages. */
-  overscroll-behavior-y: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-gutter: stable;
-}
-
-#settings-page.blank-page.chapter-page::-webkit-scrollbar {
-  width: 10px;
-}
-
-#settings-page.blank-page.chapter-page::-webkit-scrollbar-thumb {
-  background: rgba(15, 23, 42, 0.22);
-  border-radius: 999px;
 }
 
 /* Summary page: override legacy settings grid */
@@ -646,6 +615,12 @@ html[lang="zh"] .summary-lang--zh-hant {
   padding-right: env(safe-area-inset-right);
 }
 
+/* Match Worksheets: plain hub background without legacy settings ambient blobs */
+#settings-page.blank-page.active:not(:has(.summary-shell--detail))::before,
+#settings-page.blank-page.active:not(:has(.summary-shell--detail))::after {
+  content: none;
+}
+
 #settings-page.blank-page.active:not(:has(.summary-shell--detail)) .settings-viewport.chapter-summary-shell {
   max-width: none;
   flex: 1 1 0%;
@@ -656,17 +631,26 @@ html[lang="zh"] .summary-lang--zh-hant {
 }
 
 #settings-page.blank-page.active:has(.summary-shell--detail) {
-  align-items: flex-start;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
   justify-content: flex-start !important;
-  overflow: auto;
-  height: auto;
-  max-height: none;
+  box-sizing: border-box !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+  padding-top: var(--nav-offset) !important;
+  padding-bottom: clamp(12px, 3dvh, 60px) !important;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 #settings-page.blank-page.active:has(.summary-shell--detail) .settings-viewport.chapter-summary-shell {
-  flex: 1 1 auto;
+  flex: 1 1 0%;
   min-height: 0;
   width: 100%;
+  max-width: none;
+  overflow: hidden;
 }
 
 .summary-shell {
@@ -705,6 +689,19 @@ html[lang="zh"] .summary-lang--zh-hant {
 
 .summary-hub-grid {
   max-height: none;
+}
+
+/* Single-topic hub: avoid a lone card sitting in the left column of a 2-col grid */
+#settings-page.blank-page.active:not(:has(.summary-shell--detail)) .summary-hub-grid.chem-tools-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+  grid-template-rows: auto;
+  flex: 0 0 auto;
+}
+
+#settings-page.blank-page.active:not(:has(.summary-shell--detail))
+  .summary-hub-grid.chem-tools-grid:has(.summary-topic-card:only-child) {
+  width: min(560px, 100%);
+  margin-inline: auto;
 }
 
 button.summary-topic-card {
@@ -755,10 +752,24 @@ button.summary-topic-card {
 }
 
 .summary-panel-scroll {
-  flex: 1 1 auto;
+  flex: 1 1 0%;
+  min-height: 0;
   min-width: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   max-width: none;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.summary-panel-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.summary-panel-scroll::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.22);
+  border-radius: 999px;
 }
 
 /* =============================================================================

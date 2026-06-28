@@ -24,6 +24,17 @@ function hideAllPanels() {
   });
 }
 
+function resetScrollTargets() {
+  const sp = document.getElementById("settings-page");
+  const viewport = document.getElementById("page-settings");
+  if (sp) sp.scrollTop = 0;
+  if (viewport) viewport.scrollTop = 0;
+
+  const activePanel = document.querySelector(".summary-panel:not([hidden])");
+  const panelScroll = activePanel?.querySelector(".summary-panel-scroll");
+  if (panelScroll) panelScroll.scrollTop = 0;
+}
+
 function showHub() {
   const shell = getShell();
   const hub = document.getElementById("summary-hub");
@@ -37,12 +48,7 @@ function showHub() {
   }
   hideAllPanels();
 
-  requestAnimationFrame(() => {
-    const sp = document.getElementById("settings-page");
-    const viewport = document.getElementById("page-settings");
-    if (sp) sp.scrollTop = 0;
-    if (viewport) viewport.scrollTop = 0;
-  });
+  requestAnimationFrame(resetScrollTargets);
 }
 
 function showDetail(topic) {
@@ -69,10 +75,7 @@ function showDetail(topic) {
   }
 
   requestAnimationFrame(() => {
-    const sp = document.getElementById("settings-page");
-    const viewport = document.getElementById("page-settings");
-    if (sp) sp.scrollTop = 0;
-    if (viewport) viewport.scrollTop = 0;
+    resetScrollTargets();
     window.dispatchEvent(new Event("resize"));
   });
 }

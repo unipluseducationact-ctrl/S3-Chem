@@ -44,7 +44,10 @@ jobs:
           grep -q 'data-page="flashcards"' dist/index.html
           test -f dist/public/notes/topic-01-planet-earth.pdf
           grep -q 'notes-pdf-frame' dist/index.html
-          test -f dist/public/summary/infographic.png
+          grep -q 'summary-hub' dist/index.html
+          grep -q 'summary-panel-topic-2' dist/index.html
+          test -f dist/public/summary/topic-02/01-elements-and-isotopes.png
+          test -f dist/public/summary/topic-02/01-elements-and-isotopes.webp
           test -f dist/public/tools/chem-catch/index.html
           test -f dist/public/worksheets/cursor-chem/index.html
           test -f dist/public/tools/flame-test-fireworks/assets/backgrounds/city-skyline-3.jpg
