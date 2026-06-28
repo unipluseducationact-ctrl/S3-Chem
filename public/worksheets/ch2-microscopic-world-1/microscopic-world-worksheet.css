@@ -1,0 +1,168 @@
+/* Microscopic world 1 — overrides on ch5-embed-base.css */
+.microscopic-world-page .sheet-preview-body .pdf-q {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.microscopic-world-page .quiz-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 200px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.microscopic-world-page .q-block {
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: var(--bg-color);
+}
+
+.microscopic-world-page .q-head {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.microscopic-world-page .stem {
+  margin: 0.25rem 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.microscopic-world-page .stem-zh {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin: 0.15rem 0 0.5rem;
+}
+
+.microscopic-world-page .options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 0.35rem;
+}
+
+.microscopic-world-page .options label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.microscopic-world-page .options label:hover {
+  border-color: var(--text-secondary);
+  background: var(--element-bg);
+}
+
+.microscopic-world-page .text-ans {
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  background: #fff;
+  font-size: 0.9rem;
+}
+
+.microscopic-world-page .text-ans:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 3px rgba(44, 36, 32, 0.08);
+}
+
+.microscopic-world-page .quiz-check-btn {
+  margin-top: 0.65rem;
+  padding: 8px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--element-bg);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.microscopic-world-page .quiz-check-btn:hover {
+  background: #fff;
+  border-color: var(--text-secondary);
+}
+
+.microscopic-world-page .feedback {
+  margin-top: 0.65rem;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+
+.microscopic-world-page .feedback.hint,
+.microscopic-world-page .feedback.ok {
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.microscopic-world-page .feedback.bad {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+#pdfSheet {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 12mm;
+  box-sizing: border-box;
+  background: #fff;
+  color: #111;
+  font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+  font-size: 10pt;
+  line-height: 1.35;
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#pdfSheet h1 {
+  font-size: 14pt;
+  margin: 0 0 6pt;
+}
+
+#pdfSheet .pdf-q {
+  margin-bottom: 10pt;
+}
+
+#pdfSheet .meta {
+  font-size: 9pt;
+  color: #444;
+  margin-bottom: 12pt;
+}

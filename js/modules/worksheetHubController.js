@@ -4,7 +4,7 @@
 
 import { getLang, onLangChange } from "./langController.js";
 
-const WORKSHEET_SUBTYPES = ["equation", "atomic-structure", "isotope-ram", "cursor-chem"];
+const WORKSHEET_SUBTYPES = ["equation", "atomic-structure", "isotope-ram", "cursor-chem", "microscopic-world-1"];
 
 const EMBED_IFRAME_SEL = "#worksheet-shell iframe.worksheet-embed-fs-frame";
 
@@ -20,6 +20,9 @@ function langQueryForWorksheetPath(pathname, hostLang) {
     return hostLang === "en" ? "en" : "zh";
   }
   if (p.includes("ch5-atomic-structure")) {
+    return hostLang === "en" ? "en" : "zh";
+  }
+  if (p.includes("ch2-microscopic-world-1")) {
     return hostLang === "en" ? "en" : "zh";
   }
   return hostLang === "en" ? "en" : "zh-Hant";
@@ -49,6 +52,7 @@ const PANEL_ID_BY_SUBTYPE = {
   "atomic-structure": "worksheet-panel-atomic-structure",
   "isotope-ram": "worksheet-panel-isotope-ram",
   "cursor-chem": "worksheet-panel-cursor-chem",
+  "microscopic-world-1": "worksheet-panel-microscopic-world-1",
 };
 
 function getShell() {

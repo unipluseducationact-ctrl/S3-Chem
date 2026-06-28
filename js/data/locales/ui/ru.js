@@ -110,6 +110,8 @@ export const ruUI = {
     "subtypeAtomicStructureDesc": "Конфигурация электронов, периодические закономерности, структура.",
     "subtypeIsotopeRam": "Изотопы и относительная атомная масса",
     "subtypeIsotopeRamDesc": "Изотопное изобилие и расчеты ОАМ.",
+    "subtypeMicroscopicWorld1": "Микромир 1",
+    "subtypeMicroscopicWorld1Desc": "Классификация веществ, методы разделения, теория частиц и физические/химические изменения.",
     "backToHub": "К списку листов",
     "pendingName": "Скоро",
     "pendingDesc": "Другие типы появятся позже."

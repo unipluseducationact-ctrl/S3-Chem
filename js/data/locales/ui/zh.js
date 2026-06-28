@@ -110,6 +110,8 @@ export const zhUI = {
     "subtypeAtomicStructureDesc": "电子排布、周期律等结构练习。",
     "subtypeIsotopeRam": "同位素与相对原子质量",
     "subtypeIsotopeRamDesc": "丰度与相对原子质量计算。",
+    "subtypeMicroscopicWorld1": "微观世界 1",
+    "subtypeMicroscopicWorld1Desc": "物质分类、分离方法、粒子理论及物理与化学变化。",
     "backToHub": "返回工作纸",
     "pendingName": "待定",
     "pendingDesc": "更多类型稍后推出。"

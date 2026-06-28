@@ -110,6 +110,8 @@ export const frUI = {
     "subtypeAtomicStructureDesc": "Configuration electronique, tendances periodiques, exercices de structure.",
     "subtypeIsotopeRam": "Isotopes et masse atomique relative",
     "subtypeIsotopeRamDesc": "Abondances isotopiques et calculs de MAR.",
+    "subtypeMicroscopicWorld1": "Monde microscopique 1",
+    "subtypeMicroscopicWorld1Desc": "Classification de la matiere, techniques de separation, theorie des particules et changements physiques/chimiques.",
     "backToHub": "Retour aux fiches",
     "pendingName": "A venir",
     "pendingDesc": "D'autres types arriveront plus tard."

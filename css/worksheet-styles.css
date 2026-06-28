@@ -921,7 +921,8 @@
 #worksheet-panel-equation.worksheet-panel,
 #worksheet-panel-atomic-structure.worksheet-panel,
 #worksheet-panel-isotope-ram.worksheet-panel,
-#worksheet-panel-cursor-chem.worksheet-panel {
+#worksheet-panel-cursor-chem.worksheet-panel,
+#worksheet-panel-microscopic-world-1.worksheet-panel {
     display: none !important;
     flex-direction: column;
     position: absolute;
@@ -952,6 +953,10 @@
 }
 
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="cursor-chem"] #worksheet-panel-cursor-chem {
+    display: flex !important;
+}
+
+#worksheet-shell.worksheet-shell--detail[data-worksheet-panel="microscopic-world-1"] #worksheet-panel-microscopic-world-1 {
     display: flex !important;
 }
 
@@ -1074,14 +1079,16 @@
 
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="atomic-structure"] #worksheet-panel-atomic-structure,
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="isotope-ram"] #worksheet-panel-isotope-ram,
-#worksheet-shell.worksheet-shell--detail[data-worksheet-panel="cursor-chem"] #worksheet-panel-cursor-chem {
+#worksheet-shell.worksheet-shell--detail[data-worksheet-panel="cursor-chem"] #worksheet-panel-cursor-chem,
+#worksheet-shell.worksheet-shell--detail[data-worksheet-panel="microscopic-world-1"] #worksheet-panel-microscopic-world-1 {
     min-height: 0;
 }
 
 /* Embedded worksheets: same stacking/sizing path as equation panel (absolute inset inside #worksheet-shell). */
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="atomic-structure"] #worksheet-panel-atomic-structure.worksheet-panel--embed-full,
 #worksheet-shell.worksheet-shell--detail[data-worksheet-panel="isotope-ram"] #worksheet-panel-isotope-ram.worksheet-panel--embed-full,
-#worksheet-shell.worksheet-shell--detail[data-worksheet-panel="cursor-chem"] #worksheet-panel-cursor-chem.worksheet-panel--embed-full {
+#worksheet-shell.worksheet-shell--detail[data-worksheet-panel="cursor-chem"] #worksheet-panel-cursor-chem.worksheet-panel--embed-full,
+#worksheet-shell.worksheet-shell--detail[data-worksheet-panel="microscopic-world-1"] #worksheet-panel-microscopic-world-1.worksheet-panel--embed-full {
     isolation: isolate;
     z-index: 4;
 }

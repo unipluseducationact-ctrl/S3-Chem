@@ -110,6 +110,8 @@ export const tlUI = {
     "subtypeAtomicStructureDesc": "Electron configuration, periodic trends, at pagsasanay sa structure.",
     "subtypeIsotopeRam": "Mga isotope at relative atomic mass",
     "subtypeIsotopeRamDesc": "Isotope abundance at mga kalkulasyon sa RAM.",
+    "subtypeMicroscopicWorld1": "Microscopic world 1",
+    "subtypeMicroscopicWorld1Desc": "Pag-uuri ng matter, separation techniques, particle theory, at physical vs chemical changes.",
     "backToHub": "Bumalik sa mga worksheet",
     "pendingName": "Nakabinbin",
     "pendingDesc": "Higit pang uri mamaya."

@@ -110,6 +110,8 @@ export const urUI = {
     "subtypeAtomicStructureDesc": "الیکٹرون ترتیب، وقفتی رجحانات، ساخت کی مشق۔",
     "subtypeIsotopeRam": "ہم جا اور نسبتی جوہری مجموعہ",
     "subtypeIsotopeRamDesc": "ہم جا فراوانی اور RAM حساب۔",
+    "subtypeMicroscopicWorld1": "Microscopic world 1",
+    "subtypeMicroscopicWorld1Desc": "مادے کی درجہ بندی، علیحدگی کے طریقے، ذرات کا نظریہ، اور جسمانی بمقابلہ کیمیائی تبدیلیاں۔",
     "backToHub": "ورک شیٹس پر واپس",
     "pendingName": "زیر التواء",
     "pendingDesc": "مزید اقسام بعد میں۔"

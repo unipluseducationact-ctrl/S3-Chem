@@ -110,6 +110,8 @@ export const enUI = {
     "subtypeAtomicStructureDesc": "Electron configuration, periodic trends, and structure practice.",
     "subtypeIsotopeRam": "Isotopes & relative atomic mass",
     "subtypeIsotopeRamDesc": "Isotope abundance and RAM calculations.",
+    "subtypeMicroscopicWorld1": "Microscopic world 1",
+    "subtypeMicroscopicWorld1Desc": "Classification of matter, separation techniques, particle theory, and physical vs chemical changes.",
     "backToHub": "Back to worksheets",
     "pendingName": "Pending",
     "pendingDesc": "More worksheet types coming later."
