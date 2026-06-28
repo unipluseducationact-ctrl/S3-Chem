@@ -531,7 +531,7 @@
                                     <span class="lang-zh">視角縮放</span>
                                     <span class="lang-en" style="display:none;">Zoom</span>
                                 </label>
-                                <input type="range" id="sb-lattice-zoom-slider" min="100" max="500" step="5" value="100" oninput="onLatticeSettingsChange()">
+                                <input type="range" id="sb-lattice-zoom-slider" min="50" max="500" step="5" value="100" oninput="onLatticeSettingsChange()">
                                 <div class="ice-val-text" id="sb-lattice-zoom-text">100%</div>
                             </div>
                         </div>
@@ -943,7 +943,7 @@
                 sbLatticeMoleculeCount = Math.max(1, Math.min(100, parseInt(sizeSlider.value, 10) || 1));
             }
             if (zoomSlider) {
-                sbLatticeViewZoom = Math.max(1, Math.min(5, parseInt(zoomSlider.value, 10) / 100));
+                sbLatticeViewZoom = Math.max(0.5, Math.min(5, parseInt(zoomSlider.value, 10) / 100));
             }
             if (isIceIhView()) updateIceIhLatticeZoom();
             updateLatticeControlLabels();
