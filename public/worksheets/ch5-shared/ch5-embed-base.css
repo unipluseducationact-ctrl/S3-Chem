@@ -40,6 +40,7 @@ html, body {
   font-size: 0.9rem; font-weight: 500;
 }
 .ch5-embed-page .preview-mode-panel[hidden] { display: none !important; }
+.ch5-embed-page .preview-placeholder[hidden] { display: none !important; }
 .ch5-embed-page .sheet-preview-body { max-width: 680px; margin: 0 auto; }
 .ch5-embed-page .sheet-preview-body .print-q {
   padding: 8px 12px; margin-bottom: 8px; background: var(--element-bg);
