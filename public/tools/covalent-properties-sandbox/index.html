@@ -762,6 +762,11 @@
         var sbNaClBonds = [];
         var sbCsClWireframeBonds = [];
         var sbCsClAttractionBonds = [];
+        var sbCsClBonds = [];
+        var sbCsClCleaved = false;
+        var sbCsClRightBlockOffset = { x: 0, y: 0 };
+        var sbCsClCleaveAnim = null;
+        const SB_CSCL_CLEAVE_GX = 0;
         var sbSio2Bonds = [];
         var sbIceCovalentBonds = [];
         var sbIceHBonds = [];
@@ -1156,6 +1161,7 @@
             sbMalleableDeformed = false;
             resetGraphiteLayerState();
             resetNaClCleaveState();
+            resetCsClCleaveState();
             const condBtn = document.getElementById('btn-sb-conductivity');
             if (condBtn) {
                 condBtn.style.backgroundColor = '';
@@ -1347,10 +1353,12 @@
             } else if (currentSandboxMode === 'cscl') {
                 html += formatItem(circleSpan('#a855f7', '#c084fc', '+'), '銫離子 (Cs⁺)', 'Cesium Ion (Cs⁺)');
                 html += formatItem(circleSpan('#22c55e', '#4ade80', '-'), '氯離子 (Cl⁻)', 'Chloride Ion (Cl⁻)');
-                html += formatItem(lineSpan('rgba(148, 163, 184, 0.75)', false, false, true), '離子鍵 (體心立方配位連接)', 'Ionic Bond (BCC Coordination)');
-                html += formatItem(lineSpan('rgba(148, 163, 184, 0.35)', true), '晶胞輔助線', 'Unit Cell Wireframe');
-                if (sbHammerAnimating && sbHammerOffset > 8) {
-                    html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '同性電荷排斥 (錯位碎裂)', 'Like-charge Repulsion (Shatter)');
+                html += formatItem(lineSpan('rgba(16, 185, 129, 0.45)'), '離子鍵 (靜電吸引力，強)', 'Ionic Bond (Strong Attraction)');
+                if (sbShowIMF) {
+                    html += formatItem(lineSpan('rgba(148, 163, 184, 0.35)', true), '晶胞輔助線', 'Unit Cell Wireframe');
+                }
+                if (getCsClCrossBondRedBlend() > 0.1) {
+                    html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '離子鍵斷裂應力 (錘擊)', 'Ionic Bond Breakage (hammer stress)');
                 }
             } else if (currentSandboxMode === 'sio2') {
                 html += formatItem(circleSpan('#38bdf8', '#7dd3fc', 'Si'), '矽原子 (Si)', 'Silicon (Si)');
@@ -1359,6 +1367,7 @@
             } else if (currentSandboxMode === 'metal') {
                 html += formatItem(circleSpan('#fbbf24', '#fcd34d', 'Cu', '#0b1126'), '銅離子核心 (Cu²⁺)', 'Copper cation cores (Cu²⁺)');
                 html += formatItem(lineSpan('rgba(251, 191, 36, 0.55)', false, false, true), '金屬鍵 (離域電子海)', 'Metallic Bond (delocalized e⁻ sea)');
+                html += formatItem(electronSpan('#fbbf24'), '離域電子海 (自由移動)', 'Delocalized e⁻ sea (free movement)');
                 if (sbConductivityEnabled) {
                     html += formatItem(electronSpan('#00f0ff'), '離域自由電子 (定向移動導電)', 'Delocalized Electron (Conductive)');
                 }
@@ -1741,72 +1750,76 @@
                         }
                     }
                 }
+                sbCsClBonds = sbCsClAttractionBonds.map(b => ({ u: b.u, v: b.v }));
             } else if (currentSandboxMode === 'sio2') {
                 sbSio2Bonds = [];
                 let id = 0;
-                const scale = 38;
-                const siNodes = [
-                    { x: -1, y: -1, z: 0 }, { x: 1, y: -1, z: 0 },
-                    { x: -1, y: 1, z: 0 }, { x: 1, y: 1, z: 0 }
-                ];
-                const oNodes = [
-                    { x: 0, y: -1.5, z: 0.5, si: 0 }, { x: -1.5, y: 0, z: -0.5, si: 0 },
-                    { x: 1.5, y: 0, z: 0.5, si: 1 }, { x: 0, y: -1.5, z: -0.5, si: 1 },
-                    { x: -1.5, y: 0, z: 0.5, si: 2 }, { x: 0, y: 1.5, z: -0.5, si: 2 },
-                    { x: 1.5, y: 0, z: -0.5, si: 3 }, { x: 0, y: 1.5, z: 0.5, si: 3 },
-                    { x: 0, y: 0, z: 1.2, si: 0 }, { x: 0, y: 0, z: -1.2, si: 1 }
-                ];
-                const siIds = [];
-                siNodes.forEach((a) => {
-                    const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, getSandbox3DZoom(1.15));
-                    const sid = id++;
-                    siIds.push(sid);
-                    sbParticles.push({
-                        id: sid, type: 'Si', ox3d: a.x * scale, oy3d: a.y * scale, oz3d: a.z * scale,
-                        ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 11
-                    });
+                const scale = 24;
+                const zoom = getSandbox3DZoom(1.05);
+                const oMap = new Map();
+                const tetOffsets = [
+                    [1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]
+                ].map(v => {
+                    const n = Math.sqrt(3);
+                    return v.map(c => (c / n) * scale * 0.88);
                 });
-                oNodes.forEach((a) => {
-                    const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, getSandbox3DZoom(1.15));
+
+                function getOrCreateO(x3d, y3d, z3d) {
+                    const key = `${Math.round(x3d * 4)},${Math.round(y3d * 4)},${Math.round(z3d * 4)}`;
+                    if (oMap.has(key)) return oMap.get(key);
+                    const proj = project3DTo2D(x3d, y3d, z3d, w, h, zoom);
                     const oid = id++;
                     sbParticles.push({
-                        id: oid, type: 'O', ox3d: a.x * scale, oy3d: a.y * scale, oz3d: a.z * scale,
+                        id: oid, type: 'O', ox3d: x3d, oy3d: y3d, oz3d: z3d,
                         ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 7
                     });
-                    if (siIds[a.si] !== undefined) {
-                        sbSio2Bonds.push({ u: siIds[a.si], v: oid });
-                    }
-                });
-                for (let i = 0; i < siIds.length; i++) {
-                    for (let j = i + 1; j < siIds.length; j++) {
-                        const p1 = sbParticles[siIds[i]];
-                        const p2 = sbParticles[siIds[j]];
-                        const dx = p1.ox3d - p2.ox3d;
-                        const dy = p1.oy3d - p2.oy3d;
-                        const dz = p1.oz3d - p2.oz3d;
-                        if (dx * dx + dy * dy + dz * dz < scale * scale * 3.5) {
-                            sbSio2Bonds.push({ u: siIds[i], v: siIds[j], bridge: true });
+                    oMap.set(key, oid);
+                    return oid;
+                }
+
+                for (let ix = 0; ix < 2; ix++) {
+                    for (let iy = 0; iy < 2; iy++) {
+                        for (let iz = 0; iz < 2; iz++) {
+                            const sx = (ix - 0.5) * scale * 2.6;
+                            const sy = (iy - 0.5) * scale * 2.6;
+                            const sz = (iz - 0.5) * scale * 2.6;
+                            const proj = project3DTo2D(sx, sy, sz, w, h, zoom);
+                            const sid = id++;
+                            sbParticles.push({
+                                id: sid, type: 'Si', ox3d: sx, oy3d: sy, oz3d: sz,
+                                ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 11
+                            });
+                            tetOffsets.forEach(off => {
+                                const oid = getOrCreateO(sx + off[0], sy + off[1], sz + off[2]);
+                                sbSio2Bonds.push({ u: sid, v: oid });
+                            });
                         }
                     }
                 }
             } else if (currentSandboxMode === 'metal') {
                 sbMetalBonds = [];
                 let id = 0;
-                const scale = 42;
-                const fccSites = [
+                const scale = 30;
+                const fccBasis = [
                     { x: 0, y: 0, z: 0 }, { x: 1, y: 0, z: 0 }, { x: 0, y: 1, z: 0 }, { x: 1, y: 1, z: 0 },
                     { x: 0.5, y: 0.5, z: 0 }, { x: 0, y: 0.5, z: 0.5 }, { x: 0.5, y: 0, z: 0.5 }, { x: 1, y: 0.5, z: 0.5 }
                 ];
-                fccSites.forEach((a) => {
-                    const x3d = (a.x - 0.5) * scale * 2;
-                    const y3d = (a.y - 0.5) * scale * 2;
-                    const z3d = (a.z - 0.5) * scale * 2;
-                    const proj = project3DTo2D(x3d, y3d, z3d, w, h, getSandbox3DZoom());
-                    sbParticles.push({
-                        id: id++, type: 'Cu', ox3d: x3d, oy3d: y3d, oz3d: z3d,
-                        ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 12
-                    });
-                });
+                for (let cx = 0; cx < 2; cx++) {
+                    for (let cy = 0; cy < 2; cy++) {
+                        for (let cz = 0; cz < 2; cz++) {
+                            fccBasis.forEach((a) => {
+                                const x3d = (a.x + cx - 1) * scale;
+                                const y3d = (a.y + cy - 1) * scale;
+                                const z3d = (a.z + cz - 1) * scale;
+                                const proj = project3DTo2D(x3d, y3d, z3d, w, h, getSandbox3DZoom());
+                                sbParticles.push({
+                                    id: id++, type: 'Cu', ox3d: x3d, oy3d: y3d, oz3d: z3d,
+                                    ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 12
+                                });
+                            });
+                        }
+                    }
+                }
                 for (let i = 0; i < sbParticles.length; i++) {
                     for (let j = i + 1; j < sbParticles.length; j++) {
                         const p1 = sbParticles[i];
@@ -1815,16 +1828,17 @@
                         const dy = p1.oy3d - p2.oy3d;
                         const dz = p1.oz3d - p2.oz3d;
                         const d2 = dx * dx + dy * dy + dz * dz;
-                        if (d2 < scale * scale * 1.8) {
+                        if (d2 < scale * scale * 1.35) {
                             sbMetalBonds.push({ u: p1.id, v: p2.id });
                         }
                     }
                 }
-                for (let e = 0; e < 12; e++) {
+                for (let e = 0; e < 26; e++) {
                     sbDelocalizedElectrons.push({
                         x: Math.random() * w,
                         y: Math.random() * h,
-                        vx: Math.random() * 2 + 0.5
+                        vx: (Math.random() - 0.5) * 1.8 + 0.4,
+                        vy: (Math.random() - 0.5) * 1.2
                     });
                 }
             }
@@ -2662,7 +2676,7 @@
         function updateStructureResetButtonVisibility() {
             const resetBtn = document.getElementById('btn-sb-structure-reset');
             if (resetBtn) {
-                resetBtn.style.display = (currentSandboxMode === 'graphite' || currentSandboxMode === 'nacl') ? 'flex' : 'none';
+                resetBtn.style.display = (currentSandboxMode === 'graphite' || currentSandboxMode === 'nacl' || currentSandboxMode === 'cscl') ? 'flex' : 'none';
             }
         }
 
@@ -2671,6 +2685,8 @@
                 resetGraphiteLayers();
             } else if (currentSandboxMode === 'nacl') {
                 resetNaClLattice();
+            } else if (currentSandboxMode === 'cscl') {
+                resetCsClLattice();
             }
         }
 
@@ -3174,10 +3190,207 @@
         // ==========================================
         // 10.5 CsCl IONIC CRYSTALS ANIMATORS (SOLID & MOLTEN)
         // ==========================================
+        function resetCsClCleaveState() {
+            sbCsClCleaved = false;
+            sbCsClRightBlockOffset = { x: 0, y: 0 };
+            sbCsClCleaveAnim = null;
+        }
+
+        function resetCsClLattice() {
+            if (currentSandboxMode !== 'cscl') return;
+            resetCsClCleaveState();
+            sbHammerAnimating = false;
+            sbHammerOffset = 0;
+            sbShatterFragments = [];
+            updateSandboxLegend();
+            sfx.playClick();
+            showToast('氯化銫晶格已還原。', 'CsCl lattice restored.');
+        }
+
+        function isCsClMovingBlock(p) {
+            return p.gx > SB_CSCL_CLEAVE_GX;
+        }
+
+        function isCsClLeftInterfaceIon(p) {
+            return p.isCs ? p.gx === 0 : p.gx === -0.5;
+        }
+
+        function isCsClRightInterfaceIon(p) {
+            return p.isCs ? p.gx === 1 : p.gx === 0.5;
+        }
+
+        function getCsClCleaveProgress() {
+            if (!sbCsClCleaveAnim || !sbCsClCleaveAnim.started) return sbCsClCleaved ? 1 : 0;
+            const elapsed = performance.now() - sbCsClCleaveAnim.startTime;
+            return Math.min(1, elapsed / sbCsClCleaveAnim.duration);
+        }
+
+        function getCsClCleavePhaseBounds() {
+            return { slipEnd: 0.58, repulseStart: 0.52 };
+        }
+
+        function getCsClMovingBlockTransform() {
+            const base = sbCsClRightBlockOffset;
+            let x = base.x;
+            let y = base.y;
+            const { slipEnd } = getCsClCleavePhaseBounds();
+
+            if (sbCsClCleaveAnim && sbCsClCleaveAnim.started) {
+                const progress = getCsClCleaveProgress();
+                if (progress <= slipEnd) {
+                    const t = easeInQuad(progress / slipEnd);
+                    y = lerpValue(0, sbCsClCleaveAnim.toY, t);
+                    x = 0;
+                } else {
+                    y = sbCsClCleaveAnim.toY;
+                    const t = easeOutCubic((progress - slipEnd) / (1 - slipEnd));
+                    x = lerpValue(0, sbCsClCleaveAnim.toX, t);
+                }
+            }
+            return { x, y };
+        }
+
+        function getCsClCleavagePlaneX() {
+            let sum = 0;
+            let count = 0;
+            sbParticles.forEach(p => {
+                if (isCsClLeftInterfaceIon(p) || isCsClRightInterfaceIon(p)) {
+                    sum += p.x;
+                    count++;
+                }
+            });
+            return count ? sum / count : sandboxCanvas.width / 2;
+        }
+
+        function updateCsClCleaveAnim() {
+            if (!sbCsClCleaveAnim) return;
+            if (!sbCsClCleaveAnim.started && sbHammerOffset > 8) {
+                sbCsClCleaveAnim.started = true;
+                sbCsClCleaveAnim.startTime = performance.now();
+            }
+            if (!sbCsClCleaveAnim.started) return;
+            if (getCsClCleaveProgress() >= 1) {
+                sbCsClRightBlockOffset = { x: sbCsClCleaveAnim.toX, y: sbCsClCleaveAnim.toY };
+                sbCsClCleaved = true;
+                sbCsClCleaveAnim = null;
+                updateSandboxLegend();
+            }
+        }
+
+        function isCsClCrossCleavageBond(bond) {
+            const p1 = sbParticles[bond.u];
+            const p2 = sbParticles[bond.v];
+            if (!p1 || !p2) return false;
+            return (p1.gx <= SB_CSCL_CLEAVE_GX && p2.gx > SB_CSCL_CLEAVE_GX) ||
+                (p1.gx > SB_CSCL_CLEAVE_GX && p2.gx <= SB_CSCL_CLEAVE_GX);
+        }
+
+        function isCsClCrossBondStressed() {
+            return sbCsClCleaved || sbCsClCleaveAnim || (sbHammerAnimating && currentSandboxMode === 'cscl');
+        }
+
+        function getCsClCrossBondStressBlend() {
+            if (!isCsClCrossBondStressed()) return 0;
+            if (sbCsClCleaved) return 1;
+            const progress = getCsClCleaveProgress();
+            if (progress > 0) {
+                return Math.min(1, progress / getCsClCleavePhaseBounds().repulseStart);
+            }
+            if (sbHammerAnimating && sbHammerOffset > 0) {
+                return Math.min(0.55, sbHammerOffset / 16);
+            }
+            return 0;
+        }
+
+        function getCsClCrossBondRedBlend() {
+            if (sbCsClCleaved) return 0;
+            return getCsClCrossBondStressBlend();
+        }
+
+        function getCsClRepulsionVisualAlpha(cleaveProgress) {
+            if (sbCsClCleaved) return 0;
+            const { slipEnd } = getCsClCleavePhaseBounds();
+            if (cleaveProgress <= slipEnd) return 0;
+            const repulseT = (cleaveProgress - slipEnd) / (1 - slipEnd);
+            const fadeStart = 0.85;
+            if (repulseT >= fadeStart) {
+                return Math.max(0, 1 - (repulseT - fadeStart) / (1 - fadeStart));
+            }
+            return easeOutCubic(repulseT);
+        }
+
+        function isCsClRepulsionInterfaceIon(p, cleaveProgress) {
+            if (sbCsClCleaved) return false;
+            if (getCsClRepulsionVisualAlpha(cleaveProgress) <= 0) return false;
+            return isCsClLeftInterfaceIon(p) || isCsClRightInterfaceIon(p);
+        }
+
+        function drawCsClLikeChargeRepulsionLines(ctx, cleaveProgress, visualAlpha) {
+            const { slipEnd } = getCsClCleavePhaseBounds();
+            if (visualAlpha <= 0) return;
+            const alpha = easeOutCubic((cleaveProgress - slipEnd) / (1 - slipEnd)) * visualAlpha;
+            const pulse = 0.65 + 0.35 * Math.sin(sbTimeAccumulator * 0.5);
+            ctx.save();
+            ctx.strokeStyle = `rgba(239, 68, 68, ${0.55 + alpha * 0.35 * pulse})`;
+            ctx.lineWidth = 2.8;
+            ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+            ctx.shadowBlur = 10;
+            for (let i = 0; i < sbParticles.length; i++) {
+                const p1 = sbParticles[i];
+                if (!isCsClLeftInterfaceIon(p1)) continue;
+                for (let j = 0; j < sbParticles.length; j++) {
+                    const p2 = sbParticles[j];
+                    if (!isCsClRightInterfaceIon(p2)) continue;
+                    if (p2.gy !== p1.gy || p2.gz !== p1.gz || p1.isCs !== p2.isCs) continue;
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawCsClCleavageRepulsion(ctx, cleaveProgress, visualAlpha) {
+            const { slipEnd } = getCsClCleavePhaseBounds();
+            if (cleaveProgress <= slipEnd || visualAlpha <= 0) return;
+            const alpha = easeOutCubic((cleaveProgress - slipEnd) / (1 - slipEnd)) * visualAlpha;
+            const pulse = 0.65 + 0.35 * Math.sin(sbTimeAccumulator * 0.5);
+            const planeX = getCsClCleavagePlaneX();
+            ctx.save();
+            ctx.globalAlpha = alpha * 0.22 * pulse;
+            const grad = ctx.createLinearGradient(planeX - 40, 0, planeX + 40, 0);
+            grad.addColorStop(0, 'rgba(239, 68, 68, 0)');
+            grad.addColorStop(0.5, 'rgba(239, 68, 68, 0.85)');
+            grad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(planeX - 42, sandboxCanvas.height * 0.12, 84, sandboxCanvas.height * 0.76);
+            ctx.restore();
+            ctx.globalAlpha = alpha * pulse;
+            for (let i = 0; i < sbParticles.length; i++) {
+                const p1 = sbParticles[i];
+                if (!isCsClLeftInterfaceIon(p1)) continue;
+                for (let j = 0; j < sbParticles.length; j++) {
+                    const p2 = sbParticles[j];
+                    if (!isCsClRightInterfaceIon(p2)) continue;
+                    if (p2.gy !== p1.gy || p2.gz !== p1.gz || p1.isCs !== p2.isCs) continue;
+                    const label = p1.isCs ? '+' : '−';
+                    const midX = (p1.x + p2.x) / 2;
+                    const midY = (p1.y + p2.y) / 2;
+                    const push = 18 + alpha * 14;
+                    drawRepulsionArrow(ctx, p1.x, p1.y, midX - push, midY, label);
+                    drawRepulsionArrow(ctx, p2.x, p2.y, midX + push, midY, label);
+                }
+            }
+            ctx.globalAlpha = 1;
+        }
+
         function drawCsClSolid(ctx, vFactor, dt) {
             let amp = vFactor * 3.5;
+            updateCsClCleaveAnim();
+            const blockTransform = getCsClMovingBlockTransform();
+            const cleaveProgress = getCsClCleaveProgress();
 
-            // Rotate theta slowly over time only if the user is not dragging/interacting
             if (!window.sbUserInteracted || !window.sbUserInteracted()) {
                 sbRotationTheta += 0.003 * vFactor * dt * 0.06;
             }
@@ -3186,102 +3399,100 @@
                 let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * amp;
                 let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
                 let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
-
-                // Hammer strike splits the lattice apart (brittleness demo)
-                let cleaveShiftY = 0;
-                if (sbHammerAnimating) {
-                    if (p.gx >= 0.5) { // Shift right half if cleaved (gx is 0.5 or 1)
-                        cleaveShiftY = Math.min(55, sbHammerOffset * 3);
-                    }
+                let blockX = 0;
+                let blockY = 0;
+                if (isCsClMovingBlock(p)) {
+                    blockX = blockTransform.x;
+                    blockY = blockTransform.y;
                 }
-
-                // Project 3D coordinates (with vibration and cleave shift) to 2D
-                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy + cleaveShiftY, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
+                let proj = project3DTo2D(p.ox3d + blockX + vx, p.oy3d + blockY + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
             });
 
-            // 1. Draw thin dashed cubic unit cell outlines (connecting Cs+ corner ions)
-            // Corners are Cs+ (isCs = true) on a 3x3x3 grid (gx, gy, gz in [-1, 0, 1])
-            ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
-            ctx.lineWidth = 1.5;
-            ctx.setLineDash([3, 3]);
-            sbCsClWireframeBonds.forEach(bond => {
-                // If split is high, do NOT draw lines crossing split line (between gx=0 and gx=1)
-                if (sbHammerAnimating && sbHammerOffset > 10 && ((bond.u_gx < 0.5 && bond.v_gx >= 0.5) || (bond.u_gx >= 0.5 && bond.v_gx < 0.5))) {
-                    return; 
-                }
-                let p1 = sbParticles[bond.u];
-                let p2 = sbParticles[bond.v];
-                if (p1 && p2) {
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                }
-            });
-            ctx.setLineDash([]); // reset
-
-            // 2. Draw electrostatic attraction lines between each center Cl- and its 8 surrounding corner Cs+ ions
-            ctx.strokeStyle = 'rgba(148, 163, 184, 0.75)'; // textbook grey/silver rods
-            ctx.lineWidth = 3.5;
-            ctx.shadowColor = 'rgba(255, 255, 255, 0.15)';
-            ctx.shadowBlur = 4;
-            sbCsClAttractionBonds.forEach(bond => {
-                // If split is high, do NOT draw lines crossing split line
-                if (sbHammerAnimating && sbHammerOffset > 10 && ((bond.u_gx < 0.5 && bond.v_gx >= 0.5) || (bond.u_gx >= 0.5 && bond.v_gx < 0.5))) {
-                    return; 
-                }
-                let p1 = sbParticles[bond.u];
-                let p2 = sbParticles[bond.v];
-                if (p1 && p2) {
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                }
-            });
-            ctx.shadowBlur = 0; // Reset shadow blur!
-
-            // 3. Draw repulsion arrows if cleaved
-            if (sbHammerAnimating && sbHammerOffset > 8) {
-                drawCrackLine(ctx, sandboxCanvas.width / 2, sandboxCanvas.height * 0.2, sandboxCanvas.height * 0.8);
-                for (let i = 0; i < sbParticles.length; i++) {
-                    let p1 = sbParticles[i];
-                    if (p1.gx !== -0.5 && p1.gx !== 0) continue;
-                    for (let j = 0; j < sbParticles.length; j++) {
-                        let p2 = sbParticles[j];
-                        if (p2.gx !== p1.gx + 1) continue;
-                        if (p2.gz === p1.gz && p2.gy === p1.gy - 1) {
-                            if (p1.isCs === p2.isCs) {
-                                const label = p1.isCs ? '+' : '−';
-                                drawRepulsionArrow(ctx, p1.x, p1.y, p2.x, p2.y, label);
-                            }
-                        }
+            if (sbShowIMF) {
+                ctx.strokeStyle = 'rgba(148, 163, 184, 0.28)';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([3, 3]);
+                sbCsClWireframeBonds.forEach(bond => {
+                    if (sbCsClCleaved) return;
+                    if (getCsClCrossBondStressBlend() > 0 && ((bond.u_gx <= 0 && bond.v_gx > 0) || (bond.u_gx > 0 && bond.v_gx <= 0))) return;
+                    const p1 = sbParticles[bond.u];
+                    const p2 = sbParticles[bond.v];
+                    if (p1 && p2) {
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
                     }
-                }
+                });
+                ctx.setLineDash([]);
             }
 
-            // 4. Draw ions sorted by depth (painter's algorithm)
+            const crossRedBlend = getCsClCrossBondRedBlend();
+            const bondPulse = 0.65 + 0.35 * Math.sin(sbTimeAccumulator * 0.5);
+            sbCsClBonds.forEach(bond => {
+                const p1 = sbParticles[bond.u];
+                const p2 = sbParticles[bond.v];
+                if (!p1 || !p2) return;
+                const isCross = isCsClCrossCleavageBond(bond);
+                if (isCross && sbCsClCleaved) return;
+                const redWeight = isCross ? crossRedBlend : 0;
+                if (redWeight > 0) {
+                    const r = Math.round(lerpValue(16, 239, redWeight));
+                    const g = Math.round(lerpValue(185, 68, redWeight));
+                    const b = Math.round(lerpValue(129, 68, redWeight));
+                    const bondAlpha = lerpValue(0.45, 0.88, redWeight) * bondPulse;
+                    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${bondAlpha})`;
+                    ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+                    ctx.shadowBlur = 14;
+                    ctx.lineWidth = lerpValue(2.2, 3.5, redWeight);
+                } else {
+                    ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+                    ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
+                    ctx.shadowBlur = 6;
+                    ctx.lineWidth = 2.2;
+                }
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            });
+            ctx.shadowBlur = 0;
+
+            const { slipEnd } = getCsClCleavePhaseBounds();
+            const repulsionAlpha = getCsClRepulsionVisualAlpha(cleaveProgress);
+            if (cleaveProgress > slipEnd || sbCsClCleaved) {
+                drawCrackLine(ctx, getCsClCleavagePlaneX(), sandboxCanvas.height * 0.16, sandboxCanvas.height * 0.84);
+            }
+            if (repulsionAlpha > 0) {
+                drawCsClLikeChargeRepulsionLines(ctx, cleaveProgress, repulsionAlpha);
+                drawCsClCleavageRepulsion(ctx, cleaveProgress, repulsionAlpha);
+            }
+
             let sorted = [...sbParticles].sort((a, b) => b.z - a.z);
             sorted.forEach(p => {
+                if (isCsClRepulsionInterfaceIon(p, cleaveProgress)) {
+                    const visAlpha = getCsClRepulsionVisualAlpha(cleaveProgress);
+                    const glow = 0.45 + 0.55 * Math.sin(sbTimeAccumulator * 0.55 + p.id);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, (p.isCs ? 11 : 13) + 6, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(239, 68, 68, ${(0.35 + glow * 0.45) * visAlpha})`;
+                    ctx.lineWidth = 3;
+                    ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+                    ctx.shadowBlur = 14;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                }
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.isCs ? 11 : 13, 0, Math.PI * 2); // Cl- is 13, Cs+ is 11
-                
-                // Color according to the attached textbook unit cell image:
-                // Cs+ corners are purple, Cl- center is green
-                ctx.fillStyle = p.isCs ? '#a855f7' : '#22c55e'; // Purple Cs+, Green Cl-
-                ctx.strokeStyle = p.isCs ? '#7e22ce' : '#15803d'; // Darker border
-                ctx.lineWidth = 2.0;
+                ctx.arc(p.x, p.y, p.isCs ? 11 : 13, 0, Math.PI * 2);
+                ctx.fillStyle = p.isCs ? '#a855f7' : '#22c55e';
                 ctx.shadowColor = p.isCs ? 'rgba(168, 85, 247, 0.4)' : 'rgba(34, 197, 94, 0.4)';
                 ctx.shadowBlur = 6;
                 ctx.fill();
-                ctx.stroke();
-
-                // Plus/Minus labels
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 10px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+                ctx.font = 'bold 10px system-ui,sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(p.isCs ? '+' : '-', p.x, p.y);
@@ -3299,8 +3510,8 @@
 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.isCs ? 12 : 13, 0, Math.PI * 2);
-                ctx.fillStyle = p.isCs ? '#00a8ff' : '#10b981';
-                ctx.shadowColor = p.isCs ? 'rgba(0, 168, 255, 0.3)' : 'rgba(16, 185, 129, 0.3)';
+                ctx.fillStyle = p.isCs ? '#a855f7' : '#22c55e';
+                ctx.shadowColor = p.isCs ? 'rgba(168, 85, 247, 0.3)' : 'rgba(34, 197, 94, 0.3)';
                 ctx.shadowBlur = 5;
                 ctx.fill();
 
@@ -3337,15 +3548,17 @@
                 const vx = Math.sin(sbTimeAccumulator * 0.22 + p.id) * vFactor * 2;
                 const vy = Math.cos(sbTimeAccumulator * 0.19 + p.id) * vFactor * 2;
                 const vz = Math.sin(sbTimeAccumulator * 0.17 + p.id) * vFactor * 2;
-                const proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom(1.15));
+                const proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom(1.05));
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
             });
-            ctx.strokeStyle = 'rgba(56, 189, 248, 0.85)';
-            ctx.lineWidth = 3;
+            const hammerFlash = sbHammerAnimating ? 0.35 + 0.25 * Math.sin(sbTimeAccumulator * 0.8) : 0;
+            ctx.strokeStyle = `rgba(56, 189, 248, ${0.75 + hammerFlash})`;
+            ctx.lineWidth = 2.8;
+            ctx.shadowColor = 'rgba(56, 189, 248, 0.7)';
+            ctx.shadowBlur = sbHammerAnimating ? 10 : 6;
             sbSio2Bonds.forEach(bond => {
-                if (bond.bridge) return;
                 const p1 = sbParticles[bond.u];
                 const p2 = sbParticles[bond.v];
                 if (p1 && p2) {
@@ -3355,13 +3568,17 @@
                     ctx.stroke();
                 }
             });
+            ctx.shadowBlur = 0;
             const sorted = [...sbParticles].sort((a, b) => b.z - a.z);
             sorted.forEach(p => {
                 ctx.beginPath();
-                const r = p.type === 'Si' ? 11 : 7;
+                const r = p.type === 'Si' ? 10 : 7;
                 ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
                 ctx.fillStyle = p.type === 'Si' ? '#38bdf8' : '#ef4444';
+                ctx.shadowColor = p.type === 'Si' ? 'rgba(56, 189, 248, 0.45)' : 'rgba(239, 68, 68, 0.45)';
+                ctx.shadowBlur = 5;
                 ctx.fill();
+                ctx.shadowBlur = 0;
                 ctx.fillStyle = '#fff';
                 ctx.font = `bold ${p.type === 'Si' ? 9 : 8}px system-ui,sans-serif`;
                 ctx.textAlign = 'center';
@@ -3387,8 +3604,11 @@
                 p.y = proj.y;
                 p.z = proj.z;
             });
-            ctx.strokeStyle = 'rgba(251, 191, 36, 0.45)';
-            ctx.lineWidth = 2.5;
+            const bondAlpha = sbHammerAnimating ? 0.65 + 0.2 * Math.sin(sbTimeAccumulator * 0.6) : 0.55;
+            ctx.strokeStyle = `rgba(251, 191, 36, ${bondAlpha})`;
+            ctx.lineWidth = sbHammerAnimating ? 3 : 2.5;
+            ctx.shadowColor = 'rgba(251, 191, 36, 0.8)';
+            ctx.shadowBlur = sbHammerAnimating ? 10 : 6;
             sbMetalBonds.forEach(bond => {
                 const p1 = sbParticles[bond.u];
                 const p2 = sbParticles[bond.v];
@@ -3399,31 +3619,43 @@
                     ctx.stroke();
                 }
             });
+            ctx.shadowBlur = 0;
+
+            const electronSpeed = sbConductivityEnabled ? 2.2 : 0.9;
+            sbDelocalizedElectrons.forEach(e => {
+                e.x += e.vx * dt * electronSpeed;
+                e.y += (e.vy || 0) * dt * electronSpeed * 0.6;
+                if (e.x > w) e.x = 0;
+                if (e.x < 0) e.x = w;
+                if (e.y > sandboxCanvas.height) e.y = 0;
+                if (e.y < 0) e.y = sandboxCanvas.height;
+                if (sbConductivityEnabled) {
+                    e.x += 0.8 * dt;
+                }
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, sbConductivityEnabled ? 4 : 3.5, 0, Math.PI * 2);
+                ctx.fillStyle = sbConductivityEnabled ? '#00f0ff' : '#fbbf24';
+                ctx.shadowColor = sbConductivityEnabled ? '#00f0ff' : '#fbbf24';
+                ctx.shadowBlur = sbConductivityEnabled ? 10 : 7;
+                ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+
             const sorted = [...sbParticles].sort((a, b) => b.z - a.z);
             sorted.forEach(p => {
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 12, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, 11, 0, Math.PI * 2);
                 ctx.fillStyle = '#fbbf24';
+                ctx.shadowColor = 'rgba(251, 191, 36, 0.5)';
+                ctx.shadowBlur = 6;
                 ctx.fill();
+                ctx.shadowBlur = 0;
                 ctx.fillStyle = '#0b1126';
                 ctx.font = 'bold 9px system-ui,sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText('Cu', p.x, p.y);
             });
-            if (sbConductivityEnabled) {
-                sbDelocalizedElectrons.forEach(e => {
-                    e.x += e.vx * dt * 1.2;
-                    if (e.x > w) e.x = 0;
-                    ctx.beginPath();
-                    ctx.arc(e.x, e.y, 4, 0, Math.PI * 2);
-                    ctx.fillStyle = '#00f0ff';
-                    ctx.shadowColor = '#00f0ff';
-                    ctx.shadowBlur = 8;
-                    ctx.fill();
-                });
-                ctx.shadowBlur = 0;
-            }
         }
 
         function spawnShatterFragments(cx, cy, count, color) {
@@ -3588,8 +3820,21 @@
                 }
             } else if (currentSandboxMode === 'cscl') {
                 if (sandboxTemp < 645) {
+                    if (sbCsClCleaved) {
+                        sbHammerAnimating = false;
+                        sfx.playClick();
+                        showToast('晶格已分離！按「重設結構」可還原。', 'Lattice already separated! Use Reset Structure to restore.');
+                        return;
+                    }
                     targetMax = 25;
                     isShattered = true;
+                    sbCsClCleaveAnim = {
+                        started: false,
+                        startTime: 0,
+                        duration: 2200,
+                        toX: 52,
+                        toY: 36
+                    };
                     toastZh = '敲擊碎裂！受剪切力時，體心立方離子層位移，使同性電荷離子（Cs⁺與Cs⁺、Cl⁻與Cl⁻）相鄰，強烈排斥而碎裂！';
                     toastEn = 'Shattered! Shear force shifts the BCC ionic layers, bringing like-charged ions adjacent to each other, causing strong electrostatic repulsion and cleavage!';
                 } else {
@@ -3608,7 +3853,7 @@
                 toastEn = 'Metal deformed! Copper ion layers slip under the hammer — delocalized electrons allow plastic deformation without shattering (malleable)!';
             }
 
-            if (isShattered && (currentSandboxMode === 'cscl' || (currentSandboxMode === 'water' && sandboxTemp <= 0))) {
+            if (isShattered && (currentSandboxMode === 'water' && sandboxTemp <= 0)) {
                 spawnShatterFragments(sandboxCanvas.width / 2, sandboxCanvas.height / 2, 18);
             }
 
@@ -3648,6 +3893,11 @@
                     }
 
                     if (currentSandboxMode === 'nacl' && (sbNaClCleaved || sbNaClCleaveAnim)) {
+                        updateSandboxLegend();
+                        return;
+                    }
+
+                    if (currentSandboxMode === 'cscl' && (sbCsClCleaved || sbCsClCleaveAnim)) {
                         updateSandboxLegend();
                         return;
                     }
