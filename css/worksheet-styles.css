@@ -856,11 +856,12 @@
     display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
-    /* Center worksheet hub vertically within viewport */
-    justify-content: center !important;
+    /* Top-align hub so title/cards are not clipped when content exceeds viewport */
+    justify-content: flex-start !important;
     box-sizing: border-box !important;
     height: 100dvh !important;
     max-height: 100dvh !important;
+    overflow-y: auto !important;
     /* Clear fixed global nav (z-index 10000); 3dvh was too small and hid the back bar under the nav */
     padding-top: var(--nav-offset) !important;
     padding-bottom: clamp(12px, 3dvh, 60px) !important;
@@ -869,11 +870,13 @@
 /* Detail panels: back bar must sit below nav; fill viewport from that point */
 #blank-page-2:has(#worksheet-shell.worksheet-shell--detail) {
     justify-content: flex-start !important;
+    overflow: hidden !important;
 }
 
 .worksheet-root-page {
     padding: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /* Shell is the flex child that fills space below nav padding; absolute panels size to this box */
@@ -890,11 +893,11 @@
 #worksheet-hub.worksheet-hub {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: auto;
     min-height: 0;
-    /* Center hub; allow scroll only if content truly overflows */
-    overflow: hidden;
-    justify-content: center;
+    flex: 1 1 auto;
+    overflow: visible;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -902,13 +905,28 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
+    padding-top: clamp(12px, 2dvh, 24px);
+    padding-bottom: clamp(12px, 2dvh, 24px);
 }
 
 .worksheet-hub-grid {
     max-height: none;
+}
+
+/* Let cards grow with content instead of clipping descriptions in fixed grid rows */
+#blank-page-2.blank-page.active:not(:has(.worksheet-shell--detail)) .worksheet-hub-grid.chem-tools-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+    grid-template-rows: auto;
+    flex: 0 0 auto;
+    max-height: none;
+}
+
+#blank-page-2 .worksheet-type-card.chem-tool-card {
+    height: auto;
+    min-height: 0;
 }
 
 .worksheet-type-card--pending {
