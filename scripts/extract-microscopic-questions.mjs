@@ -27,27 +27,42 @@ function cleanText(raw) {
     .trim();
 }
 
-function inferQtype(stem) {
+function topicFromPage(page) {
+  if (page <= 17) return "atomic-structure";
+  if (page <= 57) return "periodic-table";
+  if (page <= 93) return "ionic-bond";
+  if (page <= 125) return "covalent-bond";
+  return "structure-properties";
+}
+
+function findPageBefore(text, index) {
+  const slice = text.slice(0, index);
+  const matches = [...slice.matchAll(/(?:^|\n)(\d{1,3}) \d+\./gm)];
+  if (!matches.length) return 2;
+  const page = Number(matches[matches.length - 1][1]);
+  return Number.isFinite(page) && page >= 2 && page <= 200 ? page : 2;
+}
+
+function inferTopic(stem, page) {
   const s = stem.toLowerCase();
-  if (/filtration|evaporation|distillation|chromatograph|crystalli|magnetic separation|separate.*mixture|separation technique/.test(s)) {
-    return "separation";
+  const byPage = topicFromPage(page);
+
+  if (/ionic bond|electron transfer|metal.*non-?metal|ionic compound|lattice|giant ionic|electrostatic attraction between (ions|oppositely charged)/.test(s)) {
+    return "ionic-bond";
   }
-  if (/physical change|chemical change|new substance|reversible|irreversible/.test(s)) {
-    return "change";
+  if (/covalent bond|shared pair|intermolecular force|macromolecular|giant covalent|simple molecular|diamond|graphite|silicon dioxide|showing electrons in the outermost/.test(s)) {
+    return /ionic bond|electron transfer|metal.*non-?metal/.test(s) ? byPage : "covalent-bond";
   }
-  if (/element.*compound|compound.*mixture|classify|mixture|pure substance/.test(s)) {
-    return "classification";
+  if (/periodic table|group i\b|group ii\b|group iii|group iv|group vii|group 0|noble gas|halogen|alkali metal|period \d|metalloid|semi-?metal/.test(s)) {
+    return page <= 17 && /subatomic|proton|neutron|isotope/.test(s) ? "atomic-structure" : "periodic-table";
   }
-  if (/particle|solid|liquid|gas|vibrate|kinetic theory|states of matter|arrangement of particles/.test(s)) {
-    return "particle";
+  if (/melting point|boiling point|electrical conductivity|solubility|hardness|malleability|ductility|states of matter|physical propert|giant (ionic|covalent|metallic)|simple molecular/.test(s)) {
+    return "structure-properties";
   }
-  if (/draw|sketch|label the|electron diagram|dot-and-cross|structural formula|showing electrons/.test(s)) {
-    return "short";
+  if (/proton|neutron|electron|isotope|atomic number|mass number|subatomic|nucleus|relative atomic mass/.test(s)) {
+    return page >= 58 ? byPage : "atomic-structure";
   }
-  if (/which of the following|true or false/.test(s)) {
-    return "mcq";
-  }
-  return "short";
+  return byPage;
 }
 
 function finalizeEntry(entry) {
@@ -70,26 +85,24 @@ function inferDifficulty(marks) {
 
 function inferHint(stem, qtype) {
   const hints = {
-    separation: "Recall which separation method suits the states of the components (solid/liquid/gas, soluble or not).",
-    change: "Ask whether a new substance forms and whether the change is easily reversed.",
-    classification: "Decide if substances are chemically combined (compound) or physically mixed (mixture).",
-    particle: "Link particle arrangement and motion to the state of matter.",
-    short: "Refer to Topic 02 Microscopic world I notes — atomic structure, periodic table, and bonding.",
-    mcq: "Eliminate options that contradict basic chemical definitions.",
+    "atomic-structure": "Recall subatomic particles, atomic number, mass number, and isotopes.",
+    "periodic-table": "Use group and period trends from the Periodic Table.",
+    "ionic-bond": "Focus on electron transfer between metals and non-metals.",
+    "covalent-bond": "Focus on shared electron pairs and molecular structures.",
+    "structure-properties": "Link bonding and structure to melting point, conductivity, and hardness.",
   };
-  return hints[qtype] || hints.short;
+  return hints[qtype] || hints["atomic-structure"];
 }
 
 function inferHintZh(qtype) {
   const hints = {
-    separation: "回想各成分的状态（固／液／氣、是否溶解）以選擇合適的分離方法。",
-    change: "判斷有否形成新物質，以及變化是否容易回復。",
-    classification: "判斷物質是化學結合（化合物）還是物理混合（混合物）。",
-    particle: "聯繫粒子排列與運動和物質的狀態。",
-    short: "參考 Topic 2 微觀世界 I 筆記：原子結構、週期表及鍵結。",
-    mcq: "排除與基本化學定義矛盾的選項。",
+    "atomic-structure": "回想次原子粒子、原子序、質量數及同位素。",
+    "periodic-table": "運用週期表中族與週期的規律。",
+    "ionic-bond": "留意金屬與非金屬之間的電子轉移。",
+    "covalent-bond": "留意共用電子對及分子結構。",
+    "structure-properties": "聯繫鍵結與結構和熔點、導電性、硬度等性質。",
   };
-  return hints[qtype] || hints.short;
+  return hints[qtype] || hints["atomic-structure"];
 }
 
 function knownAnswer(stem) {
@@ -176,13 +189,15 @@ function parseQuestions(text) {
     if (skipPatterns.some((re) => re.test(stem))) continue;
     if (/Content Part Topic Page/.test(stem)) continue;
 
-    const qtype = inferQtype(stem);
+    const page = findPageBefore(text, m.index);
+    const qtype = inferTopic(stem, page);
     const difficulty = inferDifficulty(marks);
     const known = knownAnswer(stem);
 
     const entry = {
       id: `pdf_${String(++idx).padStart(3, "0")}`,
       qtype,
+      topic_page: page,
       difficulty,
       stem_en: stem.endsWith("?") ? stem : stem + (stem.match(/\?$/) ? "" : ""),
       stem_zh: stem,
@@ -204,11 +219,17 @@ function parseQuestions(text) {
 }
 
 async function main() {
-  const buf = readFileSync(PDF_PATH);
-  const parser = new PDFParse({ data: buf });
-  const result = await parser.getText();
-  const cleaned = cleanText(result.text);
-  writeFileSync(TEXT_DUMP, cleaned, "utf8");
+  const textOnly = process.argv.includes("--text-only");
+  let cleaned;
+  if (textOnly) {
+    cleaned = cleanText(readFileSync(TEXT_DUMP, "utf8"));
+  } else {
+    const buf = readFileSync(PDF_PATH);
+    const parser = new PDFParse({ data: buf });
+    const result = await parser.getText();
+    cleaned = cleanText(result.text);
+    writeFileSync(TEXT_DUMP, cleaned, "utf8");
+  }
 
   const questions = parseQuestions(cleaned);
   const byType = {};

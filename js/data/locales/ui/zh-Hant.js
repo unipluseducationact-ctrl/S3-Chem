@@ -111,7 +111,7 @@ export const zhHantUI = {
     "subtypeIsotopeRam": "同位素與相對原子質量",
     "subtypeIsotopeRamDesc": "豐度與相對原子質量題組。",
     "subtypeMicroscopicWorld1": "微觀世界 1",
-    "subtypeMicroscopicWorld1Desc": "物質分類、分離方法、粒子理論及物理與化學變化。",
+    "subtypeMicroscopicWorld1Desc": "原子結構、週期表、離子鍵與共價鍵，以及物質的結構與性質。",
     "backToHub": "返回工作紙",
     "pendingName": "待定",
     "pendingDesc": "更多類型稍後推出。"

@@ -111,7 +111,7 @@ export const enUI = {
     "subtypeIsotopeRam": "Isotopes & relative atomic mass",
     "subtypeIsotopeRamDesc": "Isotope abundance and RAM calculations.",
     "subtypeMicroscopicWorld1": "Microscopic world 1",
-    "subtypeMicroscopicWorld1Desc": "Classification of matter, separation techniques, particle theory, and physical vs chemical changes.",
+    "subtypeMicroscopicWorld1Desc": "Atomic structure, periodic table, ionic and covalent bonding, and properties of substances.",
     "backToHub": "Back to worksheets",
     "pendingName": "Pending",
     "pendingDesc": "More worksheet types coming later."

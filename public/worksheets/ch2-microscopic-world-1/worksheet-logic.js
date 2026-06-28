@@ -48,12 +48,11 @@
   ];
 
   const QUESTION_TYPES = [
-    { id: "mcq", label_en: "Multiple choice", label_zh: "選擇題", subtitle_en: "4 options · pick one", subtitle_zh: "四選一" },
-    { id: "short", label_en: "Short / structured answer", label_zh: "短答／結構題", subtitle_en: "Written answer", subtitle_zh: "書面作答" },
-    { id: "classification", label_en: "Classification of matter", label_zh: "物質分類", subtitle_en: "Element, compound, mixture", subtitle_zh: "元素、化合物、混合物" },
-    { id: "separation", label_en: "Separation techniques", label_zh: "分離方法", subtitle_en: "Filtration, distillation, etc.", subtitle_zh: "過濾、蒸餾等" },
-    { id: "particle", label_en: "Particle theory", label_zh: "粒子理論", subtitle_en: "States of matter", subtitle_zh: "物質三態" },
-    { id: "change", label_en: "Physical vs chemical change", label_zh: "物理變化與化學變化", subtitle_en: "Identify change type", subtitle_zh: "判斷變化類型" },
+    { id: "atomic-structure", label_en: "Atomic structure", label_zh: "原子結構", subtitle_en: "Protons, neutrons, electrons, isotopes", subtitle_zh: "質子、中子、電子、同位素" },
+    { id: "periodic-table", label_en: "Periodic table", label_zh: "週期表", subtitle_en: "Groups, periods, trends", subtitle_zh: "族、週期、趨勢" },
+    { id: "ionic-bond", label_en: "Ionic bond", label_zh: "離子鍵", subtitle_en: "Electron transfer, ionic compounds", subtitle_zh: "電子轉移、離子化合物" },
+    { id: "covalent-bond", label_en: "Covalent bond", label_zh: "共價鍵", subtitle_en: "Shared electrons, molecules", subtitle_zh: "共用電子、分子" },
+    { id: "structure-properties", label_en: "Structure and properties of substances", label_zh: "物質的結構與性質", subtitle_en: "Bonding types and physical properties", subtitle_zh: "鍵結類型與物理性質" },
   ];
 
   const DIFFICULTIES = [
@@ -107,7 +106,7 @@
       revBandExcellent: "Overall accuracy is very high. Keep mixing question types for exam readiness.",
       revBandGood: "Good result. Use the table to target weaker types with another short round.",
       revBandFair: "Mixed performance: re-read Topic 2 notes on weaker areas, then regenerate.",
-      revBandLow: "Several Topic 2 concepts need consolidation — classification, separation methods, particle model, and change types.",
+      revBandLow: "Several Topic 2 concepts need consolidation — atomic structure, periodic table, bonding, and properties of substances.",
       revWeakOne: "Prioritise revision on {type} — scored {c}/{t} ({pct}%).",
       revStrongOne: "Strength: every {type} item correct ({n} questions).",
       revTwoStrike: "Questions missed twice: study model answers, then regenerate those types.",
@@ -153,7 +152,7 @@
       revBandExcellent: "整體答對率很高。建議持續混合各題型練習。",
       revBandGood: "整體表現不錯。可針對較弱題型加做一輪。",
       revBandFair: "表現參差：請重溫 Topic 2 相關筆記後再練習。",
-      revBandLow: "多個 Topic 2 概念仍需鞏固：分類、分離法、粒子模型及變化類型。",
+      revBandLow: "多個 Topic 2 概念仍需鞏固：原子結構、週期表、鍵結及物質性質。",
       revWeakOne: "建議優先溫習「{type}」：本次 {c}/{t}（{pct}%）。",
       revStrongOne: "強項：「{type}」本次全對（共 {n} 題）。",
       revTwoStrike: "曾兩次皆錯的題目：請細讀參考答案後再練習。",
@@ -206,8 +205,9 @@
   }
 
   function allowedByDifficulty(q, difficulty) {
-    if (difficulty === "easy") return ["mcq", "classification", "change"].includes(q.qtype);
-    if (difficulty === "medium") return ["mcq", "classification", "particle", "separation", "change", "short"].includes(q.qtype);
+    const qDiff = q.difficulty || difficulty;
+    if (difficulty === "easy") return qDiff === "easy";
+    if (difficulty === "medium") return qDiff === "easy" || qDiff === "medium";
     return true;
   }
 
@@ -490,12 +490,11 @@
   }
 
   const BUILDERS = {
-    mcq: [mcqParticleSolid, mcqParticleGas, mcqCompoundDef, mcqMixtureDef],
-    classification: [classifySubstance, classifyShort],
-    separation: [separationMcq, separationShort],
-    particle: [particleStateCompare, particleShort],
-    change: [changeIdentify, changeShort],
-    short: [shortDefineElement, shortFiltration],
+    "atomic-structure": [shortDefineElement, mcqParticleSolid, mcqParticleGas],
+    "periodic-table": [mcqCompoundDef, mcqMixtureDef, classifySubstance],
+    "ionic-bond": [shortDefineElement, classifyShort],
+    "covalent-bond": [mcqCompoundDef, particleShort],
+    "structure-properties": [particleStateCompare, particleShort, changeIdentify],
   };
 
   let PDF_BANK = [];
@@ -503,7 +502,7 @@
 
   function loadPdfBank() {
     if (!pdfBankLoadPromise) {
-      pdfBankLoadPromise = fetch("./pdf-question-bank.json?v=20260628")
+      pdfBankLoadPromise = fetch("./pdf-question-bank.json?v=20260629")
         .then((r) => (r.ok ? r.json() : []))
         .then((data) => {
           PDF_BANK = (Array.isArray(data) ? data : []).map((e) => window.Ch5EmbedUI.normalizeQuestion(e));
@@ -539,16 +538,18 @@
 
   function generateFromBuilders(rng, types, difficulty, count) {
     let buildersFlat = [];
-    types.forEach((t) => { (BUILDERS[t] || []).forEach((b) => buildersFlat.push(b)); });
-    if (!buildersFlat.length) buildersFlat = [mcqCompoundDef];
+    types.forEach((t) => { (BUILDERS[t] || []).forEach((b) => buildersFlat.push({ type: t, fn: b })); });
+    if (!buildersFlat.length) buildersFlat = [{ type: "atomic-structure", fn: shortDefineElement }];
     const out = [];
     for (let i = 0; i < count; i++) {
-      let builder = rng.choice(buildersFlat);
-      let q = builder(rng, difficulty);
+      let picked = rng.choice(buildersFlat);
+      let q = picked.fn(rng, difficulty);
+      q.qtype = picked.type;
       let guard = 0;
       while (!allowedByDifficulty(q, difficulty) && guard < 20) {
-        builder = rng.choice(buildersFlat);
-        q = builder(rng, difficulty);
+        picked = rng.choice(buildersFlat);
+        q = picked.fn(rng, difficulty);
+        q.qtype = picked.type;
         guard++;
       }
       q.id = q.id + "_fb_" + i;
@@ -682,7 +683,7 @@
       lab.className = "checkbox-option";
       const cb = document.createElement("input");
       cb.type = "checkbox"; cb.value = qt.id;
-      cb.checked = checked.size ? checked.has(qt.id) : ["short", "particle", "classification"].includes(qt.id);
+      cb.checked = checked.size ? checked.has(qt.id) : ["atomic-structure", "periodic-table", "ionic-bond"].includes(qt.id);
       const wrap = document.createElement("div");
       wrap.className = "checkbox-text-wrapper";
       const span = document.createElement("span");
