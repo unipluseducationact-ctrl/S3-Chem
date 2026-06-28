@@ -384,7 +384,7 @@ html[lang="zh"] .summary-lang--zh-hant {
   align-self: flex-start;
 }
 
-.chapter-summary-shell .chapter-scroll {
+.chapter-summary-shell .chapter-scroll:not(.summary-panel-scroll) {
   max-width: none;
   flex: 0 0 auto;
   min-height: 0;
@@ -761,6 +761,15 @@ button.summary-topic-card {
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+}
+
+.summary-shell--detail .summary-panel-scroll.chapter-scroll {
+  flex: 1 1 0%;
+  min-height: 0;
+  height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: none;
 }
 
 .summary-panel-scroll::-webkit-scrollbar {
