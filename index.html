@@ -766,16 +766,20 @@
     <div id="settings-page" class="blank-page chapter-page">
         <div class="settings-viewport chapter-summary-shell" id="page-settings">
             <div id="summary-shell" class="summary-shell">
-                <div id="summary-hub" class="summary-hub">
-                    <div class="chem-tools-container summary-hub-inner">
-                        <div class="chem-tools-grid summary-hub-grid">
+                <div id="summary-hub" class="summary-hub worksheet-hub">
+                    <div class="chem-tools-container worksheet-hub-inner summary-hub-inner">
+                        <h1 class="chem-tools-title" data-i18n="summary.hubTitle">Summary</h1>
+                        <p class="chem-tools-subtitle" data-i18n="summary.hubSubtitle">Choose a topic to view infographic summaries</p>
+                        <div class="chem-tools-grid worksheet-hub-grid summary-hub-grid">
                             <button type="button" class="chem-tool-card summary-topic-card" data-summary-topic="2">
                                 <div class="chem-tool-header">
                                     <div class="chem-tool-icon-box balancer-icon">
                                         <span class="chem-tool-number">2</span>
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                            <circle cx="12" cy="12" r="3" />
-                                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                            <circle cx="8" cy="8" r="2" />
+                                            <circle cx="16" cy="8" r="2" />
+                                            <circle cx="12" cy="16" r="2" />
+                                            <path d="M8 10v2M16 10v2M10 14h4" />
                                         </svg>
                                     </div>
                                     <span class="chem-tool-arrow" aria-hidden="true">
@@ -795,8 +799,8 @@
                 </div>
 
                 <div id="summary-panel-topic-2" class="summary-panel" hidden aria-hidden="true">
-                    <div class="summary-panel-bar">
-                        <button type="button" class="summary-back-btn" data-i18n="summary.backToHub">Back to Summary</button>
+                    <div class="worksheet-panel-bar summary-panel-bar">
+                        <button type="button" class="worksheet-back-btn summary-back-btn" data-i18n="summary.backToHub">Back to Summary</button>
                     </div>
                     <div class="chapter-scroll summary-panel-scroll">
                         <header class="chapter-hero">
