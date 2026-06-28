@@ -778,7 +778,11 @@
         var sbShatterFragments = [];
         var sbDeformationShear = 0;
         var sbMalleableDeformed = false;
-        var sbGraphiteLayerOffset = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
+        var sbGraphiteLayerOffset = [
+            { x: 0, y: 0, screenY: 0 },
+            { x: 0, y: 0, screenY: 0 },
+            { x: 0, y: 0, screenY: 0 }
+        ];
         var sbGraphiteLayerDetached = [false, false, false];
         var sbGraphiteSlipAnim = null;
 
@@ -2532,14 +2536,65 @@
             return 1 - Math.pow(1 - t, 3);
         }
 
+        function easeInQuad(t) {
+            t = Math.max(0, Math.min(1, t));
+            return t * t;
+        }
+
         function lerpValue(a, b, t) {
             return a + (b - a) * t;
         }
 
         function resetGraphiteLayerState() {
-            sbGraphiteLayerOffset = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
+            sbGraphiteLayerOffset = [
+                { x: 0, y: 0, screenY: 0 },
+                { x: 0, y: 0, screenY: 0 },
+                { x: 0, y: 0, screenY: 0 }
+            ];
             sbGraphiteLayerDetached = [false, false, false];
             sbGraphiteSlipAnim = null;
+        }
+
+        function computeGraphiteLayerFallScreenY(slipLayer, peelX, peelY) {
+            const w = sandboxCanvas.width;
+            const h = sandboxCanvas.height;
+            const zoom = getSandbox3DZoom();
+            const layerParticles = sbParticles.filter(p => p.layer === slipLayer);
+            let maxAtomScreenY = -Infinity;
+
+            layerParticles.forEach(p => {
+                const proj = project3DTo2D(p.ox3d + peelX, p.oy3d + peelY, p.oz3d, w, h, zoom);
+                maxAtomScreenY = Math.max(maxAtomScreenY, proj.y);
+            });
+
+            const fallenCount = sbGraphiteLayerDetached.filter(Boolean).length;
+            const floorY = h * 0.86 - fallenCount * 34;
+            return Math.max(18, floorY - maxAtomScreenY);
+        }
+
+        function getGraphiteLayerTransforms(layer) {
+            const base = sbGraphiteLayerOffset[layer];
+            let x = base.x;
+            let y = base.y;
+            let screenY = base.screenY || 0;
+
+            if (sbGraphiteSlipAnim && sbGraphiteSlipAnim.layer === layer && sbGraphiteSlipAnim.started) {
+                const progress = getGraphiteSlipProgress();
+                const peelEnd = 0.34;
+
+                if (progress <= peelEnd) {
+                    const t = easeOutCubic(progress / peelEnd);
+                    x = lerpValue(sbGraphiteSlipAnim.fromX, sbGraphiteSlipAnim.toX, t);
+                    y = lerpValue(sbGraphiteSlipAnim.fromY, sbGraphiteSlipAnim.toY, t);
+                } else {
+                    x = sbGraphiteSlipAnim.toX;
+                    y = sbGraphiteSlipAnim.toY;
+                    const fallT = easeInQuad((progress - peelEnd) / (1 - peelEnd));
+                    screenY = lerpValue(0, sbGraphiteSlipAnim.toScreenY, fallT);
+                }
+            }
+
+            return { x, y, screenY };
         }
 
         function findNextGraphiteLayerToDetach() {
@@ -2557,15 +2612,7 @@
         }
 
         function getGraphiteLayerShift(layer) {
-            const base = sbGraphiteLayerOffset[layer];
-            if (sbGraphiteSlipAnim && sbGraphiteSlipAnim.layer === layer && sbGraphiteSlipAnim.started) {
-                const t = easeOutCubic(getGraphiteSlipProgress());
-                return {
-                    x: lerpValue(sbGraphiteSlipAnim.fromX, sbGraphiteSlipAnim.toX, t),
-                    y: lerpValue(sbGraphiteSlipAnim.fromY, sbGraphiteSlipAnim.toY, t)
-                };
-            }
-            return base;
+            return getGraphiteLayerTransforms(layer);
         }
 
         function updateGraphiteSlipAnim() {
@@ -2582,7 +2629,8 @@
                 const layer = sbGraphiteSlipAnim.layer;
                 sbGraphiteLayerOffset[layer] = {
                     x: sbGraphiteSlipAnim.toX,
-                    y: sbGraphiteSlipAnim.toY
+                    y: sbGraphiteSlipAnim.toY,
+                    screenY: sbGraphiteSlipAnim.toScreenY
                 };
                 sbGraphiteLayerDetached[layer] = true;
                 sbGraphiteSlipAnim = null;
@@ -2635,12 +2683,12 @@
                 let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * amp;
                 let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
                 let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
-                const shift = getGraphiteLayerShift(p.layer);
+                const shift = getGraphiteLayerTransforms(p.layer);
 
                 // Project 3D coordinates (with vibration and per-layer slip) to 2D
                 let proj = project3DTo2D(p.ox3d + shift.x + vx, p.oy3d + shift.y + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
-                p.y = proj.y;
+                p.y = proj.y + shift.screenY;
                 p.z = proj.z;
             });
 
@@ -3245,15 +3293,18 @@
                 targetMax = 22;
                 isShattered = true;
                 const from = sbGraphiteLayerOffset[slipLayer];
+                const peelX = from.x + 65;
+                const peelY = from.y - 22;
                 sbGraphiteSlipAnim = {
                     layer: slipLayer,
                     started: false,
                     startTime: 0,
-                    duration: 900,
+                    duration: 1400,
                     fromX: from.x,
                     fromY: from.y,
-                    toX: from.x + 65,
-                    toY: from.y - 22
+                    toX: peelX,
+                    toY: peelY,
+                    toScreenY: computeGraphiteLayerFallScreenY(slipLayer, peelX, peelY)
                 };
                 toastZh = '層間滑動！石墨層與層之間僅有微弱的范德華力，受剪切力時層與層極易滑動（具潤滑性與延展性）！';
                 toastEn = 'Layers slipped! Graphite layers slide past each other easily — malleable lubrication effect!';
