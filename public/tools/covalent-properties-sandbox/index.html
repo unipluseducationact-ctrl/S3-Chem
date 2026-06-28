@@ -570,7 +570,7 @@
                     <!-- Macro Properties Tests -->
                     <div class="glass-card" style="padding:10px 15px; display:flex; flex-direction:column; gap:8px; justify-content:center; height:100%; box-sizing:border-box;">
                         <div style="font-size: 0.72em; color: var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Macro Properties Tests</div>
-                        <div style="display:flex; gap:10px;">
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
                             <button class="cyber-btn cyber-btn-secondary" style="flex:1; font-size:0.8em; padding:8px 12px;" onclick="applyShearForceSandbox()">
                                 <i class="fa-solid fa-hammer"></i>
                                 <span class="lang-zh">外力敲擊</span>
@@ -580,6 +580,11 @@
                                 <i class="fa-solid fa-bolt"></i>
                                 <span class="lang-zh">導電測試</span>
                                 <span class="lang-en" style="display:none;">Conductivity</span>
+                            </button>
+                            <button class="cyber-btn cyber-btn-secondary" id="btn-sb-graphite-reset" style="display:none; flex:1 1 100%; font-size:0.8em; padding:8px 12px;" onclick="resetGraphiteStructure()">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                <span class="lang-zh">重置結構</span>
+                                <span class="lang-en" style="display:none;">Reset Structure</span>
                             </button>
                         </div>
                     </div>
@@ -773,6 +778,9 @@
         var sbShatterFragments = [];
         var sbDeformationShear = 0;
         var sbMalleableDeformed = false;
+        var sbGraphiteDetachedOffsets = {};
+        var sbGraphitePeelAnim = null;
+        var sbGraphitePeelTargetLayer = null;
 
         // 3D Projection variables & helpers for realistic crystal structures
         var sbRotationTheta = 0.5;
@@ -1134,6 +1142,9 @@
             sbShatterFragments = [];
             sbDeformationShear = 0;
             sbMalleableDeformed = false;
+            sbGraphiteDetachedOffsets = {};
+            sbGraphitePeelAnim = null;
+            sbGraphitePeelTargetLayer = null;
             
             // Reset Conductivity button style
             const condBtn = document.getElementById('btn-sb-conductivity');
@@ -1168,9 +1179,8 @@
             updateSandboxLegend();
             updateRotateHint();
             updateLatticeControlsVisibility();
+            updateGraphiteResetButton();
         }
-
-        function switchSandboxMode(mode) {
             currentSandboxMode = mode;
             initPropertiesSandbox();
             sfx.playClick();
@@ -1315,6 +1325,13 @@
                 }
                 if (sbConductivityEnabled) {
                     html += formatItem(electronSpan('#00f0ff'), '離域自由電子 (定向移動導電)', 'Delocalized Electron (Conductive)');
+                }
+                const peeledCount = Object.keys(sbGraphiteDetachedOffsets).length;
+                if (peeledCount > 0) {
+                    html += formatItem(lineSpan('rgba(251, 191, 36, 0.85)', true), `已剝離 ${peeledCount} 層（仍保留於視圖）`, `${peeledCount} layer(s) peeled off (remain in view)`);
+                }
+                if (sbGraphitePeelAnim) {
+                    html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)', true), '層間范德華力斷裂（剝離中）', 'Interlayer VdW breaking (peeling)');
                 }
             } else if (currentSandboxMode === 'nacl') {
                 html += formatItem(circleSpan('#a855f7', '#c084fc', '+'), '鈉離子 (Na⁺)', 'Sodium Ion (Na⁺)');
@@ -2519,7 +2536,113 @@
         // ==========================================
         // 9. GRAPHITE LATTICE ANIMATORS
         // ==========================================
+        function easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+
+        function easeInCubic(t) {
+            return t * t * t;
+        }
+
+        function getNextGraphiteLayerToPeel() {
+            for (let layer = 2; layer >= 0; layer--) {
+                if (!sbGraphiteDetachedOffsets[layer]) return layer;
+            }
+            return null;
+        }
+
+        function isGraphiteLayerDetached(layer) {
+            return Object.prototype.hasOwnProperty.call(sbGraphiteDetachedOffsets, layer);
+        }
+
+        function getGraphiteLayerTransform(layer) {
+            if (sbGraphitePeelAnim && sbGraphitePeelAnim.layer === layer) {
+                return {
+                    slideX: sbGraphitePeelAnim.currentSlide,
+                    fallY: sbGraphitePeelAnim.currentFall
+                };
+            }
+            if (isGraphiteLayerDetached(layer)) {
+                return sbGraphiteDetachedOffsets[layer];
+            }
+            return { slideX: 0, fallY: 0 };
+        }
+
+        function shouldDrawGraphiteVdWLink(p1, p2) {
+            if (isGraphiteLayerDetached(p1.layer) || isGraphiteLayerDetached(p2.layer)) return false;
+            if (sbGraphitePeelAnim) {
+                const peelLayer = sbGraphitePeelAnim.layer;
+                if (p1.layer === peelLayer || p2.layer === peelLayer) return false;
+            }
+            return true;
+        }
+
+        function updateGraphitePeelAnimation(now) {
+            if (!sbGraphitePeelAnim) return;
+
+            const progress = Math.min(1, (now - sbGraphitePeelAnim.startTime) / sbGraphitePeelAnim.duration);
+
+            if (progress < 0.48) {
+                const p = easeOutCubic(progress / 0.48);
+                sbGraphitePeelAnim.currentSlide = p * sbGraphitePeelAnim.slideDist;
+                sbGraphitePeelAnim.currentFall = -p * 10;
+            } else {
+                const p = easeInCubic((progress - 0.48) / 0.52);
+                sbGraphitePeelAnim.currentSlide = sbGraphitePeelAnim.slideDist;
+                sbGraphitePeelAnim.currentFall = -10 + p * (sbGraphitePeelAnim.fallDist + 10);
+            }
+
+            if (progress >= 1) {
+                sbGraphiteDetachedOffsets[sbGraphitePeelAnim.layer] = {
+                    slideX: sbGraphitePeelAnim.slideDist,
+                    fallY: sbGraphitePeelAnim.fallDist
+                };
+                sbDelocalizedElectrons = sbDelocalizedElectrons.filter(e => e.layer !== sbGraphitePeelAnim.layer);
+                sbGraphitePeelAnim = null;
+                updateGraphiteResetButton();
+                updateSandboxLegend();
+            }
+        }
+
+        function startGraphiteLayerPeel(layer) {
+            sbGraphitePeelAnim = {
+                layer: layer,
+                startTime: performance.now(),
+                duration: 1500,
+                slideDist: 42 + (2 - layer) * 8,
+                fallDist: 50 + (2 - layer) * 22,
+                currentSlide: 0,
+                currentFall: 0
+            };
+            sbMalleableDeformed = true;
+            updateGraphiteResetButton();
+            updateSandboxLegend();
+        }
+
+        function resetGraphiteStructure() {
+            sbGraphiteDetachedOffsets = {};
+            sbGraphitePeelAnim = null;
+            sbGraphitePeelTargetLayer = null;
+            sbDeformationShear = 0;
+            sbMalleableDeformed = false;
+            sbHammerAnimating = false;
+            sbHammerOffset = 0;
+            buildSandboxParticles();
+            updateGraphiteResetButton();
+            updateSandboxLegend();
+            sfx.playClick();
+            showToast('結構已重置！石墨恢復三層堆疊。', 'Structure reset! Graphite restored to three stacked layers.');
+        }
+
+        function updateGraphiteResetButton() {
+            const btn = document.getElementById('btn-sb-graphite-reset');
+            if (!btn) return;
+            const hasChange = Object.keys(sbGraphiteDetachedOffsets).length > 0 || sbGraphitePeelAnim;
+            btn.style.display = (currentSandboxMode === 'graphite' && hasChange) ? 'flex' : 'none';
+        }
+
         function drawGraphiteLattice(ctx, vFactor, w, dt) {
+            updateGraphitePeelAnimation(performance.now());
             let amp = vFactor * 3.5;
 
             // Rotate theta slowly over time only if the user is not dragging/interacting
@@ -2528,25 +2651,28 @@
             }
 
             sbParticles.forEach(p => {
-                let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * amp;
-                let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
-                let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
-                
-                // If hammer strikes, slide layers horizontally (shearing effect)
-                let shear = sbDeformationShear;
-                if (sbHammerAnimating) {
-                    if (p.layer === 0) {
-                        shear += Math.min(50, sbHammerOffset * 3.0);
-                    } else if (p.layer === 1) {
-                        shear += Math.min(25, sbHammerOffset * 1.5);
-                    }
-                }
+                const layerTransform = getGraphiteLayerTransform(p.layer);
+                const detached = isGraphiteLayerDetached(p.layer);
+                const peeling = sbGraphitePeelAnim && sbGraphitePeelAnim.layer === p.layer;
+                const motionAmp = (detached || peeling) ? amp * 0.25 : amp;
 
-                // Project 3D coordinates (with vibration and shear) to 2D
-                let proj = project3DTo2D(p.ox3d + shear + vx, p.oy3d + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
+                let vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * motionAmp;
+                let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * motionAmp;
+                let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * motionAmp;
+
+                // Project 3D coordinates (with vibration and layer peel offset) to 2D
+                let proj = project3DTo2D(
+                    p.ox3d + layerTransform.slideX + vx,
+                    p.oy3d + layerTransform.fallY + vy,
+                    p.oz3d + vz,
+                    sandboxCanvas.width,
+                    sandboxCanvas.height,
+                    getSandbox3DZoom()
+                );
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
+                p._detached = detached || peeling;
             });
 
             // 1. Draw weak interlayer Van der Waals forces (dashed lines)
@@ -2560,7 +2686,7 @@
                 sbGraphiteVdWLinks.forEach(link => {
                     let p1 = sbParticles[link.u];
                     let p2 = sbParticles[link.v];
-                    if (p1 && p2) {
+                    if (p1 && p2 && shouldDrawGraphiteVdWLink(p1, p2)) {
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
@@ -2591,11 +2717,11 @@
             sorted.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
-                ctx.fillStyle = '#475569'; // charcoal black
-                ctx.strokeStyle = '#94a3b8';
-                ctx.lineWidth = 1;
-                ctx.shadowColor = 'rgba(71, 85, 105, 0.4)';
-                ctx.shadowBlur = 5;
+                ctx.fillStyle = p._detached ? '#64748b' : '#475569';
+                ctx.strokeStyle = p._detached ? '#cbd5e1' : '#94a3b8';
+                ctx.lineWidth = p._detached ? 1.5 : 1;
+                ctx.shadowColor = p._detached ? 'rgba(148, 163, 184, 0.55)' : 'rgba(71, 85, 105, 0.4)';
+                ctx.shadowBlur = p._detached ? 8 : 5;
                 ctx.fill();
                 ctx.stroke();
 
@@ -2612,6 +2738,8 @@
             if (sbConductivityEnabled) {
                 // Update electron Y coordinates to match the current projected layer Y coordinates
                 for (let layer = 0; layer < 3; layer++) {
+                    if (isGraphiteLayerDetached(layer)) continue;
+                    if (sbGraphitePeelAnim && sbGraphitePeelAnim.layer === layer) continue;
                     let layerAtoms = sbParticles.filter(p => p.layer === layer);
                     if (layerAtoms.length > 0) {
                         let avgY = layerAtoms.reduce((sum, p) => sum + p.y, 0) / layerAtoms.length;
@@ -3100,8 +3228,20 @@
         // ==========================================
         function applyShearForceSandbox() {
             if (sbHammerAnimating) return;
+            if (currentSandboxMode === 'graphite' && sbGraphitePeelAnim) return;
+
+            if (currentSandboxMode === 'graphite') {
+                const nextLayer = getNextGraphiteLayerToPeel();
+                if (nextLayer === null) {
+                    sfx.playClick();
+                    showToast('所有石墨層已剝離！按「重置結構」恢復原始堆疊。', 'All graphite layers peeled! Press Reset Structure to restore.');
+                    return;
+                }
+            }
+
             sbHammerAnimating = true;
             sbHammerOffset = 0;
+            sbGraphitePeelTargetLayer = null;
 
             // Update legend overlay to show repulsion if applicable
             updateSandboxLegend();
@@ -3135,12 +3275,12 @@
                 toastZh = '敲擊失敗！金剛石擁有巨型共價網絡結構，所有碳原子均以極強的共價單鍵鎖定，硬度極高！';
                 toastEn = 'Hammer failed! Diamond has a giant covalent network where all carbon atoms are locked by extremely strong single covalent bonds.';
             } else if (currentSandboxMode === 'graphite') {
-                targetMax = 22;
+                targetMax = 18;
                 isShattered = true;
-                sbMalleableDeformed = true;
-                sbDeformationShear = Math.min(60, sbDeformationShear + 18);
-                toastZh = '層間滑動！石墨層與層之間僅有微弱的范德華力，受剪切力時層與層極易滑動（具潤滑性與延展性）！';
-                toastEn = 'Layers slipped! Graphite layers slide past each other easily — malleable lubrication effect!';
+                sbGraphitePeelTargetLayer = getNextGraphiteLayerToPeel();
+                const layerLabel = sbGraphitePeelTargetLayer + 1;
+                toastZh = `第 ${layerLabel} 層滑動剝離！石墨層與層之間僅有微弱范德華力，受剪切力時層與層極易滑動（具潤滑性）！`;
+                toastEn = `Layer ${layerLabel} is peeling off! Weak van der Waals forces between graphite layers allow easy sliding (lubrication).`;
             } else if (currentSandboxMode === 'nacl') {
                 if (sandboxTemp < 801) {
                     targetMax = 25;
@@ -3191,8 +3331,12 @@
                 } else {
                     // Hammer retract after a short pause
                     setTimeout(() => {
+                        if (currentSandboxMode === 'graphite' && sbGraphitePeelTargetLayer !== null) {
+                            startGraphiteLayerPeel(sbGraphitePeelTargetLayer);
+                            sbGraphitePeelTargetLayer = null;
+                        }
                         retractHammer();
-                    }, 600);
+                    }, 350);
                 }
             }
             animateHammer();
@@ -3208,7 +3352,7 @@
                     sbHammerAnimating = false;
 
                     const isMalleable = currentSandboxMode === 'graphite' || currentSandboxMode === 'metal';
-                    if (isMalleable && sbMalleableDeformed) {
+                    if (isMalleable && (sbMalleableDeformed || Object.keys(sbGraphiteDetachedOffsets).length > 0 || sbGraphitePeelAnim)) {
                         updateSandboxLegend();
                         return;
                     }
