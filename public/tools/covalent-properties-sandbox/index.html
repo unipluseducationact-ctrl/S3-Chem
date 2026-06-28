@@ -2543,7 +2543,8 @@
         }
 
         function findNextGraphiteLayerToDetach() {
-            for (let layer = 2; layer >= 0; layer--) {
+            // Layer 0 (oy3d = -75) projects to the visually upper sheet at default view.
+            for (let layer = 0; layer <= 2; layer++) {
                 if (!sbGraphiteLayerDetached[layer]) return layer;
             }
             return -1;
@@ -2590,11 +2591,12 @@
         }
 
         function shouldDrawGraphiteVdWLink(p1, p2) {
-            const upperLayer = Math.max(p1.layer, p2.layer);
-            if (sbGraphiteLayerDetached[upperLayer]) return false;
-            if (sbGraphiteSlipAnim && sbGraphiteSlipAnim.layer === upperLayer) {
+            if (sbGraphiteLayerDetached[p1.layer] || sbGraphiteLayerDetached[p2.layer]) return false;
+            if (sbGraphiteSlipAnim) {
                 const progress = sbGraphiteSlipAnim.started ? getGraphiteSlipProgress() : 0;
-                if (progress > 0.3) return false;
+                if (progress > 0.3 && (sbGraphiteSlipAnim.layer === p1.layer || sbGraphiteSlipAnim.layer === p2.layer)) {
+                    return false;
+                }
             }
             return true;
         }
