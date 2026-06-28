@@ -789,7 +789,7 @@
         var sbNaClRightBlockOffset = { x: 0, y: 0 };
         var sbNaClCleaveAnim = null;
         const SB_NACL_GRID_SIZE = 4;
-        const SB_NACL_CLEAVE_GY = 1; // split between gy=1 and gy=2 → two 4×2 blocks
+        const SB_NACL_CLEAVE_GX = 1; // split between gx=1 and gx=2 → two 2×4×4 blocks
 
         // 3D Projection variables & helpers for realistic crystal structures
         var sbRotationTheta = 0.5;
@@ -1587,17 +1587,17 @@
                     }
                 }
             } else if (currentSandboxMode === 'nacl') {
-                // NaCl: 4×4 alternating ionic lattice (splits into two 4×2 blocks on hammer test)
+                // NaCl: 4×4×4 alternating ionic lattice (splits into two 2×4×4 blocks on hammer test)
                 let id = 0;
-                const scale = 42;
+                const scale = 36;
                 const center = (SB_NACL_GRID_SIZE - 1) / 2;
                 for (let gx = 0; gx < SB_NACL_GRID_SIZE; gx++) {
                     for (let gy = 0; gy < SB_NACL_GRID_SIZE; gy++) {
-                        for (let gz = 0; gz < 1; gz++) {
+                        for (let gz = 0; gz < SB_NACL_GRID_SIZE; gz++) {
                             const isNa = (gx + gy + gz) % 2 === 0;
                             const x3d = (gx - center) * scale;
                             const y3d = (gy - center) * scale;
-                            const z3d = gz * scale * 0.5;
+                            const z3d = (gz - center) * scale;
 
                             const proj = project3DTo2D(x3d, y3d, z3d, w, h, getSandbox3DZoom());
                             sbParticles.push({
@@ -1616,7 +1616,7 @@
                                 z: proj.z,
                                 vx: (Math.random() - 0.5) * 1.5,
                                 vy: (Math.random() - 0.5) * 1.5,
-                                r: isNa ? 8 : 13
+                                r: isNa ? 7 : 11
                             });
                         }
                     }
@@ -1630,7 +1630,7 @@
                         let p2 = sbParticles[j];
                         let distGrid = Math.abs(p1.gx - p2.gx) + Math.abs(p1.gy - p2.gy) + Math.abs(p1.gz - p2.gz);
                         if (distGrid === 1) {
-                            sbNaClBonds.push({ u: p1.id, v: p2.id, u_gy: p1.gy, v_gy: p2.gy });
+                            sbNaClBonds.push({ u: p1.id, v: p2.id });
                         }
                     }
                 }
@@ -2824,7 +2824,7 @@
         }
 
         function isNaClMovingBlock(p) {
-            return p.gy > SB_NACL_CLEAVE_GY;
+            return p.gx > SB_NACL_CLEAVE_GX;
         }
 
         function getNaClCleaveProgress() {
@@ -2869,8 +2869,8 @@
             const p1 = sbParticles[bond.u];
             const p2 = sbParticles[bond.v];
             if (!p1 || !p2) return false;
-            return (p1.gy <= SB_NACL_CLEAVE_GY && p2.gy > SB_NACL_CLEAVE_GY) ||
-                (p1.gy > SB_NACL_CLEAVE_GY && p2.gy <= SB_NACL_CLEAVE_GY);
+            return (p1.gx <= SB_NACL_CLEAVE_GX && p2.gx > SB_NACL_CLEAVE_GX) ||
+                (p1.gx > SB_NACL_CLEAVE_GX && p2.gx <= SB_NACL_CLEAVE_GX);
         }
 
         function shouldDrawNaClCrossBond(bond) {
@@ -2933,11 +2933,11 @@
                 drawCrackLine(ctx, sandboxCanvas.width / 2, sandboxCanvas.height * 0.2, sandboxCanvas.height * 0.8);
                 for (let i = 0; i < sbParticles.length; i++) {
                     let p1 = sbParticles[i];
-                    if (p1.gy !== SB_NACL_CLEAVE_GY) continue;
+                    if (p1.gx !== SB_NACL_CLEAVE_GX) continue;
                     for (let j = 0; j < sbParticles.length; j++) {
                         let p2 = sbParticles[j];
-                        if (p2.gy !== SB_NACL_CLEAVE_GY + 1) continue;
-                        if (p2.gx === p1.gx && p2.gz === p1.gz && p1.isNa === p2.isNa) {
+                        if (p2.gx !== SB_NACL_CLEAVE_GX + 1) continue;
+                        if (p2.gy === p1.gy && p2.gz === p1.gz && p1.isNa === p2.isNa) {
                             const label = p1.isNa ? '+' : '−';
                             drawRepulsionArrow(ctx, p1.x, p1.y, p2.x, p2.y, label);
                         }
@@ -2949,7 +2949,7 @@
             let sorted = [...sbParticles].sort((a, b) => b.z - a.z);
             sorted.forEach(p => {
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.isNa ? 8 : 13, 0, Math.PI * 2); // Cl- is larger than Na+
+                ctx.arc(p.x, p.y, p.isNa ? 7 : 11, 0, Math.PI * 2); // Cl- is larger than Na+
                 ctx.fillStyle = p.isNa ? '#a855f7' : '#10b981'; // Purple Na+, Green Cl-
                 ctx.shadowColor = p.isNa ? 'rgba(168, 85, 247, 0.4)' : 'rgba(16, 185, 129, 0.4)';
                 ctx.shadowBlur = 6;
@@ -3407,8 +3407,8 @@
                         started: false,
                         startTime: 0,
                         duration: 1100,
-                        toX: 0,
-                        toY: 58
+                        toX: 52,
+                        toY: 0
                     };
                     toastZh = '敲擊碎裂！受外力敲擊時，離子層發生位移，導致同性電荷離子相鄰，產生極強的靜電排斥力而碎裂！';
                     toastEn = 'Shattered! External force shifts ionic layers, bringing like-charged ions adjacent to each other, causing strong electrostatic repulsion and cleavage!';
