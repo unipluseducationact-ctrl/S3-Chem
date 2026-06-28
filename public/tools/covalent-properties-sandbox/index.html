@@ -1365,6 +1365,7 @@
                 html += formatItem(circleSpan('#38bdf8', '#7dd3fc', 'Si'), '矽原子 (Si)', 'Silicon (Si)');
                 html += formatItem(circleSpan('#ef4444', '#f87171', 'O'), '氧原子 (O)', 'Oxygen (O)');
                 html += formatItem(lineSpan('rgba(34, 197, 94, 0.85)', false, false, true), 'Si–O 共價鍵 (巨型網絡)', 'Si–O Covalent Bond (giant network)');
+                html += formatItem(lineSpan('rgba(148, 163, 184, 0.25)', true), '晶胞輔助線', 'Unit Cell Wireframe');
             } else if (currentSandboxMode === 'metal') {
                 html += formatItem(circleSpan('#fbbf24', '#fcd34d', 'Cu', '#0b1126'), '銅離子核心 (Cu²⁺)', 'Copper cation cores (Cu²⁺)');
                 html += formatItem(lineSpan('rgba(251, 191, 36, 0.55)', false, false, true), '金屬鍵 (離域電子海)', 'Metallic Bond (delocalized e⁻ sea)');
@@ -1383,132 +1384,84 @@
         // ==========================================
         // 5. BUILD PHYSICS PARTICLES
         // ==========================================
-        function buildSio2CristobaliteUnitCell(w, h, zoom) {
-            const cellA = 50;
-            const faceShifts = [[0, 0, 0], [0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]];
+        const DIAMOND_UNIT_CELL_SCALE = 80;
+        const DIAMOND_UNIT_CELL_ATOMS = [
+            { x: -1, y: -1, z: -1 }, // 0
+            { x:  1, y: -1, z: -1 }, // 1
+            { x:  1, y:  1, z: -1 }, // 2
+            { x: -1, y:  1, z: -1 }, // 3
+            { x: -1, y: -1, z:  1 }, // 4
+            { x:  1, y: -1, z:  1 }, // 5
+            { x:  1, y:  1, z:  1 }, // 6
+            { x: -1, y:  1, z:  1 }, // 7
+            { x:  0, y: -1, z:  0 }, // 8
+            { x:  0, y:  1, z:  0 }, // 9
+            { x: -1, y:  0, z:  0 }, // 10
+            { x:  1, y:  0, z:  0 }, // 11
+            { x:  0, y:  0, z: -1 }, // 12
+            { x:  0, y:  0, z:  1 }, // 13
+            { x: -0.5, y: -0.5, z: -0.5 }, // 14
+            { x:  0.5, y:  0.5, z: -0.5 }, // 15
+            { x: -0.5, y:  0.5, z:  0.5 }, // 16
+            { x:  0.5, y: -0.5, z:  0.5 }  // 17
+        ];
+        const DIAMOND_UNIT_CELL_BONDS = [
+            [14, 0], [14, 8], [14, 10], [14, 12],
+            [15, 2], [15, 9], [15, 11], [15, 12],
+            [16, 7], [16, 9], [16, 10], [16, 13],
+            [17, 5], [17, 8], [17, 11], [17, 13]
+        ];
+        const DIAMOND_UNIT_CELL_WIREFRAME = [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7]
+        ];
 
-            function normFrac(f) {
-                return ((f % 1) + 1) % 1;
-            }
-
-            function addFaceCentered(basisFrac, out, keySet) {
-                basisFrac.forEach((bf) => {
-                    faceShifts.forEach((fs) => {
-                        const fx = normFrac(bf[0] + fs[0]);
-                        const fy = normFrac(bf[1] + fs[1]);
-                        const fz = normFrac(bf[2] + fs[2]);
-                        const key = `${Math.round(fx * 1000)},${Math.round(fy * 1000)},${Math.round(fz * 1000)}`;
-                        if (keySet.has(key)) return;
-                        keySet.add(key);
-                        out.push({
-                            x3d: (fx - 0.5) * cellA,
-                            y3d: (fy - 0.5) * cellA,
-                            z3d: (fz - 0.5) * cellA
-                        });
-                    });
-                });
-            }
-
-            const siKeySet = new Set();
-            const oKeySet = new Set();
-            const siCoords = [];
-            const oCoords = [];
-
-            addFaceCentered([[0.125, 0.125, 0.125], [0.875, 0.875, 0.875]], siCoords, siKeySet);
-            addFaceCentered([
-                [0, 0, 0], [0.25, 0.25, 0], [0.25, 0, 0.25], [0, 0.25, 0.25]
-            ], oCoords, oKeySet);
-
+        function buildSio2DiamondLikeUnitCell(w, h, zoom) {
+            const scale = DIAMOND_UNIT_CELL_SCALE;
+            const diamondIndexToParticle = new Map();
             const particles = [];
-            const siIds = [];
-            const oIds = [];
             let id = 0;
 
-            siCoords.forEach((c) => {
-                const proj = project3DTo2D(c.x3d, c.y3d, c.z3d, w, h, zoom);
+            DIAMOND_UNIT_CELL_ATOMS.forEach((a, diamondIdx) => {
+                const isSi = diamondIdx >= 14;
+                const x3d = a.x * scale;
+                const y3d = a.y * scale;
+                const z3d = a.z * scale;
+                const proj = project3DTo2D(x3d, y3d, z3d, w, h, zoom);
                 const pid = id++;
-                siIds.push(pid);
+                diamondIndexToParticle.set(diamondIdx, pid);
                 particles.push({
-                    id: pid, type: 'Si', ox3d: c.x3d, oy3d: c.y3d, oz3d: c.z3d,
-                    ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 11
+                    id: pid,
+                    type: isSi ? 'Si' : 'O',
+                    diamondIdx,
+                    ox3d: x3d,
+                    oy3d: y3d,
+                    oz3d: z3d,
+                    ox: proj.x,
+                    oy: proj.y,
+                    x: proj.x,
+                    y: proj.y,
+                    z: proj.z,
+                    vx: 0,
+                    vy: 0,
+                    r: isSi ? 11 : 8
                 });
             });
 
-            oCoords.forEach((c) => {
-                const proj = project3DTo2D(c.x3d, c.y3d, c.z3d, w, h, zoom);
-                const pid = id++;
-                oIds.push(pid);
-                particles.push({
-                    id: pid, type: 'O', ox3d: c.x3d, oy3d: c.y3d, oz3d: c.z3d,
-                    ox: proj.x, oy: proj.y, x: proj.x, y: proj.y, z: proj.z, vx: 0, vy: 0, r: 8
-                });
-            });
-
-            const siOBondDist = cellA * 0.125 * Math.sqrt(3) * 1.08;
-            const bondDist2 = siOBondDist * siOBondDist;
-
-            function minImageDist2(p1, p2) {
-                const fx1 = p1.ox3d / cellA + 0.5;
-                const fy1 = p1.oy3d / cellA + 0.5;
-                const fz1 = p1.oz3d / cellA + 0.5;
-                const fx2 = p2.ox3d / cellA + 0.5;
-                const fy2 = p2.oy3d / cellA + 0.5;
-                const fz2 = p2.oz3d / cellA + 0.5;
-                const dx = Math.min(Math.abs(fx1 - fx2), 1 - Math.abs(fx1 - fx2)) * cellA;
-                const dy = Math.min(Math.abs(fy1 - fy2), 1 - Math.abs(fy1 - fy2)) * cellA;
-                const dz = Math.min(Math.abs(fz1 - fz2), 1 - Math.abs(fz1 - fz2)) * cellA;
-                return dx * dx + dy * dy + dz * dz;
-            }
-
-            const bonds = [];
-            const bondKeys = new Set();
-            const siDegree = new Map();
-            const oDegree = new Map();
-
-            siIds.forEach((siId) => {
-                const si = particles[siId];
-                oIds.forEach((oid) => {
-                    const o = particles[oid];
-                    if (minImageDist2(si, o) > bondDist2) return;
-                    const key = siId < oid ? `${siId}-${oid}` : `${oid}-${siId}`;
-                    if (bondKeys.has(key)) return;
-                    bondKeys.add(key);
-                    bonds.push({ u: siId, v: oid });
-                    siDegree.set(siId, (siDegree.get(siId) || 0) + 1);
-                    oDegree.set(oid, (oDegree.get(oid) || 0) + 1);
-                });
-            });
-
-            if (siIds.length !== 8 || oIds.length !== 16) {
-                console.warn('SiO2 unit cell atom count mismatch:', siIds.length, oIds.length);
-            }
-            siIds.forEach((siId) => {
-                if ((siDegree.get(siId) || 0) !== 4) {
-                    console.warn('SiO2 Si coordination != 4:', siId, siDegree.get(siId));
-                }
-            });
-            oIds.forEach((oid) => {
-                if ((oDegree.get(oid) || 0) !== 2) {
-                    console.warn('SiO2 O coordination != 2:', oid, oDegree.get(oid));
-                }
-            });
-
-            const half = cellA * 0.5;
-            const corners = [
-                [-half, -half, -half], [half, -half, -half],
-                [half, half, -half], [-half, half, -half],
-                [-half, -half, half], [half, -half, half],
-                [half, half, half], [-half, half, half]
-            ];
-            const edgePairs = [
-                [0, 1], [1, 2], [2, 3], [3, 0],
-                [4, 5], [5, 6], [6, 7], [7, 4],
-                [0, 4], [1, 5], [2, 6], [3, 7]
-            ];
-            const wireframe = edgePairs.map(([u, v]) => ({
-                x1: corners[u][0], y1: corners[u][1], z1: corners[u][2],
-                x2: corners[v][0], y2: corners[v][1], z2: corners[v][2]
+            const bonds = DIAMOND_UNIT_CELL_BONDS.map(([u, v]) => ({
+                u: diamondIndexToParticle.get(u),
+                v: diamondIndexToParticle.get(v)
             }));
+
+            const wireframe = DIAMOND_UNIT_CELL_WIREFRAME.map(([u, v]) => {
+                const a = DIAMOND_UNIT_CELL_ATOMS[u];
+                const b = DIAMOND_UNIT_CELL_ATOMS[v];
+                return {
+                    x1: a.x * scale, y1: a.y * scale, z1: a.z * scale,
+                    x2: b.x * scale, y2: b.y * scale, z2: b.z * scale
+                };
+            });
 
             return { particles, bonds, wireframe };
         }
@@ -1561,37 +1514,8 @@
                     });
                 });
             } else if (currentSandboxMode === 'diamond') {
-                // Diamond 3D network: textbook face-centered cubic (FCC) unit cell with 4 tetrahedral carbon atoms inside
-                // This matches the attached diagram exactly, showing the full interlocking cage structure!
-                const atoms = [
-                    // Corner atoms of the FCC unit cell (8 atoms)
-                    { x: -1, y: -1, z: -1 }, // 0: (0, 0, 0)
-                    { x:  1, y: -1, z: -1 }, // 1: (1, 0, 0)
-                    { x:  1, y:  1, z: -1 }, // 2: (1, 1, 0)
-                    { x: -1, y:  1, z: -1 }, // 3: (0, 1, 0)
-                    { x: -1, y: -1, z:  1 }, // 4: (0, 0, 1)
-                    { x:  1, y: -1, z:  1 }, // 5: (1, 0, 1)
-                    { x:  1, y:  1, z:  1 }, // 6: (1, 1, 1)
-                    { x: -1, y:  1, z:  1 }, // 7: (0, 1, 1)
-
-                    // Face-centered atoms of the FCC unit cell (6 atoms)
-                    { x:  0, y: -1, z:  0 }, // 8: Bottom face center
-                    { x:  0, y:  1, z:  0 }, // 9: Top face center
-                    { x: -1, y:  0, z:  0 }, // 10: Left face center
-                    { x:  1, y:  0, z:  0 }, // 11: Right face center
-                    { x:  0, y:  0, z: -1 }, // 12: Back face center
-                    { x:  0, y:  0, z:  1 }, // 13: Front face center
-
-                    // Inner tetrahedral atoms (4 atoms)
-                    { x: -0.5, y: -0.5, z: -0.5 }, // 14: Bottom-Back-Left octant center
-                    { x:  0.5, y:  0.5, z: -0.5 }, // 15: Bottom-Front-Right octant center
-                    { x: -0.5, y:  0.5, z:  0.5 }, // 16: Top-Back-Right octant center
-                    { x:  0.5, y: -0.5, z:  0.5 }  // 17: Top-Front-Left octant center
-                ];
-
-                const scale = 80;
-                atoms.forEach((a, i) => {
-                    // Calculate initial projected coordinates
+                const scale = DIAMOND_UNIT_CELL_SCALE;
+                DIAMOND_UNIT_CELL_ATOMS.forEach((a, i) => {
                     const proj = project3DTo2D(a.x * scale, a.y * scale, a.z * scale, w, h, getSandbox3DZoom());
                     sbParticles.push({
                         id: i,
@@ -1605,7 +1529,7 @@
                         z: proj.z,
                         vx: 0,
                         vy: 0,
-                        r: 9 // Carbon atom radius
+                        r: 9
                     });
                 });
             } else if (currentSandboxMode === 'graphite') {
@@ -1883,8 +1807,8 @@
                 }
                 sbCsClBonds = sbCsClAttractionBonds.map(b => ({ u: b.u, v: b.v }));
             } else if (currentSandboxMode === 'sio2') {
-                const zoom = getSandbox3DZoom(0.92);
-                const sio2Cell = buildSio2CristobaliteUnitCell(w, h, zoom);
+                const zoom = getSandbox3DZoom();
+                const sio2Cell = buildSio2DiamondLikeUnitCell(w, h, zoom);
                 sbParticles = sio2Cell.particles;
                 sbSio2Bonds = sio2Cell.bonds;
                 sbSio2Wireframe = sio2Cell.wireframe;
@@ -2573,28 +2497,14 @@
             // - Face center 11: (1, 0, 0) (right)
             // - Face center 13: (0, 0, 1) (front)
 
-            const bonds = [
-                // Inner 14 bonds
-                [14, 0], [14, 8], [14, 10], [14, 12],
-                // Inner 15 bonds
-                [15, 2], [15, 9], [15, 11], [15, 12],
-                // Inner 16 bonds
-                [16, 7], [16, 9], [16, 10], [16, 13],
-                // Inner 17 bonds
-                [17, 5], [17, 8], [17, 11], [17, 13]
-            ];
+            const bonds = DIAMOND_UNIT_CELL_BONDS;
 
             // Also draw thin dashed unit cell wireframe lines (connecting FCC corners and faces)
             // to perfectly match the wireframe box look in the textbook diagram
             ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
             ctx.lineWidth = 1.2;
             ctx.setLineDash([3, 3]);
-            const wireframe = [
-                [0, 1], [1, 2], [2, 3], [3, 0], // Back face corners
-                [4, 5], [5, 6], [6, 7], [7, 4], // Front face corners
-                [0, 4], [1, 5], [2, 6], [3, 7]  // Connecting pillars
-            ];
-            wireframe.forEach(([u, v]) => {
+            DIAMOND_UNIT_CELL_WIREFRAME.forEach(([u, v]) => {
                 let p1 = sbParticles[u];
                 let p2 = sbParticles[v];
                 if (p1 && p2) {
@@ -3633,8 +3543,8 @@
         // 10.5 SiO2 & METAL LATTICE ANIMATORS
         // ==========================================
         function drawSio2Lattice(ctx, vFactor, dt) {
-            const amp = vFactor * 1.2;
-            const zoom = getSandbox3DZoom(0.92);
+            const amp = vFactor * 3.5;
+            const zoom = getSandbox3DZoom();
             const canvasW = sandboxCanvas.width;
             const canvasH = sandboxCanvas.height;
 
@@ -3643,44 +3553,43 @@
             }
 
             sbParticles.forEach(p => {
-                const vx = Math.sin(sbTimeAccumulator * 0.22 + p.id) * amp;
-                const vy = Math.cos(sbTimeAccumulator * 0.19 + p.id) * amp;
-                const vz = Math.sin(sbTimeAccumulator * 0.17 + p.id) * amp;
+                const vx = Math.sin(sbTimeAccumulator * 0.24 + p.id) * amp;
+                const vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
+                const vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
                 const proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy, p.oz3d + vz, canvasW, canvasH, zoom);
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
             });
 
-            const wireVib = Math.sin(sbTimeAccumulator * 0.15) * amp * 0.15;
+            const cornerByDiamondIdx = {};
+            sbParticles.forEach(p => {
+                if (p.diamondIdx >= 0 && p.diamondIdx <= 7) {
+                    cornerByDiamondIdx[p.diamondIdx] = p;
+                }
+            });
+
             ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
             ctx.lineWidth = 1.2;
             ctx.setLineDash([3, 3]);
-            sbSio2Wireframe.forEach(edge => {
-                const p1 = project3DTo2D(edge.x1 + wireVib, edge.y1 + wireVib, edge.z1 + wireVib, canvasW, canvasH, zoom);
-                const p2 = project3DTo2D(edge.x2 + wireVib, edge.y2 + wireVib, edge.z2 + wireVib, canvasW, canvasH, zoom);
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.stroke();
+            DIAMOND_UNIT_CELL_WIREFRAME.forEach(([u, v]) => {
+                const p1 = cornerByDiamondIdx[u];
+                const p2 = cornerByDiamondIdx[v];
+                if (p1 && p2) {
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
             });
             ctx.setLineDash([]);
 
             const hammerFlash = sbHammerAnimating ? 0.2 + 0.2 * Math.sin(sbTimeAccumulator * 0.8) : 0;
             const bondAlpha = 0.75 + hammerFlash;
-            const sortedBonds = [...sbSio2Bonds].sort((a, b) => {
-                const pa = sbParticles[a.u];
-                const pb = sbParticles[a.v];
-                const pc = sbParticles[b.u];
-                const pd = sbParticles[b.v];
-                if (!pa || !pb || !pc || !pd) return 0;
-                return ((pc.z + pd.z) / 2) - ((pa.z + pb.z) / 2);
-            });
-
-            ctx.lineWidth = sbHammerAnimating ? 3.2 : 2.8;
+            ctx.lineWidth = sbHammerAnimating ? 3.5 : 3.5;
             ctx.shadowColor = 'rgba(34, 197, 94, 0.6)';
             ctx.shadowBlur = sbHammerAnimating ? 12 : 6;
-            sortedBonds.forEach(bond => {
+            sbSio2Bonds.forEach(bond => {
                 const p1 = sbParticles[bond.u];
                 const p2 = sbParticles[bond.v];
                 if (!p1 || !p2) return;
