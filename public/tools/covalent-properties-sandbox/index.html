@@ -786,7 +786,7 @@
         var sbGraphiteLayerDetached = [false, false, false];
         var sbGraphiteSlipAnim = null;
         var sbNaClCleaved = false;
-        var sbNaClRightBlockOffset = { x: 0, y: 0 };
+        var sbNaClRightBlockOffset = { x: 0, y: 0, screenY: 0 };
         var sbNaClCleaveAnim = null;
         const SB_NACL_GRID_SIZE = 4;
         const SB_NACL_CLEAVE_GX = 1; // split between gx=1 and gx=2 → two 2×4×4 blocks
@@ -2808,7 +2808,7 @@
         // ==========================================
         function resetNaClCleaveState() {
             sbNaClCleaved = false;
-            sbNaClRightBlockOffset = { x: 0, y: 0 };
+            sbNaClRightBlockOffset = { x: 0, y: 0, screenY: 0 };
             sbNaClCleaveAnim = null;
         }
 
@@ -2833,15 +2833,90 @@
             return Math.min(1, elapsed / sbNaClCleaveAnim.duration);
         }
 
-        function getNaClRightBlockOffset() {
+        function computeNaClMovingBlockFallScreenY(peelX) {
+            const w = sandboxCanvas.width;
+            const h = sandboxCanvas.height;
+            const zoom = getSandbox3DZoom();
+            let maxScreenY = -Infinity;
+
+            sbParticles.filter(isNaClMovingBlock).forEach(p => {
+                const proj = project3DTo2D(p.ox3d + peelX, p.oy3d, p.oz3d, w, h, zoom);
+                maxScreenY = Math.max(maxScreenY, proj.y);
+            });
+
+            const floorY = h * 0.88;
+            return Math.max(24, floorY - maxScreenY);
+        }
+
+        function getNaClMovingBlockTransform() {
+            const base = sbNaClRightBlockOffset;
+            let x = base.x;
+            let y = base.y;
+            let screenY = base.screenY || 0;
+
             if (sbNaClCleaveAnim && sbNaClCleaveAnim.started) {
-                const t = easeOutCubic(getNaClCleaveProgress());
-                return {
-                    x: lerpValue(0, sbNaClCleaveAnim.toX, t),
-                    y: lerpValue(0, sbNaClCleaveAnim.toY, t)
-                };
+                const progress = getNaClCleaveProgress();
+                const peelEnd = 0.38;
+
+                if (progress <= peelEnd) {
+                    const t = easeOutCubic(progress / peelEnd);
+                    x = lerpValue(0, sbNaClCleaveAnim.toX, t);
+                    y = lerpValue(0, sbNaClCleaveAnim.toY, t);
+                } else {
+                    x = sbNaClCleaveAnim.toX;
+                    y = sbNaClCleaveAnim.toY;
+                    const fallT = easeInQuad((progress - peelEnd) / (1 - peelEnd));
+                    screenY = lerpValue(0, sbNaClCleaveAnim.toScreenY, fallT);
+                }
             }
-            return { x: sbNaClRightBlockOffset.x, y: sbNaClRightBlockOffset.y };
+
+            return { x, y, screenY };
+        }
+
+        function getNaClCleavagePlaneX() {
+            let sum = 0;
+            let count = 0;
+            sbParticles.forEach(p => {
+                if (p.gx === SB_NACL_CLEAVE_GX || p.gx === SB_NACL_CLEAVE_GX + 1) {
+                    sum += p.x;
+                    count++;
+                }
+            });
+            return count ? sum / count : sandboxCanvas.width / 2;
+        }
+
+        function drawNaClCleavageRepulsion(ctx, cleaveProgress) {
+            if (cleaveProgress <= 0.08) return;
+
+            const peelEnd = 0.38;
+            let alpha = 1;
+            if (cleaveProgress <= peelEnd) {
+                alpha = easeOutCubic((cleaveProgress - 0.08) / (peelEnd - 0.08));
+            }
+
+            const pulse = 0.75 + 0.25 * Math.sin(sbTimeAccumulator * 0.35);
+            ctx.globalAlpha = alpha * pulse;
+
+            for (let i = 0; i < sbParticles.length; i++) {
+                let p1 = sbParticles[i];
+                if (p1.gx !== SB_NACL_CLEAVE_GX) continue;
+                for (let j = 0; j < sbParticles.length; j++) {
+                    let p2 = sbParticles[j];
+                    if (p2.gx !== SB_NACL_CLEAVE_GX + 1) continue;
+                    if (p2.gy !== p1.gy || p2.gz !== p1.gz || p1.isNa !== p2.isNa) continue;
+
+                    const label = p1.isNa ? '+' : '−';
+                    drawRepulsionArrow(ctx, p1.x, p1.y, p2.x, p2.y, label);
+
+                    ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.arc((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, 10 + alpha * 6, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            }
+
+            ctx.globalAlpha = 1;
         }
 
         function updateNaClCleaveAnim() {
@@ -2857,7 +2932,8 @@
             if (getNaClCleaveProgress() >= 1) {
                 sbNaClRightBlockOffset = {
                     x: sbNaClCleaveAnim.toX,
-                    y: sbNaClCleaveAnim.toY
+                    y: sbNaClCleaveAnim.toY,
+                    screenY: sbNaClCleaveAnim.toScreenY
                 };
                 sbNaClCleaved = true;
                 sbNaClCleaveAnim = null;
@@ -2875,14 +2951,14 @@
 
         function shouldDrawNaClCrossBond(bond) {
             if (!isNaClCrossCleavageBond(bond)) return true;
-            return getNaClCleaveProgress() <= 0.25;
+            return getNaClCleaveProgress() <= 0.12;
         }
 
         function drawNaClSolid(ctx, vFactor, dt) {
             let amp = vFactor * 3.5;
 
             updateNaClCleaveAnim();
-            const rightOffset = getNaClRightBlockOffset();
+            const blockTransform = getNaClMovingBlockTransform();
             const cleaveProgress = getNaClCleaveProgress();
 
             // Rotate theta slowly over time only if the user is not dragging/interacting
@@ -2897,15 +2973,17 @@
 
                 let blockX = 0;
                 let blockY = 0;
+                let blockScreenY = 0;
                 if (isNaClMovingBlock(p)) {
-                    blockX = rightOffset.x;
-                    blockY = rightOffset.y;
+                    blockX = blockTransform.x;
+                    blockY = blockTransform.y;
+                    blockScreenY = blockTransform.screenY;
                 }
 
                 // Project 3D coordinates (with vibration and cleavage offset) to 2D
                 let proj = project3DTo2D(p.ox3d + blockX + vx, p.oy3d + blockY + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
-                p.y = proj.y;
+                p.y = proj.y + blockScreenY;
                 p.z = proj.z;
             });
 
@@ -2928,21 +3006,10 @@
             });
             ctx.shadowBlur = 0; // Reset shadow blur!
 
-            // Draw repulsion arrows if cleaved
-            if (cleaveProgress > 0.25) {
-                drawCrackLine(ctx, sandboxCanvas.width / 2, sandboxCanvas.height * 0.2, sandboxCanvas.height * 0.8);
-                for (let i = 0; i < sbParticles.length; i++) {
-                    let p1 = sbParticles[i];
-                    if (p1.gx !== SB_NACL_CLEAVE_GX) continue;
-                    for (let j = 0; j < sbParticles.length; j++) {
-                        let p2 = sbParticles[j];
-                        if (p2.gx !== SB_NACL_CLEAVE_GX + 1) continue;
-                        if (p2.gy === p1.gy && p2.gz === p1.gz && p1.isNa === p2.isNa) {
-                            const label = p1.isNa ? '+' : '−';
-                            drawRepulsionArrow(ctx, p1.x, p1.y, p2.x, p2.y, label);
-                        }
-                    }
-                }
+            // Cleavage plane + electrostatic repulsion during separation
+            if (cleaveProgress > 0.1) {
+                drawCrackLine(ctx, getNaClCleavagePlaneX(), sandboxCanvas.height * 0.16, sandboxCanvas.height * 0.84);
+                drawNaClCleavageRepulsion(ctx, cleaveProgress);
             }
 
             // Draw ions sorted by depth (painter's algorithm)
@@ -3403,12 +3470,14 @@
                     }
                     targetMax = 25;
                     isShattered = true;
+                    const toX = 52;
                     sbNaClCleaveAnim = {
                         started: false,
                         startTime: 0,
-                        duration: 1100,
-                        toX: 52,
-                        toY: 0
+                        duration: 1500,
+                        toX: toX,
+                        toY: 0,
+                        toScreenY: computeNaClMovingBlockFallScreenY(toX)
                     };
                     toastZh = '敲擊碎裂！受外力敲擊時，離子層發生位移，導致同性電荷離子相鄰，產生極強的靜電排斥力而碎裂！';
                     toastEn = 'Shattered! External force shifts ionic layers, bringing like-charged ions adjacent to each other, causing strong electrostatic repulsion and cleavage!';
