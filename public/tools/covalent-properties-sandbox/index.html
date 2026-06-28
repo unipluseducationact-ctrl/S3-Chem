@@ -582,7 +582,7 @@
                                 <span class="lang-en" style="display:none;">Conductivity</span>
                             </button>
                         </div>
-                        <button class="cyber-btn cyber-btn-secondary" style="display:none; width:100%; font-size:0.8em; padding:8px 12px;" id="btn-sb-graphite-reset" onclick="resetGraphiteLayers()">
+                        <button class="cyber-btn cyber-btn-secondary" style="display:none; width:100%; font-size:0.8em; padding:8px 12px;" id="btn-sb-structure-reset" onclick="resetSandboxStructure()">
                             <i class="fa-solid fa-rotate-left"></i>
                             <span class="lang-zh">重設結構</span>
                             <span class="lang-en" style="display:none;">Reset Structure</span>
@@ -785,6 +785,9 @@
         ];
         var sbGraphiteLayerDetached = [false, false, false];
         var sbGraphiteSlipAnim = null;
+        var sbNaClCleaved = false;
+        var sbNaClRightBlockOffset = { x: 0, y: 0 };
+        var sbNaClCleaveAnim = null;
 
         // 3D Projection variables & helpers for realistic crystal structures
         var sbRotationTheta = 0.5;
@@ -1147,6 +1150,7 @@
             sbDeformationShear = 0;
             sbMalleableDeformed = false;
             resetGraphiteLayerState();
+            resetNaClCleaveState();
             const condBtn = document.getElementById('btn-sb-conductivity');
             if (condBtn) {
                 condBtn.style.backgroundColor = '';
@@ -1179,7 +1183,7 @@
             updateSandboxLegend();
             updateRotateHint();
             updateLatticeControlsVisibility();
-            updateGraphiteResetButtonVisibility();
+            updateStructureResetButtonVisibility();
         }
 
         function switchSandboxMode(mode) {
@@ -2649,10 +2653,18 @@
             return true;
         }
 
-        function updateGraphiteResetButtonVisibility() {
-            const resetBtn = document.getElementById('btn-sb-graphite-reset');
+        function updateStructureResetButtonVisibility() {
+            const resetBtn = document.getElementById('btn-sb-structure-reset');
             if (resetBtn) {
-                resetBtn.style.display = currentSandboxMode === 'graphite' ? 'flex' : 'none';
+                resetBtn.style.display = (currentSandboxMode === 'graphite' || currentSandboxMode === 'nacl') ? 'flex' : 'none';
+            }
+        }
+
+        function resetSandboxStructure() {
+            if (currentSandboxMode === 'graphite') {
+                resetGraphiteLayers();
+            } else if (currentSandboxMode === 'nacl') {
+                resetNaClLattice();
             }
         }
 
@@ -2791,8 +2803,83 @@
         // ==========================================
         // 10. NaCl IONIC CRYSTALS ANIMATORS (SOLID & MOLTEN)
         // ==========================================
+        function resetNaClCleaveState() {
+            sbNaClCleaved = false;
+            sbNaClRightBlockOffset = { x: 0, y: 0 };
+            sbNaClCleaveAnim = null;
+        }
+
+        function resetNaClLattice() {
+            if (currentSandboxMode !== 'nacl') return;
+            resetNaClCleaveState();
+            sbHammerAnimating = false;
+            sbHammerOffset = 0;
+            sbShatterFragments = [];
+            updateSandboxLegend();
+            sfx.playClick();
+            showToast('氯化鈉晶格已還原。', 'NaCl lattice restored.');
+        }
+
+        function isNaClRightBlock(p) {
+            return p.gx >= 1;
+        }
+
+        function getNaClCleaveProgress() {
+            if (!sbNaClCleaveAnim || !sbNaClCleaveAnim.started) return sbNaClCleaved ? 1 : 0;
+            const elapsed = performance.now() - sbNaClCleaveAnim.startTime;
+            return Math.min(1, elapsed / sbNaClCleaveAnim.duration);
+        }
+
+        function getNaClRightBlockOffset() {
+            if (sbNaClCleaveAnim && sbNaClCleaveAnim.started) {
+                const t = easeOutCubic(getNaClCleaveProgress());
+                return {
+                    x: lerpValue(0, sbNaClCleaveAnim.toX, t),
+                    y: lerpValue(0, sbNaClCleaveAnim.toY, t)
+                };
+            }
+            return { x: sbNaClRightBlockOffset.x, y: sbNaClRightBlockOffset.y };
+        }
+
+        function updateNaClCleaveAnim() {
+            if (!sbNaClCleaveAnim) return;
+
+            if (!sbNaClCleaveAnim.started && sbHammerOffset > 8) {
+                sbNaClCleaveAnim.started = true;
+                sbNaClCleaveAnim.startTime = performance.now();
+            }
+
+            if (!sbNaClCleaveAnim.started) return;
+
+            if (getNaClCleaveProgress() >= 1) {
+                sbNaClRightBlockOffset = {
+                    x: sbNaClCleaveAnim.toX,
+                    y: sbNaClCleaveAnim.toY
+                };
+                sbNaClCleaved = true;
+                sbNaClCleaveAnim = null;
+                updateSandboxLegend();
+            }
+        }
+
+        function isNaClCrossCleavageBond(bond) {
+            const p1 = sbParticles[bond.u];
+            const p2 = sbParticles[bond.v];
+            if (!p1 || !p2) return false;
+            return (p1.gx <= 0 && p2.gx >= 1) || (p1.gx >= 1 && p2.gx <= 0);
+        }
+
+        function shouldDrawNaClCrossBond(bond) {
+            if (!isNaClCrossCleavageBond(bond)) return true;
+            return getNaClCleaveProgress() <= 0.25;
+        }
+
         function drawNaClSolid(ctx, vFactor, dt) {
             let amp = vFactor * 3.5;
+
+            updateNaClCleaveAnim();
+            const rightOffset = getNaClRightBlockOffset();
+            const cleaveProgress = getNaClCleaveProgress();
 
             // Rotate theta slowly over time only if the user is not dragging/interacting
             if (!window.sbUserInteracted || !window.sbUserInteracted()) {
@@ -2804,16 +2891,15 @@
                 let vy = Math.cos(sbTimeAccumulator * 0.2 + p.id) * amp;
                 let vz = Math.sin(sbTimeAccumulator * 0.18 + p.id) * amp;
 
-                // Hammer strike splits the lattice apart (brittleness demo)
-                let cleaveShiftY = 0;
-                if (sbHammerAnimating) {
-                    if (p.gx === 1) {
-                        cleaveShiftY = Math.min(55, sbHammerOffset * 3);
-                    }
+                let blockX = 0;
+                let blockY = 0;
+                if (isNaClRightBlock(p)) {
+                    blockX = rightOffset.x;
+                    blockY = rightOffset.y;
                 }
 
-                // Project 3D coordinates (with vibration and cleave shift) to 2D
-                let proj = project3DTo2D(p.ox3d + vx, p.oy3d + vy + cleaveShiftY, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
+                // Project 3D coordinates (with vibration and cleavage offset) to 2D
+                let proj = project3DTo2D(p.ox3d + blockX + vx, p.oy3d + blockY + vy, p.oz3d + vz, sandboxCanvas.width, sandboxCanvas.height, getSandbox3DZoom());
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
@@ -2826,10 +2912,7 @@
             ctx.shadowBlur = 6;
 
             sbNaClBonds.forEach(bond => {
-                // If split is high, do NOT draw electrostatic lines crossing split line (between gx=0 and gx=1)
-                if (sbHammerAnimating && sbHammerOffset > 10 && ((bond.u_gx === 0 && bond.v_gx === 1) || (bond.u_gx === 1 && bond.v_gx === 0))) {
-                    return; 
-                }
+                if (!shouldDrawNaClCrossBond(bond)) return;
                 let p1 = sbParticles[bond.u];
                 let p2 = sbParticles[bond.v];
                 if (p1 && p2) {
@@ -2842,7 +2925,7 @@
             ctx.shadowBlur = 0; // Reset shadow blur!
 
             // Draw repulsion arrows if cleaved
-            if (sbHammerAnimating && sbHammerOffset > 8) {
+            if (cleaveProgress > 0.25) {
                 drawCrackLine(ctx, sandboxCanvas.width / 2, sandboxCanvas.height * 0.2, sandboxCanvas.height * 0.8);
                 for (let i = 0; i < sbParticles.length; i++) {
                     let p1 = sbParticles[i];
@@ -3247,7 +3330,7 @@
         // 11. SHIER FORCE / HAMMER TESTING & ANIMATIONS
         // ==========================================
         function applyShearForceSandbox() {
-            if (sbHammerAnimating || sbGraphiteSlipAnim) return;
+            if (sbHammerAnimating || sbGraphiteSlipAnim || sbNaClCleaveAnim) return;
             sbHammerAnimating = true;
             sbHammerOffset = 0;
 
@@ -3310,8 +3393,21 @@
                 toastEn = 'Layers slipped! Graphite layers slide past each other easily — malleable lubrication effect!';
             } else if (currentSandboxMode === 'nacl') {
                 if (sandboxTemp < 801) {
+                    if (sbNaClCleaved) {
+                        sbHammerAnimating = false;
+                        sfx.playClick();
+                        showToast('晶格已分離！按「重設結構」可還原。', 'Lattice already separated! Use Reset Structure to restore.');
+                        return;
+                    }
                     targetMax = 25;
                     isShattered = true;
+                    sbNaClCleaveAnim = {
+                        started: false,
+                        startTime: 0,
+                        duration: 1100,
+                        toX: 50,
+                        toY: 55
+                    };
                     toastZh = '敲擊碎裂！受外力敲擊時，離子層發生位移，導致同性電荷離子相鄰，產生極強的靜電排斥力而碎裂！';
                     toastEn = 'Shattered! External force shifts ionic layers, bringing like-charged ions adjacent to each other, causing strong electrostatic repulsion and cleavage!';
                 } else {
@@ -3340,7 +3436,7 @@
                 toastEn = 'Metal deformed! Copper ion layers slip under the hammer — delocalized electrons allow plastic deformation without shattering (malleable)!';
             }
 
-            if (isShattered && (currentSandboxMode === 'nacl' || currentSandboxMode === 'cscl' || (currentSandboxMode === 'water' && sandboxTemp <= 0))) {
+            if (isShattered && (currentSandboxMode === 'cscl' || (currentSandboxMode === 'water' && sandboxTemp <= 0))) {
                 spawnShatterFragments(sandboxCanvas.width / 2, sandboxCanvas.height / 2, 18);
             }
 
@@ -3375,6 +3471,11 @@
                     sbHammerAnimating = false;
 
                     if (currentSandboxMode === 'graphite') {
+                        updateSandboxLegend();
+                        return;
+                    }
+
+                    if (currentSandboxMode === 'nacl' && (sbNaClCleaved || sbNaClCleaveAnim)) {
                         updateSandboxLegend();
                         return;
                     }
