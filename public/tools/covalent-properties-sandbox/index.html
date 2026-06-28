@@ -543,6 +543,15 @@
                         <span class="lang-en" style="display:none;">Drag to rotate view</span>
                     </div>
 
+                    <div id="sb-nacl-theory-mark" style="display:none; position:absolute; top:68px; left:50%; transform:translateX(-50%); pointer-events:none; background:rgba(127,29,29,0.82); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(248,113,113,0.55); padding:10px 14px; border-radius:10px; z-index:11; max-width:min(92%, 420px); box-shadow:0 0 24px rgba(239,68,68,0.35);">
+                        <div style="font-size:0.68em; color:#fecaca; text-transform:uppercase; letter-spacing:0.6px; font-weight:700; margin-bottom:4px;">
+                            <i class="fa-solid fa-bolt" style="margin-right:5px;"></i>
+                            <span class="lang-zh">靜電排斥理論</span>
+                            <span class="lang-en" style="display:none;">Electrostatic Repulsion</span>
+                        </div>
+                        <div id="sb-nacl-theory-mark-body" style="font-size:0.78em; line-height:1.45; color:#fff7f7; font-weight:600;"></div>
+                    </div>
+
                     <!-- Bottom-left Legend Overlay inside canvas -->
                     <div id="sb-legend-overlay" style="position: absolute; bottom: 15px; left: 15px; background:rgba(11,17,38,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.06); padding:10px 14px; border-radius:10px; z-index:10; pointer-events:none; display:flex; flex-direction:column; gap:6px; min-width: 150px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
                         <div style="font-size: 0.72em; color: var(--text-secondary); text-transform: uppercase; letter-spacing:0.5px; margin-bottom: 2px; font-weight: 700;">
@@ -1156,6 +1165,7 @@
             sbMalleableDeformed = false;
             resetGraphiteLayerState();
             resetNaClCleaveState();
+            hideNaClTheoryMark();
             const condBtn = document.getElementById('btn-sb-conductivity');
             if (condBtn) {
                 condBtn.style.backgroundColor = '';
@@ -2818,6 +2828,7 @@
         function resetNaClLattice() {
             if (currentSandboxMode !== 'nacl') return;
             resetNaClCleaveState();
+            hideNaClTheoryMark();
             sbHammerAnimating = false;
             sbHammerOffset = 0;
             sbShatterFragments = [];
@@ -2875,12 +2886,71 @@
             return count ? sum / count : sandboxCanvas.width / 2;
         }
 
+        function updateNaClTheoryMark(cleaveProgress) {
+            const mark = document.getElementById('sb-nacl-theory-mark');
+            const body = document.getElementById('sb-nacl-theory-mark-body');
+            if (!mark || !body) return;
+
+            if (currentSandboxMode !== 'nacl' || sandboxTemp >= 801) {
+                mark.style.display = 'none';
+                return;
+            }
+
+            const { slipEnd } = getNaClCleavePhaseBounds();
+            const active = sbNaClCleaveAnim || sbNaClCleaved;
+            if (!active) {
+                mark.style.display = 'none';
+                return;
+            }
+
+            mark.style.display = 'block';
+            let zh = '';
+            let en = '';
+
+            if (cleaveProgress <= slipEnd && !sbNaClCleaved) {
+                zh = '步驟 1：受敲擊時，離子層向下滑移，破壞原本異性離子交替排列。';
+                en = 'Step 1: The strike shears ion layers downward, breaking the alternating Na⁺/Cl⁻ pattern.';
+            } else {
+                zh = '步驟 2：同性電荷離子（Na⁺–Na⁺、Cl⁻–Cl⁻）相鄰而強烈排斥，晶格沿裂縫分離（易脆性）。';
+                en = 'Step 2: Like charges (Na⁺–Na⁺, Cl⁻–Cl⁻) become adjacent and strongly repel — brittle cleavage.';
+            }
+
+            body.innerHTML = `
+                <span class="lang-zh">${zh}</span>
+                <span class="lang-en" style="display:none;">${en}</span>
+            `;
+            if (typeof applyLanguage === 'function') applyLanguage();
+        }
+
+        function hideNaClTheoryMark() {
+            const mark = document.getElementById('sb-nacl-theory-mark');
+            if (mark) mark.style.display = 'none';
+        }
+
+        function isNaClRepulsionInterfaceIon(p, cleaveProgress) {
+            const { slipEnd } = getNaClCleavePhaseBounds();
+            if (cleaveProgress <= slipEnd && !sbNaClCleaved) return false;
+            return p.gx === SB_NACL_CLEAVE_GX || p.gx === SB_NACL_CLEAVE_GX + 1;
+        }
+
         function drawNaClCleavageRepulsion(ctx, cleaveProgress) {
             const { slipEnd } = getNaClCleavePhaseBounds();
             if (cleaveProgress <= slipEnd) return;
 
             const alpha = easeOutCubic((cleaveProgress - slipEnd) / (1 - slipEnd));
-            const pulse = 0.75 + 0.25 * Math.sin(sbTimeAccumulator * 0.35);
+            const pulse = 0.65 + 0.35 * Math.sin(sbTimeAccumulator * 0.5);
+            const planeX = getNaClCleavagePlaneX();
+
+            ctx.save();
+            ctx.globalAlpha = alpha * 0.22 * pulse;
+            const grad = ctx.createLinearGradient(planeX - 40, 0, planeX + 40, 0);
+            grad.addColorStop(0, 'rgba(239, 68, 68, 0)');
+            grad.addColorStop(0.5, 'rgba(239, 68, 68, 0.85)');
+            grad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(planeX - 42, sandboxCanvas.height * 0.12, 84, sandboxCanvas.height * 0.76);
+            ctx.restore();
+
             ctx.globalAlpha = alpha * pulse;
 
             for (let i = 0; i < sbParticles.length; i++) {
@@ -2892,12 +2962,21 @@
                     if (p2.gy !== p1.gy || p2.gz !== p1.gz || p1.isNa !== p2.isNa) continue;
 
                     const label = p1.isNa ? '+' : '−';
-                    drawRepulsionArrow(ctx, p1.x, p1.y, p2.x, p2.y, label);
+                    const midX = (p1.x + p2.x) / 2;
+                    const midY = (p1.y + p2.y) / 2;
+                    const push = 18 + alpha * 14;
 
-                    ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
-                    ctx.lineWidth = 1.5;
+                    drawRepulsionArrow(ctx, p1.x, p1.y, midX - push, midY, label);
+                    drawRepulsionArrow(ctx, p2.x, p2.y, midX + push, midY, label);
+                    drawRepulsionArrow(ctx, p1.x, p1.y, p2.x, p2.y, '');
+
+                    ctx.strokeStyle = 'rgba(239, 68, 68, 0.55)';
+                    ctx.lineWidth = 2.5;
                     ctx.beginPath();
-                    ctx.arc((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, 10 + alpha * 6, 0, Math.PI * 2);
+                    ctx.arc(midX, midY, 12 + alpha * 10 * pulse, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(midX, midY, 6 + alpha * 5 * pulse, 0, Math.PI * 2);
                     ctx.stroke();
                 }
             }
@@ -3000,6 +3079,18 @@
             // Draw ions sorted by depth (painter's algorithm)
             let sorted = [...sbParticles].sort((a, b) => b.z - a.z);
             sorted.forEach(p => {
+                if (isNaClRepulsionInterfaceIon(p, cleaveProgress)) {
+                    const glow = 0.45 + 0.55 * Math.sin(sbTimeAccumulator * 0.55 + p.id);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, (p.isNa ? 7 : 11) + 6, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(239, 68, 68, ${0.35 + glow * 0.45})`;
+                    ctx.lineWidth = 3;
+                    ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+                    ctx.shadowBlur = 14;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                }
+
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.isNa ? 7 : 11, 0, Math.PI * 2); // Cl- is larger than Na+
                 ctx.fillStyle = p.isNa ? '#a855f7' : '#10b981'; // Purple Na+, Green Cl-
@@ -3015,6 +3106,7 @@
                 ctx.fillText(p.isNa ? '+' : '-', p.x, p.y);
             });
             ctx.shadowBlur = 0;
+            updateNaClTheoryMark(cleaveProgress);
         }
 
         function drawNaClMolten(ctx, vFactor, w, h, dt) {
@@ -3342,11 +3434,11 @@
         }
 
         function drawRepulsionArrow(ctx, x1, y1, x2, y2, label) {
-            ctx.strokeStyle = 'rgba(239, 68, 68, 0.9)';
-            ctx.fillStyle = 'rgba(239, 68, 68, 0.95)';
-            ctx.lineWidth = 2.5;
-            ctx.shadowColor = 'rgba(239, 68, 68, 0.8)';
-            ctx.shadowBlur = 6;
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.95)';
+            ctx.fillStyle = 'rgba(239, 68, 68, 1)';
+            ctx.lineWidth = 3.5;
+            ctx.shadowColor = 'rgba(239, 68, 68, 1)';
+            ctx.shadowBlur = 12;
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
@@ -3360,9 +3452,9 @@
             ctx.closePath();
             ctx.fill();
             if (label) {
-                ctx.font = 'bold 10px system-ui,sans-serif';
+                ctx.font = 'bold 11px system-ui,sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText(label, (x1 + x2) / 2, (y1 + y2) / 2 - 8);
+                ctx.fillText(label, (x1 + x2) / 2, (y1 + y2) / 2 - 10);
             }
             ctx.shadowBlur = 0;
         }
