@@ -265,27 +265,38 @@ export function initChemFlashcard() {
   function renderShellDiagram(container, shells, animKey, opts) {
     opts = opts || {};
     const firstShellNoPair = !!opts.firstShellNoPair;
+    const compact = !!opts.compact;
     container.innerHTML = "";
-    const cap = document.createElement("div");
-    cap.className = "shell-caption";
-    cap.textContent = t("filling");
-    container.appendChild(cap);
-    const nucLabel = document.createElement("div");
-    nucLabel.className = "nucleus-label";
-    nucLabel.textContent = t("nucleus");
-    container.appendChild(nucLabel);
+    if (!compact) {
+      const cap = document.createElement("div");
+      cap.className = "shell-caption";
+      cap.textContent = t("filling");
+      container.appendChild(cap);
+      const nucLabel = document.createElement("div");
+      nucLabel.className = "nucleus-label";
+      nucLabel.textContent = t("nucleus");
+      container.appendChild(nucLabel);
+    }
 
     const svgNS = "http://www.w3.org/2000/svg";
-    const vb = 240;
-    const cx = vb / 2;
-    const cy = vb / 2;
+    const cx = 120;
+    const cy = 120;
     const startR = 28;
     const ringGap = 23;
     const eR = 5;
     const nucR = 9;
 
+    const maxSi = Math.max(0, shells.length - 1);
+    const maxR = startR + maxSi * ringGap;
+    const cropPad = compact ? 12 : 14;
+    const cropHalf = maxR + eR + cropPad;
+    const cropSize = Math.max(compact ? 68 : 72, cropHalf * 2);
+
     const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("viewBox", "0 0 " + vb + " " + vb);
+    svg.setAttribute(
+      "viewBox",
+      cx - cropSize / 2 + " " + (cy - cropSize / 2) + " " + cropSize + " " + cropSize
+    );
     svg.setAttribute("class", "bohr-svg");
     svg.setAttribute("aria-hidden", "true");
 
@@ -372,7 +383,11 @@ export function initChemFlashcard() {
       const wrap = document.createElement("div");
       wrap.className = "shell-diagram";
       $("backExtra").appendChild(wrap);
-      renderShellDiagram(wrap, row.shells, index + "-" + i, { firstShellNoPair: true, static: true });
+      renderShellDiagram(wrap, row.shells, index + "-" + i, {
+        firstShellNoPair: true,
+        static: true,
+        compact: true,
+      });
     } else if (d.type === "properties") {
       $("frontMain").innerHTML = row.notn;
       $("frontSub").hidden = false;
