@@ -2128,7 +2128,7 @@ function generateCovalentBondPuzzleToolContent() {
 
 function generateCovalentPropertiesSandboxToolContent() {
   return generateInteractiveLabIframeContent(
-    "public/tools/covalent-properties-sandbox/index.html?v=20260628nacl5",
+    "public/tools/covalent-properties-sandbox/index.html?v=20260628nacl6",
     "lab.sandboxName",
   );
 }
