@@ -180,15 +180,7 @@
     };
   }
 
-  async function stableSeed(userSeed, count, types, difficulty) {
-    const raw = `${userSeed || ""}|${count}|${[...types].sort().join(",")}|${difficulty}`;
-    const subtle = typeof crypto !== "undefined" && crypto.subtle;
-    if (subtle && typeof subtle.digest === "function") {
-      const enc = new TextEncoder().encode(raw);
-      const buf = await subtle.digest("SHA-256", enc);
-      const hex = Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
-      return parseInt(hex.slice(0, 8), 16) >>> 0;
-    }
+  function fnvSeed(raw) {
     let h = 2166136261 >>> 0;
     for (let i = 0; i < raw.length; i++) {
       h ^= raw.charCodeAt(i);
@@ -197,9 +189,25 @@
     return h >>> 0;
   }
 
+  async function stableSeed(userSeed, count, types, difficulty) {
+    const raw = `${userSeed || ""}|${count}|${[...types].sort().join(",")}|${difficulty}`;
+    const subtle = typeof crypto !== "undefined" && crypto.subtle;
+    if (subtle && typeof subtle.digest === "function") {
+      try {
+        const enc = new TextEncoder().encode(raw);
+        const buf = await subtle.digest("SHA-256", enc);
+        const hex = Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
+        return parseInt(hex.slice(0, 8), 16) >>> 0;
+      } catch {
+        /* SubtleCrypto may be blocked in some browsers/contexts — use FNV fallback */
+      }
+    }
+    return fnvSeed(raw);
+  }
+
   function allowedByDifficulty(q, difficulty) {
     if (difficulty === "easy") return ["mcq", "classification", "change"].includes(q.qtype);
-    if (difficulty === "medium") return q.qtype !== "short";
+    if (difficulty === "medium") return ["mcq", "classification", "particle", "separation", "change", "short"].includes(q.qtype);
     return true;
   }
 
@@ -695,20 +703,39 @@
   async function generate() {
     const types = selectedTypes();
     if (!types.length) { alert(lang === "zh" ? "請至少選擇一種題型。" : "Select at least one question type."); return; }
-    const count = Math.min(50, Math.max(1, Number(document.getElementById("numCount").value) || 10));
-    const difficulty = document.getElementById("selDiff").value;
-    const seed = document.getElementById("txtSeed").value;
-    lastQuestions = await generateQuestions(count, types, difficulty, seed);
-    attemptMap.clear();
-    lastQuestions.forEach((q) => attemptMap.set(q.id, { wrong: 0, solved: false }));
-    document.getElementById("summaryPanel").hidden = true;
-    document.getElementById("summaryPanel").innerHTML = "";
-    sheetDate = "";
-    renderSheetPreviews(); renderQuiz();
-    setExportButtonsEnabled(true);
-    currentViewMode = "print";
-    document.querySelectorAll(".preview-tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.mode === "print"));
-    renderViewMode();
+    const btn = document.getElementById("btnGenerate");
+    const btnLabel = document.getElementById("btnGenerateLabel");
+    const prevLabel = btnLabel.textContent;
+    btn.disabled = true;
+    btnLabel.textContent = lang === "zh" ? "產生中…" : "Generating…";
+    try {
+      const count = Math.min(50, Math.max(1, Number(document.getElementById("numCount").value) || 10));
+      const difficulty = document.getElementById("selDiff").value;
+      const seed = document.getElementById("txtSeed").value;
+      lastQuestions = await generateQuestions(count, types, difficulty, seed);
+      if (!lastQuestions.length) {
+        throw new Error("No questions generated");
+      }
+      attemptMap.clear();
+      lastQuestions.forEach((q) => attemptMap.set(q.id, { wrong: 0, solved: false }));
+      document.getElementById("summaryPanel").hidden = true;
+      document.getElementById("summaryPanel").innerHTML = "";
+      sheetDate = "";
+      renderSheetPreviews();
+      renderQuiz();
+      setExportButtonsEnabled(true);
+      currentViewMode = "print";
+      document.querySelectorAll(".preview-tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.mode === "print"));
+      renderViewMode();
+    } catch (err) {
+      console.error("Worksheet generate failed:", err);
+      alert(lang === "zh"
+        ? "無法產生工作紙，請重新整理頁面後再試。"
+        : "Could not generate the worksheet. Please refresh and try again.");
+    } finally {
+      btn.disabled = false;
+      btnLabel.textContent = prevLabel;
+    }
   }
 
   function renderViewMode() {
@@ -901,6 +928,7 @@
   }
 
   function escHtml(s) {
+    if (s == null) return "";
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
