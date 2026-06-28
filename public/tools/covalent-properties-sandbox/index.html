@@ -1341,7 +1341,7 @@
                 html += formatItem(circleSpan('#a855f7', '#c084fc', '+'), '鈉離子 (Na⁺)', 'Sodium Ion (Na⁺)');
                 html += formatItem(circleSpan('#10b981', '#34d399', '-'), '氯離子 (Cl⁻)', 'Chloride Ion (Cl⁻)');
                 html += formatItem(lineSpan('rgba(16, 185, 129, 0.45)'), '離子鍵 (靜電吸引力，強)', 'Ionic Bond (Strong Attraction)');
-                if (isNaClCrossBondStressed()) {
+                if (isNaClLikeChargeRepulsionActive()) {
                     html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '同性電荷排斥 (錯位碎裂)', 'Like-charge Repulsion (Shatter)');
                 }
             } else if (currentSandboxMode === 'cscl') {
@@ -2916,7 +2916,6 @@
 
                     drawRepulsionArrow(ctx, p1.x, p1.y, midX - push, midY, label);
                     drawRepulsionArrow(ctx, p2.x, p2.y, midX + push, midY, label);
-                    drawRepulsionArrow(ctx, p1.x, p1.y, p2.x, p2.y, '');
 
                     ctx.strokeStyle = 'rgba(239, 68, 68, 0.55)';
                     ctx.lineWidth = 2.5;
@@ -2978,6 +2977,39 @@
             return 0;
         }
 
+        function isNaClLikeChargeRepulsionActive() {
+            if (sbNaClCleaved) return true;
+            return getNaClCleaveProgress() > getNaClCleavePhaseBounds().slipEnd;
+        }
+
+        function drawNaClLikeChargeRepulsionLines(ctx, cleaveProgress) {
+            const { slipEnd } = getNaClCleavePhaseBounds();
+            const alpha = easeOutCubic((cleaveProgress - slipEnd) / (1 - slipEnd));
+            const pulse = 0.65 + 0.35 * Math.sin(sbTimeAccumulator * 0.5);
+
+            ctx.save();
+            ctx.strokeStyle = `rgba(239, 68, 68, ${0.55 + alpha * 0.35 * pulse})`;
+            ctx.lineWidth = 2.8;
+            ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+            ctx.shadowBlur = 10;
+
+            for (let i = 0; i < sbParticles.length; i++) {
+                const p1 = sbParticles[i];
+                if (p1.gx !== SB_NACL_CLEAVE_GX) continue;
+                for (let j = 0; j < sbParticles.length; j++) {
+                    const p2 = sbParticles[j];
+                    if (p2.gx !== SB_NACL_CLEAVE_GX + 1) continue;
+                    if (p2.gy !== p1.gy || p2.gz !== p1.gz || p1.isNa !== p2.isNa) continue;
+
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+            ctx.restore();
+        }
+
         function drawNaClSolid(ctx, vFactor, dt) {
             let amp = vFactor * 3.5;
 
@@ -3009,7 +3041,7 @@
                 p.z = proj.z;
             });
 
-            // Draw electrostatic attraction / repulsion lines between ions
+            // Draw ionic attraction bonds (cross-cleavage Na⁺–Cl⁻ bonds hide once fractured)
             ctx.lineWidth = 2.2;
             const crossStressBlend = getNaClCrossBondStressBlend();
 
@@ -3018,29 +3050,23 @@
                 let p2 = sbParticles[bond.v];
                 if (!p1 || !p2) return;
 
-                const isCross = isNaClCrossCleavageBond(bond);
-                const stressBlend = isCross ? crossStressBlend : 0;
-                const alpha = lerpValue(0.45, 0.88, stressBlend);
-                const redWeight = Math.min(1, stressBlend * 1.4);
-                const r = Math.round(lerpValue(16, 239, redWeight));
-                const g = Math.round(lerpValue(185, 68, redWeight));
-                const b = Math.round(lerpValue(129, 68, redWeight));
+                if (isNaClCrossCleavageBond(bond) && crossStressBlend > 0) return;
 
-                ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-                ctx.shadowColor = redWeight > 0.35 ? 'rgba(239, 68, 68, 0.9)' : 'rgba(16, 185, 129, 0.8)';
-                ctx.shadowBlur = redWeight > 0.35 ? 10 : 6;
-                ctx.lineWidth = redWeight > 0.35 ? 2.8 : 2.2;
+                ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+                ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
+                ctx.shadowBlur = 6;
 
                 ctx.beginPath();
                 ctx.moveTo(p1.x, p1.y);
                 ctx.lineTo(p2.x, p2.y);
                 ctx.stroke();
             });
-            ctx.shadowBlur = 0; // Reset shadow blur!
+            ctx.shadowBlur = 0;
 
-            // Cleavage plane + electrostatic repulsion during separation
+            // Cleavage plane + like-charge repulsion after slip alignment
             const { slipEnd } = getNaClCleavePhaseBounds();
             if (cleaveProgress > slipEnd) {
+                drawNaClLikeChargeRepulsionLines(ctx, cleaveProgress);
                 drawCrackLine(ctx, getNaClCleavagePlaneX(), sandboxCanvas.height * 0.16, sandboxCanvas.height * 0.84);
                 drawNaClCleavageRepulsion(ctx, cleaveProgress);
             }
