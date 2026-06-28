@@ -110,8 +110,8 @@ export const faUI = {
     "subtypeAtomicStructureDesc": "پیکربندی الکترون، روندهای تناوبی و تمرین ساختار.",
     "subtypeIsotopeRam": "ایزوتوپ‌ها و جرم اتمی نسبی",
     "subtypeIsotopeRamDesc": "فراوانی ایزوتوپ و محاسبات RAM.",
-    "subtypeMicroscopicWorld1": "دنیای میکروسکوپی ۱",
-    "subtypeMicroscopicWorld1Desc": "طبقه‌بندی مواد، روش‌های جداسازی، نظریه ذرات و تغییرات فیزیکی و شیمیایی.",
+    "subtypeMicroscopicWorld1": "پیوند یونی و کووالانسی",
+    "subtypeMicroscopicWorld1Desc": "سوالات پیوند یونی و کووالانسی از Topic 02 Overall 1 (صفحات ۵۸–۱۲۵).",
     "backToHub": "بازگشت به برگه‌ها",
     "pendingName": "به‌زودی",
     "pendingDesc": "انواع دیگر بعداً اضافه می‌شوند."

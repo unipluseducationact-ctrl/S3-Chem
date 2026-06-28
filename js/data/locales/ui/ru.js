@@ -110,8 +110,8 @@ export const ruUI = {
     "subtypeAtomicStructureDesc": "Конфигурация электронов, периодические закономерности, структура.",
     "subtypeIsotopeRam": "Изотопы и относительная атомная масса",
     "subtypeIsotopeRamDesc": "Изотопное изобилие и расчеты ОАМ.",
-    "subtypeMicroscopicWorld1": "Микромир 1",
-    "subtypeMicroscopicWorld1Desc": "Классификация веществ, методы разделения, теория частиц и физические/химические изменения.",
+    "subtypeMicroscopicWorld1": "Ионная и ковалентная связь",
+    "subtypeMicroscopicWorld1Desc": "Вопросы по ионной и ковалентной связи из Topic 02 Overall 1 (стр. 58–125).",
     "backToHub": "К списку листов",
     "pendingName": "Скоро",
     "pendingDesc": "Другие типы появятся позже."

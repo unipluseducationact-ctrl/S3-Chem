@@ -110,8 +110,8 @@ export const zhHantUI = {
     "subtypeAtomicStructureDesc": "電子排布、週期律等結構練習。",
     "subtypeIsotopeRam": "同位素與相對原子質量",
     "subtypeIsotopeRamDesc": "豐度與相對原子質量題組。",
-    "subtypeMicroscopicWorld1": "微觀世界 1",
-    "subtypeMicroscopicWorld1Desc": "原子結構、週期表、離子鍵與共價鍵，以及物質的結構與性質。",
+    "subtypeMicroscopicWorld1": "離子鍵與共價鍵",
+    "subtypeMicroscopicWorld1Desc": "來自 Topic 02 Overall 1（第 58–125 頁）的離子鍵與共價鍵題目。",
     "backToHub": "返回工作紙",
     "pendingName": "待定",
     "pendingDesc": "更多類型稍後推出。"

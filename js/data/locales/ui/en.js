@@ -110,8 +110,8 @@ export const enUI = {
     "subtypeAtomicStructureDesc": "Electron configuration, periodic trends, and structure practice.",
     "subtypeIsotopeRam": "Isotopes & relative atomic mass",
     "subtypeIsotopeRamDesc": "Isotope abundance and RAM calculations.",
-    "subtypeMicroscopicWorld1": "Microscopic world 1",
-    "subtypeMicroscopicWorld1Desc": "Atomic structure, periodic table, ionic and covalent bonding, and properties of substances.",
+    "subtypeMicroscopicWorld1": "Ionic and covalent bond",
+    "subtypeMicroscopicWorld1Desc": "Ionic and covalent bonding questions from Topic 02 Overall 1 (pages 58–125).",
     "backToHub": "Back to worksheets",
     "pendingName": "Pending",
     "pendingDesc": "More worksheet types coming later."

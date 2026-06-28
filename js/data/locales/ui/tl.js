@@ -110,8 +110,8 @@ export const tlUI = {
     "subtypeAtomicStructureDesc": "Electron configuration, periodic trends, at pagsasanay sa structure.",
     "subtypeIsotopeRam": "Mga isotope at relative atomic mass",
     "subtypeIsotopeRamDesc": "Isotope abundance at mga kalkulasyon sa RAM.",
-    "subtypeMicroscopicWorld1": "Microscopic world 1",
-    "subtypeMicroscopicWorld1Desc": "Pag-uuri ng matter, separation techniques, particle theory, at physical vs chemical changes.",
+    "subtypeMicroscopicWorld1": "Ionic and covalent bond",
+    "subtypeMicroscopicWorld1Desc": "Ionic and covalent bonding questions from Topic 02 Overall 1 (pages 58–125).",
     "backToHub": "Bumalik sa mga worksheet",
     "pendingName": "Nakabinbin",
     "pendingDesc": "Higit pang uri mamaya."

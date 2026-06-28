@@ -6,6 +6,14 @@ import { readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { PDFParse } from "pdf-parse";
+import {
+  PAGE_MIN,
+  PAGE_MAX,
+  ALLOWED_QTYPES,
+  requiresTableOrDiagram,
+  isOutOfScopeTopic,
+  isBondingBankEntry,
+} from "../public/worksheets/ch2-microscopic-world-1/bonding-question-filters.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -158,6 +166,7 @@ function parseQuestions(text) {
   const markRe = /([\s\S]*?)\((\d+)\s*marks?\)/gi;
   let m;
   let idx = 0;
+  const stats = { outOfPage: 0, tableDiagram: 0, outOfScope: 0, wrongType: 0 };
   const skipPatterns = [
     /^content$/i,
     /^part topic page$/i,
@@ -190,7 +199,13 @@ function parseQuestions(text) {
     if (/Content Part Topic Page/.test(stem)) continue;
 
     const page = findPageBefore(text, m.index);
+    if (page < PAGE_MIN || page > PAGE_MAX) { stats.outOfPage++; continue; }
+    if (requiresTableOrDiagram(stem)) { stats.tableDiagram++; continue; }
+    if (isOutOfScopeTopic(stem)) { stats.outOfScope++; continue; }
+
     const qtype = inferTopic(stem, page);
+    if (!ALLOWED_QTYPES.has(qtype)) { stats.wrongType++; continue; }
+
     const difficulty = inferDifficulty(marks);
     const known = knownAnswer(stem);
 
@@ -215,6 +230,7 @@ function parseQuestions(text) {
     };
     items.push(finalizeEntry(entry));
   }
+  items._stats = stats;
   return items;
 }
 
@@ -232,14 +248,17 @@ async function main() {
   }
 
   const questions = parseQuestions(cleaned);
+  const stats = questions._stats || {};
+  const bank = questions.filter((q) => isBondingBankEntry(q));
   const byType = {};
-  questions.forEach((q) => {
+  bank.forEach((q) => {
     byType[q.qtype] = (byType[q.qtype] || 0) + 1;
   });
 
-  writeFileSync(OUT_PATH, JSON.stringify(questions, null, 2), "utf8");
-  console.log(`Wrote ${questions.length} questions to ${OUT_PATH}`);
+  writeFileSync(OUT_PATH, JSON.stringify(bank, null, 2), "utf8");
+  console.log(`Wrote ${bank.length} questions to ${OUT_PATH}`);
   console.log("By type:", byType);
+  console.log("Excluded:", stats);
 }
 
 main().catch((err) => {

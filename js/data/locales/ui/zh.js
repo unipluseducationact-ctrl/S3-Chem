@@ -110,8 +110,8 @@ export const zhUI = {
     "subtypeAtomicStructureDesc": "电子排布、周期律等结构练习。",
     "subtypeIsotopeRam": "同位素与相对原子质量",
     "subtypeIsotopeRamDesc": "丰度与相对原子质量计算。",
-    "subtypeMicroscopicWorld1": "微观世界 1",
-    "subtypeMicroscopicWorld1Desc": "原子结构、周期表、离子键与共价键，以及物质的结构与性质。",
+    "subtypeMicroscopicWorld1": "离子键与共价键",
+    "subtypeMicroscopicWorld1Desc": "来自 Topic 02 Overall 1（第 58–125 页）的离子键与共价键题目。",
     "backToHub": "返回工作纸",
     "pendingName": "待定",
     "pendingDesc": "更多类型稍后推出。"
