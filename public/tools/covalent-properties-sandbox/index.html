@@ -1341,7 +1341,7 @@
                 html += formatItem(circleSpan('#a855f7', '#c084fc', '+'), '鈉離子 (Na⁺)', 'Sodium Ion (Na⁺)');
                 html += formatItem(circleSpan('#10b981', '#34d399', '-'), '氯離子 (Cl⁻)', 'Chloride Ion (Cl⁻)');
                 html += formatItem(lineSpan('rgba(16, 185, 129, 0.45)'), '離子鍵 (靜電吸引力，強)', 'Ionic Bond (Strong Attraction)');
-                if (sbHammerAnimating && sbHammerOffset > 8) {
+                if (isNaClCrossBondStressed()) {
                     html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '同性電荷排斥 (錯位碎裂)', 'Like-charge Repulsion (Shatter)');
                 }
             } else if (currentSandboxMode === 'cscl') {
@@ -2961,10 +2961,21 @@
                 (p1.gx > SB_NACL_CLEAVE_GX && p2.gx <= SB_NACL_CLEAVE_GX);
         }
 
-        function shouldDrawNaClCrossBond(bond) {
-            if (!isNaClCrossCleavageBond(bond)) return true;
-            const { repulseStart } = getNaClCleavePhaseBounds();
-            return getNaClCleaveProgress() <= repulseStart;
+        function isNaClCrossBondStressed() {
+            return sbNaClCleaved || sbNaClCleaveAnim || (sbHammerAnimating && currentSandboxMode === 'nacl');
+        }
+
+        function getNaClCrossBondStressBlend() {
+            if (!isNaClCrossBondStressed()) return 0;
+            if (sbNaClCleaved) return 1;
+            const progress = getNaClCleaveProgress();
+            if (progress > 0) {
+                return Math.min(1, progress / getNaClCleavePhaseBounds().repulseStart);
+            }
+            if (sbHammerAnimating && sbHammerOffset > 0) {
+                return Math.min(0.35, sbHammerOffset / 22);
+            }
+            return 0;
         }
 
         function drawNaClSolid(ctx, vFactor, dt) {
@@ -2998,22 +3009,32 @@
                 p.z = proj.z;
             });
 
-            // Draw electrostatic attraction lines between ions
-            ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+            // Draw electrostatic attraction / repulsion lines between ions
             ctx.lineWidth = 2.2;
-            ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
-            ctx.shadowBlur = 6;
+            const crossStressBlend = getNaClCrossBondStressBlend();
 
             sbNaClBonds.forEach(bond => {
-                if (!shouldDrawNaClCrossBond(bond)) return;
                 let p1 = sbParticles[bond.u];
                 let p2 = sbParticles[bond.v];
-                if (p1 && p2) {
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                }
+                if (!p1 || !p2) return;
+
+                const isCross = isNaClCrossCleavageBond(bond);
+                const stressBlend = isCross ? crossStressBlend : 0;
+                const alpha = lerpValue(0.45, 0.88, stressBlend);
+                const redWeight = Math.min(1, stressBlend * 1.4);
+                const r = Math.round(lerpValue(16, 239, redWeight));
+                const g = Math.round(lerpValue(185, 68, redWeight));
+                const b = Math.round(lerpValue(129, 68, redWeight));
+
+                ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                ctx.shadowColor = redWeight > 0.35 ? 'rgba(239, 68, 68, 0.9)' : 'rgba(16, 185, 129, 0.8)';
+                ctx.shadowBlur = redWeight > 0.35 ? 10 : 6;
+                ctx.lineWidth = redWeight > 0.35 ? 2.8 : 2.2;
+
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
             });
             ctx.shadowBlur = 0; // Reset shadow blur!
 
