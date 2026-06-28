@@ -1341,8 +1341,8 @@
                 html += formatItem(circleSpan('#a855f7', '#c084fc', '+'), '鈉離子 (Na⁺)', 'Sodium Ion (Na⁺)');
                 html += formatItem(circleSpan('#10b981', '#34d399', '-'), '氯離子 (Cl⁻)', 'Chloride Ion (Cl⁻)');
                 html += formatItem(lineSpan('rgba(16, 185, 129, 0.45)'), '離子鍵 (靜電吸引力，強)', 'Ionic Bond (Strong Attraction)');
-                if (isNaClLikeChargeRepulsionActive()) {
-                    html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '同性電荷排斥 (錯位碎裂)', 'Like-charge Repulsion (Shatter)');
+                if (getNaClCrossBondRedBlend() > 0.1) {
+                    html += formatItem(lineSpan('rgba(239, 68, 68, 0.85)'), '離子鍵斷裂應力 (錘擊)', 'Ionic Bond Breakage (hammer stress)');
                 }
             } else if (currentSandboxMode === 'cscl') {
                 html += formatItem(circleSpan('#a855f7', '#c084fc', '+'), '銫離子 (Cs⁺)', 'Cesium Ion (Cs⁺)');
@@ -2876,16 +2876,16 @@
         }
 
         function isNaClRepulsionInterfaceIon(p, cleaveProgress) {
-            const { slipEnd } = getNaClCleavePhaseBounds();
-            if (cleaveProgress <= slipEnd && !sbNaClCleaved) return false;
+            if (sbNaClCleaved) return false;
+            if (getNaClRepulsionVisualAlpha(cleaveProgress) <= 0) return false;
             return p.gx === SB_NACL_CLEAVE_GX || p.gx === SB_NACL_CLEAVE_GX + 1;
         }
 
-        function drawNaClCleavageRepulsion(ctx, cleaveProgress) {
+        function drawNaClCleavageRepulsion(ctx, cleaveProgress, visualAlpha) {
             const { slipEnd } = getNaClCleavePhaseBounds();
-            if (cleaveProgress <= slipEnd) return;
+            if (cleaveProgress <= slipEnd || visualAlpha <= 0) return;
 
-            const alpha = easeOutCubic((cleaveProgress - slipEnd) / (1 - slipEnd));
+            const alpha = easeOutCubic((cleaveProgress - slipEnd) / (1 - slipEnd)) * visualAlpha;
             const pulse = 0.65 + 0.35 * Math.sin(sbTimeAccumulator * 0.5);
             const planeX = getNaClCleavagePlaneX();
 
@@ -2972,19 +2972,32 @@
                 return Math.min(1, progress / getNaClCleavePhaseBounds().repulseStart);
             }
             if (sbHammerAnimating && sbHammerOffset > 0) {
-                return Math.min(0.35, sbHammerOffset / 22);
+                return Math.min(0.55, sbHammerOffset / 16);
             }
             return 0;
         }
 
-        function isNaClLikeChargeRepulsionActive() {
-            if (sbNaClCleaved) return true;
-            return getNaClCleaveProgress() > getNaClCleavePhaseBounds().slipEnd;
+        function getNaClCrossBondRedBlend() {
+            if (sbNaClCleaved) return 0;
+            return getNaClCrossBondStressBlend();
         }
 
-        function drawNaClLikeChargeRepulsionLines(ctx, cleaveProgress) {
+        function getNaClRepulsionVisualAlpha(cleaveProgress) {
+            if (sbNaClCleaved) return 0;
             const { slipEnd } = getNaClCleavePhaseBounds();
-            const alpha = easeOutCubic((cleaveProgress - slipEnd) / (1 - slipEnd));
+            if (cleaveProgress <= slipEnd) return 0;
+            const repulseT = (cleaveProgress - slipEnd) / (1 - slipEnd);
+            const fadeStart = 0.85;
+            if (repulseT >= fadeStart) {
+                return Math.max(0, 1 - (repulseT - fadeStart) / (1 - fadeStart));
+            }
+            return easeOutCubic(repulseT);
+        }
+
+        function drawNaClLikeChargeRepulsionLines(ctx, cleaveProgress, visualAlpha) {
+            const { slipEnd } = getNaClCleavePhaseBounds();
+            if (visualAlpha <= 0) return;
+            const alpha = easeOutCubic((cleaveProgress - slipEnd) / (1 - slipEnd)) * visualAlpha;
             const pulse = 0.65 + 0.35 * Math.sin(sbTimeAccumulator * 0.5);
 
             ctx.save();
@@ -3041,20 +3054,34 @@
                 p.z = proj.z;
             });
 
-            // Draw ionic attraction bonds (cross-cleavage Na⁺–Cl⁻ bonds hide once fractured)
-            ctx.lineWidth = 2.2;
-            const crossStressBlend = getNaClCrossBondStressBlend();
+            // Draw ionic attraction bonds (cross-cleavage bonds turn red under hammer stress, hide when cleaved)
+            const crossRedBlend = getNaClCrossBondRedBlend();
+            const bondPulse = 0.65 + 0.35 * Math.sin(sbTimeAccumulator * 0.5);
 
             sbNaClBonds.forEach(bond => {
                 let p1 = sbParticles[bond.u];
                 let p2 = sbParticles[bond.v];
                 if (!p1 || !p2) return;
 
-                if (isNaClCrossCleavageBond(bond) && crossStressBlend > 0) return;
+                const isCross = isNaClCrossCleavageBond(bond);
+                if (isCross && sbNaClCleaved) return;
 
-                ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
-                ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
-                ctx.shadowBlur = 6;
+                const redWeight = isCross ? crossRedBlend : 0;
+                if (redWeight > 0) {
+                    const r = Math.round(lerpValue(16, 239, redWeight));
+                    const g = Math.round(lerpValue(185, 68, redWeight));
+                    const b = Math.round(lerpValue(129, 68, redWeight));
+                    const bondAlpha = lerpValue(0.45, 0.88, redWeight) * bondPulse;
+                    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${bondAlpha})`;
+                    ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+                    ctx.shadowBlur = 14;
+                    ctx.lineWidth = lerpValue(2.2, 3.5, redWeight);
+                } else {
+                    ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+                    ctx.shadowColor = 'rgba(16, 185, 129, 0.8)';
+                    ctx.shadowBlur = 6;
+                    ctx.lineWidth = 2.2;
+                }
 
                 ctx.beginPath();
                 ctx.moveTo(p1.x, p1.y);
@@ -3063,22 +3090,26 @@
             });
             ctx.shadowBlur = 0;
 
-            // Cleavage plane + like-charge repulsion after slip alignment
+            // Cleavage plane + brief repulsion visuals during separation (fade out before cleaved)
             const { slipEnd } = getNaClCleavePhaseBounds();
-            if (cleaveProgress > slipEnd) {
-                drawNaClLikeChargeRepulsionLines(ctx, cleaveProgress);
+            const repulsionAlpha = getNaClRepulsionVisualAlpha(cleaveProgress);
+            if (cleaveProgress > slipEnd || sbNaClCleaved) {
                 drawCrackLine(ctx, getNaClCleavagePlaneX(), sandboxCanvas.height * 0.16, sandboxCanvas.height * 0.84);
-                drawNaClCleavageRepulsion(ctx, cleaveProgress);
+            }
+            if (repulsionAlpha > 0) {
+                drawNaClLikeChargeRepulsionLines(ctx, cleaveProgress, repulsionAlpha);
+                drawNaClCleavageRepulsion(ctx, cleaveProgress, repulsionAlpha);
             }
 
             // Draw ions sorted by depth (painter's algorithm)
             let sorted = [...sbParticles].sort((a, b) => b.z - a.z);
             sorted.forEach(p => {
                 if (isNaClRepulsionInterfaceIon(p, cleaveProgress)) {
+                    const visAlpha = getNaClRepulsionVisualAlpha(cleaveProgress);
                     const glow = 0.45 + 0.55 * Math.sin(sbTimeAccumulator * 0.55 + p.id);
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, (p.isNa ? 7 : 11) + 6, 0, Math.PI * 2);
-                    ctx.strokeStyle = `rgba(239, 68, 68, ${0.35 + glow * 0.45})`;
+                    ctx.strokeStyle = `rgba(239, 68, 68, ${(0.35 + glow * 0.45) * visAlpha})`;
                     ctx.lineWidth = 3;
                     ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
                     ctx.shadowBlur = 14;
