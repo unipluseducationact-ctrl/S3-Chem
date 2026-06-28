@@ -794,6 +794,12 @@
         ];
         var sbGraphiteLayerDetached = [false, false, false];
         var sbGraphiteSlipAnim = null;
+        var sbMetalLayerOffsets = [];
+        var sbMetalLayerYValues = [];
+        var sbMetalLayerCount = 0;
+        var sbMetalSlipAnim = null;
+        var sbMetalSlipStep = 13.5;
+        var sbMetalBaseMaxX = 0;
         var sbNaClCleaved = false;
         var sbNaClRightBlockOffset = { x: 0, y: 0 };
         var sbNaClCleaveAnim = null;
@@ -1161,6 +1167,7 @@
             sbDeformationShear = 0;
             sbMalleableDeformed = false;
             resetGraphiteLayerState();
+            resetMetalLayerState();
             resetNaClCleaveState();
             resetCsClCleaveState();
             const condBtn = document.getElementById('btn-sb-conductivity');
@@ -1368,7 +1375,7 @@
                 html += formatItem(lineSpan('rgba(148, 163, 184, 0.25)', true), '晶胞輔助線', 'Unit Cell Wireframe');
             } else if (currentSandboxMode === 'metal') {
                 const seaSpan = '<span style="display:inline-block; width:20px; height:12px; background:linear-gradient(135deg, rgba(167,139,250,0.5), rgba(139,92,246,0.15)); border-radius:3px; vertical-align:middle; margin-right:8px;"></span>';
-                html += formatItem(circleSpan('#94a3b8', '#cbd5e1', '+'), '金屬離子 (Cu²⁺，帶正電荷)', 'Metal ion (Cu²⁺, positively charged)');
+                html += formatItem(circleSpan('#fbbf24', '#fcd34d', '+'), '金屬離子 (Cu²⁺，帶正電荷)', 'Metal ion (Cu²⁺, positively charged)');
                 html += formatItem(seaSpan, '離域電子海 (負電荷背景)', 'Delocalized electron sea (negative charge background)');
                 html += formatItem(electronSpan('#f472b6'), '離域電子 (e⁻，自由移動)', 'Delocalized electron (e⁻, free movement)');
                 if (sbConductivityEnabled) {
@@ -1865,6 +1872,9 @@
                     }
                 }
                 spawnMetalSeaElectrons(sbParticles, 45);
+                assignMetalLayers(sbParticles);
+                sbMetalSlipStep = scale * 0.45;
+                sbMetalBaseMaxX = Math.max(...sbParticles.map(p => p.ox3d));
             }
 
             // Update legend overlay dynamically
@@ -2587,6 +2597,108 @@
             ];
             sbGraphiteLayerDetached = [false, false, false];
             sbGraphiteSlipAnim = null;
+        }
+
+        function resetMetalLayerState() {
+            sbMetalLayerOffsets = [];
+            sbMetalLayerYValues = [];
+            sbMetalLayerCount = 0;
+            sbMetalSlipAnim = null;
+            sbMetalSlipStep = 13.5;
+            sbMetalBaseMaxX = 0;
+        }
+
+        function assignMetalLayers(particles) {
+            sbMetalLayerYValues = [...new Set(particles.map(p => Math.round(p.oy3d * 10) / 10))].sort((a, b) => a - b);
+            sbMetalLayerCount = sbMetalLayerYValues.length;
+            sbMetalLayerOffsets = new Array(sbMetalLayerCount).fill(0);
+            particles.forEach(p => {
+                const yKey = Math.round(p.oy3d * 10) / 10;
+                p.metalLayer = sbMetalLayerYValues.indexOf(yKey);
+            });
+        }
+
+        function getMetalLayerForPosition(oy3d) {
+            if (sbMetalLayerYValues.length === 0) return 0;
+            const yKey = Math.round(oy3d * 10) / 10;
+            let best = 0;
+            let bestDist = Infinity;
+            for (let i = 0; i < sbMetalLayerYValues.length; i++) {
+                const d = Math.abs(sbMetalLayerYValues[i] - yKey);
+                if (d < bestDist) {
+                    bestDist = d;
+                    best = i;
+                }
+            }
+            return best;
+        }
+
+        function getMetalSlipProgress() {
+            if (!sbMetalSlipAnim || !sbMetalSlipAnim.started) return 0;
+            const elapsed = performance.now() - sbMetalSlipAnim.startTime;
+            return Math.min(1, elapsed / sbMetalSlipAnim.duration);
+        }
+
+        function getMetalLayerShiftX(layer) {
+            let x = sbMetalLayerOffsets[layer] || 0;
+            if (sbMetalSlipAnim && sbMetalSlipAnim.started) {
+                const t = easeOutCubic(getMetalSlipProgress());
+                const fromX = sbMetalSlipAnim.fromOffsets[layer] || 0;
+                const toX = sbMetalSlipAnim.toOffsets[layer] || 0;
+                x = lerpValue(fromX, toX, t);
+            }
+            return x;
+        }
+
+        function getMetalLayerCompressY(layer) {
+            if (layer === 0) return 0;
+            const slipP = sbMetalSlipAnim && sbMetalSlipAnim.started ? easeOutCubic(getMetalSlipProgress()) : 0;
+            const hammerP = sbHammerAnimating ? Math.min(1, sbHammerOffset / 20) : 0;
+            const t = Math.max(slipP * 0.65, hammerP * 0.35);
+            return -layer * 2 * t;
+        }
+
+        function expandMetalElectronBounds(extraMaxX) {
+            const pad = 6;
+            sbDelocalizedElectrons.forEach(e => {
+                if (e.bounds) {
+                    e.bounds.maxX = Math.max(e.bounds.maxX, sbMetalBaseMaxX + extraMaxX + pad);
+                }
+            });
+        }
+
+        function startMetalSlipAnimation() {
+            const slipStep = sbMetalSlipStep;
+            const fromOffsets = [...sbMetalLayerOffsets];
+            const toOffsets = fromOffsets.map((x, layer) => {
+                if (layer === 0) return x;
+                return layer % 2 === 1 ? x + slipStep : x;
+            });
+            sbMetalSlipAnim = {
+                fromOffsets,
+                toOffsets,
+                started: false,
+                startTime: 0,
+                duration: 1700
+            };
+        }
+
+        function updateMetalSlipAnim() {
+            if (!sbMetalSlipAnim) return;
+
+            if (!sbMetalSlipAnim.started && sbHammerOffset > 8) {
+                sbMetalSlipAnim.started = true;
+                sbMetalSlipAnim.startTime = performance.now();
+            }
+
+            if (!sbMetalSlipAnim.started) return;
+
+            if (getMetalSlipProgress() >= 1) {
+                sbMetalLayerOffsets = [...sbMetalSlipAnim.toOffsets];
+                const maxOffset = Math.max(...sbMetalLayerOffsets, 0);
+                expandMetalElectronBounds(maxOffset);
+                sbMetalSlipAnim = null;
+            }
         }
 
         function computeGraphiteLayerFallScreenY(slipLayer, peelX, peelY) {
@@ -3631,27 +3743,38 @@
             const canvasH = sandboxCanvas.height;
             const zoom = getSandbox3DZoom();
 
+            updateMetalSlipAnim();
+
             if (!window.sbUserInteracted || !window.sbUserInteracted()) {
                 sbRotationTheta += 0.003 * vFactor * dt * 0.06;
             }
-            let shear = sbDeformationShear;
-            if (sbHammerAnimating) {
-                shear += Math.min(35, sbHammerOffset * 2.5);
-            }
             sbParticles.forEach(p => {
+                const layer = p.metalLayer || 0;
+                const shiftX = getMetalLayerShiftX(layer);
+                const compressY = getMetalLayerCompressY(layer);
                 const vx = Math.sin(sbTimeAccumulator * 0.2 + p.id) * vFactor * 2.5;
                 const vy = Math.cos(sbTimeAccumulator * 0.18 + p.id) * vFactor * 2.5;
                 const vz = Math.sin(sbTimeAccumulator * 0.16 + p.id) * vFactor * 2.5;
-                const proj = project3DTo2D(p.ox3d + shear + vx, p.oy3d + vy, p.oz3d + vz, w, canvasH, zoom);
+                const proj = project3DTo2D(p.ox3d + shiftX + vx, p.oy3d + compressY + vy, p.oz3d + vz, w, canvasH, zoom);
                 p.x = proj.x;
                 p.y = proj.y;
                 p.z = proj.z;
             });
 
             if (sbParticles.length > 0) {
-                const cx = sbParticles.reduce((sum, p) => sum + p.x, 0) / sbParticles.length;
-                const cy = sbParticles.reduce((sum, p) => sum + p.y, 0) / sbParticles.length;
-                const glowRadius = Math.max(w, canvasH) * 0.22;
+                let minX = Infinity;
+                let maxX = -Infinity;
+                let minY = Infinity;
+                let maxY = -Infinity;
+                sbParticles.forEach(p => {
+                    minX = Math.min(minX, p.x);
+                    maxX = Math.max(maxX, p.x);
+                    minY = Math.min(minY, p.y);
+                    maxY = Math.max(maxY, p.y);
+                });
+                const cx = (minX + maxX) / 2;
+                const cy = (minY + maxY) / 2;
+                const glowRadius = Math.max(maxX - minX, maxY - minY, 80) * 0.85;
                 const gradient = ctx.createRadialGradient(cx, cy, 8, cx, cy, glowRadius);
                 gradient.addColorStop(0, 'rgba(167, 139, 250, 0.18)');
                 gradient.addColorStop(0.55, 'rgba(139, 92, 246, 0.1)');
@@ -3677,8 +3800,11 @@
                     e.oy3d = Math.max(b.minY, Math.min(b.maxY, e.oy3d));
                     e.oz3d = Math.max(b.minZ, Math.min(b.maxZ, e.oz3d));
                 }
+                const eLayer = getMetalLayerForPosition(e.oy3d);
+                const eShiftX = getMetalLayerShiftX(eLayer);
+                const eCompressY = getMetalLayerCompressY(eLayer);
                 const driftX = sbConductivityEnabled ? 0.8 * dt : 0;
-                const proj = project3DTo2D(e.ox3d + shear + driftX, e.oy3d, e.oz3d, w, canvasH, zoom);
+                const proj = project3DTo2D(e.ox3d + eShiftX + driftX, e.oy3d + eCompressY, e.oz3d, w, canvasH, zoom);
                 electronProjected.push({ x: proj.x, y: proj.y, z: proj.z, idx });
             });
 
@@ -3698,10 +3824,10 @@
             sorted.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 11, 0, Math.PI * 2);
-                ctx.fillStyle = '#94a3b8';
-                ctx.strokeStyle = '#cbd5e1';
+                ctx.fillStyle = '#fbbf24';
+                ctx.strokeStyle = '#fcd34d';
                 ctx.lineWidth = 1;
-                ctx.shadowColor = 'rgba(148, 163, 184, 0.5)';
+                ctx.shadowColor = 'rgba(251, 191, 36, 0.55)';
                 ctx.shadowBlur = 6;
                 ctx.fill();
                 ctx.stroke();
@@ -3789,7 +3915,7 @@
         // 11. SHIER FORCE / HAMMER TESTING & ANIMATIONS
         // ==========================================
         function applyShearForceSandbox() {
-            if (sbHammerAnimating || sbGraphiteSlipAnim || sbNaClCleaveAnim) return;
+            if (sbHammerAnimating || sbGraphiteSlipAnim || sbMetalSlipAnim || sbNaClCleaveAnim) return;
             sbHammerAnimating = true;
             sbHammerOffset = 0;
 
@@ -3904,7 +4030,7 @@
                 targetMax = 20;
                 isShattered = true;
                 sbMalleableDeformed = true;
-                sbDeformationShear = Math.min(50, sbDeformationShear + 15);
+                startMetalSlipAnimation();
                 toastZh = '金屬延展！銅離子層在錘擊下發生滑移，離域電子海使結構可塑性變形而不碎裂（具延展性）！';
                 toastEn = 'Metal deformed! Copper ion layers slip under the hammer — delocalized electrons allow plastic deformation without shattering (malleable)!';
             }
