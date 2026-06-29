@@ -1010,3 +1010,41 @@ button.summary-topic-card {
   background: #38bdf8;
   color: #0f172a;
 }
+
+/* Quiz tab — full-viewport iframe embed */
+#quiz-page.quiz-embed-page {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding-top: var(--nav-offset);
+  overflow: hidden;
+  box-sizing: border-box;
+  min-height: 0;
+}
+
+#quiz-page.quiz-embed-page.active {
+  display: flex;
+}
+
+#quiz-page .quiz-embed-fs {
+  position: relative;
+  flex: 1 1 0%;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-color, #f7f9fb);
+}
+
+#quiz-page .quiz-embed-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: var(--bg-color, #f7f9fb);
+  touch-action: manipulation;
+  -webkit-transform: translateZ(0);
+}

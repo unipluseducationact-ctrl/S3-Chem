@@ -20,6 +20,7 @@ export function initPageController(options = {}) {
   const blankPage2 = document.getElementById("blank-page-2");
   const notesPage = document.getElementById("notes-page");
   const flashcardsPage = document.getElementById("flashcards-page");
+  const quizPage = document.getElementById("quiz-page");
   const settingsPage = document.getElementById("settings-page");
   const ionsPage = document.getElementById("ions-page");
 
@@ -41,6 +42,9 @@ export function initPageController(options = {}) {
     blank2: () => {
       if (blankPage2) blankPage2.classList.add("active");
     },
+    quiz: () => {
+      if (quizPage) quizPage.classList.add("active");
+    },
     flashcards: () => {
       if (flashcardsPage) flashcardsPage.classList.add("active");
     },
@@ -55,6 +59,7 @@ export function initPageController(options = {}) {
     if (interactiveLabPage) interactiveLabPage.classList.remove("active");
     if (blankPage2) blankPage2.classList.remove("active");
     if (notesPage) notesPage.classList.remove("active");
+    if (quizPage) quizPage.classList.remove("active");
     if (flashcardsPage) flashcardsPage.classList.remove("active");
     if (settingsPage) settingsPage.classList.remove("active");
     if (ionsPage) ionsPage.classList.remove("active");
@@ -96,6 +101,10 @@ export function initPageController(options = {}) {
       onSettingsPageShown();
     }
 
+    if (page === "quiz") {
+      requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+    }
+
     if (page === "flashcards" && typeof onFlashcardsPageShown === "function") {
       onFlashcardsPageShown();
     }
@@ -108,6 +117,7 @@ export function initPageController(options = {}) {
     tools: "blank1",
     lab: "lab",
     worksheet: "blank2",
+    quiz: "quiz",
     flashcards: "flashcards",
     summary: "settings",
   };

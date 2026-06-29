@@ -52,6 +52,9 @@ jobs:
           test -f dist/public/worksheets/cursor-chem/index.html
           test -f dist/public/worksheets/ch2-microscopic-world-1/worksheet.html
           test -f dist/public/worksheets/ch2-microscopic-world-1/pdf-question-bank.json
+          grep -q 'data-page="quiz"' dist/index.html
+          test -f dist/public/quiz/microscopic-world-i/quiz.html
+          test -f dist/public/quiz/microscopic-world-i/js/quizApp.js
           test -f dist/public/tools/flame-test-fireworks/assets/backgrounds/city-skyline-3.jpg
           test -f dist/public/three.min.js
 
