@@ -1011,9 +1011,8 @@ button.summary-topic-card {
   color: #0f172a;
 }
 
-/* Quiz tab — full-viewport iframe embed */
+/* Quiz tab — full-viewport iframe embed (visibility via .blank-page.active only) */
 #quiz-page.quiz-embed-page {
-  display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
