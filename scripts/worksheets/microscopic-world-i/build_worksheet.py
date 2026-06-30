@@ -145,7 +145,116 @@ def _split_trailing_question(text: str) -> tuple[str, str]:
     return text, ""
 
 
-def _format_isotope_abundance_table(stem: str) -> str | None:
+TABLE_PHRASE = re.compile(r"following table|table below|table shows|listed in the table", re.I)
+KNOWN_TABLE_HEADERS = [
+    "Number of protons",
+    "Number of neutrons",
+    "Number of electrons",
+    "Mass number",
+    "Relative abundance / %",
+    "Relative abundance",
+    "Electronic arrangement",
+    "Atomic number",
+    "Relative atomic mass",
+    "Melting point / C",
+    "Melting point / °C",
+    "Boiling point / C",
+    "Boiling point / °C",
+    "Electrical conductivity",
+    "Electrical conductivity in the solid state",
+    "Electrical conductivity in the liquid state",
+    "Solubility in water",
+    "Physical state at room temperature",
+    "Physical state under room conditions",
+    "Colour of the aqueous solution",
+    "Chemical formula of the product",
+    "Structure of the product",
+    "Does it conduct electricity?",
+    "Solid state",
+    "Liquid state",
+    "Aqueous solution",
+]
+
+
+def _make_table(headers: list[str], rows: list[list[str]]) -> dict:
+    return {"headers": headers, "rows": rows}
+
+
+def _table_result(
+    stem: str, start: int, end: int, table: dict
+) -> tuple[str, str, dict]:
+    prefix = stem[:start].rstrip()
+    _, suffix = _split_trailing_question(stem[end:].strip())
+    return prefix, suffix, table
+
+
+def _format_table_notation(table: dict) -> dict:
+    return {
+        "headers": [format_isotope_notation(h) for h in table.get("headers", [])],
+        "rows": [
+            [format_isotope_notation(c) for c in row] for row in table.get("rows", [])
+        ],
+    }
+
+
+def _extract_particle_row_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Particle\s+Number of protons\s+Number of neutrons\s+Number of electrons\s+"
+        r"((?:[A-Z]\s+\d+\s+\d+\s+\d+\s*)+)",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    rows = re.findall(r"([A-Z])\s+(\d+)\s+(\d+)\s+(\d+)", m.group(1))
+    if len(rows) < 2:
+        return None
+    table = _make_table(
+        ["Particle", "Protons", "Neutrons", "Electrons"],
+        [[a, p, n, e] for a, p, n, e in rows],
+    )
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_particle_xyz_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"((?:[A-Z]\s+){1,}[A-Z])\s+"
+        r"Number of protons\s+((?:\d+\s+)+)"
+        r"Number of neutrons\s+((?:\d+\s+)+)"
+        r"Number of electrons\s+((?:\d+\s+)+)",
+        stem,
+        re.I,
+    )
+    if not m:
+        m = re.search(
+            r"((?:[A-Z]\s+){2,}[A-Z])\s+"
+            r"Number of protons\s+((?:\d+\s+)+)"
+            r"Number of neutrons\s+((?:\d+\s+)+)"
+            r"Number of electrons\s+((?:\d+\s+)+)",
+            stem,
+            re.I,
+        )
+    if not m:
+        return None
+    labels = m.group(1).split()
+    protons = m.group(2).split()
+    neutrons = m.group(3).split()
+    electrons = m.group(4).split()
+    n = len(labels)
+    if n < 2 or len(protons) < n or len(neutrons) < n or len(electrons) < n:
+        return None
+    table = _make_table(
+        [""] + labels,
+        [
+            ["Protons", *protons[:n]],
+            ["Neutrons", *neutrons[:n]],
+            ["Electrons", *electrons[:n]],
+        ],
+    )
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_isotope_abundance_table(stem: str) -> tuple[str, str, dict] | None:
     m = re.search(
         r"(Number of protons\s+Number of neutrons\s+Relative abundance\s*/?\s*%?\s*)"
         r"((?:Isotope\s+\d+\s+\d+\s+\d+\s+[\d.]+\s*)+)",
@@ -157,151 +266,386 @@ def _format_isotope_abundance_table(stem: str) -> str | None:
     rows = ISO_TOPE_ROW.findall(m.group(2))
     if not rows:
         return None
-    prefix = stem[: m.start()].rstrip()
-    table = "Protons | Neutrons | Abundance %\n" + "\n".join(
-        f"Isotope {iso}: {p} | {n} | {ab}" for iso, p, n, ab in rows
+    table = _make_table(
+        ["Isotope", "Protons", "Neutrons", "Abundance %"],
+        [[f"Isotope {iso}", p, n, ab] for iso, p, n, ab in rows],
     )
-    _, suffix = _split_trailing_question(stem[m.end() :])
-    return f"{prefix}\n\n{table}\n\n{suffix}".strip() if suffix else f"{prefix}\n\n{table}".strip()
+    return _table_result(stem, m.start(), m.end(), table)
 
 
-def _format_particle_xyz_table(stem: str) -> str | None:
+def _extract_silicon_isotope_table(stem: str) -> tuple[str, str, dict] | None:
     m = re.search(
-        r"((?:[A-Z]\s+){1,}[A-Z])\s+"
-        r"Number of protons\s+((?:\d+\s+)+)"
-        r"Number of neutrons\s+((?:\d+\s+)+)"
-        r"(?:Number of electrons\s+((?:\d+\s+)+))?",
+        r"Isotope\s+Relative abundance\s*/?\s*%\s+"
+        r"((?:\d{1,3}[A-Z][a-z]?\s+[\d.]+\s*)+)",
         stem,
         re.I,
     )
     if not m:
         return None
-    labels = m.group(1).split()
-    protons = m.group(2).split()
-    neutrons = m.group(3).split()
-    electrons = (m.group(4) or "").split()
-    n = len(labels)
-    if n < 2 or len(protons) < n or len(neutrons) < n:
+    rows = re.findall(r"(\d{1,3})([A-Z][a-z]?)\s+([\d.]+)", m.group(1))
+    if len(rows) < 2:
         return None
-    prefix = stem[: m.start()].rstrip()
-    lines = [" | ".join([""] + labels)]
-    lines.append("Protons | " + " | ".join(protons[:n]))
-    lines.append("Neutrons | " + " | ".join(neutrons[:n]))
-    if len(electrons) >= n:
-        lines.append("Electrons | " + " | ".join(electrons[:n]))
-    _, suffix = _split_trailing_question(stem[m.end() :])
-    table = "\n".join(lines)
-    return f"{prefix}\n\n{table}\n\n{suffix}".strip() if suffix else f"{prefix}\n\n{table}".strip()
+    table = _make_table(
+        ["Isotope", "Relative abundance / %"],
+        [[f"{mass}{sym}", ab] for mass, sym, ab in rows],
+    )
+    return _table_result(stem, m.start(), m.end(), table)
 
 
-def _format_atom_wxyz_table(stem: str) -> str | None:
+def _extract_atom_wxyz_table(stem: str) -> tuple[str, str, dict] | None:
     m = re.search(
         r"Atom\s+Number of neutrons\s+Number of electrons\s+Mass number\s+"
-        r"((?:[A-Z]\s+\d+\s+\d+\s+\d+\s*)+)",
+        r"((?:[A-Z]\s+(?:\d+\s+){2,3})+)",
         stem,
         re.I,
     )
     if not m:
         return None
-    rows = re.findall(r"([A-Z])\s+(\d+)\s+(\d+)\s+(\d+)", m.group(1))
-    if not rows:
-        return None
-    prefix = stem[: m.start()].rstrip()
-    lines = ["Atom | Neutrons | Electrons | Mass number"]
-    lines.extend(f"{a} | {n} | {e} | {mass}" for a, n, e, mass in rows)
-    _, suffix = _split_trailing_question(stem[m.end() :])
-    table = "\n".join(lines)
-    return f"{prefix}\n\n{table}\n\n{suffix}".strip() if suffix else f"{prefix}\n\n{table}".strip()
+    data = m.group(1)
+    rows_4 = re.findall(r"([A-Z])\s+(\d+)\s+(\d+)\s+(\d+)", data)
+    if rows_4:
+        table = _make_table(
+            ["Atom", "Neutrons", "Electrons", "Mass number"],
+            [[a, n, e, mass] for a, n, e, mass in rows_4],
+        )
+        return _table_result(stem, m.start(), m.end(), table)
+    rows_2 = re.findall(r"([A-Z])\s+(\d+)\s+(\d+)", data)
+    if rows_2:
+        table = _make_table(
+            ["Atom", "Neutrons", "Electrons", "Mass number"],
+            [[a, n, e, str(int(n) + int(e))] for a, n, e in rows_2],
+        )
+        return _table_result(stem, m.start(), m.end(), table)
+    return None
 
 
-def _format_species_table(stem: str) -> str | None:
+def _extract_atom_ion_table(stem: str) -> tuple[str, str, dict] | None:
     m = re.search(
-        r"Species\s+Electronic arrangement\s+((?:[A-Z0-9+\-]+\s+[\d,]+\s*)+)",
+        r"Atom/ion\s+Number of neutrons\s+Number of electrons\s+"
+        r"((?:[A-Z][A-Z0-9+\-]*\s+\d+\s+\d+\s*)+)",
         stem,
         re.I,
     )
     if not m:
         return None
-    rows = re.findall(r"([A-Z0-9+\-]+)\s+([\d,]+)", m.group(1))
-    if not rows:
+    rows = re.findall(r"([A-Z][A-Z0-9+\-]*)\s+(\d+)\s+(\d+)", m.group(1))
+    if len(rows) < 2:
         return None
-    prefix = stem[: m.start()].rstrip()
-    lines = ["Species | Electronic arrangement"] + [
-        f"{sp} | {arr}" for sp, arr in rows
-    ]
-    _, suffix = _split_trailing_question(stem[m.end() :])
-    table = "\n".join(lines)
-    return f"{prefix}\n\n{table}\n\n{suffix}".strip() if suffix else f"{prefix}\n\n{table}".strip()
+    table = _make_table(
+        ["Atom/ion", "Neutrons", "Electrons"],
+        [[a, n, e] for a, n, e in rows],
+    )
+    return _table_result(stem, m.start(), m.end(), table)
 
 
-def _format_complete_table(stem: str) -> str | None:
-    if not re.search(r"Complete the following table", stem, re.I):
-        return None
-    m = re.match(r"(Complete the following table[:\s]+)(.+)", stem, re.I | re.S)
-    if not m:
-        return None
-    header_part = m.group(1).strip()
-    rest = m.group(2).strip()
-    if "\n" in rest and rest.count("\n") >= 2:
-        return None
-    labels = re.findall(
-        r"[A-Z][a-z]+(?:\s+of\s+[a-z]+)?(?:\s+[a-z]+)*|No\.\s+of\s+\w+|"
-        r"Full atomic symbol|Electronic arrangement|Name of element|"
-        r"Physical state|Color|Type\(s\) of chemical bonding|"
-        r"Particle|Proton|Neutron|Electron|Mass number|Atomic number|"
-        r"Period number|Group number|Element|Substance|State at room",
-        rest,
+def _extract_species_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Species\s+Electronic arrangement\s+((?:[A-Z][A-Z0-9+\-]*\s+[\d,]+\s*)+)",
+        stem,
         re.I,
     )
-    if len(labels) < 3:
+    if not m:
         return None
-    # Find where numeric tail starts after last label
-    tail_start = 0
-    for label in labels:
-        idx = rest.find(label, tail_start)
-        if idx >= 0:
-            tail_start = idx + len(label)
-    tail = rest[tail_start:].strip()
-    if not tail or not re.search(r"\d", tail):
+    rows = re.findall(r"([A-Z][A-Z0-9+\-]*)\s+([\d,]+)", m.group(1))
+    if len(rows) < 2:
         return None
-    nums = re.findall(r"[\d.]+|[A-Z][a-z]+(?:\s+\d+[A-Za-z]+)?", tail)
-    if len(nums) < 4:
-        return None
-    chunk = max(1, len(nums) // len(labels))
-    lines = [header_part, ""]
-    for i, label in enumerate(labels):
-        start = i * chunk
-        end = start + chunk if i < len(labels) - 1 else len(nums)
-        row_vals = nums[start:end]
-        if row_vals:
-            lines.append(f"{label}: {' | '.join(row_vals)}")
-    return "\n".join(lines).strip()
+    table = _make_table(
+        ["Species", "Electronic arrangement"],
+        [[sp, arr] for sp, arr in rows],
+    )
+    return _table_result(stem, m.start(), m.end(), table)
 
 
-def format_table_in_stem(stem: str) -> str:
-    for fn in (
-        _format_isotope_abundance_table,
-        _format_atom_wxyz_table,
-        _format_particle_xyz_table,
-        _format_species_table,
-        _format_complete_table,
-    ):
-        out = fn(stem)
-        if out:
-            return out
-    if re.search(r"following table|table below|table shows", stem, re.I):
-        table_m = re.search(
-            r"((?:Number of|Relative abundance|Isotope|Atom|Species|Substance|Element)\s+.+)",
+def _parse_entity_value_pairs(data: str) -> list[list[str]]:
+    pairs = re.findall(
+        r"([A-Z][A-Z0-9+\-]*)\s+([\d,.]+(?:,\s*[\d.]+)*|[^\dA-Z][^A-Z]*?)"
+        r"(?=\s+[A-Z][A-Z0-9+\-]*\s+|\s*$)",
+        data,
+    )
+    if len(pairs) >= 2:
+        return [[ent.strip(), val.strip()] for ent, val in pairs]
+    return []
+
+
+def _extract_label_value_grid(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"(Element|Atom)\s+"
+        r"(Atomic number|Electronic arrangement)\s+"
+        r"(.+?)"
+        r"(?=\s+Which of|\s+What is|\s+At \d|\s+Give )",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    col1, col2, data = m.group(1), m.group(2), m.group(3).strip()
+    rows = _parse_entity_value_pairs(data)
+    if len(rows) < 2:
+        return None
+    table = _make_table([col1, col2], rows)
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_compound_colour_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Compound\s+Colour of the aqueous solution\s+"
+        r"((?:[A-Z]{2,}\s+[a-z]+(?:\s+[a-z]+)*\s*)+)",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    rows = re.findall(r"([A-Z]{2,})\s+([a-z]+(?:\s+[a-z]+)*)", m.group(1))
+    if len(rows) < 2:
+        return None
+    table = _make_table(
+        ["Compound", "Colour of the aqueous solution"],
+        [[c, colour] for c, colour in rows],
+    )
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_element_pair_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Element\s+Atomic number\s+Relative atomic mass\s+"
+        r"((?:[A-Z]\s+\d+\.?\d*\s+\d+\.?\d*\s*)+)",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    rows = re.findall(r"([A-Z])\s+([\d.]+)\s+([\d.]+)", m.group(1))
+    if len(rows) < 2:
+        return None
+    table = _make_table(
+        ["Element", "Atomic number", "Relative atomic mass"],
+        [[a, z, ram] for a, z, ram in rows],
+    )
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_metal_mp_bp_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Metal\s+Melting point\s*/?\s*C\s+Boiling point\s*/?\s*C\s+"
+        r"((?:[A-Z][a-z]+\s+\d+\s+\d+\s*)+)",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    rows = re.findall(r"([A-Z][a-z]+)\s+(\d+)\s+(\d+)", m.group(1))
+    if len(rows) < 2:
+        return None
+    table = _make_table(
+        ["Metal", "Melting point / °C", "Boiling point / °C"],
+        [[metal, mp, bp] for metal, mp, bp in rows],
+    )
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_substance_property_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Substance\s+"
+        r"(Physical state at room temperature\s+Solubility in water|"
+        r"Physical state under room conditions\s+Does it conduct electricity\?|"
+        r"Melting point\s*/?\s*C\s+Electrical conductivity|"
+        r"Electrical conductivity)\s+"
+        r"(.+?)"
+        r"(?=\s+Which of|\s+What is|\s+At \d|\s+Consider )",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    headers_raw = m.group(1)
+    data = m.group(2).strip()
+    header_parts = re.split(
+        r"(Physical state at room temperature|Physical state under room conditions|"
+        r"Does it conduct electricity\?|Melting point\s*/?\s*C|"
+        r"Electrical conductivity in the solid state|"
+        r"Electrical conductivity in the liquid state|"
+        r"Solubility in water|Electrical conductivity)",
+        headers_raw,
+        flags=re.I,
+    )
+    col_headers = ["Substance"] + [h.strip() for h in header_parts if h.strip()]
+    row_re = re.compile(
+        r"\b([A-Z])\s+"
+        r"((?:(?! [A-Z] ).)+?)"
+        r"(?=\s+[A-Z]\s+|\s+Which|\s+What|\s*$)",
+        re.I,
+    )
+    rows = []
+    for rm in row_re.finditer(data):
+        label = rm.group(1)
+        vals = re.split(r"\s{2,}|\s+(?=[A-Z][a-z])", rm.group(2).strip())
+        vals = [v.strip() for v in vals if v.strip()]
+        if vals:
+            rows.append([label, *vals])
+    if len(rows) < 2:
+        return None
+    while len(col_headers) < len(rows[0]):
+        col_headers.append(f"Col {len(col_headers)}")
+    table = _make_table(col_headers[: len(rows[0])], rows)
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_chloride_mp_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Chloride\s+((?:NaCl|SiCl4|PCl3|[A-Z][a-z]+)\s+\d+\s*)+"
+        r"Melting point\s*/?\s*C\s+",
+        stem,
+        re.I,
+    )
+    if m:
+        before = stem[: m.start()]
+        mp_label = re.search(r"Melting point\s*/?\s*C", stem[m.start() :], re.I)
+        if not mp_label:
+            return None
+        data_m = re.search(
+            r"Melting point\s*/?\s*C\s+((?:[A-Za-z0-9]+\s+\d+\s*)+)",
             stem,
             re.I,
         )
-        if table_m:
-            prefix = stem[: table_m.start()].rstrip()
-            table_part, suffix = _split_trailing_question(table_m.group(1))
-            if suffix:
-                return f"{prefix}\n\n{table_part}\n\n{suffix}".strip()
-            return f"{prefix}\n\n{table_part}".strip()
-    return stem
+    else:
+        data_m = re.search(
+            r"(?:Melting point\s*/?\s*C|melting points of two chlorides\.\s+)"
+            r"\s*((?:Chloride of\s+[A-Z]\s+\d+\s*)+)",
+            stem,
+            re.I,
+        )
+    if not data_m:
+        data_m = re.search(
+            r"Melting point\s*/?\s*C\s+((?:NaCl|SiCl4|PCl3|[A-Za-z0-9 ]+\s+\d+\s*)+)",
+            stem,
+            re.I,
+        )
+    if not data_m:
+        return None
+    data = data_m.group(1)
+    rows = re.findall(r"([A-Za-z0-9 ]+?)\s+(\d+)\s*", data)
+    rows = [[n.strip(), v] for n, v in rows if n.strip()]
+    if len(rows) < 2:
+        return None
+    table = _make_table(["Chloride", "Melting point / °C"], rows)
+    start = data_m.start()
+    end = data_m.end()
+    prefix = stem[:start].rstrip()
+  # trim header noise from prefix
+    prefix = re.sub(r"Melting point\s*/?\s*C\s*$", "", prefix, flags=re.I).rstrip()
+    _, suffix = _split_trailing_question(stem[end:].strip())
+    return prefix, suffix, table
+
+
+def _extract_element_product_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Element\s+Chemical formula of the product\s+Structure of the product\s+"
+        r"((?:[A-Z]\s+[A-Z0-9]+\s+.+?(?=\s+[A-Z]\s+[A-Z]|Y No product|Z ZI)\s*)+)",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    data = m.group(1)
+    rows = []
+    for part in re.split(r"(?=[A-Z]\s)", data):
+        part = part.strip()
+        if not part:
+            continue
+        rm = re.match(
+            r"([A-Z])\s+(.+?)\s+(Simple molecular structure|Giant ionic structure|No product forms\s*/?)",
+            part,
+            re.I,
+        )
+        if rm:
+            rows.append([rm.group(1), rm.group(2).strip(), rm.group(3).strip()])
+    if len(rows) < 2:
+        return None
+    table = _make_table(
+        ["Element", "Chemical formula of the product", "Structure of the product"],
+        rows,
+    )
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_conductivity_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Substance\s+Electrical conductivity\s+"
+        r"((?:[A-Z]\s+.+?(?=\s+[A-Z]\s+|\s+Which)\s*)+)",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    rows = []
+    for rm in re.finditer(
+        r"([A-Z])\s+(Conducts[^Y]*?|Poor[^X]*?|Good[^Y]*?|Insoluble[^W]*?)"
+        r"(?=\s+[A-Z]\s+|\s+Which|\s*$)",
+        m.group(1),
+        re.I,
+    ):
+        rows.append([rm.group(1), " ".join(rm.group(2).split())])
+    if len(rows) < 2:
+        return None
+    table = _make_table(["Substance", "Electrical conductivity"], rows)
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_generic_table(stem: str) -> tuple[str, str, dict] | None:
+    if not TABLE_PHRASE.search(stem):
+        return None
+    table_m = re.search(
+        r"((?:Number of|Relative abundance|Isotope|Atom|Species|Substance|Element|Metal|Chloride|Compound)\s+.+)",
+        stem,
+        re.I,
+    )
+    if not table_m:
+        return None
+    table_part, suffix = _split_trailing_question(table_m.group(1))
+    if not suffix or len(table_part) < 20:
+        return None
+    prefix = stem[: table_m.start()].rstrip()
+    pairs = _parse_entity_value_pairs(table_part)
+    if len(pairs) >= 2:
+        header_m = re.match(
+            r"(Element|Atom|Species|Metal|Compound|Chloride|Substance)\s+(.+?)\s+"
+            r"(?=[A-Z][A-Z0-9+\-]*\s+)",
+            table_part,
+            re.I,
+        )
+        if header_m:
+            table = _make_table(
+                [header_m.group(1), header_m.group(2).strip()],
+                pairs,
+            )
+            return prefix, suffix, table
+    return None
+
+
+def extract_stem_table(stem: str) -> tuple[str, str, dict | None]:
+    for fn in (
+        _extract_particle_row_table,
+        _extract_particle_xyz_table,
+        _extract_isotope_abundance_table,
+        _extract_silicon_isotope_table,
+        _extract_atom_wxyz_table,
+        _extract_atom_ion_table,
+        _extract_species_table,
+        _extract_label_value_grid,
+        _extract_compound_colour_table,
+        _extract_element_pair_table,
+        _extract_metal_mp_bp_table,
+        _extract_substance_property_table,
+        _extract_chloride_mp_table,
+        _extract_element_product_table,
+        _extract_conductivity_table,
+        _extract_generic_table,
+    ):
+        result = fn(stem)
+        if result:
+            intro, suffix, table = result
+            return intro, suffix, table
+    return stem, "", None
 
 
 def cleanup_graph_stem_noise(stem: str) -> str:
@@ -325,11 +669,16 @@ def cleanup_graph_stem_noise(stem: str) -> str:
     return f"{prefix}\n\n{cleaned}".strip() if cleaned else prefix
 
 
-def format_stem_pipeline(stem: str) -> str:
+def format_stem_pipeline(stem: str) -> tuple[str, dict | None]:
     stem = cleanup_graph_stem_noise(stem)
-    stem = format_table_in_stem(stem)
-    stem = format_stem_for_display(stem)
-    return format_isotope_notation(stem)
+    intro, suffix, table = extract_stem_table(stem)
+    parts = [p for p in (intro, suffix) if p]
+    combined = "\n\n".join(parts)
+    combined = format_stem_for_display(combined)
+    combined = format_isotope_notation(combined)
+    if table:
+        table = _format_table_notation(table)
+    return combined, table
 
 
 def is_bare_multi_diagram_mc(stem: str, options: list) -> bool:
@@ -733,16 +1082,20 @@ def lq_to_fill(item: dict) -> dict:
                 {"type": "text", "value": f"({i}) "},
                 {"type": "blank", "accept": answer_variants(p)},
             ]})
-    return {
+    stem, stem_table = format_stem_pipeline(item["stem"])
+    out = {
         "id": item["id"],
         "section": item["section"],
         "format": "fill",
         "difficulty": marks_difficulty(marks),
-        "stem": format_stem_pipeline(item["stem"]),
+        "stem": stem,
         "lines": lines,
         "hint": f"See {item.get('sourceRef', 'notes')}. ({marks} mark{'s' if marks!=1 else ''})",
         "sourceRef": item.get("sourceRef", ""),
     }
+    if stem_table:
+        out["stemTable"] = stem_table
+    return out
 
 
 def mc_to_item(q: dict) -> dict | None:
@@ -750,10 +1103,11 @@ def mc_to_item(q: dict) -> dict | None:
         return None
     raw_stem = q["stem"]
     raw_options = q["options"]
+    stem_table = None
     if is_combination_table_mcq(raw_stem, raw_options):
         ncol = _infer_combination_ncol(raw_options, KNOWN_COMBINATION_PHRASES)
         combo_stem = format_combination_stem(raw_stem, ncol)
-        stem = format_stem_pipeline(combo_stem)
+        stem, stem_table = format_stem_pipeline(combo_stem)
         options = [
             {
                 "key": o["key"],
@@ -764,7 +1118,7 @@ def mc_to_item(q: dict) -> dict | None:
             for o in raw_options
         ]
     else:
-        stem = format_stem_pipeline(raw_stem)
+        stem, stem_table = format_stem_pipeline(raw_stem)
         options = [
             {"key": o["key"], "text": format_isotope_notation(o.get("text", ""))}
             for o in raw_options
@@ -780,6 +1134,8 @@ def mc_to_item(q: dict) -> dict | None:
         "hint": q.get("hint") or "Review your notes.",
         "sourceRef": q.get("sourceRef", q["id"]),
     }
+    if stem_table:
+        item["stemTable"] = stem_table
     files = q.get("imageFiles") or []
     if files:
         item["_imageFile"] = files[0]
@@ -918,6 +1274,67 @@ def patch_quiz_utils(text: str) -> str:
         'return local === "zh-Hant" ? "zh-Hant" : "zh";',
         'return local === "zh-Hant" || local === "zh-HK" ? "zh-Hant" : "zh";',
     )
+    if "export function splitStemText" not in text:
+        text += '''
+
+export function splitStemText(stem) {
+  const parts = String(stem || "")
+    .split(/\\n\\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (parts.length <= 1) return { intro: stem || "", suffix: "" };
+  if (parts.length === 2) return { intro: parts[0], suffix: parts[1] };
+  return { intro: parts[0], suffix: parts.slice(1).join("\\n\\n") };
+}
+
+export function parsePipeTableFromStem(stem) {
+  const lines = String(stem || "")
+    .split("\\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  const pipeIdx = lines.map((l, i) => (l.includes("|") ? i : -1)).filter((i) => i >= 0);
+  if (pipeIdx.length < 2) return null;
+  const first = pipeIdx[0];
+  const last = pipeIdx[pipeIdx.length - 1];
+  const pipeLines = lines.slice(first, last + 1);
+  const headers = pipeLines[0].split("|").map((c) => c.trim());
+  const rows = pipeLines.slice(1).map((line) => line.split("|").map((c) => c.trim()));
+  return {
+    intro: lines.slice(0, first).join("\\n\\n"),
+    suffix: lines.slice(last + 1).join("\\n\\n"),
+    table: { headers, rows },
+  };
+}
+
+export function renderStemTableHtml(table) {
+  const headers = table?.headers || [];
+  const rows = table?.rows || [];
+  if (!rows.length) return "";
+  const useHeaderRow = headers.length > 0;
+  let html = '<div class="overflow-x-auto my-4"><table class="quiz-stem-table">';
+  if (useHeaderRow) {
+    html += "<thead><tr>";
+    for (const h of headers) {
+      html += `<th>${escHtml(h)}</th>`;
+    }
+    html += "</tr></thead>";
+  }
+  html += "<tbody>";
+  for (const row of rows) {
+    html += "<tr>";
+    row.forEach((cell, i) => {
+      const rowLabel =
+        (useHeaderRow && headers[0] === "" && i === 0) || (!useHeaderRow && i === 0);
+      const tag = rowLabel ? "th" : "td";
+      const cls = tag === "td" ? ' class="tabular-nums"' : "";
+      html += `<${tag}${cls}>${escHtml(cell)}</${tag}>`;
+    });
+    html += "</tr>";
+  }
+  html += "</tbody></table></div>";
+  return html;
+}
+'''
     return text
 
 
@@ -953,6 +1370,51 @@ def patch_quiz_app(text: str, locale: str) -> str:
         text = text.replace(
             "Several concepts need consolidation. Review Snell's law, refractive index, ray paths, and dispersion before the next round.",
             "部分課題需加強。請重溫原子結構、化學鍵與物質結構性質，再生成新一輪題目。",
+        )
+    if "splitStemText" not in text:
+        text = text.replace(
+            "  filterQuizPool,\n} from \"./quizUtils.js\";",
+            "  filterQuizPool,\n  splitStemText,\n  parsePipeTableFromStem,\n  renderStemTableHtml,\n} from \"./quizUtils.js\";",
+        )
+        text = text.replace(
+            """      const stem = document.createElement("p");
+      stem.className =
+        "split-text-target font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-1 leading-tight whitespace-pre-line";
+      stem.textContent = q.stem;
+      wrap.appendChild(stem);""",
+            """      const stemClass =
+        "split-text-target font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight whitespace-pre-line";
+
+      function appendStemParagraph(text, extraClass = "mb-1") {
+        if (!text) return;
+        const p = document.createElement("p");
+        p.className = `${stemClass} ${extraClass}`;
+        p.textContent = text;
+        wrap.appendChild(p);
+      }
+
+      let table = q.stemTable;
+      let intro = q.stem;
+      let suffix = "";
+      if (table) {
+        const split = splitStemText(q.stem);
+        intro = split.intro;
+        suffix = split.suffix;
+      } else {
+        const parsed = parsePipeTableFromStem(q.stem);
+        if (parsed?.table?.rows?.length) {
+          intro = parsed.intro;
+          suffix = parsed.suffix;
+          table = parsed.table;
+        }
+      }
+      appendStemParagraph(intro);
+      if (table?.rows?.length) {
+        const tableWrap = document.createElement("div");
+        tableWrap.innerHTML = renderStemTableHtml(table);
+        wrap.appendChild(tableWrap);
+      }
+      appendStemParagraph(suffix, q.stemZh ? "mb-1" : "mb-4");""",
         )
     return text
 
@@ -1020,6 +1482,27 @@ def patch_quiz_html(html: str, locale: str) -> str:
         count=1,
     )
     html = html.replace("</div>\n</div>\n</main>", "</div>\n</main>", 1)
+    if ".quiz-stem-table" not in html:
+        html = html.replace(
+            ".quiz-bank-matrix .cell-hit { font-weight: 700; color: #004e9f; }\n@media print {",
+            """.quiz-bank-matrix .cell-hit { font-weight: 700; color: #004e9f; }
+.quiz-stem-table {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+  background: #ffffff; border-radius: 0.75rem; overflow: hidden;
+  border: 1px solid rgba(193, 198, 213, 0.55);
+}
+.quiz-stem-table th, .quiz-stem-table td {
+  border: 1px solid rgba(193, 198, 213, 0.45); padding: 0.5rem 0.75rem; text-align: center;
+}
+.quiz-stem-table thead th {
+  background: rgba(242, 244, 246, 0.95); font-weight: 600; color: #191c1e;
+}
+.quiz-stem-table tbody th {
+  background: rgba(242, 244, 246, 0.7); font-weight: 600; text-align: left;
+}
+.quiz-stem-table td.tabular-nums { font-variant-numeric: tabular-nums; }
+@media print {""",
+        )
     if locale == "en":
         html = html.replace("<title>Quiz — replace chapter title</title>", "<title>Microscopic World I · Worksheet</title>")
         html = html.replace("CH · CHAPTER LABEL", "Topic 2 · Microscopic World I")

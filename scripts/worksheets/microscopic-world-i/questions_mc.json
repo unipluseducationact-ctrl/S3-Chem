@@ -336,7 +336,7 @@
     "chapter": 5,
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The following table shows the number of neutrons, number of electrons and the mass number of four atoms (W, X, Y and Z). Atom Number of neutrons Number of electrons Mass number W 8 8 X 10 20 Y 9 19 Z 9 17 Which of the following pairs of atoms are isotopes?",
+    "stem": "The following table shows the number of neutrons, number of electrons and the mass number of four atoms (W, X, Y and Z). Atom Number of neutrons Number of electrons Mass number W 8 8 16 X 10 10 20 Y 9 10 19 Z 9 8 17 Which of the following pairs of atoms are isotopes?",
     "options": [
       {
         "key": "A",

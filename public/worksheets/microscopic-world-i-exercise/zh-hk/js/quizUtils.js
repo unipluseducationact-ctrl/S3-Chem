@@ -201,3 +201,62 @@ export function modelAnswerText(q) {
   const zh = opt?.textZh ? `${q.answer}. ${opt.textZh}` : "";
   return { en, zh };
 }
+
+
+export function splitStemText(stem) {
+  const parts = String(stem || "")
+    .split(/\n\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (parts.length <= 1) return { intro: stem || "", suffix: "" };
+  if (parts.length === 2) return { intro: parts[0], suffix: parts[1] };
+  return { intro: parts[0], suffix: parts.slice(1).join("\n\n") };
+}
+
+export function parsePipeTableFromStem(stem) {
+  const lines = String(stem || "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  const pipeIdx = lines.map((l, i) => (l.includes("|") ? i : -1)).filter((i) => i >= 0);
+  if (pipeIdx.length < 2) return null;
+  const first = pipeIdx[0];
+  const last = pipeIdx[pipeIdx.length - 1];
+  const pipeLines = lines.slice(first, last + 1);
+  const headers = pipeLines[0].split("|").map((c) => c.trim());
+  const rows = pipeLines.slice(1).map((line) => line.split("|").map((c) => c.trim()));
+  return {
+    intro: lines.slice(0, first).join("\n\n"),
+    suffix: lines.slice(last + 1).join("\n\n"),
+    table: { headers, rows },
+  };
+}
+
+export function renderStemTableHtml(table) {
+  const headers = table?.headers || [];
+  const rows = table?.rows || [];
+  if (!rows.length) return "";
+  const useHeaderRow = headers.length > 0;
+  let html = '<div class="overflow-x-auto my-4"><table class="quiz-stem-table">';
+  if (useHeaderRow) {
+    html += "<thead><tr>";
+    for (const h of headers) {
+      html += `<th>${escHtml(h)}</th>`;
+    }
+    html += "</tr></thead>";
+  }
+  html += "<tbody>";
+  for (const row of rows) {
+    html += "<tr>";
+    row.forEach((cell, i) => {
+      const rowLabel =
+        (useHeaderRow && headers[0] === "" && i === 0) || (!useHeaderRow && i === 0);
+      const tag = rowLabel ? "th" : "td";
+      const cls = tag === "td" ? ' class="tabular-nums"' : "";
+      html += `<${tag}${cls}>${escHtml(cell)}</${tag}>`;
+    });
+    html += "</tr>";
+  }
+  html += "</tbody></table></div>";
+  return html;
+}

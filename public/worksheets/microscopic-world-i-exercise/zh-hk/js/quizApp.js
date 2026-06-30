@@ -18,6 +18,9 @@ import {
   formatFilterLabel,
   buildQuizBankStats,
   filterQuizPool,
+  splitStemText,
+  parsePipeTableFromStem,
+  renderStemTableHtml,
 } from "./quizUtils.js";
 import {
   animateSplitText,
@@ -539,11 +542,39 @@ export function initQuiz() {
         wrap.appendChild(fig);
       }
 
-      const stem = document.createElement("p");
-      stem.className =
-        "split-text-target font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-1 leading-tight whitespace-pre-line";
-      stem.textContent = q.stem;
-      wrap.appendChild(stem);
+      const stemClass =
+        "split-text-target font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight whitespace-pre-line";
+
+      function appendStemParagraph(text, extraClass = "mb-1") {
+        if (!text) return;
+        const p = document.createElement("p");
+        p.className = `${stemClass} ${extraClass}`;
+        p.textContent = text;
+        wrap.appendChild(p);
+      }
+
+      let table = q.stemTable;
+      let intro = q.stem;
+      let suffix = "";
+      if (table) {
+        const split = splitStemText(q.stem);
+        intro = split.intro;
+        suffix = split.suffix;
+      } else {
+        const parsed = parsePipeTableFromStem(q.stem);
+        if (parsed?.table?.rows?.length) {
+          intro = parsed.intro;
+          suffix = parsed.suffix;
+          table = parsed.table;
+        }
+      }
+      appendStemParagraph(intro);
+      if (table?.rows?.length) {
+        const tableWrap = document.createElement("div");
+        tableWrap.innerHTML = renderStemTableHtml(table);
+        wrap.appendChild(tableWrap);
+      }
+      appendStemParagraph(suffix, q.stemZh ? "mb-1" : "mb-4");
 
       if (q.stemZh) {
         const stemZh = document.createElement("p");

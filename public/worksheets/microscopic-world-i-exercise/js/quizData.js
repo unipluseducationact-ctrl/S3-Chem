@@ -258,7 +258,7 @@ export const QUIZ_ITEMS = [
     "section": "atomic-structure",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The following table shows the\n\nnumber of neutrons, number of electrons and the mass number of four atoms (W, X, Y and Z). Atom Number of neutrons Number of electrons Mass number W 8 8 X 10 20 Y 9 19 Z 9 17\n\nWhich of the following pairs of atoms are isotopes?",
+    "stem": "The following table shows the number of neutrons, number of electrons and the mass number of four atoms (W, X, Y and Z).\n\nWhich of the following pairs of atoms are isotopes?",
     "options": [
       {
         "key": "A",
@@ -279,14 +279,48 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "C",
     "hint": "For an electrically neutral atom, the number of electrons is equal to the number of protons. W and Z have the same number of protons but different numbers of neutrons.",
-    "sourceRef": "ChemMCQ05012"
+    "sourceRef": "ChemMCQ05012",
+    "stemTable": {
+      "headers": [
+        "Atom",
+        "Neutrons",
+        "Electrons",
+        "Mass number"
+      ],
+      "rows": [
+        [
+          "W",
+          "8",
+          "8",
+          "16"
+        ],
+        [
+          "X",
+          "10",
+          "10",
+          "20"
+        ],
+        [
+          "Y",
+          "9",
+          "10",
+          "19"
+        ],
+        [
+          "Z",
+          "9",
+          "8",
+          "17"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-05014",
     "section": "atomic-structure",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Consider the following information about three particles P, Q and R. Particle Number of protons Number of neutrons Number of electrons P 18 22 18 Q 19 20 18 R 19 22 18 Which of the following statements concerning these three particles is/are correct?\n(1) P has the smallest mass.\n(2) Q is a charged particle.\n(3) P and R are derived from the same element.",
+    "stem": "Consider the following information about three particles P, Q and R.\n\nWhich of the following statements concerning these three particles is/are correct?\n(1) P has the smallest mass.\n(2) Q is a charged particle.\n(3) P and R are derived from the same element.",
     "options": [
       {
         "key": "A",
@@ -307,14 +341,42 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "B",
     "hint": "(1): The mass numbers (sum of the number of protons and the number of neutrons) of P, Q and R are 40, 39 and 41 respectively. (2): Q has 19 protons and 18 electrons, so it has a charge of 1+. (3): P and R are derived from different elements as they have different numbers of protons.",
-    "sourceRef": "ChemMCQ05014"
+    "sourceRef": "ChemMCQ05014",
+    "stemTable": {
+      "headers": [
+        "Particle",
+        "Protons",
+        "Neutrons",
+        "Electrons"
+      ],
+      "rows": [
+        [
+          "P",
+          "18",
+          "22",
+          "18"
+        ],
+        [
+          "Q",
+          "19",
+          "20",
+          "18"
+        ],
+        [
+          "R",
+          "19",
+          "22",
+          "18"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-05015",
     "section": "atomic-structure",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The following table shows the number of subatomic particles in particles X, Y and Z.\n\n | X | Y | Z\nProtons | 35 | 35 | 35\nNeutrons | 46 | 45 | 46\nElectrons | 35 | 35 | 36\n\nWhich of the following statements concerning the three particles is/are correct?\n(1) Y is electrically neutral.\n(2) X and Y have the same mass number.\n(3) X and Z are isotopes.",
+    "stem": "The following table shows the number of subatomic particles in particles X, Y and Z.\n\nWhich of the following statements concerning the three particles is/are correct?\n(1) Y is electrically neutral.\n(2) X and Y have the same mass number.\n(3) X and Z are isotopes.",
     "options": [
       {
         "key": "A",
@@ -335,7 +397,35 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "A",
     "hint": "X and Y have different mass numbers because they have different numbers of neutrons. Z is the anion of X.",
-    "sourceRef": "ChemMCQ05015"
+    "sourceRef": "ChemMCQ05015",
+    "stemTable": {
+      "headers": [
+        "",
+        "X",
+        "Y",
+        "Z"
+      ],
+      "rows": [
+        [
+          "Protons",
+          "35",
+          "35",
+          "35"
+        ],
+        [
+          "Neutrons",
+          "46",
+          "45",
+          "46"
+        ],
+        [
+          "Electrons",
+          "35",
+          "35",
+          "36"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-05016",
@@ -482,7 +572,7 @@ export const QUIZ_ITEMS = [
     "section": "atomic-structure",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Element Y has three naturally occurring isotopes. The number of protons, number of neutrons and the relative abundances of the three isotopes are shown in the following table.\n\nProtons | Neutrons | Abundance %\nIsotope 1: 10 | 10 | 90.48\nIsotope 2: 10 | 11 | 0.27\nIsotope 3: 10 | 12 | 9.25\n\nWhat is the relative atomic mass of Y?",
+    "stem": "Element Y has three naturally occurring isotopes. The number of protons, number of neutrons and the relative abundances of the three isotopes are shown in the following table.\n\nWhat is the relative atomic mass of Y?",
     "options": [
       {
         "key": "A",
@@ -503,14 +593,42 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "D",
     "hint": "Relative atomic mass of Y = (10 + 10) × 90.48% + (10 + 11) × 0.27% + (10 + 12) × 9.25% = 20.2",
-    "sourceRef": "ChemMCQ05021"
+    "sourceRef": "ChemMCQ05021",
+    "stemTable": {
+      "headers": [
+        "Isotope",
+        "Protons",
+        "Neutrons",
+        "Abundance %"
+      ],
+      "rows": [
+        [
+          "Isotope 1",
+          "10",
+          "10",
+          "90.48"
+        ],
+        [
+          "Isotope 2",
+          "10",
+          "11",
+          "0.27"
+        ],
+        [
+          "Isotope 3",
+          "10",
+          "12",
+          "9.25"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-05022",
     "section": "atomic-structure",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Silicon has three naturally occurring isotopes. The table below shows the relative abundances of these isotopes.\n\nIsotope Relative abundance / % ²⁸Si 92.2 ²⁹Si 4.7 ³⁰Si 3.1\n\nWhat is the relative atomic mass of silicon?",
+    "stem": "Silicon has three naturally occurring isotopes. The table below shows the relative abundances of these isotopes.\n\nWhat is the relative atomic mass of silicon?",
     "options": [
       {
         "key": "A",
@@ -531,7 +649,27 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "B",
     "hint": "Relative atomic mass of silicon = 28 × 92.2% + 29 × 4.7% + 30 × 3.1% = 28.1",
-    "sourceRef": "ChemMCQ05022"
+    "sourceRef": "ChemMCQ05022",
+    "stemTable": {
+      "headers": [
+        "Isotope",
+        "Relative abundance / %"
+      ],
+      "rows": [
+        [
+          "²⁸Si",
+          "92.2"
+        ],
+        [
+          "²⁹Si",
+          "4.7"
+        ],
+        [
+          "³⁰Si",
+          "3.1"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-05023",
@@ -2360,7 +2498,7 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the atomic numbers of four elements.\n\nElement Atomic number P 17 Q 18 R 19 S 20 Which of the above atoms of elements forms a stable ion with a charge of 1+?",
+    "stem": "The table below shows the atomic numbers of four elements.",
     "options": [
       {
         "key": "A",
@@ -2381,7 +2519,31 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "C",
     "hint": "Atom R with 19 protons (atomic number = number of protons) has 19 electrons. Its electronic arrangement is 2, 8, 8, 1. It can attain a stable octet electronic arrangement by losing one electron to form an ion with a charge of 1+.",
-    "sourceRef": "ChemMCQ07011"
+    "sourceRef": "ChemMCQ07011",
+    "stemTable": {
+      "headers": [
+        "Element",
+        "Atomic number"
+      ],
+      "rows": [
+        [
+          "P",
+          "17"
+        ],
+        [
+          "Q",
+          "18"
+        ],
+        [
+          "R",
+          "19"
+        ],
+        [
+          "S",
+          "20"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-07014",
@@ -2556,7 +2718,7 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the\n\nnumber of neutrons and the number of electrons in five atoms/ions. Atom/ion Number of neutrons Number of electrons X 8 8 Y 8 6 Z2+ 12 10 Q2 9 10 R+ 12 10\n\nWhich of the following atoms is an isotope of X?",
+    "stem": "The table below shows the number of neutrons and the number of electrons in five atoms/ions.\n\nWhich of the following atoms is an isotope of X?",
     "options": [
       {
         "key": "A",
@@ -2577,7 +2739,41 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "C",
     "hint": "An atom of Q has 10  2 = 8 protons, which is the same as that in an atom of X.",
-    "sourceRef": "ChemMCQ07020"
+    "sourceRef": "ChemMCQ07020",
+    "stemTable": {
+      "headers": [
+        "Atom/ion",
+        "Neutrons",
+        "Electrons"
+      ],
+      "rows": [
+        [
+          "X",
+          "8",
+          "8"
+        ],
+        [
+          "Y",
+          "8",
+          "6"
+        ],
+        [
+          "Z2+",
+          "12",
+          "10"
+        ],
+        [
+          "Q2",
+          "9",
+          "10"
+        ],
+        [
+          "R+",
+          "12",
+          "10"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-07021",
@@ -2612,7 +2808,7 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The following table shows the electronic arrangements of three species.\n\nSpecies | Electronic arrangement\nX | 2,\n\nWhich of the following elements belong to the same period of the Periodic Table?\n(1) X\n(2) Y\n(3) Z",
+    "stem": "The following table shows the electronic arrangements of three species.\n\nWhich of the following elements belong to the same period of the Periodic Table?\n(1) X\n(2) Y\n(3) Z",
     "options": [
       {
         "key": "A",
@@ -2633,7 +2829,27 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "D",
     "hint": "The electronic arrangements of the atoms of Y and Z are 2, 8, 6 and 2, 8, 1 respectively. X, Y and Z have the same number of occupied electron shells in their atoms.",
-    "sourceRef": "ChemMCQ07022"
+    "sourceRef": "ChemMCQ07022",
+    "stemTable": {
+      "headers": [
+        "Species",
+        "Electronic"
+      ],
+      "rows": [
+        [
+          "X",
+          "2, 8, 5"
+        ],
+        [
+          "Y2",
+          "2, 8, 8"
+        ],
+        [
+          "Z+",
+          "2, 8"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-07023",
@@ -2953,7 +3169,7 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the electronic arrangements of the atoms of four elements.\n\nElement Electronic arrangement W 2, 8, 8, 1 X 2, 8, 7 Y 2, 8 Z 2, 4 Which of the above elements can form an ionic compound with bromine?",
+    "stem": "The table below shows the electronic arrangements of the atoms of four elements.",
     "options": [
       {
         "key": "A",
@@ -2974,7 +3190,31 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "A",
     "hint": "Metals can form ionic compounds with bromine. Element W is a Group I metal.",
-    "sourceRef": "ChemMCQ07035"
+    "sourceRef": "ChemMCQ07035",
+    "stemTable": {
+      "headers": [
+        "Element",
+        "Electronic arrangement"
+      ],
+      "rows": [
+        [
+          "W",
+          "2, 8, 8, 1"
+        ],
+        [
+          "X",
+          "2, 8, 7"
+        ],
+        [
+          "Y",
+          "2, 8"
+        ],
+        [
+          "Z",
+          "2, 4"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-07036",
@@ -3696,7 +3936,7 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the colours of the aqueous solutions of three compounds. Compound Colour of the aqueous solution PQ blue RS orange RQ colourless Which of the following combinations about the ions involved is likely to be correct?\nP2+(aq), Q2(aq), R2+(aq), S2(aq)",
+    "stem": "The table below shows the colours of the aqueous solutions of three compounds.",
     "options": [
       {
         "key": "A",
@@ -3717,14 +3957,34 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "C",
     "hint": "Since RQ is colourless, R2+(aq) and Q2(aq) are both colourless. As RS is orange in colour, S2(aq) is orange in colour, which can be Cr2O72(aq). As PQ is blue in colour, P2+(aq) is blue in colour, which can be Cu2+(aq).",
-    "sourceRef": "ChemMCQ07061"
+    "sourceRef": "ChemMCQ07061",
+    "stemTable": {
+      "headers": [
+        "Compound",
+        "Colour of the aqueous solution"
+      ],
+      "rows": [
+        [
+          "PQ",
+          "blue"
+        ],
+        [
+          "RS",
+          "orange"
+        ],
+        [
+          "RQ",
+          "colourless"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-07062",
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The colours of the aqueous solutions of three ionic compounds are tabulated below. Compound Colour of the aqueous solution AB blue CD yellow CB colourless Which of the following ions is/are likely colourless?\n(1) C2+(aq)\n(2) D2(aq)\n(3) B2(aq)",
+    "stem": "The colours of the aqueous solutions of three ionic compounds are tabulated below.",
     "options": [
       {
         "key": "A",
@@ -3745,7 +4005,27 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "C",
     "hint": "As CB(aq) is colourless, both C2+(aq) and B2(aq) are colourless. As CD(aq) is yellow in colour and C2+(aq) is colourless, D2(aq) is yellow in colour.",
-    "sourceRef": "ChemMCQ07062"
+    "sourceRef": "ChemMCQ07062",
+    "stemTable": {
+      "headers": [
+        "Compound",
+        "Colour of the aqueous solution"
+      ],
+      "rows": [
+        [
+          "AB",
+          "blue"
+        ],
+        [
+          "CD",
+          "yellow"
+        ],
+        [
+          "CB",
+          "colourless"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-07063",
@@ -4075,7 +4355,7 @@ export const QUIZ_ITEMS = [
     "section": "covalent-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the electronic arrangements of four atoms.\n\nAtom Electronic arrangement P 2, 5 Q 2, 6 R 2, 7 S 2, 8\n\nWhich of the following atoms is the most probable to form a single bond in the molecule of its element?",
+    "stem": "The table below shows the electronic arrangements of four atoms.\n\nWhich of the following atoms is the most probable to form a single bond in the molecule of its element?",
     "options": [
       {
         "key": "A",
@@ -4096,7 +4376,31 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "C",
     "hint": "Atom R has seven outermost shell electrons. It shares one of its outermost shell electrons with another atom R to attain a stable octet.",
-    "sourceRef": "ChemMCQ08009"
+    "sourceRef": "ChemMCQ08009",
+    "stemTable": {
+      "headers": [
+        "Atom",
+        "Electronic arrangement"
+      ],
+      "rows": [
+        [
+          "P",
+          "2, 5"
+        ],
+        [
+          "Q",
+          "2, 6"
+        ],
+        [
+          "R",
+          "2, 7"
+        ],
+        [
+          "S",
+          "2, 8"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-08010",
@@ -5011,7 +5315,7 @@ export const QUIZ_ITEMS = [
     "section": "covalent-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below lists some information about two elements M and N.\n\nElement Atomic number Relative atomic mass M 17 35.5 N 20 40.1\n\nWhat is the formula mass of the compound formed between M and N?",
+    "stem": "The table below lists some information about two elements M and N.\n\nWhat is the formula mass of the compound formed between M and N?",
     "options": [
       {
         "key": "A",
@@ -5032,7 +5336,26 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "B",
     "hint": "The electronic arrangements of M and N are 2, 8, 7 and 2, 8, 8, 2 respectively. The formula of the compound formed between M and N is NM2. Its formula mass is 40.1 + 35.5 × 2 = 111.1.",
-    "sourceRef": "ChemMCQ08044"
+    "sourceRef": "ChemMCQ08044",
+    "stemTable": {
+      "headers": [
+        "Element",
+        "Atomic number",
+        "Relative atomic mass"
+      ],
+      "rows": [
+        [
+          "M",
+          "17",
+          "35.5"
+        ],
+        [
+          "N",
+          "20",
+          "40.1"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-08045",
@@ -5212,7 +5535,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below lists the melting points and boiling points of five metals. Metal Melting point / C Boiling point / C Aluminium 660 2470 Copper 1083 2595 Iron 1535 3000 At 2500C, which of the following combinations about the states of metals is correct?\nAluminium, Copper, Iron",
+    "stem": "The table below lists the melting points and boiling points of five metals.\n\nwhich of the following combinations about the states of metals is correct?\nAluminium, Copper, Iron",
     "options": [
       {
         "key": "A",
@@ -5233,7 +5556,31 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "A",
     "hint": "Review your notes.",
-    "sourceRef": "ChemMCQ09005"
+    "sourceRef": "ChemMCQ09005",
+    "stemTable": {
+      "headers": [
+        "Metal",
+        "Melting point / °C",
+        "Boiling point / °C"
+      ],
+      "rows": [
+        [
+          "Aluminium",
+          "660",
+          "2470"
+        ],
+        [
+          "Copper",
+          "1083",
+          "2595"
+        ],
+        [
+          "Iron",
+          "1535",
+          "3000"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09006",
@@ -6197,7 +6544,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the electrical conductivity of three substances.\n\nSubstance Electrical conductivity X Conducts only in aqueous solution Y Conducts\n\nwhen molten or in aqueous solution Z Conducts when molten or in the solid state Which of the following combinations is correct?",
+    "stem": "The table below shows the electrical conductivity of three substances.\n\nWhich of the following combinations is correct?\nX, Y, Z",
     "options": [
       {
         "key": "A",
@@ -6218,7 +6565,27 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "C",
     "hint": "H2SO4 is a covalent compound. When it dissolves in water, it ionizes to give mobile ions and so its aqueous solution can conduct electricity. NaBr is an ionic compound. Its ions become mobile when molten or in aqueous solution. Pb is a metal.",
-    "sourceRef": "ChemMCQ09041"
+    "sourceRef": "ChemMCQ09041",
+    "stemTable": {
+      "headers": [
+        "Substance",
+        "Electrical conductivity"
+      ],
+      "rows": [
+        [
+          "X",
+          "Conducts only in aqueous solution"
+        ],
+        [
+          "Y",
+          "Conducts when molten or in aqueous solution"
+        ],
+        [
+          "Z",
+          "Conducts when molten or in the solid state"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09042",
@@ -6734,7 +7101,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "X, Y, and Z are three consecutive elements in the Periodic Table. The following table shows the information about the products of the reactions of the elements with iodine.\n\nElement Chemical formula of the product Structure of the product X IX Simple molecular structure Y No product forms / Z ZI Giant ionic structure\n\nWhich of the following statements concerning X, Y and Z is correct?",
+    "stem": "X, Y, and Z are three consecutive elements in the Periodic Table. The following table shows the information about the products of the reactions of the elements with iodine. Element Chemical formula of the product Structure of the product X IX Simple molecular structure Y No product forms / Z ZI Giant ionic structure Which of the following statements concerning X, Y and Z is correct?",
     "options": [
       {
         "key": "A",
@@ -6823,7 +7190,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The following table shows the properties of four substances.\n\nSubstance Physical state at room temperature Solubility in water A Solid Soluble B Solid Insoluble C Gas Insoluble D Liquid Insoluble\n\nWhich of the following substances probably have a giant covalent structure?",
+    "stem": "The following table shows the properties of four substances.\n\nWhich of the following substances probably have a giant covalent structure?",
     "options": [
       {
         "key": "A",
@@ -6844,7 +7211,36 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "B",
     "hint": "Substances with a giant covalent structure are all solids at room temperature and are insoluble in water.",
-    "sourceRef": "ChemMCQ09063"
+    "sourceRef": "ChemMCQ09063",
+    "stemTable": {
+      "headers": [
+        "Substance",
+        "Physical state at room temperature",
+        "Solubility in water"
+      ],
+      "rows": [
+        [
+          "A",
+          "Solid",
+          "Soluble"
+        ],
+        [
+          "B",
+          "Solid",
+          "Insoluble"
+        ],
+        [
+          "C",
+          "Gas",
+          "Insoluble"
+        ],
+        [
+          "D",
+          "Liquid",
+          "Insoluble"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09064",
@@ -6935,7 +7331,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The following table shows the properties of four substances.\n\nSubstance Physical state under room conditions Does it conduct electricity? Solid state Molten state A Solid No Yes B Solid Yes Yes C Solid No No D Liquid Yes\n\nWhich of the following substances probably have a giant ionic structure?",
+    "stem": "The following table shows the properties of four substances.\n\nWhich of the following substances probably have a giant ionic structure?",
     "options": [
       {
         "key": "A",
@@ -6956,14 +7352,47 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "A",
     "hint": "Ionic compounds conduct electricity when molten or in aqueous solution.",
-    "sourceRef": "ChemMCQ09067"
+    "sourceRef": "ChemMCQ09067",
+    "stemTable": {
+      "headers": [
+        "Substance",
+        "Physical state under room conditions",
+        "Does it conduct electricity?",
+        "Col 3"
+      ],
+      "rows": [
+        [
+          "A",
+          "Solid",
+          "No",
+          "Yes"
+        ],
+        [
+          "B",
+          "Solid",
+          "Yes",
+          "Yes"
+        ],
+        [
+          "C",
+          "Solid",
+          "No",
+          "No"
+        ],
+        [
+          "D",
+          "Liquid",
+          "Yes"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09068",
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Consider the information listed in the table below.\n\nSubstance Melting point / C Electrical conductivity W 1610 Poor in the solid state X 872 Good\n\nwhen in aqueous solution Y 45 Poor in any states Z 180 Good in the solid and liquid states Which of the following substances would probably have a giant covalent structure?",
+    "stem": "Consider the information listed in the table below.\n\nWhich of the following substances would probably have a giant covalent structure?",
     "options": [
       {
         "key": "A",
@@ -6984,14 +7413,43 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "A",
     "hint": "Substances with a giant covalent structure have very high melting points and cannot conduct electricity (except graphite).",
-    "sourceRef": "ChemMCQ09068"
+    "sourceRef": "ChemMCQ09068",
+    "stemTable": {
+      "headers": [
+        "Substance",
+        "Melting point / C",
+        "Electrical conductivity"
+      ],
+      "rows": [
+        [
+          "W",
+          "1610",
+          "Poor in the solid state"
+        ],
+        [
+          "X",
+          "872",
+          "Good when in aqueous solution"
+        ],
+        [
+          "Y",
+          "45",
+          "Poor in any states"
+        ],
+        [
+          "Z",
+          "180",
+          "Good in the solid and liquid states"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09069",
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "X, Y and Z are three elements and the properties of their chlorides are given below. Melting point / C Electrical conductivity in the molten state Chloride of X 4 Poor Chloride of Y 873 Good Chloride of Z 677 Poor Which of the following statements must be correct?",
+    "stem": "X, Y and Z are three elements and the properties of their chlorides are given below.\n\nWhich of the following statements must be correct?",
     "options": [
       {
         "key": "A",
@@ -7012,7 +7470,27 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "D",
     "hint": "(A): The physical state of the chloride of X not only depends on its melting point, but also its boiling point. If its boiling point is lower than room temperature, it is a gas at room temperature. (B): Since the chlorides of Y and Z have different electrical conductivities in the molten state, they probably have different types of structure. (C): If the chloride of Y is insoluble in water, the mixture of the chloride of Y and water does not conduct electricity. (D): Since the chloride of X has a low melting point, it probably has a simple molecular structure. It may be a compound of a non-metal (or a semi-metal) and chlorine.",
-    "sourceRef": "ChemMCQ09069"
+    "sourceRef": "ChemMCQ09069",
+    "stemTable": {
+      "headers": [
+        "Chloride",
+        "Melting point / °C"
+      ],
+      "rows": [
+        [
+          "Electrical conductivity in the molten state Chloride of X",
+          "4"
+        ],
+        [
+          "Poor Chloride of Y",
+          "873"
+        ],
+        [
+          "Good Chloride of Z",
+          "677"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09070",
@@ -7047,7 +7525,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the melting points of two chlorides. Melting point / C Chloride of X 50 Chloride of Y 1000 Which of the following statements is correct?",
+    "stem": "The table below shows the melting points of two chlorides.\n\nWhich of the following statements is correct?",
     "options": [
       {
         "key": "A",
@@ -7068,7 +7546,23 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "D",
     "hint": "The low melting point of the chloride of X indicates that it has a simple molecular structure. X should be a non-metal forming a covalent compound with chlorine. No ions or delocalized electrons are present in the chloride of X. The chloride of Y should be an ionic compound and the ions become mobile when it melts.",
-    "sourceRef": "ChemMCQ09071"
+    "sourceRef": "ChemMCQ09071",
+    "stemTable": {
+      "headers": [
+        "Chloride",
+        "Melting point / °C"
+      ],
+      "rows": [
+        [
+          "Chloride of X",
+          "50"
+        ],
+        [
+          "Chloride of Y",
+          "1000"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09072",
@@ -7159,7 +7653,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Consider the following information about four substances P, Q, R and S. Substance Melting point / C Electrical conductivity at room temperature P 7 Poor Q 39 Good R 801 Poor S 660 Good Which of the following substances has a giant metallic structure and is a solid at room temperature?",
+    "stem": "Consider the following information about four substances P, Q, R and S.\n\nWhich of the following substances has a giant metallic structure and is a solid at room temperature?",
     "options": [
       {
         "key": "A",
@@ -7180,14 +7674,43 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "D",
     "hint": "Substances with a giant metallic structure can conduct of electricity at room temperature. Q is not a solid at room temperature.",
-    "sourceRef": "ChemMCQ09075"
+    "sourceRef": "ChemMCQ09075",
+    "stemTable": {
+      "headers": [
+        "Substance",
+        "Melting point / C",
+        "Electrical conductivity"
+      ],
+      "rows": [
+        [
+          "P",
+          "7",
+          "Poor"
+        ],
+        [
+          "Q",
+          "39",
+          "Good"
+        ],
+        [
+          "R",
+          "801",
+          "Poor"
+        ],
+        [
+          "S",
+          "660",
+          "Good"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09076",
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below gives some information on four substances.\n\nSubstance Melting point / C Electrical conductivity in the solid state Electrical conductivity in the liquid state Solubility in water W 17 Poor Poor Soluble X 455 Poor Good Soluble Y 1064 Good Good Insoluble Z 3550 Poor Poor Insoluble\n\nWhich of the following deductions is correct?",
+    "stem": "The table below gives some information on four substances.\n\nWhich of the following deductions is correct?",
     "options": [
       {
         "key": "A",
@@ -7208,14 +7731,53 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "A",
     "hint": "(B): X is not a metal as it is a poor conductor of electricity in the solid state. (C): Y should have a giant metallic structure. There are no discrete molecules in Y. (D): Z is not an ionic compound. Ionic compounds can conduct electricity in the liquid state.",
-    "sourceRef": "ChemMCQ09076"
+    "sourceRef": "ChemMCQ09076",
+    "stemTable": {
+      "headers": [
+        "Substance",
+        "Melting point / C",
+        "Electrical conductivity",
+        "Col 3",
+        "Col 4"
+      ],
+      "rows": [
+        [
+          "W",
+          "17",
+          "Poor",
+          "Poor",
+          "Soluble"
+        ],
+        [
+          "X",
+          "455",
+          "Poor",
+          "Good",
+          "Soluble"
+        ],
+        [
+          "Y",
+          "1064",
+          "Good",
+          "Good",
+          "Insoluble"
+        ],
+        [
+          "Z",
+          "3550",
+          "Poor",
+          "Poor",
+          "Insoluble"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09077",
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the electrical conductivities of four substances W, X, Y and Z at different states. In the table, ‘’ and ‘’ represent ‘can conduct electricity’ and ‘cannot conduct electricity’ respectively.\n\nSubstance Solid state Liquid state Aqueous solution W Insoluble in water X Insoluble in water Y Z\n\nWhich of the following substances is likely to be wax?",
+    "stem": "The table below shows the electrical conductivities of four substances W, X, Y and Z at different states. In the table, ‘’ and ‘’ represent ‘can conduct electricity’ and ‘cannot conduct electricity’ respectively. Substance Solid state Liquid state Aqueous solution W Insoluble in water X Insoluble in water Y Z Which of the following substances is likely to be wax?",
     "options": [
       {
         "key": "A",
@@ -7443,7 +8005,7 @@ export const QUIZ_ITEMS = [
     "section": "periodic-table",
     "format": "fill",
     "difficulty": "Applied",
-    "stem": "If the atomic\n\nnumber of an element is known, its electronic arrangement, period number and group number can be written.\n\nComplete the following table without referring to the Periodic Table. (P, Q, R, S, T and U are NOT the symbols of the elements.) Element Atomic number Electronic arrangement Period number Group number P 5 Q 8 R 10 S 11 T 14 U 20",
+    "stem": "If the atomic number of an element is known, its electronic arrangement, period number and group number can be written. Complete the following table without referring to the Periodic Table. (P, Q, R, S, T and U are NOT the symbols of the elements.) Element Atomic number Electronic arrangement Period number Group number P 5 Q 8 R 10 S 11 T 14 U 20",
     "lines": [
       {
         "segments": [
@@ -7609,7 +8171,7 @@ export const QUIZ_ITEMS = [
     "section": "periodic-table",
     "format": "fill",
     "difficulty": "Foundation",
-    "stem": "Complete the following table:\n\nFull Atomic symbol Proton Neutron Electron Mass number Atomic number Electronic arrangement Name of element: 18 | 39 | 21 | 11 | 23 | 23 | 10 | 22 | 22 | 62 | 2 | 8\nSilicon: 18 | 18 | 1 | 119 | 2 | 8 | 18 | 32 | 18 | 2 | 116 | 2\nPhosphorus: 8 | 18 | 32 | 17 | 1 | 133 | 2 | 8 | 18 | 18 | 8 | 1\nHelium: 204 | 2 | 8 | 18 | 32 | 18 | 4 | 197 | 2 | 8 | 18 | 32 | 18 | 1",
+    "stem": "Complete the following table: Full Atomic symbol Proton Neutron Electron Mass number Atomic number Electronic arrangement Name of element 3 4 7 15 17 37 10 9 20 41 6 13 13 12 39 19 9 4 15 Silicon 31 Phosphorus 3 Helium 𝐴𝑟 18 39 21 𝑁𝑎 11 23 23 𝑁𝑒 10 22 22 62 2,8,18,18,1 119 2,8,18,32,18,2 116 2,8,18,32,17,1 133 2,8,18,18,8,1 204 2,8,18,32,18,4 197 2,8,18,32,18,1",
     "lines": [
       {
         "segments": [
@@ -9488,7 +10050,7 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "fill",
     "difficulty": "Foundation",
-    "stem": "Complete the following table\n\nSpecies Atomic number Mass number Electronic arrangement Number of Protons Neutrons Electrons",
+    "stem": "Complete the following table Species Atomic number Mass number Electronic arrangement Number of Protons Neutrons Electrons",
     "lines": [
       {
         "segments": [

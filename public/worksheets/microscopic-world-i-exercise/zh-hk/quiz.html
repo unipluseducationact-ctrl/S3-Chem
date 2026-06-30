@@ -85,6 +85,21 @@ tailwind.config = {
 .quiz-bank-matrix td:first-child, .quiz-bank-matrix th:first-child { text-align: left; max-width: 9rem; }
 .quiz-bank-matrix .cell-zero { color: #727784; }
 .quiz-bank-matrix .cell-hit { font-weight: 700; color: #004e9f; }
+.quiz-stem-table {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+  background: #ffffff; border-radius: 0.75rem; overflow: hidden;
+  border: 1px solid rgba(193, 198, 213, 0.55);
+}
+.quiz-stem-table th, .quiz-stem-table td {
+  border: 1px solid rgba(193, 198, 213, 0.45); padding: 0.5rem 0.75rem; text-align: center;
+}
+.quiz-stem-table thead th {
+  background: rgba(242, 244, 246, 0.95); font-weight: 600; color: #191c1e;
+}
+.quiz-stem-table tbody th {
+  background: rgba(242, 244, 246, 0.7); font-weight: 600; text-align: left;
+}
+.quiz-stem-table td.tabular-nums { font-variant-numeric: tabular-nums; }
 @media print {
   body * { visibility: hidden; }
   #quiz-pdf-sheet, #quiz-pdf-sheet * { visibility: visible; }
