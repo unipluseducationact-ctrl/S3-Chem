@@ -14,13 +14,13 @@ export function resolveQuizLang() {
   try {
     const parentLang = window.parent.document.documentElement.lang;
     if (parentLang && QUIZ_UI_LANGS.includes(parentLang)) return parentLang;
-    if (parentLang?.startsWith("zh")) return parentLang === "zh-Hant" || parentLang === "zh-HK" ? "zh-Hant" : "zh";
+    if (parentLang?.startsWith("zh")) return parentLang === "zh-Hant" ? "zh-Hant" : "zh";
   } catch (_) {
     /* cross-origin */
   }
   const local = document.documentElement.lang;
   if (local && QUIZ_UI_LANGS.includes(local)) return local;
-  if (local?.startsWith("zh")) return local === "zh-Hant" || local === "zh-HK" ? "zh-Hant" : "zh";
+  if (local?.startsWith("zh")) return local === "zh-Hant" ? "zh-Hant" : "zh";
   return "en";
 }
 
@@ -80,11 +80,120 @@ export function questionFormat(q) {
   return q.format || "mcq";
 }
 
-/** Worksheet filters for question format (MCQ / T/F / fill). */
+/** Worksheet filters for question format (MCQ only for this quiz). */
 export const QUIZ_FORMAT_FILTERS = [
   { id: "mcq", labelEn: "Multiple choice", labelZh: "選擇題", labelZhHans: "选择题" },
-  { id: "fill", labelEn: "Short answer", labelZh: "短答題", labelZhHans: "短答题" },
 ];
+
+export function questionStem(q, lang) {
+  return isChineseUI(lang) ? q.stemZh || q.stem : q.stem;
+}
+
+function isTableSeparatorLine(line) {
+  return /^\|[\s\-:|]+\|$/.test(line.trim());
+}
+
+function isTableRow(line) {
+  const t = line.trim();
+  if (!t) return false;
+  if (isTableSeparatorLine(t)) return true;
+  if (t.startsWith("|") && t.endsWith("|")) return true;
+  return (t.match(/\|/g) || []).length >= 2;
+}
+
+function parseTableCells(line) {
+  const t = line.trim();
+  if (t.startsWith("|") && t.endsWith("|")) {
+    return t
+      .slice(1, -1)
+      .split("|")
+      .map((s) => s.trim());
+  }
+  return t.split("|").map((s) => s.trim()).filter(Boolean);
+}
+
+function isNumberedLine(line) {
+  return /^\(\d+\)\s/.test(line.trim());
+}
+
+function isOptionTableRow(cells) {
+  return cells.length > 0 && /^[A-D]\.\s/.test(cells[0]);
+}
+
+/** Parse stem text into structured HTML (paragraphs, numbered lists, tables). */
+export function formatStemHtml(text) {
+  const lines = String(text || "").split("\n");
+  const parts = [];
+  let paragraphCount = 0;
+  let i = 0;
+
+  function flushTable(rows) {
+    const dataRows = rows.filter((r) => !isTableSeparatorLine(r));
+    if (!dataRows.length) return;
+    let html = '<table class="quiz-stem-table"><tbody>';
+    dataRows.forEach((row, ri) => {
+      const cells = parseTableCells(row);
+      const isHeader = ri === 0 && !isOptionTableRow(cells);
+      html += "<tr>";
+      cells.forEach((cell) => {
+        html += isHeader
+          ? `<th>${escHtml(cell)}</th>`
+          : `<td>${escHtml(cell)}</td>`;
+      });
+      html += "</tr>";
+    });
+    html += "</tbody></table>";
+    parts.push(html);
+  }
+
+  function flushList(items) {
+    if (!items.length) return;
+    parts.push(
+      `<ul class="quiz-stem-list">${items.map((li) => `<li>${escHtml(li)}</li>`).join("")}</ul>`
+    );
+  }
+
+  function flushParagraph(line) {
+    const t = line.trim();
+    if (!t) return;
+    paragraphCount += 1;
+    const cls = paragraphCount === 1 ? "quiz-stem-p quiz-stem-lead" : "quiz-stem-p";
+    parts.push(`<p class="${cls}">${escHtml(t)}</p>`);
+  }
+
+  while (i < lines.length) {
+    const trimmed = lines[i].trim();
+    if (!trimmed) {
+      i += 1;
+      continue;
+    }
+
+    if (isTableRow(trimmed)) {
+      const tableRows = [];
+      while (i < lines.length && lines[i].trim() && isTableRow(lines[i].trim())) {
+        tableRows.push(lines[i].trim());
+        i += 1;
+      }
+      flushTable(tableRows);
+      continue;
+    }
+
+    if (isNumberedLine(trimmed)) {
+      const listItems = [];
+      while (i < lines.length && isNumberedLine(lines[i].trim())) {
+        listItems.push(lines[i].trim());
+        i += 1;
+      }
+      flushList(listItems);
+      continue;
+    }
+
+    flushParagraph(trimmed);
+    i += 1;
+  }
+
+  return parts.join("");
+}
 
 export function formatFilterLabel(filter, lang) {
   if (lang === "zh") return filter.labelZhHans || filter.labelZh;
@@ -200,4 +309,9 @@ export function modelAnswerText(q) {
   const en = opt ? `${q.answer}. ${opt.text}` : q.answer;
   const zh = opt?.textZh ? `${q.answer}. ${opt.textZh}` : "";
   return { en, zh };
+}
+
+export function modelAnswerForLang(q, lang) {
+  const ma = modelAnswerText(q);
+  return isChineseUI(lang) ? ma.zh || ma.en : ma.en;
 }

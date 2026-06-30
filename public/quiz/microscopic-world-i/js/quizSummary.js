@@ -83,14 +83,12 @@ export function renderSessionSummary({ questions, attemptMap, panel, t, lang }) 
     const agg = byType.get(sid);
     agg.total += 1;
 
-    if (st.solved && st.wrong < 2) {
+    if (st.solved && st.wrong === 0) {
       correct += 1;
       agg.correct += 1;
-      if (st.wrong === 0) {
-        firstTry += 1;
-        agg.firstTry += 1;
-      }
-    } else if (st.solved && st.wrong >= 2) {
+      firstTry += 1;
+      agg.firstTry += 1;
+    } else if (st.solved && st.wrong > 0) {
       failed.push({ n, q });
     } else {
       incomplete.push(n);

@@ -10,22 +10,10 @@ export function animateSplitText(element) {
   const text = element.textContent?.trim() || "";
   if (!text) return;
   element.classList.remove("reveal");
-  let delay = 0;
-  const lines = text.split(/\n/);
-  element.innerHTML = lines
-    .map((line) => {
-      const words = line.trim().split(/\s+/).filter(Boolean);
-      if (!words.length) return "<br>";
-      const html = words
-        .map((word) => {
-          const span = `<span class="split-word" style="transition-delay:${delay}ms">${word}</span>`;
-          delay += 28;
-          return span;
-        })
-        .join(" ");
-      return html;
-    })
-    .join("<br>");
+  element.innerHTML = text
+    .split(/\s+/)
+    .map((word, i) => `<span class="split-word" style="transition-delay:${i * 28}ms">${word}</span>`)
+    .join(" ");
   requestAnimationFrame(() => {
     setTimeout(() => element.classList.add("reveal"), 40);
   });

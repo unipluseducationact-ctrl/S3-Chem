@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Microscopic World I · Worksheet</title>
+<title>Microscopic World I · Ch5–8 Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
@@ -65,6 +65,14 @@ tailwind.config = {
   display: block; width: 100%; max-height: 280px; object-fit: contain;
   border-radius: 0.75rem; background: #f7f9fb;
 }
+.quiz-stem-p { margin-bottom: 0.75rem; }
+.quiz-stem-p:last-child { margin-bottom: 0; }
+.quiz-stem-lead { font-weight: 600; }
+.quiz-stem-list { margin: 0.5rem 0 0.75rem; padding-left: 1.25rem; list-style: none; }
+.quiz-stem-list li { margin-bottom: 0.35rem; padding-left: 0.25rem; }
+.quiz-stem-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.92rem; }
+.quiz-stem-table th, .quiz-stem-table td { border: 1px solid rgba(193, 198, 213, 0.6); padding: 0.4rem 0.6rem; text-align: left; }
+.quiz-stem-table th { background: rgba(242, 244, 246, 0.9); font-weight: 600; }
 .summary-panel[hidden] { display: none !important; }
 #settings-panel { transition: opacity 0.35s ease, transform 0.35s ease; }
 #quiz-layout.settings-collapsed #settings-panel { display: none; }
@@ -85,6 +93,18 @@ tailwind.config = {
 .quiz-bank-matrix td:first-child, .quiz-bank-matrix th:first-child { text-align: left; max-width: 9rem; }
 .quiz-bank-matrix .cell-zero { color: #727784; }
 .quiz-bank-matrix .cell-hit { font-weight: 700; color: #004e9f; }
+.lang-switch {
+  display: flex; gap: 0.35rem; align-items: center;
+  background: #ffffff; padding: 0.3rem; border-radius: 9999px;
+  border: 1px solid rgba(193, 198, 213, 0.5); box-shadow: 0 2px 8px rgba(25, 28, 30, 0.04);
+}
+.lang-switch button {
+  background: transparent; color: #414753; border: none;
+  padding: 0.45rem 1rem; border-radius: 9999px; cursor: pointer;
+  font-size: 0.82rem; font-weight: 600; transition: background 0.2s, color 0.2s;
+}
+.lang-switch button:hover { color: #004e9f; }
+.lang-switch button.active { background: #004e9f; color: #ffffff; }
 @media print {
   body * { visibility: hidden; }
   #quiz-pdf-sheet, #quiz-pdf-sheet * { visibility: visible; }
@@ -95,6 +115,17 @@ tailwind.config = {
 </head>
 <body class="bg-background font-body-md text-on-background min-h-screen selection:bg-primary-fixed">
 
+<div class="hidden max-w-container-max mx-auto px-4 md:px-6 pt-4" id="file-protocol-banner">
+<div class="p-4 rounded-2xl bg-tertiary/10 border border-tertiary/30 text-body-sm text-on-surface">
+<strong class="text-tertiary">無法以檔案模式開啟</strong> — 請雙擊同資料夾內的 <code class="font-label-bold">start-quiz.bat</code>，或執行 <code>python -m http.server 8765 --bind 127.0.0.1</code> 後開啟 <a class="text-primary underline" href="http://127.0.0.1:8765/quiz.html">http://127.0.0.1:8765/quiz.html</a>。
+</div>
+</div>
+<script>
+if (location.protocol === "file:") {
+  document.getElementById("file-protocol-banner")?.classList.remove("hidden");
+}
+</script>
+
 <main class="max-w-container-max mx-auto px-4 md:px-6 py-4 md:py-6 pb-12 grid grid-cols-1 lg:grid-cols-[minmax(280px,360px)_1fr] gap-6 items-start" id="quiz-layout">
 
 <aside class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/30 shadow-lg lg:sticky lg:top-2" id="settings-panel">
@@ -102,14 +133,8 @@ tailwind.config = {
 <div class="quiz-bank-summary mb-5 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/25 text-body-sm" id="quiz-bank-summary" aria-live="polite"></div>
 <label class="block text-body-sm font-label-bold text-on-surface-variant mb-2" data-i18n="lblTypes">Topics</label>
 <div class="space-y-2 mb-4" id="quiz-type-checks"></div>
-<label class="block text-body-sm font-label-bold text-on-surface-variant mb-2" data-i18n="lblFormats">Question types</label>
-<div class="space-y-2 mb-4" id="quiz-format-checks"></div>
 <label class="block text-body-sm font-label-bold text-on-surface-variant mb-1" for="quiz-num-count" data-i18n="lblCount">Number of questions (1–50)</label>
 <input class="w-full mb-4 rounded-xl border-outline-variant bg-surface-container-low focus:ring-primary focus:border-primary" id="quiz-num-count" max="50" min="1" type="number" value="10"/>
-<label class="block text-body-sm font-label-bold text-on-surface-variant mb-1" for="quiz-sel-diff" data-i18n="lblDiff">Difficulty</label>
-<select class="w-full mb-4 rounded-xl border-outline-variant bg-surface-container-low font-label-bold focus:ring-primary" id="quiz-sel-diff"></select>
-<label class="block text-body-sm font-label-bold text-on-surface-variant mb-1" for="quiz-txt-seed" data-i18n="lblSeed">Random seed (optional)</label>
-<input class="w-full mb-4 rounded-xl border-outline-variant bg-surface-container-low" id="quiz-txt-seed" placeholder="e.g. classA-2026" type="text"/>
 <button class="w-full py-3 rounded-full bg-primary text-on-primary font-label-bold shadow-md hover:opacity-90 transition-opacity mb-6" id="btn-generate" type="button" data-i18n="btnGenerate">Generate questions</button>
 <h3 class="font-label-bold text-on-surface mb-2" data-i18n="hExport">Export</h3>
 <p class="text-body-sm text-on-surface-variant mb-3" data-i18n="txtExportHint">Word: .doc for Microsoft Word. Use Print → Save as PDF for a PDF copy.</p>
@@ -123,11 +148,15 @@ tailwind.config = {
 <div class="min-w-0 space-y-4">
 <div class="flex flex-wrap items-center justify-between gap-3 focus-dim">
 <div class="min-w-0 flex-1">
-<p class="font-label-bold text-primary text-body-sm mb-1">Topic 2 · Microscopic World I</p>
+<p class="font-label-bold text-primary text-body-sm mb-1">MW I · Atom / Periodic Table / Ionic / Covalent</p>
 <p class="font-label-bold text-on-surface-variant text-body-sm" id="quiz-progress-text">No session yet</p>
 <div class="h-2.5 w-full max-w-md mt-2 bg-surface-container-high rounded-full relative overflow-hidden">
 <div class="shiny-progress-bar absolute left-0 top-0 h-full bg-primary-container rounded-full transition-all duration-500" id="quiz-progress-bar" style="width:0%"></div>
 </div>
+</div>
+<div class="lang-switch shrink-0" id="quiz-lang-switch">
+<button type="button" id="btn-lang-en" class="active">English</button>
+<button type="button" id="btn-lang-zh">繁體中文</button>
 </div>
 <button class="settings-toggle-btn flex items-center gap-2 px-4 py-2 rounded-full border border-outline-variant/40 bg-surface-container-lowest font-label-bold text-body-sm text-on-surface-variant hover:text-primary shrink-0" id="btn-toggle-settings" type="button" aria-controls="settings-panel" aria-expanded="true">
 <span class="material-symbols-outlined text-lg" id="settings-toggle-icon">chevron_left</span>
@@ -142,7 +171,7 @@ tailwind.config = {
 <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
 <div>
 <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-1 split-text-target" id="page-title" data-i18n="hPractice">On-screen practice</h2>
-<p class="text-body-sm text-on-surface-variant" data-i18n="txtPracticeHint">First wrong: hint only. Second wrong: model answer.</p>
+<p class="text-body-sm text-on-surface-variant" data-i18n="txtPracticeHint">Wrong answer: model answer shown immediately.</p>
 </div>
 <button class="py-2.5 px-5 rounded-full border border-outline-variant/30 bg-surface font-label-bold text-body-sm hover:border-primary hover:text-primary transition-colors" id="btn-summary" type="button" data-i18n="btnSummary">Session summary</button>
 </div>

@@ -2,20 +2,18 @@ import { QUIZ_ITEMS, QUIZ_SECTIONS } from "./quizData.js";
 import { sectionLabel, renderSessionSummary } from "./quizSummary.js";
 import { downloadWord, printSheet } from "./quizExport.js";
 import {
-  DIFFICULTY_LEVELS,
-  difficultyLevel,
   seededShuffle,
   escHtml,
-  modelAnswerText,
+  modelAnswerForLang,
   resolveQuizLang,
   isChineseUI,
   questionFormat,
+  questionStem,
+  formatStemHtml,
   formatTypeLabel,
   allFillFieldsCorrect,
   countFillBlanks,
   getFillLines,
-  QUIZ_FORMAT_FILTERS,
-  formatFilterLabel,
   buildQuizBankStats,
   filterQuizPool,
 } from "./quizUtils.js";
@@ -27,9 +25,13 @@ import {
   initSettingsToggle,
 } from "./quizEffects.js";
 
+function normalizeLang(l) {
+  return l === "zh-Hant" || l === "zh" ? "zh-Hant" : "en";
+}
+
 const UI = {
   en: {
-    appSubtitle: "HKDSE worksheet practice · English / 繁體中文 UI",
+    appSubtitle: "Microscopic World I · Ch5–8 · English / 繁體中文",
     hSettings: "Worksheet settings",
     lblTypes: "Topics",
     lblFormats: "Question types",
@@ -38,10 +40,8 @@ const UI = {
     bankByTopic: "By topic",
     bankByType: "By question type",
     bankMatrix: "Topic × type",
-    bankNone: "Select at least one topic and one question type.",
+    bankNone: "Select at least one topic.",
     lblCount: "Number of questions (1–50)",
-    lblDiff: "Difficulty",
-    lblSeed: "Random seed (optional)",
     btnGenerate: "Generate questions",
     hExport: "Export",
     txtExportHint: "Word: .doc for Microsoft Word. Use Print → Save as PDF for a PDF copy.",
@@ -49,7 +49,7 @@ const UI = {
     btnDocA: "Word — Answers",
     btnPrint: "Print / Save as PDF",
     hPractice: "On-screen practice",
-    txtPracticeHint: "First wrong: hint only. Second wrong: model answer.",
+    txtPracticeHint: "Wrong answer: model answer shown immediately.",
     btnSummary: "Session summary",
     quizCheck: "Check answer",
     empty: "Generate questions first.",
@@ -58,7 +58,7 @@ const UI = {
     alertNoFormats: "Select at least one question type.",
     alertNoMatch: "No questions match your filters.",
     alertPoolLimited:
-      "Only {available} question(s) match your topics, question types, and difficulty (you asked for {requested}). Questions were not repeated.",
+      "Only {available} question(s) match your topics (you asked for {requested}). Questions were not repeated.",
     progressNone: "No session yet",
     progressCompletedPrefix: "Completed ",
     correct: "Correct.",
@@ -68,8 +68,8 @@ const UI = {
     summaryTitle: "Summary",
     summaryScoreLabel: "Score (correct / total)",
     summaryFirstTry: "Correct on first attempt",
-    summaryWrongTitle: "Wrong twice — review these",
-    summaryNoneWrong: "None — no questions failed after two attempts.",
+    summaryWrongTitle: "Wrong answers — review these",
+    summaryNoneWrong: "None — all questions answered correctly.",
     summaryIncomplete: "Still in progress",
     summaryByTypeTitle: "Correct rate by topic",
     summaryByTypeColType: "Topic",
@@ -80,14 +80,14 @@ const UI = {
     revBandExcellent:
       "Overall accuracy is very high. Keep mixing topics so recall stays sharp for HKDSE.",
     revBandGood: "Good result. Use the table above to add a short round on weaker topics.",
-    revBandFair: "Mixed performance: revisit weaker topics (see table), then regenerate.",
+    revBandFair: "Mixed performance: re-read Microscopic World I notes for weaker topics, then regenerate.",
     revBandLow:
-      "Several topics need consolidation. Review atomic structure, bonding, and structure-property links before the next round.",
+      "Several concepts need consolidation. Review atoms & isotopes, the periodic table, ionic bonding, and covalent bonding before the next round.",
     revWeakOne: "Prioritise revision on {type} — you scored {c}/{t} ({pct}%) in that topic.",
     revStrongOne: "Strength: every {type} item correct ({n} questions).",
-    revTwoStrike: "Questions missed twice: study the model answers, then regenerate those topics.",
+    revTwoStrike: "Wrong answers: study the model answers, then regenerate those topics.",
     revIncomplete: "Finish questions still in progress for a fair measure of strengths and gaps.",
-    revFirstTryLow: "Many items needed two attempts. Read each stem carefully before answering.",
+    revFirstTryLow: "Several items were answered incorrectly. Read each stem carefully before answering.",
     revBalanced: "Errors spread across topics — continue balanced practice.",
     hideSettings: "Hide settings",
     showSettings: "Show settings",
@@ -102,10 +102,8 @@ const UI = {
     bankByTopic: "按课题",
     bankByType: "按题型",
     bankMatrix: "课题 × 题型",
-    bankNone: "请至少选择一个课题和一种题型。",
+    bankNone: "请至少选择一个课题。",
     lblCount: "题数（1–50）",
-    lblDiff: "难度",
-    lblSeed: "随机种子（可留空）",
     btnGenerate: "生成题目",
     hExport: "导出",
     txtExportHint: "Word：下载 .doc 以 Word 打开。PDF 请用「打印」→「另存 PDF」。",
@@ -113,7 +111,7 @@ const UI = {
     btnDocA: "Word — 答案",
     btnPrint: "打印／另存 PDF",
     hPractice: "互动练习",
-    txtPracticeHint: "第一次答错只显示提示；第二次答错显示参考答案。",
+    txtPracticeHint: "第一次答错立即显示参考答案。",
     btnSummary: "学习摘要",
     quizCheck: "检查答案",
     empty: "请先按「生成题目」。",
@@ -122,7 +120,7 @@ const UI = {
     alertNoFormats: "请至少选择一种题型。",
     alertNoMatch: "没有符合条件的题目。",
     alertPoolLimited:
-      "符合课题、题型与难度条件的只有 {available} 题（你要求 {requested} 题）。不会重复出题。",
+      "符合课题条件的只有 {available} 题（你要求 {requested} 题）。不会重复出题。",
     progressNone: "尚未生成题目",
     progressCompletedPrefix: "已完成 ",
     correct: "正确。",
@@ -132,8 +130,8 @@ const UI = {
     summaryTitle: "摘要",
     summaryScoreLabel: "得分（答对／总题数）",
     summaryFirstTry: "首次即答对",
-    summaryWrongTitle: "两次皆错 — 需重温",
-    summaryNoneWrong: "没有此类题目。",
+    summaryWrongTitle: "答错题目 — 需重温",
+    summaryNoneWrong: "没有答错的题目。",
     summaryIncomplete: "尚未答对",
     summaryByTypeTitle: "各课题答对率",
     summaryByTypeColType: "课题",
@@ -144,18 +142,18 @@ const UI = {
     revBandExcellent: "整体答对率很高。建议持续混合各课题练习。",
     revBandGood: "整体表现不错。可针对较弱课题加做一轮。",
     revBandFair: "表现参差：请重温相关笔记后再生成题目。",
-    revBandLow: "多个概念仍需巩固。请先温习流动镶嵌、渗透性、渗透与主动运输。",
+    revBandLow: "多个概念仍需巩固。请先温习原子与同位素、周期表、离子键与共价键。",
     revWeakOne: "建议优先温习「{type}」：本次 {c}/{t}（{pct}%）。",
     revStrongOne: "强项：「{type}」本次全对（共 {n} 题）。",
-    revTwoStrike: "曾两次答错的题目：请细读参考答案后再练。",
+    revTwoStrike: "答错的题目：请细读参考答案后再练。",
     revIncomplete: "尚有未答对题目，建议先完成。",
-    revFirstTryLow: "不少题目需第二次才答对。作答前宜放慢阅读题干。",
+    revFirstTryLow: "不少题目答错。作答前宜放慢阅读题干。",
     revBalanced: "错误分散在不同课题，宜均衡练习。",
     hideSettings: "隐藏设定",
     showSettings: "显示设定",
   },
   "zh-Hant": {
-    appSubtitle: "概念檢查 · 介面繁體中文",
+    appSubtitle: "概念檢查 · English / 繁體中文",
     hSettings: "工作紙設定",
     lblTypes: "課題",
     lblFormats: "題型",
@@ -164,10 +162,8 @@ const UI = {
     bankByTopic: "按課題",
     bankByType: "按題型",
     bankMatrix: "課題 × 題型",
-    bankNone: "請至少選擇一個課題和一種題型。",
+    bankNone: "請至少選擇一個課題。",
     lblCount: "題數（1–50）",
-    lblDiff: "難度",
-    lblSeed: "隨機種子（可留空）",
     btnGenerate: "產生題目",
     hExport: "匯出",
     txtExportHint: "Word：下載 .doc 以 Word 開啟。PDF 請用「列印」→「另存 PDF」。",
@@ -175,7 +171,7 @@ const UI = {
     btnDocA: "Word — 答案",
     btnPrint: "列印／另存 PDF",
     hPractice: "互動練習",
-    txtPracticeHint: "第一次答錯只顯示提示；第二次答錯顯示參考答案。",
+    txtPracticeHint: "答錯後會立即顯示參考答案。",
     btnSummary: "學習摘要",
     quizCheck: "檢查答案",
     empty: "請先按「產生題目」。",
@@ -184,7 +180,7 @@ const UI = {
     alertNoFormats: "請至少選擇一種題型。",
     alertNoMatch: "沒有符合條件的題目。",
     alertPoolLimited:
-      "符合課題、題型與難度條件的只有 {available} 題（你要求 {requested} 題）。不會重複出題。",
+      "符合課題條件的只有 {available} 題（你要求 {requested} 題）。不會重複出題。",
     progressNone: "尚未產生題目",
     progressCompletedPrefix: "已完成 ",
     correct: "正確。",
@@ -194,8 +190,8 @@ const UI = {
     summaryTitle: "摘要",
     summaryScoreLabel: "得分（答對／總題數）",
     summaryFirstTry: "首次即答對",
-    summaryWrongTitle: "兩次皆錯 — 需重溫",
-    summaryNoneWrong: "沒有此類題目。",
+    summaryWrongTitle: "答錯題目 — 需重溫",
+    summaryNoneWrong: "沒有答錯的題目。",
     summaryIncomplete: "尚未答對",
     summaryByTypeTitle: "各課題答對率",
     summaryByTypeColType: "課題",
@@ -206,12 +202,12 @@ const UI = {
     revBandExcellent: "整體答對率很高。建議持續混合各課題練習。",
     revBandGood: "整體表現不錯。可針對較弱課題加做一輪。",
     revBandFair: "表現參差：請重溫相關筆記後再產生題目。",
-    revBandLow: "多個概念仍需鞏固。請先溫習流動鑲嵌、滲透性、滲透與主動運輸。",
+    revBandLow: "多個概念仍需鞏固。請先溫習原子與同位素、週期表、離子鍵與共價鍵。",
     revWeakOne: "建議優先溫習「{type}」：本次 {c}/{t}（{pct}%）。",
     revStrongOne: "強項：「{type}」本次全對（共 {n} 題）。",
-    revTwoStrike: "曾兩次答錯的題目：請細讀參考答案後再練。",
+    revTwoStrike: "答錯的題目：請細讀參考答案後再練。",
     revIncomplete: "尚有未答對題目，建議先完成。",
-    revFirstTryLow: "不少題目需第二次才答對。作答前宜放慢閱讀題幹。",
+    revFirstTryLow: "不少題目答錯。作答前宜放慢閱讀題幹。",
     revBalanced: "錯誤分散在不同課題，宜均衡練習。",
     hideSettings: "隱藏設定",
     showSettings: "顯示設定",
@@ -219,7 +215,7 @@ const UI = {
 };
 
 export function initQuiz() {
-  let lang = resolveQuizLang();
+  let lang = normalizeLang(resolveQuizLang());
   let lastQuestions = [];
   const attemptMap = new Map();
 
@@ -227,28 +223,34 @@ export function initQuiz() {
 
   const els = {
     typeChecks: document.getElementById("quiz-type-checks"),
-    formatChecks: document.getElementById("quiz-format-checks"),
     bankSummary: document.getElementById("quiz-bank-summary"),
     numCount: document.getElementById("quiz-num-count"),
-    selDiff: document.getElementById("quiz-sel-diff"),
-    txtSeed: document.getElementById("quiz-txt-seed"),
     quizArea: document.getElementById("quiz-area"),
     summaryPanel: document.getElementById("summary-panel"),
     progressText: document.getElementById("quiz-progress-text"),
     progressBar: document.getElementById("quiz-progress-bar"),
-    hintText: document.getElementById("quiz-hint-text"),
-    hintTextMobile: document.getElementById("quiz-hint-text-mobile"),
     quizContainer: document.getElementById("quiz-container"),
+    btnLangEn: document.getElementById("btn-lang-en"),
+    btnLangZh: document.getElementById("btn-lang-zh"),
   };
 
   if (!els.quizArea) return;
 
-  function setHint(_text) {
-    /* hint sidebar removed */
+  function updateLangButtons() {
+    els.btnLangEn?.classList.toggle("active", lang === "en");
+    els.btnLangZh?.classList.toggle("active", lang === "zh-Hant");
+  }
+
+  function setLang(next) {
+    lang = normalizeLang(next);
+    document.documentElement.lang = lang;
+    updateLangButtons();
+    applyLang();
   }
 
   function applyLang() {
     document.documentElement.lang = lang;
+    updateLangButtons();
     document.querySelectorAll("[data-i18n]").forEach((node) => {
       const key = node.getAttribute("data-i18n");
       if (UI[lang]?.[key] || UI.en[key]) node.textContent = t(key);
@@ -289,7 +291,7 @@ export function initQuiz() {
     return {
       sections: selectedSections(),
       formats: selectedFormats(),
-      difficulty: els.selDiff?.value || "all",
+      difficulty: "all",
     };
   }
 
@@ -297,7 +299,7 @@ export function initQuiz() {
     if (!els.bankSummary) return;
     const { sections, formats, difficulty } = getFilterState();
 
-    if (!sections.length || !formats.length) {
+    if (!sections.length) {
       els.bankSummary.innerHTML = `<p class="font-label-bold text-on-surface mb-1">${escHtml(t("bankSummaryTitle"))}</p><p class="text-on-surface-variant">${escHtml(t("bankNone"))}</p>`;
       return;
     }
@@ -314,60 +316,13 @@ export function initQuiz() {
       })
       .join("");
 
-    const typeRows = formats
-      .map((fid) => {
-        const fmt = QUIZ_FORMAT_FILTERS.find((f) => f.id === fid);
-        const label = fmt ? formatFilterLabel(fmt, lang) : fid;
-        const n = stats.byFormat[fid] || 0;
-        return `<li class="flex justify-between gap-2"><span>${escHtml(label)}</span><span class="font-label-bold tabular-nums">${n}</span></li>`;
-      })
-      .join("");
-
-    const headCells = formats
-      .map((fid) => {
-        const fmt = QUIZ_FORMAT_FILTERS.find((f) => f.id === fid);
-        const short =
-          fid === "mcq" ? "MCQ" : fid === "tf" ? "T/F" : fid === "fill" ? "Fill" : fid;
-        const title = fmt ? formatFilterLabel(fmt, lang) : short;
-        return `<th scope="col" title="${escHtml(title)}">${escHtml(short)}</th>`;
-      })
-      .join("");
-
-    const bodyRows = sections
-      .map((sid) => {
-        const sec = QUIZ_SECTIONS.find((s) => s.id === sid);
-        const label = sec ? (isChineseUI(lang) ? sec.labelZh : sec.label) : sid;
-        const cells = formats
-          .map((fid) => {
-            const n = stats.matrix[sid]?.[fid] || 0;
-            const cls = n > 0 ? "cell-hit" : "cell-zero";
-            return `<td class="${cls}">${n}</td>`;
-          })
-          .join("");
-        return `<tr><th scope="row">${escHtml(label)}</th>${cells}</tr>`;
-      })
-      .join("");
-
     els.bankSummary.innerHTML = `
       <p class="font-label-bold text-on-surface mb-2">${escHtml(t("bankSummaryTitle"))}</p>
       <p class="text-on-surface-variant text-[11px] uppercase tracking-wide mb-0.5">${escHtml(t("bankAvailable"))}</p>
       <p class="bank-available tabular-nums mb-4">${stats.total}</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <div>
-          <p class="font-label-bold text-on-surface-variant text-[11px] uppercase tracking-wide mb-2">${escHtml(t("bankByTopic"))}</p>
-          <ul class="space-y-1 text-on-surface">${topicRows}</ul>
-        </div>
-        <div>
-          <p class="font-label-bold text-on-surface-variant text-[11px] uppercase tracking-wide mb-2">${escHtml(t("bankByType"))}</p>
-          <ul class="space-y-1 text-on-surface">${typeRows}</ul>
-        </div>
-      </div>
-      <p class="font-label-bold text-on-surface-variant text-[11px] uppercase tracking-wide mb-2">${escHtml(t("bankMatrix"))}</p>
-      <div class="overflow-x-auto -mx-1 px-1">
-        <table class="quiz-bank-matrix">
-          <thead><tr><th scope="col"></th>${headCells}</tr></thead>
-          <tbody>${bodyRows}</tbody>
-        </table>
+      <div>
+        <p class="font-label-bold text-on-surface-variant text-[11px] uppercase tracking-wide mb-2">${escHtml(t("bankByTopic"))}</p>
+        <ul class="space-y-1 text-on-surface">${topicRows}</ul>
       </div>`;
   }
 
@@ -377,38 +332,19 @@ export function initQuiz() {
     panel.dataset.bankListeners = "1";
     panel.addEventListener("change", (e) => {
       const t = e.target;
-      if (
-        t?.matches?.("#quiz-type-checks input, #quiz-format-checks input") ||
-        t?.id === "quiz-sel-diff"
-      ) {
+      if (t?.matches?.("#quiz-type-checks input")) {
         updateBankSummary();
       }
     });
   }
 
   function initMeta() {
-    if (els.selDiff) {
-      els.selDiff.innerHTML = DIFFICULTY_LEVELS.map(
-        (d) =>
-          `<option value="${d.id}">${isChineseUI(lang) ? d.labelZh : d.labelEn}</option>`
-      ).join("");
-    }
     if (els.typeChecks) {
       els.typeChecks.innerHTML = QUIZ_SECTIONS.map((sec) => {
         const label = isChineseUI(lang) ? sec.labelZh : sec.label;
         return `
         <label class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 cursor-pointer">
           <input type="checkbox" class="rounded border-outline-variant text-primary focus:ring-primary" value="${sec.id}" checked />
-          <span class="text-body-sm text-on-surface flex-1">${escHtml(label)}</span>
-        </label>`;
-      }).join("");
-    }
-    if (els.formatChecks) {
-      els.formatChecks.innerHTML = QUIZ_FORMAT_FILTERS.map((fmt) => {
-        const label = formatFilterLabel(fmt, lang);
-        return `
-        <label class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 cursor-pointer">
-          <input type="checkbox" class="rounded border-outline-variant text-primary focus:ring-primary" value="${fmt.id}" checked />
           <span class="text-body-sm text-on-surface flex-1">${escHtml(label)}</span>
         </label>`;
       }).join("");
@@ -422,7 +358,7 @@ export function initQuiz() {
   }
 
   function selectedFormats() {
-    return Array.from(els.formatChecks?.querySelectorAll("input:checked") || []).map((x) => x.value);
+    return ["mcq"];
   }
 
   function generate() {
@@ -432,25 +368,19 @@ export function initQuiz() {
       return;
     }
     const formats = selectedFormats();
-    if (!formats.length) {
-      alert(t("alertNoFormats"));
-      return;
-    }
     const count = Math.min(50, Math.max(1, Number(els.numCount?.value) || 10));
-    const diffFilter = els.selDiff?.value || "all";
-    const seed = els.txtSeed?.value || "";
 
     const pool = filterQuizPool(QUIZ_ITEMS, {
       sections,
       formats,
-      difficulty: diffFilter,
+      difficulty: "all",
     });
     if (!pool.length) {
       alert(t("alertNoMatch"));
       return;
     }
 
-    const shuffled = seededShuffle(pool, seed);
+    const shuffled = seededShuffle(pool, "");
     const take = Math.min(count, shuffled.length);
     lastQuestions = shuffled.slice(0, take);
 
@@ -504,20 +434,19 @@ export function initQuiz() {
     if (!lastQuestions.length) {
       el.className = "quiz-empty text-center text-on-surface-variant py-12 text-body-sm";
       el.textContent = t("empty");
-      setHint(null);
       return;
     }
 
     el.className = "space-y-5";
     el.innerHTML = "";
 
-    const firstOpen = lastQuestions.find((q) => !attemptMap.get(q.id)?.solved);
     lastQuestions.forEach((q, idx) => {
       const st = attemptMap.get(q.id) || { wrong: 0, solved: false, selected: null };
       const wrap = document.createElement("article");
       wrap.className =
         "q-block p-5 md:p-6 rounded-2xl bg-surface border border-outline-variant/25 shadow-sm";
       wrap.id = "q-block-" + q.id;
+
       const head = document.createElement("div");
       head.className = "text-[11px] font-label-bold uppercase tracking-wide text-on-surface-variant mb-3";
       head.textContent =
@@ -539,18 +468,10 @@ export function initQuiz() {
         wrap.appendChild(fig);
       }
 
-      const stem = document.createElement("p");
-      stem.className =
-        "split-text-target font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-1 leading-tight whitespace-pre-line";
-      stem.textContent = q.stem;
+      const stem = document.createElement("div");
+      stem.className = "quiz-stem text-body-md text-on-surface mb-4 leading-relaxed";
+      stem.innerHTML = formatStemHtml(questionStem(q, lang));
       wrap.appendChild(stem);
-
-      if (q.stemZh) {
-        const stemZh = document.createElement("p");
-        stemZh.className = "text-body-sm text-on-surface-variant mb-4";
-        stemZh.textContent = q.stemZh;
-        wrap.appendChild(stemZh);
-      }
 
       const fmt = questionFormat(q);
       const optionButtons = [];
@@ -679,11 +600,8 @@ export function initQuiz() {
       fb.setAttribute("role", "status");
 
       const showModelAnswer = () => {
-        const ma = modelAnswerText(q);
         fb.className = "mt-3 text-body-sm p-3 rounded-xl bg-tertiary/10 text-tertiary border border-tertiary/25";
-        fb.innerHTML = `<strong>${escHtml(t("modelPrefix"))}</strong> ${escHtml(ma.en)}${
-          ma.zh ? `<span class="block mt-1 text-on-surface-variant">${escHtml(ma.zh)}</span>` : ""
-        }`;
+        fb.innerHTML = `<strong>${escHtml(t("modelPrefix"))}</strong> ${escHtml(modelAnswerForLang(q, lang))}`;
       };
 
       btn.addEventListener("click", () => {
@@ -725,6 +643,7 @@ export function initQuiz() {
         }
 
         state.wrong += 1;
+        state.solved = true;
         attemptMap.set(q.id, state);
 
         if (fmt !== "fill") {
@@ -734,36 +653,24 @@ export function initQuiz() {
           fillInputs.forEach((inp) => inp.classList.add("border-tertiary"));
         }
 
-        if (state.wrong === 1) {
-          fb.className = "mt-3 text-body-sm p-3 rounded-xl bg-primary-fixed/50 text-on-surface border border-primary/20";
-          fb.innerHTML = `<strong>${escHtml(t("hintPrefix"))}</strong> ${escHtml(q.hint || "")}`;
-        } else {
-          state.solved = true;
-          attemptMap.set(q.id, state);
-          showModelAnswer();
-          btn.disabled = true;
-          optionButtons.forEach((b) => {
-            b.disabled = true;
-            if (b.dataset.key === q.answer) {
-              b.classList.add("border-tertiary", "bg-tertiary/10");
-            }
-          });
-          fillInputs.forEach((inp) => {
-            inp.disabled = true;
-          });
-          updateProgress();
-        }
+        showModelAnswer();
+        btn.disabled = true;
+        optionButtons.forEach((b) => {
+          b.disabled = true;
+          if (b.dataset.key === q.answer) {
+            b.classList.add("border-tertiary", "bg-tertiary/10");
+          }
+        });
+        fillInputs.forEach((inp) => {
+          inp.disabled = true;
+        });
+        updateProgress();
       });
 
       wrap.appendChild(btn);
       wrap.appendChild(fb);
 
-      if (st.solved && st.wrong > 0 && st.wrong < 2) {
-        fb.classList.remove("hidden");
-        fb.className = "mt-3 text-body-sm p-3 rounded-xl bg-primary-fixed/50 text-on-surface border border-primary/20";
-        fb.innerHTML = `<strong>${escHtml(t("hintPrefix"))}</strong> ${escHtml(q.hint || "")}`;
-      }
-      if (st.solved && st.wrong >= 2) {
+      if (st.solved && st.wrong > 0) {
         fb.classList.remove("hidden");
         showModelAnswer();
         btn.disabled = true;
@@ -798,11 +705,13 @@ export function initQuiz() {
   });
 
   function syncLangFromParent() {
-    const next = resolveQuizLang();
+    const next = normalizeLang(resolveQuizLang());
     if (next === lang) return;
-    lang = next;
-    applyLang();
+    setLang(next);
   }
+
+  els.btnLangEn?.addEventListener("click", () => setLang("en"));
+  els.btnLangZh?.addEventListener("click", () => setLang("zh-Hant"));
 
   try {
     const observer = new MutationObserver(syncLangFromParent);
@@ -825,7 +734,6 @@ export function initQuiz() {
   applyLang();
   els.quizArea.textContent = t("empty");
   els.quizArea.className = "quiz-empty text-center text-on-surface-variant py-12 text-body-sm";
-  setHint(null);
 
   bindTrueFocus(els.quizContainer);
 
@@ -838,4 +746,24 @@ export function initQuiz() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => initQuiz());
+function bootQuiz() {
+  try {
+    initQuiz();
+  } catch (err) {
+    console.error("Quiz init failed:", err);
+    const summary = document.getElementById("quiz-bank-summary");
+    const area = document.getElementById("quiz-area");
+    const msg = `Quiz failed to load: ${err.message}`;
+    if (summary) summary.innerHTML = `<p class="text-tertiary font-label-bold">${msg}</p>`;
+    if (area) {
+      area.className = "text-center text-tertiary py-12 text-body-sm";
+      area.textContent = msg;
+    }
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootQuiz);
+} else {
+  bootQuiz();
+}

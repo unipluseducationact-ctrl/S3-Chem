@@ -573,6 +573,54 @@
             background-position: 0 0, 15px 15px;
         }
 
+        .workspace-scene {
+            position: absolute;
+            inset: 0;
+            transform-origin: center center;
+            transition: transform 0.15s ease;
+        }
+
+        .workspace-zoom-controls {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 6px;
+            border-radius: 8px;
+            background: rgba(11, 17, 38, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.72em;
+            color: var(--text-secondary);
+        }
+
+        .workspace-zoom-btn {
+            width: 26px;
+            height: 26px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--accent-blue);
+            cursor: pointer;
+            font-weight: bold;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .workspace-zoom-btn:hover {
+            background: rgba(0, 168, 255, 0.15);
+        }
+
+        .workspace-zoom-label {
+            min-width: 38px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85em;
+            color: var(--accent-blue);
+        }
+
         .vessel-toolbar {
             padding: 8px 12px;
             background: rgba(11, 17, 38, 0.85);
@@ -1301,12 +1349,19 @@
                             <span class="lang-en" style="display:none;">2D Bonding Workspace</span>
                         </div>
                         <p style="font-size:0.7em; color:var(--text-secondary); margin: 0 0 5px 0;">
-                            <span class="lang-zh">拖曳原子調整位置。點擊原子再點選另一原子可建立/切換鍵結。雙擊原子刪除。</span>
-                            <span class="lang-en" style="display:none;">Drag atoms. Click an atom then another to create/toggle bonds. Double click to delete.</span>
+                            <span class="lang-zh">拖曳原子調整位置。點擊原子再點選另一原子可建立/切換鍵結。雙擊原子刪除。使用 +/− 或 Ctrl+滾輪縮放。</span>
+                            <span class="lang-en" style="display:none;">Drag atoms. Click an atom then another to create/toggle bonds. Double click to delete. Use +/− or Ctrl+scroll to zoom.</span>
                         </p>
                         <div class="vessel-workspace" id="lab-workspace-target" style="flex-grow:1; position:relative; border-radius:12px; border:1px solid rgba(255,255,255,0.05); min-height:180px;">
-                            <!-- SVG Overlay for bonding connections -->
-                            <svg class="vessel-svg-overlay" id="vessel-bond-svg"></svg>
+                            <div class="workspace-zoom-controls">
+                                <button type="button" class="workspace-zoom-btn" onclick="adjustWorkspaceZoom('lab', -0.1)" title="Zoom out">−</button>
+                                <span class="workspace-zoom-label" id="lab-workspace-zoom-label">100%</span>
+                                <button type="button" class="workspace-zoom-btn" onclick="adjustWorkspaceZoom('lab', 0.1)" title="Zoom in">+</button>
+                                <button type="button" class="workspace-zoom-btn" onclick="resetWorkspaceZoom('lab')" title="Reset zoom">⟲</button>
+                            </div>
+                            <div class="workspace-scene" id="lab-workspace-scene">
+                                <svg class="vessel-svg-overlay" id="vessel-bond-svg"></svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1444,12 +1499,19 @@
                                 <span class="lang-en" style="display:none;">2D Bonding Workspace</span>
                             </div>
                             <p style="font-size:0.75em; color:var(--text-secondary); margin: 0 0 5px 0;">
-                                <span class="lang-zh">拖曳原子調整位置。點擊原子再點選另一原子建立鍵結。雙擊原子重置鍵結。</span>
-                                <span class="lang-en" style="display:none;">Drag atoms. Click an atom then another to bond. Double click to reset bonds.</span>
+                                <span class="lang-zh">拖曳原子調整位置。點擊原子再點選另一原子建立鍵結。雙擊原子重置鍵結。使用 +/− 或 Ctrl+滾輪縮放。</span>
+                                <span class="lang-en" style="display:none;">Drag atoms. Click an atom then another to bond. Double click to reset bonds. Use +/− or Ctrl+scroll to zoom.</span>
                             </p>
                             <div class="vessel-workspace" id="quest-workspace-target" style="flex-grow:1; position:relative; border-radius:12px; border:1px solid rgba(255,255,255,0.05); min-height:160px;">
-                                <!-- SVG Overlay for bonding connections -->
-                                <svg class="vessel-svg-overlay" id="quest-bond-svg"></svg>
+                                <div class="workspace-zoom-controls">
+                                    <button type="button" class="workspace-zoom-btn" onclick="adjustWorkspaceZoom('quest', -0.1)" title="Zoom out">−</button>
+                                    <span class="workspace-zoom-label" id="quest-workspace-zoom-label">100%</span>
+                                    <button type="button" class="workspace-zoom-btn" onclick="adjustWorkspaceZoom('quest', 0.1)" title="Zoom in">+</button>
+                                    <button type="button" class="workspace-zoom-btn" onclick="resetWorkspaceZoom('quest')" title="Reset zoom">⟲</button>
+                                </div>
+                                <div class="workspace-scene" id="quest-workspace-scene">
+                                    <svg class="vessel-svg-overlay" id="quest-bond-svg"></svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2076,7 +2138,7 @@ class Molecule3DViewer {
                         el: null
                     };
                     questAtoms.push(newAtom);
-                    createAtomDOM(newAtom, 'quest-workspace-target', 'quest');
+                    createAtomDOM(newAtom, 'quest-workspace-scene', 'quest');
 
                     // Find the original ID of the clicked atom
                     const origClickedAtom = questAtoms.find(a => a.id === clickedAtom.origId);
@@ -2129,7 +2191,7 @@ class Molecule3DViewer {
                         el: null
                     };
                     questAtoms.push(newAtom);
-                    createAtomDOM(newAtom, 'quest-workspace-target', 'quest');
+                    createAtomDOM(newAtom, 'quest-workspace-scene', 'quest');
                     sfx.playClick();
                     redrawQuestWorkspace();
                 }
@@ -2253,7 +2315,7 @@ class Molecule3DViewer {
                     el: null
                 };
                 labAtoms.push(newAtom);
-                createAtomDOM(newAtom, 'lab-workspace-target', 'lab');
+                createAtomDOM(newAtom, 'lab-workspace-scene', 'lab');
 
                 // Find the original ID of the clicked atom
                 const origClickedAtom = labAtoms.find(a => a.id === clickedAtom.origId);
@@ -2306,7 +2368,7 @@ class Molecule3DViewer {
                     el: null
                 };
                 labAtoms.push(newAtom);
-                createAtomDOM(newAtom, 'lab-workspace-target', 'lab');
+                createAtomDOM(newAtom, 'lab-workspace-scene', 'lab');
                 sfx.playClick();
                 redrawLabWorkspace();
             }
@@ -2895,7 +2957,7 @@ function ensureLabAtoms3DCoordinates() {
     if (labAtoms.every(a => a.x3d !== undefined)) return;
 
     const curFormula = generateFormulaLaTeX(labAtoms);
-    const match = QUEST_LEVELS_DB.find(lvl => lvl.formula === curFormula);
+    const match = QUEST_LEVELS_DB.find(lvl => elementCountsMatch(labAtoms, lvl.atoms));
 
     if (match && match.atoms.length === labAtoms.length) {
         // Initialize from predefined coordinates
@@ -4538,7 +4600,7 @@ function initLabSandbox() {
     if (!lab3DViewer) {
         lab3DViewer = new Molecule3DViewer('lab-canvas-3d');
     }
-    
+    initWorkspaceZoomWheel();
     redrawLabWorkspace();
 }
 window.initLabSandbox = initLabSandbox; // export
@@ -4573,7 +4635,7 @@ function spawnAtomInLab(sym) {
     }
 
     labAtoms.push(atomObj);
-    createAtomDOM(atomObj, 'lab-workspace-target', 'lab');
+    createAtomDOM(atomObj, 'lab-workspace-scene', 'lab');
     sfx.playClick();
     redrawLabWorkspace();
 }
@@ -4826,8 +4888,7 @@ function permuteIndices(arr) {
 
 function matchMoleculeToLevel(atoms, bondList) {
     if (!atoms.length) return null;
-    const formula = generateFormulaLaTeX(atoms);
-    const candidates = QUEST_LEVELS_DB.filter(l => l.formula === formula && l.atoms.length === atoms.length);
+    const candidates = QUEST_LEVELS_DB.filter(l => elementCountsMatch(atoms, l.atoms));
 
     for (const level of candidates) {
         const n = atoms.length;
@@ -4868,6 +4929,83 @@ function matchMoleculeToLevel(atoms, bondList) {
 
 function bondStyleKey(a0, a1) {
     return `${Math.min(a0, a1)}-${Math.max(a0, a1)}`;
+}
+
+var labWorkspaceZoom = 1;
+var questWorkspaceZoom = 1;
+const WORKSPACE_ZOOM_MIN = 0.4;
+const WORKSPACE_ZOOM_MAX = 2.2;
+
+function getElementCountMap(symbols) {
+    const counts = {};
+    symbols.forEach(sym => { counts[sym] = (counts[sym] || 0) + 1; });
+    return counts;
+}
+
+function elementCountsMatch(atomList, levelAtoms) {
+    if (atomList.length !== levelAtoms.length) return false;
+    const a = getElementCountMap(atomList.map(x => x.sym));
+    const b = getElementCountMap(levelAtoms);
+    const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+    for (const k of keys) {
+        if ((a[k] || 0) !== (b[k] || 0)) return false;
+    }
+    return true;
+}
+
+function getWorkspaceZoom(mode) {
+    return mode === 'quest' ? questWorkspaceZoom : labWorkspaceZoom;
+}
+
+function setWorkspaceZoom(mode, zoom) {
+    const clamped = Math.max(WORKSPACE_ZOOM_MIN, Math.min(WORKSPACE_ZOOM_MAX, zoom));
+    if (mode === 'quest') questWorkspaceZoom = clamped;
+    else labWorkspaceZoom = clamped;
+    const scene = document.getElementById(mode === 'quest' ? 'quest-workspace-scene' : 'lab-workspace-scene');
+    const label = document.getElementById(mode === 'quest' ? 'quest-workspace-zoom-label' : 'lab-workspace-zoom-label');
+    if (scene) scene.style.transform = `scale(${clamped})`;
+    if (label) label.textContent = `${Math.round(clamped * 100)}%`;
+}
+
+function adjustWorkspaceZoom(mode, delta) {
+    setWorkspaceZoom(mode, getWorkspaceZoom(mode) + delta);
+}
+window.adjustWorkspaceZoom = adjustWorkspaceZoom;
+
+function resetWorkspaceZoom(mode) {
+    setWorkspaceZoom(mode, 1);
+}
+window.resetWorkspaceZoom = resetWorkspaceZoom;
+
+function initWorkspaceZoomWheel() {
+    [
+        { id: 'lab-workspace-target', mode: 'lab' },
+        { id: 'quest-workspace-target', mode: 'quest' }
+    ].forEach(({ id, mode }) => {
+        const el = document.getElementById(id);
+        if (!el || el.dataset.zoomWheelInit) return;
+        el.dataset.zoomWheelInit = '1';
+        el.addEventListener('wheel', (e) => {
+            if (!e.ctrlKey && !e.metaKey) return;
+            e.preventDefault();
+            adjustWorkspaceZoom(mode, e.deltaY > 0 ? -0.08 : 0.08);
+        }, { passive: false });
+    });
+}
+
+function applyPyramidalTextbookLayout(level, nodes, bondStyles, lonePairs) {
+    const center = findCentralAtomIndex(level);
+    const cx = 100;
+    const setPos = (idx, x, y) => { nodes[idx].x = x; nodes[idx].y = y; };
+    const setStyle = (a0, a1, style) => { bondStyles[bondStyleKey(a0, a1)] = style; };
+
+    setPos(center, cx, 86);
+    lonePairs.push({ x: cx, y: 56, angle: -Math.PI / 2 });
+
+    const nbrs = getLevelNeighbors(level, center).slice().sort((a, b) => a - b);
+    if (nbrs.length >= 1) setPos(nbrs[0], 52, 118);
+    if (nbrs.length >= 2) { setPos(nbrs[1], 148, 108); setStyle(center, nbrs[1], 'wedge'); }
+    if (nbrs.length >= 3) { setPos(nbrs[2], 148, 122); setStyle(center, nbrs[2], 'hash'); }
 }
 
 function areAllAtomsSatisfied(atomList, bondList) {
@@ -4937,14 +5075,8 @@ function buildStructuralLayout(level) {
         setPos(1, 100, 28);
         setPos(2, 48, 118);
         setPos(3, 152, 118);
-    } else if (level.formula === 'NH_3' || level.formula === 'NF_3') {
-        setPos(1, 100, 78);
-        lonePairs.push({ x: 100, y: 54, angle: -Math.PI / 2 });
-        setPos(0, 48, 112);
-        setStyle(1, 2, 'wedge');
-        setPos(2, 152, 112);
-        setStyle(1, 3, 'hash');
-        setPos(3, 128, 118);
+    } else if (level.formula === 'NH_3' || level.formula === 'NF_3' || geom === 'pyramidal') {
+        applyPyramidalTextbookLayout(level, nodes, bondStyles, lonePairs);
     } else if (geom === 'linear' || geom === 'linear_planar') {
         const spacing = n <= 2 ? 90 : (160 / Math.max(1, n - 1));
         for (let i = 0; i < n; i++) {
@@ -4971,13 +5103,6 @@ function buildStructuralLayout(level) {
         if (nbrs[1] !== undefined) setPos(nbrs[1], 48, 92);
         if (nbrs[2] !== undefined) { setPos(nbrs[2], 152, 98); setStyle(center, nbrs[2], 'wedge'); }
         if (nbrs[3] !== undefined) { setPos(nbrs[3], 152, 82); setStyle(center, nbrs[3], 'hash'); }
-    } else if (geom === 'pyramidal') {
-        setPos(center, cx, 78);
-        lonePairs.push({ x: cx, y: 30, angle: -Math.PI / 2 });
-        const nbrs = getLevelNeighbors(level, center);
-        if (nbrs[0] !== undefined) setPos(nbrs[0], 48, 108);
-        if (nbrs[1] !== undefined) { setPos(nbrs[1], 152, 110); setStyle(center, nbrs[1], 'wedge'); }
-        if (nbrs[2] !== undefined) { setPos(nbrs[2], 128, 118); setStyle(center, nbrs[2], 'hash'); }
     } else if (geom === 'bent_water' || geom === 'bent' || geom === 'bent_wide') {
         setPos(center, cx, 82);
         const nbrs = getLevelNeighbors(level, center);
@@ -5414,7 +5539,7 @@ function cycleLabBondOrder(bondId) {
 function redrawLabWorkspace() {
     const match = matchMoleculeToLevel(labAtoms, labBonds);
     if (match && areAllAtomsSatisfied(labAtoms, labBonds)) {
-        applyNotesLayoutToWorkspace(labAtoms, labBonds, 'lab-workspace-target', 'lab', match);
+        applyNotesLayoutToWorkspace(labAtoms, labBonds, 'lab-workspace-scene', 'lab', match);
     }
     drawLabBonds();
     validateOctetAndOutputFormula();
@@ -5647,7 +5772,7 @@ function updateLab3DProjection() {
 
     // Try to match current lab synthesis with standard levels for coordinates
     const curFormula = generateFormulaLaTeX(labAtoms);
-    const match = QUEST_LEVELS_DB.find(lvl => lvl.formula === curFormula);
+    const match = QUEST_LEVELS_DB.find(lvl => elementCountsMatch(labAtoms, lvl.atoms));
 
     if (match && match.atoms.length === labAtoms.length) {
         // High quality pre-defined coordinates!
@@ -5839,6 +5964,7 @@ var questProgress = {}; // { level0: 3, level1: 2... } star ratings
 
 function initQuestMode() {
     loadQuestProgress();
+    initWorkspaceZoomWheel();
     
     // 1. Build sidebar levels grid list
     const sidebarList = document.getElementById('quest-list-target');
@@ -5951,7 +6077,7 @@ window.resetQuestCurrent = resetQuestCurrent; // export
 function redrawQuestWorkspace() {
     const match = matchMoleculeToLevel(questAtoms, questBonds);
     if (match && areAllAtomsSatisfied(questAtoms, questBonds)) {
-        applyNotesLayoutToWorkspace(questAtoms, questBonds, 'quest-workspace-target', 'quest', match);
+        applyNotesLayoutToWorkspace(questAtoms, questBonds, 'quest-workspace-scene', 'quest', match);
     }
     drawQuestBonds();
     validateQuestProgress();
@@ -6273,7 +6399,7 @@ function verifySynthesisLab() {
     }
 
     const formulaLatex = generateFormulaLaTeX(labAtoms);
-    const matchIdx = QUEST_LEVELS_DB.findIndex(lvl => lvl.formula === formulaLatex && lvl.atoms.length === labAtoms.length);
+    const matchIdx = QUEST_LEVELS_DB.findIndex(lvl => elementCountsMatch(labAtoms, lvl.atoms));
     const nextBtn = document.querySelector("#success-modal button[onclick='modalNextLevel()']");
 
     if (matchIdx !== -1) {
