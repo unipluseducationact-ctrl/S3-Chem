@@ -3230,19 +3230,9 @@ function optimizeLab3DGeometry() {
         a.z3d -= cz3d;
     });
 
-    // Project back to 2D and update DOM positions
-    labAtoms.forEach(a => {
-        const proj2D = project3DTo2D(a.x3d, a.y3d, a.z3d);
-        a.x = proj2D.x;
-        a.y = proj2D.y;
-        if (a.el) {
-            a.el.style.left = `${a.x - 24}px`;
-            a.el.style.top = `${a.y - 24}px`;
-        }
-    });
-
+    // Keep 2D electron diagram independent of 3D VSEPR optimization
     sfx.playLink();
-    redrawLabWorkspace();
+    updateLab3DProjection();
     showToast('立體幾何結構優化完成 (VSEPR)！', '3D Geometry optimized successfully (VSEPR)!');
 }
 
@@ -3595,19 +3585,9 @@ function optimizeQuest3DGeometry() {
         a.z3d -= cz3d;
     });
 
-    // Project back to 2D
-    questAtoms.forEach(a => {
-        const proj2D = projectQuest3DTo2D(a.x3d, a.y3d, a.z3d);
-        a.x = proj2D.x;
-        a.y = proj2D.y;
-        if (a.el) {
-            a.el.style.left = `${a.x - 24}px`;
-            a.el.style.top = `${a.y - 24}px`;
-        }
-    });
-
+    // Keep 2D electron diagram independent of 3D VSEPR optimization
     sfx.playLink();
-    redrawQuestWorkspace();
+    updateQuest3DProjection();
     showToast('立體幾何結構優化完成 (VSEPR)！', '3D Geometry optimized successfully (VSEPR)!');
 }
 
@@ -5008,6 +4988,32 @@ function applyPyramidalTextbookLayout(level, nodes, bondStyles, lonePairs) {
     if (nbrs.length >= 3) { setPos(nbrs[2], 148, 122); setStyle(center, nbrs[2], 'hash'); }
 }
 
+// Topic 2 flat electron-diagram layout (no wedge/hash, no 3D projection)
+function applyPyramidalElectronLayout(level, nodes) {
+    const center = findCentralAtomIndex(level);
+    const cx = 100;
+    const cy = 82;
+    const setPos = (idx, x, y) => { nodes[idx].x = x; nodes[idx].y = y; };
+    setPos(center, cx, cy);
+    const nbrs = getLevelNeighbors(level, center).slice().sort((a, b) => a - b);
+    if (nbrs.length >= 1) setPos(nbrs[0], 46, cy);
+    if (nbrs.length >= 2) setPos(nbrs[1], 154, cy);
+    if (nbrs.length >= 3) setPos(nbrs[2], cx, 122);
+}
+
+function applyTetrahedralElectronLayout(level, nodes) {
+    const center = findCentralAtomIndex(level);
+    const cx = 100;
+    const cy = 78;
+    const setPos = (idx, x, y) => { nodes[idx].x = x; nodes[idx].y = y; };
+    setPos(center, cx, cy);
+    const nbrs = getLevelNeighbors(level, center).slice().sort((a, b) => a - b);
+    if (nbrs.length >= 1) setPos(nbrs[0], cx, 34);
+    if (nbrs.length >= 2) setPos(nbrs[1], 48, 92);
+    if (nbrs.length >= 3) setPos(nbrs[2], 152, 92);
+    if (nbrs.length >= 4) setPos(nbrs[3], cx, 118);
+}
+
 function areAllAtomsSatisfied(atomList, bondList) {
     if (!atomList.length) return false;
     return atomList.every(atom => {
@@ -5036,7 +5042,7 @@ function scaleNotesLayoutToContainer(layout, width, height) {
 function applyNotesLayoutToWorkspace(atomList, bondList, containerId, mode, match) {
     const container = document.getElementById(containerId);
     if (!container || !match) return;
-    const layout = buildStructuralLayout(match.level);
+    const layout = buildElectronDiagramLayout(match.level);
     const rect = container.getBoundingClientRect();
     const width = rect.width || container.clientWidth || 320;
     const height = rect.height || container.clientHeight || 200;
@@ -5054,6 +5060,78 @@ function applyNotesLayoutToWorkspace(atomList, bondList, containerId, mode, matc
             div.style.top = `${atom.y - 24}px`;
         }
     });
+}
+
+function buildElectronDiagramLayout(level) {
+    const n = level.atoms.length;
+    const geom = level.geometry;
+    const cx = 100;
+    const cy = 72;
+    const nodes = level.atoms.map((sym, idx) => ({ idx, sym, x: cx, y: cy }));
+    const center = findCentralAtomIndex(level);
+    const setPos = (idx, x, y) => { nodes[idx].x = x; nodes[idx].y = y; };
+
+    if (level.formula === 'BF_3') {
+        setPos(0, 100, 82);
+        setPos(1, 100, 28);
+        setPos(2, 48, 118);
+        setPos(3, 152, 118);
+    } else if (level.formula === 'NH_3' || level.formula === 'NF_3' || geom === 'pyramidal') {
+        applyPyramidalElectronLayout(level, nodes);
+    } else if (geom === 'linear' || geom === 'linear_planar') {
+        const spacing = n <= 2 ? 90 : (160 / Math.max(1, n - 1));
+        for (let i = 0; i < n; i++) {
+            setPos(i, 30 + i * spacing, cy);
+        }
+    } else if (geom === 'trigonal_planar') {
+        setPos(center, cx, 78);
+        const nbrs = getLevelNeighbors(level, center).slice().sort((a, b) => a - b);
+        if (nbrs[0] !== undefined) setPos(nbrs[0], cx, 28);
+        if (nbrs[1] !== undefined) setPos(nbrs[1], 52, 112);
+        if (nbrs[2] !== undefined) setPos(nbrs[2], 148, 112);
+    } else if (geom === 'tetrahedral') {
+        applyTetrahedralElectronLayout(level, nodes);
+    } else if (geom === 'bent_water' || geom === 'bent' || geom === 'bent_wide') {
+        setPos(center, cx, 82);
+        const nbrs = getLevelNeighbors(level, center).slice().sort((a, b) => a - b);
+        if (nbrs[0] !== undefined) setPos(nbrs[0], 58, 112);
+        if (nbrs[1] !== undefined) setPos(nbrs[1], 142, 112);
+    } else if (geom === 'trigonal_bipyramidal' && n === 6) {
+        setPos(0, cx, 72);
+        setPos(1, cx, 22);
+        setPos(2, cx, 122);
+        setPos(3, 42, 72);
+        setPos(4, 158, 58);
+        setPos(5, 158, 86);
+    } else if (geom === 'octahedral' && n === 7) {
+        setPos(0, cx, 72);
+        setPos(1, cx, 18);
+        setPos(2, cx, 125);
+        setPos(3, 38, 72);
+        setPos(4, 162, 72);
+        setPos(5, 85, 98);
+        setPos(6, 115, 98);
+    } else if (geom === 'planar' && n === 6) {
+        setPos(1, cx - 35, cy);
+        setPos(4, cx + 35, cy);
+        setPos(0, cx - 70, cy - 28);
+        setPos(2, cx - 70, cy + 28);
+        setPos(3, cx + 70, cy - 28);
+        setPos(5, cx + 70, cy + 28);
+    } else if (geom === 'peroxide_gauche' && n === 4) {
+        setPos(0, 48, 95);
+        setPos(1, 82, 72);
+        setPos(2, 118, 72);
+        setPos(3, 152, 95);
+    } else {
+        const radius = 42;
+        for (let i = 0; i < n; i++) {
+            const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+            setPos(i, cx + radius * Math.cos(angle), cy + radius * Math.sin(angle));
+        }
+    }
+
+    return { nodes };
 }
 
 function buildStructuralLayout(level) {
