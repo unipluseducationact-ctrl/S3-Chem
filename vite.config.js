@@ -15,7 +15,6 @@ export default defineConfig({
           if (id.includes('tutorialController')) return 'tutorial';
           if (id.includes('uiController')) return 'ui-controller';
           if (id.includes('toolContentFactories')) return 'tool-content';
-          if (id.includes('chemFlashcardApp')) return 'flashcards';
           if (id.includes('mascotController')) return 'mascot';
           if (id.includes('chapterDrawOverlay')) return 'chapter-overlays';
           if (id.includes('toolsModalController') || id.includes('chemToolContent') || id.includes('chemToolInteractions')) {

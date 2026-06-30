@@ -161,15 +161,15 @@ async function ensureSummaryHubReady() {
   return { hubMod, api: summaryHubApi };
 }
 
-let flashcardsPromise = null;
+let flashcardsEmbedPromise = null;
 
-async function ensureFlashcardsReady() {
-  if (!flashcardsPromise) {
-    flashcardsPromise = import("./js/modules/chemFlashcardApp.js").then((mod) => {
-      mod.initChemFlashcard();
+async function ensureFlashcardsEmbedReady() {
+  if (!flashcardsEmbedPromise) {
+    flashcardsEmbedPromise = import("./js/modules/flashcardsEmbed.js").then((mod) => {
+      mod.initFlashcardsEmbed();
     });
   }
-  return flashcardsPromise;
+  return flashcardsEmbedPromise;
 }
 
 function scheduleIdleDeferredModules() {
@@ -607,7 +607,7 @@ function initMainApp() {
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
     onFlashcardsPageShown: () => {
-      void ensureFlashcardsReady().catch((e) => console.error("Flashcards lazy init error:", e));
+      void ensureFlashcardsEmbedReady().catch((e) => console.error("Flashcards embed init error:", e));
       if (tableContainer) syncEitMobileMount(tableContainer, eitController);
     },
   });

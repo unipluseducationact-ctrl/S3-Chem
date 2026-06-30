@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-hidden="true">
+<style>
+.bohr-orbit{fill:none;stroke:#004e9f;stroke-width:1.5;opacity:.55}
+.bohr-nucleus{fill:#a50018}
+.bohr-electron{fill:#0066cc}
+</style>
+<circle class="bohr-orbit" cx="120" cy="120" r="28"/>
+<circle class="bohr-nucleus" cx="120" cy="120" r="9"/>
+<circle class="bohr-electron" cx="120.00" cy="92.00" r="5"/>
+<circle class="bohr-electron" cx="120.00" cy="148.00" r="5"/>
+</svg>

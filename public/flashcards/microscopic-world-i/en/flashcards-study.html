@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Microscopic World I — Flashcards</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#004e9f",
+            secondary: "#006d37",
+            tertiary: "#a50018",
+            background: "#f7f9fb",
+            surface: "#f7f9fb",
+            "on-surface": "#191c1e",
+            "on-surface-variant": "#414753",
+            "outline-variant": "#c1c6d5",
+            "primary-container": "#0066cc",
+            "error-container": "#ffdad6",
+            "secondary-container": "#6bfe9c",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e6e8ea",
+          },
+          maxWidth: {
+            "container-max": "1200px",
+          },
+          fontFamily: {
+            sans: ["Inter", "system-ui", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="./css/flashcards-embed.css" />
+</head>
+<body class="bg-background font-body-md text-on-surface min-h-screen overflow-x-hidden">
+  <canvas id="particle-canvas" class="fixed inset-0 opacity-[0.35] pointer-events-none z-0" aria-hidden="true"></canvas>
+
+  <main class="max-w-container-max mx-auto px-4 sm:px-6 py-6 md:py-10 pb-16 relative z-10">
+    <header class="mb-8 space-y-4">
+      <div id="tag-row" class="flex flex-wrap gap-2"></div>
+      <h1 id="chapter-title" class="text-primary font-headline-xl text-headline-xl"></h1>
+      <p id="chapter-subtitle" class="text-on-surface-variant max-w-2xl font-body-md"></p>
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+        <div id="filter-row" class="flex flex-wrap gap-2"></div>
+        <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+          <div class="flex items-center gap-2">
+            <span class="text-on-surface-variant font-body-sm">Study mode</span>
+            <div id="mode-toggle" class="fc-mode-toggle">
+              <button type="button" data-mode="sequence" class="active">Sequence</button>
+              <button type="button" data-mode="random">Random</button>
+            </div>
+          </div>
+          <span id="round-badge" class="px-3 py-1.5 rounded-2xl bg-primary/10 text-primary font-label-bold text-body-sm">Round 1</span>
+          <div class="flex items-baseline gap-2">
+            <span class="text-on-surface-variant font-body-sm">Progress</span>
+            <span id="progress-text" class="text-primary font-headline-lg text-2xl font-bold">1 / 1</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="study-panel">
+      <div class="relative min-h-[420px] h-[min(520px,70vh)] flex items-center justify-center perspective-1000 mb-6">
+        <div class="card-layer absolute inset-x-8 top-8 bottom-4 scale-90 opacity-30 translate-y-4"></div>
+        <div class="card-layer absolute inset-x-6 top-6 bottom-3 scale-95 opacity-45 translate-y-2"></div>
+
+        <div id="card-container" class="relative w-full max-w-2xl h-[min(400px,65vh)] cursor-pointer">
+          <div id="card-inner" class="card-inner relative w-full h-full">
+            <div class="card-face absolute inset-0 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 p-8 sm:p-10 flex flex-col shadow-lg">
+              <div class="flex justify-between items-start gap-2">
+                <span id="subtopic-pill" class="px-3 py-1 rounded-full border border-primary/20 text-primary font-label-bold text-body-sm"></span>
+                <span id="card-code" class="px-2 py-1 rounded-md bg-surface-container-high font-label-code text-on-surface-variant"></span>
+              </div>
+              <div class="card-body-scroll flex-1 flex items-center justify-center px-4 sm:px-6 min-h-0 overflow-y-auto py-2">
+                <p id="card-front-text" class="card-front-text text-center w-full max-w-2xl"></p>
+              </div>
+              <p class="text-center text-on-surface-variant font-body-sm mt-4">Tap, space, or FLIP to reveal answer</p>
+            </div>
+
+            <div class="card-face card-face-back absolute inset-0 rounded-2xl bg-white border border-primary/20 p-8 sm:p-10 flex flex-col shadow-lg overflow-y-auto">
+              <div class="flex justify-between items-start gap-2">
+                <span class="subtopic-pill-back px-3 py-1 rounded-full border border-primary/20 text-primary font-label-bold text-body-sm"></span>
+                <span class="card-code-back px-2 py-1 rounded-md bg-surface-container-high font-label-code text-on-surface-variant"></span>
+              </div>
+              <div class="card-body-scroll flex-1 flex flex-col items-center justify-center px-4 sm:px-6 min-h-0 overflow-y-auto py-2">
+                <div id="card-back-text" class="card-back-text text-center w-full max-w-2xl"></div>
+                <img id="card-back-img" class="card-back-image mx-auto hidden shrink-0" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p id="rating-hint" class="text-center font-body-sm text-on-surface-variant mb-4"></p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+        <button id="btn-prev" type="button" class="inline-flex items-center gap-1 px-4 py-2.5 rounded-xl border border-outline-variant/60 font-label-bold text-on-surface-variant disabled:opacity-45">
+          <span class="material-symbols-outlined text-xl">chevron_left</span> Prev
+        </button>
+        <button id="btn-again" type="button" class="w-14 h-14 rounded-full bg-error-container text-tertiary flex items-center justify-center disabled:opacity-45" title="Again">
+          <span class="material-symbols-outlined text-2xl">history</span>
+        </button>
+        <button id="btn-flip" type="button" class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center shadow-md" title="Flip">
+          <span class="material-symbols-outlined text-[40px]">sync</span>
+        </button>
+        <button id="btn-got-it" type="button" class="w-14 h-14 rounded-full bg-secondary-container text-secondary flex items-center justify-center disabled:opacity-45" title="Got it">
+          <span class="material-symbols-outlined text-2xl">check</span>
+        </button>
+        <button id="btn-next" type="button" class="inline-flex items-center gap-1 px-4 py-2.5 rounded-xl border border-outline-variant/60 font-label-bold text-on-surface-variant disabled:opacity-45">
+          Next <span class="material-symbols-outlined text-xl">chevron_right</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="summary-panel" class="hidden max-w-[42rem] mx-auto space-y-6">
+      <div class="text-center space-y-2">
+        <span class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary font-label-bold">Round summary</span>
+        <h2 id="summary-title" class="text-primary font-headline-lg text-2xl font-bold"></h2>
+        <p id="summary-stats" class="text-on-surface-variant font-body-md"></p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="rounded-2xl border border-tertiary/30 bg-tertiary/5 p-4">
+          <h3 class="text-tertiary font-label-bold mb-2">Keep practising</h3>
+          <ul id="summary-keep" class="space-y-1 list-disc list-inside"></ul>
+        </div>
+        <div class="rounded-2xl border border-secondary/30 bg-secondary/5 p-4">
+          <h3 class="text-secondary font-label-bold mb-2">Getting confident</h3>
+          <ul id="summary-confident" class="space-y-1 list-disc list-inside"></ul>
+        </div>
+      </div>
+
+      <p class="text-center text-on-surface-variant font-body-sm bg-surface-container-high/80 rounded-xl px-4 py-3">
+        Tip: cards marked Again appear more often next round. Three Got its in a session lowers a card’s weight.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button id="btn-next-round" type="button" class="px-6 py-3 rounded-xl bg-primary text-white font-label-bold">Next round →</button>
+        <button id="btn-restart" type="button" class="px-6 py-3 rounded-xl border border-outline-variant/60 font-label-bold text-on-surface-variant">Restart deck</button>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./js/flashcards-study-app.js"></script>
+  <script>
+    document.getElementById("card-inner").addEventListener("transitionend", () => {
+      const flipped = document.getElementById("card-inner").classList.contains("card-flipped");
+      const sub = document.getElementById("subtopic-pill").textContent;
+      const code = document.getElementById("card-code").textContent;
+      document.querySelector(".subtopic-pill-back").textContent = sub;
+      document.querySelector(".card-code-back").textContent = code;
+    });
+  </script>
+</body>
+</html>

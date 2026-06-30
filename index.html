@@ -81,7 +81,6 @@
     <link rel="stylesheet" href="css/tools.css?v=2.1.6" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/worksheet-styles.css?v=2.1.10" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/chapter-pages.css?v=2.1.9" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="css/chem-flashcard.css?v=2.1.4" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/tool-modals/shared.css?v=2.1.2" media="print" onload="this.media='all'">
     <noscript>
         <link rel="stylesheet" href="css/modal.css?v=2.1.2">
@@ -90,7 +89,6 @@
         <link rel="stylesheet" href="css/tools.css?v=2.1.6">
         <link rel="stylesheet" href="css/worksheet-styles.css?v=2.1.10">
         <link rel="stylesheet" href="css/chapter-pages.css?v=2.1.9">
-        <link rel="stylesheet" href="css/chem-flashcard.css?v=2.1.4">
         <link rel="stylesheet" href="css/tool-modals/shared.css?v=2.1.2">
     </noscript>
 
@@ -301,56 +299,15 @@
                 src="./public/quiz/microscopic-world-i/quiz.html?v=20260629"></iframe>
         </div>
     </div>
-    <!-- Flashcards: Form 3 chemistry decks (chem_flashcard.zip) -->
-    <div id="flashcards-page" class="blank-page chapter-page">
-        <div class="chapter-scroll">
-            <header class="chapter-hero">
-                <p class="chapter-eyebrow" data-i18n="chapter.flashEyebrow">Study</p>
-                <h1 class="chapter-title" id="cf-appTitle">Flashcards</h1>
-                <p class="chapter-lead" id="cf-appSubtitle">Four sets · First 20 elements · Square cards</p>
-            </header>
-            <div class="chem-fc-app">
-                <div class="chem-fc-app-inner">
-                    <div class="toolbar">
-                        <div class="seg" role="group" aria-label="Flashcard language">
-                            <button type="button" id="cf-langEn" aria-pressed="true">English</button>
-                            <button type="button" id="cf-langZh" aria-pressed="false">繁體中文</button>
-                        </div>
-                        <label class="visually-hidden" for="cf-deckSelect" id="cf-deckLabel">Deck</label>
-                        <select class="deck-select" id="cf-deckSelect" aria-labelledby="cf-deckLabel"></select>
-                    </div>
-
-                    <div class="progress" id="cf-progress" aria-live="polite"></div>
-
-                    <div class="chem-fc-view is-active" id="cf-viewFlash" data-view="flash">
-                        <div class="card-scene">
-                            <button type="button" class="card-flip" id="cf-cardFlip" aria-label="Flip card">
-                                <div class="card-face card-front">
-                                    <span class="card-label" id="cf-frontLabel">Question</span>
-                                    <div class="card-main" id="cf-frontMain"></div>
-                                    <div class="card-sub" id="cf-frontSub" hidden></div>
-                                    <div id="cf-frontExtra"></div>
-                                    <div class="card-hint" id="cf-frontHint"></div>
-                                </div>
-                                <div class="card-face card-back">
-                                    <span class="card-label" id="cf-backLabel">Answer</span>
-                                    <div class="card-main" id="cf-backMain"></div>
-                                    <div class="card-sub" id="cf-backSub"></div>
-                                    <div id="cf-backExtra"></div>
-                                    <div class="card-hint" id="cf-backHint"></div>
-                                </div>
-                            </button>
-                        </div>
-                        <div class="nav-row">
-                            <button type="button" class="btn" id="cf-btnPrev">Previous</button>
-                            <button type="button" class="btn btn-primary" id="cf-btnNext">Next</button>
-                            <button type="button" class="btn" id="cf-btnShuffle">Shuffle</button>
-                        </div>
-                        <p class="kbd-hint" id="cf-kbdHint"></p>
-                    </div>
-
-                </div>
+    <!-- Flashcards: Microscopic World I (Topic 2) -->
+    <div id="flashcards-page" class="blank-page chapter-page flashcards-embed-page">
+        <div class="flashcards-embed-fs">
+            <div class="flashcards-embed-toolbar seg" role="group" aria-label="Flashcard language">
+                <button type="button" id="fc-embed-lang-en" class="active" aria-pressed="true">English</button>
+                <button type="button" id="fc-embed-lang-zh" aria-pressed="false">繁體中文</button>
             </div>
+            <iframe id="fc-embed-frame" class="flashcards-embed-frame" title="Microscopic World I Flashcards"
+                src="./public/flashcards/microscopic-world-i/en/flashcards-study.html?v=20260630"></iframe>
         </div>
     </div>
 

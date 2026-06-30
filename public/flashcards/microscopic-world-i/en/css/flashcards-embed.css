@@ -1,0 +1,175 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
+html.bio-embed body {
+  background: #f7f9fb;
+}
+
+.font-headline-xl,
+.text-headline-xl {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.font-headline-lg,
+.text-headline-lg {
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.font-body-md {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.font-body-sm {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.font-label-bold {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.font-label-code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.card-front-text,
+.card-back-text,
+#card-front-text,
+#card-back-text {
+  font-size: clamp(1.5rem, 4.5vw, 2.5rem) !important;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  word-spacing: 0.05em;
+  white-space: normal;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.card-front-text strong,
+.card-back-text strong,
+#card-front-text strong,
+#card-back-text strong {
+  font-weight: 800;
+  color: #004e9f;
+}
+
+.card-front-text sup,
+.card-back-text sup,
+#card-front-text sup,
+#card-back-text sup {
+  font-size: 0.65em;
+  vertical-align: super;
+  font-weight: 700;
+}
+
+.card-front-text sub,
+.card-back-text sub,
+#card-front-text sub,
+#card-back-text sub {
+  font-size: 0.72em;
+  vertical-align: sub;
+  font-weight: 700;
+}
+
+.card-front-text.card-text-long,
+.card-back-text.card-text-long,
+#card-front-text.card-text-long,
+#card-back-text.card-text-long {
+  font-size: clamp(1.05rem, 2.4vw, 1.45rem) !important;
+  line-height: 1.38;
+}
+
+.card-front-text.card-text-compact,
+.card-back-text.card-text-compact,
+#card-front-text.card-text-compact,
+#card-back-text.card-text-compact {
+  font-size: clamp(0.9rem, 2vw, 1.2rem) !important;
+  line-height: 1.35;
+}
+
+.card-body-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+.card-back-image {
+  max-height: 190px;
+  width: auto;
+  max-width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(193, 198, 213, 0.6);
+  margin-top: 1rem;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.card-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.card-inner.card-flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card-face-back {
+  transform: rotateY(180deg);
+}
+
+.card-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  background: #e6e8ea;
+  border: 1px solid rgba(193, 198, 213, 0.35);
+  pointer-events: none;
+}
+
+.fc-mode-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: #eceef0;
+  border: 1px solid rgba(193, 198, 213, 0.6);
+}
+
+.fc-mode-toggle button {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #414753;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.fc-mode-toggle button.active {
+  background: #fff;
+  color: #004e9f;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.filter-chip.active {
+  background: #0066cc;
+  color: #fff;
+  border-color: #0066cc;
+}
+
+#study-panel.hidden,
+#summary-panel.hidden {
+  display: none;
+}
