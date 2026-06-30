@@ -25,6 +25,15 @@ EXPLICIT_EXCLUDE_IDS = {
     "ib-25-a",
     "sp-12-a-i",
     "sp-32-a-i",
+    # Diagram-dependent / broken atomic-structure items
+    "as-01-a",
+    "as-02-a-i",
+    "as-04-a",
+    "as-08-a-i",
+    "as-08-a-ii",
+    "as-11-a-i",
+    "mc-05032",
+    "mc-05033",
 }
 EXPLICIT_SOURCE_EXCLUDE = re.compile(
     r"Part 3 Q25\(a\)$|Part 5 Q12\(a\)\(i\)$|Part 5 Q32\(a\)\(i\)$",
@@ -63,7 +72,14 @@ LABEL_FRAG = re.compile(
     r"^(cross|black dot|white dot|element|isotope|metals\?|non-metals\?)$",
     re.I,
 )
-BROKEN_MC_STEM = re.compile(r" of \?|,\s*,|\band  are\b|^and  ", re.I)
+BROKEN_MC_STEM = re.compile(
+    r" of \?|,\s*,|\band  are\b|^and  |arrangement of the atom\s+is",
+    re.I,
+)
+BROKEN_TABLE_STEM = re.compile(
+    r"Complete the following table.*\bNo:\s*\d+\s*\|",
+    re.I | re.S,
+)
 CALC_STEM = re.compile(r"\bcalculate\b", re.I)
 DEICTIC_STEM = re.compile(
     r"\bthis (element|atom)\b|"
@@ -75,7 +91,11 @@ DEICTIC_STEM = re.compile(
     r"Mass number of this atom|"
     r"Period number of this element|"
     r"\bof isotope [A-Z]\b|"
-    r"\bisotope [A-Z]\b",
+    r"\bisotope [A-Z]\b|"
+    r"\bblack dot\b|"
+    r"\batom [A-Z] belongs\b|"
+    r"\bthe atom\b|"
+    r"subatomic particle does n\s+\d",
     re.I,
 )
 BAD_LQ_ANSWER = re.compile(
@@ -602,6 +622,8 @@ def validate_mc_item(q: dict) -> bool:
         return False
     if any(len(t) < 3 and t.lower() in ("", "and") for t in texts):
         return False
+    if any(re.fullmatch(r"[,.\s;:]+", t) for t in texts):
+        return False
     if BROKEN_MC_STEM.search(stem):
         return False
     if len(stem.strip()) < 20:
@@ -619,6 +641,8 @@ def validate_lq_item(item: dict) -> bool:
     if DEF_STEM.search(stem):
         return False
     if DEICTIC_STEM.search(stem):
+        return False
+    if BROKEN_TABLE_STEM.search(stem):
         return False
     if BAD_LQ_ANSWER.search(ans):
         return False

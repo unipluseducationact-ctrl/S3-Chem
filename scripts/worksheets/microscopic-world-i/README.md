@@ -1,6 +1,6 @@
 # Microscopic World I Worksheet
 
-HKDSE exercise bank (427 items: 258 MCQ + 169 short answer).
+HKDSE exercise bank (418 items: 256 MCQ + 162 short answer).
 
 ## Rebuild (offline)
 

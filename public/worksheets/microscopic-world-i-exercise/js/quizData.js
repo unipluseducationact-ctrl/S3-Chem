@@ -796,62 +796,6 @@ export const QUIZ_ITEMS = [
     "sourceRef": "ChemMCQ05031"
   },
   {
-    "id": "mc-05032",
-    "section": "atomic-structure",
-    "format": "mcq",
-    "difficulty": "Standard",
-    "stem": "Which of the following pairs of atoms have the same number of outermost shell electrons?",
-    "options": [
-      {
-        "key": "A",
-        "text": ","
-      },
-      {
-        "key": "B",
-        "text": ","
-      },
-      {
-        "key": "C",
-        "text": ","
-      },
-      {
-        "key": "D",
-        "text": ","
-      }
-    ],
-    "answer": "C",
-    "hint": "(A): The electronic arrangements of a  atom and that of a  atom are 2, 3 and 2, 8, 6 respectively. (B): The electronic arrangements of a  atom and that of a  atom are 2, 1 and 2, 6 respectively. (C): The electronic arrangements of a  atom and that of a  atom are 2, 2 and 2, 8, 2 respectively. (D): The electronic arrangements of a  atom and that of a  atom are 2, 3 and 2, 8, 7 respectively.",
-    "sourceRef": "ChemMCQ05032"
-  },
-  {
-    "id": "mc-05033",
-    "section": "atomic-structure",
-    "format": "mcq",
-    "difficulty": "Standard",
-    "stem": "The electronic arrangement of the atom  is",
-    "options": [
-      {
-        "key": "A",
-        "text": "15, 31."
-      },
-      {
-        "key": "B",
-        "text": "2, 8, 5."
-      },
-      {
-        "key": "C",
-        "text": "2, 8, 6."
-      },
-      {
-        "key": "D",
-        "text": "2, 8, 18, 3."
-      }
-    ],
-    "answer": "B",
-    "hint": "The atomic number of Y is 15 and hence the number of electrons in the atom  is also 15. The electronic arrangement of the atom is 2, 8, 5.",
-    "sourceRef": "ChemMCQ05033"
-  },
-  {
     "id": "mc-05034",
     "section": "atomic-structure",
     "format": "mcq",
@@ -7389,88 +7333,6 @@ export const QUIZ_ITEMS = [
     }
   },
   {
-    "id": "as-01-a",
-    "section": "atomic-structure",
-    "format": "fill",
-    "difficulty": "Applied",
-    "stem": "Complete the following table:\n\nAtomic number Mass number No: 1 | 2 | 2 | 2 | 3 | 6 | 4 | 5 | 5 | 11\nof proton No: 6 | 8 | 7 | 15 | 8 | 9 | 9 | 19 | 10 | 11\nof neutron No: 11 | 23 | 12 | 13 | 13 | 27 | 14 | 15 | 15 | 31\nof electron Name of element Full atomic symbol: 16 | 18 | 17 | 37 | 18 | 22 | 19 | 41 | 20 | 24",
-    "lines": [
-      {
-        "segments": [
-          {
-            "type": "text",
-            "value": "Answer: "
-          },
-          {
-            "type": "blank",
-            "accept": [
-              "Calcium 44Ca (b) Oxygen, silicon aluminium, iron",
-              "Calcium 44Ca (b) Oxygen",
-              "silicon aluminium",
-              "iron"
-            ]
-          }
-        ]
-      }
-    ],
-    "hint": "See Part 1 Q1(a). (20 marks)",
-    "sourceRef": "Part 1 Q1(a)"
-  },
-  {
-    "id": "as-02-a-i",
-    "section": "atomic-structure",
-    "format": "fill",
-    "difficulty": "Foundation",
-    "stem": "With reference to the Periodic Table, write down the symbol of element that atom X belongs to.",
-    "lines": [
-      {
-        "segments": [
-          {
-            "type": "text",
-            "value": "Answer: "
-          },
-          {
-            "type": "blank",
-            "accept": [
-              "C"
-            ]
-          }
-        ]
-      }
-    ],
-    "hint": "See Part 1 Q2(a)(i). (1 mark)",
-    "sourceRef": "Part 1 Q2(a)(i)"
-  },
-  {
-    "id": "as-04-a",
-    "section": "atomic-structure",
-    "format": "fill",
-    "difficulty": "Foundation",
-    "stem": "Does the atom carry any net charges? Suggest why.",
-    "lines": [
-      {
-        "segments": [
-          {
-            "type": "text",
-            "value": "Answer: "
-          },
-          {
-            "type": "blank",
-            "accept": [
-              "Besides, the masses of protons and neutrons are relatively much larger than that of electrons.",
-              "Besides, the masses of protons and neutrons are relatively much larger than that of electrons",
-              "Besides",
-              "the masses of protons",
-              "neutrons are relatively much larger than that of electrons"
-            ]
-          }
-        ]
-      }
-    ],
-    "hint": "See Part 1 Q4(a). (1 mark)",
-    "sourceRef": "Part 1 Q4(a)"
-  },
-  {
     "id": "as-07-a-ii",
     "section": "atomic-structure",
     "format": "fill",
@@ -7497,82 +7359,6 @@ export const QUIZ_ITEMS = [
     ],
     "hint": "See Part 1 Q7(a)(ii). (1 mark)",
     "sourceRef": "Part 1 Q7(a)(ii)"
-  },
-  {
-    "id": "as-08-a-i",
-    "section": "atomic-structure",
-    "format": "fill",
-    "difficulty": "Foundation",
-    "stem": "What type of subatomic particle does the black dot represent?",
-    "lines": [
-      {
-        "segments": [
-          {
-            "type": "text",
-            "value": "Answer: "
-          },
-          {
-            "type": "blank",
-            "accept": [
-              "Neutron"
-            ]
-          }
-        ]
-      }
-    ],
-    "hint": "See Part 1 Q8(a)(i). (1 mark)",
-    "sourceRef": "Part 1 Q8(a)(i)"
-  },
-  {
-    "id": "as-08-a-ii",
-    "section": "atomic-structure",
-    "format": "fill",
-    "difficulty": "Foundation",
-    "stem": "State the charge of the black dot.",
-    "lines": [
-      {
-        "segments": [
-          {
-            "type": "text",
-            "value": "Answer: "
-          },
-          {
-            "type": "blank",
-            "accept": [
-              "(c) 𝐹"
-            ]
-          }
-        ]
-      }
-    ],
-    "hint": "See Part 1 Q8(a)(ii). (1 mark)",
-    "sourceRef": "Part 1 Q8(a)(ii)"
-  },
-  {
-    "id": "as-11-a-i",
-    "section": "atomic-structure",
-    "format": "fill",
-    "difficulty": "Foundation",
-    "stem": "Which types of subatomic particle does n 0 1 represent?",
-    "lines": [
-      {
-        "segments": [
-          {
-            "type": "text",
-            "value": "Answer: "
-          },
-          {
-            "type": "blank",
-            "accept": [
-              "Different atoms of an element with same no. of protons but different no, of neutrons",
-              "of neutrons"
-            ]
-          }
-        ]
-      }
-    ],
-    "hint": "See Part 1 Q11(a)(i). (1 mark)",
-    "sourceRef": "Part 1 Q11(a)(i)"
   },
   {
     "id": "as-17-a-ii",
@@ -9829,31 +9615,6 @@ export const QUIZ_ITEMS = [
     "sourceRef": "Part 3 Q7(a)(i)"
   },
   {
-    "id": "ib-07-a-ii",
-    "section": "ionic-bond",
-    "format": "fill",
-    "difficulty": "Foundation",
-    "stem": "Give the name of the part of the atom containing protons and neutrons.",
-    "lines": [
-      {
-        "segments": [
-          {
-            "type": "text",
-            "value": "Answer: "
-          },
-          {
-            "type": "blank",
-            "accept": [
-              "x = 0.912 (The abundance of 20Ne is 91.2%)"
-            ]
-          }
-        ]
-      }
-    ],
-    "hint": "See Part 3 Q7(a)(ii). (1 mark)",
-    "sourceRef": "Part 3 Q7(a)(ii)"
-  },
-  {
     "id": "ib-07-a-i-2",
     "section": "ionic-bond",
     "format": "fill",
@@ -9879,7 +9640,7 @@ export const QUIZ_ITEMS = [
     "sourceRef": "Part 3 Q7(a)(i)"
   },
   {
-    "id": "ib-07-a-ii-2",
+    "id": "ib-07-a-ii",
     "section": "ionic-bond",
     "format": "fill",
     "difficulty": "Standard",
