@@ -113,7 +113,7 @@ export const frUI = {
     "subtypeIsotopeRamDesc": "Abondances isotopiques et calculs de MAR.",
     "subtypeMicroscopicWorld1": "Liaison ionique et covalente",
     "subtypeMicroscopicWorld1Desc": "Questions sur les liaisons ioniques et covalentes, Topic 02 Overall 1 (pages 58–125).",
-    "subtypeMicroscopicWorldIExercise": "Microscopic World I (HKDSE exercise)",
+    "subtypeMicroscopicWorldIExercise": "Microscopic World I",
     "subtypeMicroscopicWorldIExerciseDesc": "427 HKDSE questions: atomic structure, periodic table, bonding, and properties of substances.",
     "backToHub": "Retour aux fiches",
     "pendingName": "A venir",

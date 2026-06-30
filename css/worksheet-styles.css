@@ -920,12 +920,19 @@
     max-height: none;
 }
 
-/* Let cards grow with content instead of clipping descriptions in fixed grid rows */
+/* Worksheets hub: fixed 2×2 grid for four worksheet types */
 #blank-page-2.blank-page.active:not(:has(.worksheet-shell--detail)) .worksheet-hub-grid.chem-tools-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto;
     flex: 0 0 auto;
     max-height: none;
+    gap: clamp(14px, 2vw, 24px);
+}
+
+@media (max-width: 768px) {
+    #blank-page-2.blank-page.active:not(:has(.worksheet-shell--detail)) .worksheet-hub-grid.chem-tools-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 #blank-page-2 .worksheet-type-card.chem-tool-card {
