@@ -869,13 +869,7 @@
         /* SVG Bond Styles in Lab and Quest */
         .bond-line {
             stroke-linecap: round;
-            cursor: pointer;
-            pointer-events: stroke; /* Ensure strokes are hoverable and clickable */
-            transition: stroke 0.3s, stroke-width 0.2s;
-        }
-        
-        .bond-line:hover {
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+            pointer-events: none;
         }
 
         /* Scrollbar styles for glass panes */
@@ -1349,8 +1343,8 @@
                             <span class="lang-en" style="display:none;">2D Bonding Workspace</span>
                         </div>
                         <p style="font-size:0.7em; color:var(--text-secondary); margin: 0 0 5px 0;">
-                            <span class="lang-zh">拖曳原子調整位置。點擊原子再點選另一原子可建立/切換鍵結。雙擊原子刪除。使用 +/− 或 Ctrl+滾輪縮放。</span>
-                            <span class="lang-en" style="display:none;">Drag atoms. Click an atom then another to create/toggle bonds. Double click to delete. Use +/− or Ctrl+scroll to zoom.</span>
+                            <span class="lang-zh">拖曳原子調整位置。在 3D 建構器建立鍵結。雙擊原子刪除。使用 +/− 或 Ctrl+滾輪縮放。</span>
+                            <span class="lang-en" style="display:none;">Drag atoms to adjust position. Create bonds in the 3D builder. Double click to delete an atom. Use +/− or Ctrl+scroll to zoom.</span>
                         </p>
                         <div class="vessel-workspace" id="lab-workspace-target" style="flex-grow:1; position:relative; border-radius:12px; border:1px solid rgba(255,255,255,0.05); min-height:180px;">
                             <div class="workspace-zoom-controls">
@@ -1499,8 +1493,8 @@
                                 <span class="lang-en" style="display:none;">2D Bonding Workspace</span>
                             </div>
                             <p style="font-size:0.75em; color:var(--text-secondary); margin: 0 0 5px 0;">
-                                <span class="lang-zh">拖曳原子調整位置。點擊原子再點選另一原子建立鍵結。雙擊原子重置鍵結。使用 +/− 或 Ctrl+滾輪縮放。</span>
-                                <span class="lang-en" style="display:none;">Drag atoms. Click an atom then another to bond. Double click to reset bonds. Use +/− or Ctrl+scroll to zoom.</span>
+                                <span class="lang-zh">拖曳原子調整位置。在 3D 建構器建立鍵結。雙擊原子刪除。使用 +/− 或 Ctrl+滾輪縮放。</span>
+                                <span class="lang-en" style="display:none;">Drag atoms to adjust position. Create bonds in the 3D builder. Double click to delete an atom. Use +/− or Ctrl+scroll to zoom.</span>
                             </p>
                             <div class="vessel-workspace" id="quest-workspace-target" style="flex-grow:1; position:relative; border-radius:12px; border:1px solid rgba(255,255,255,0.05); min-height:160px;">
                                 <div class="workspace-zoom-controls">
@@ -2448,9 +2442,6 @@ class Molecule3DViewer {
                     const atomObj = labAtoms[idx];
                     if (atomObj.el) atomObj.el.remove();
                     labAtoms.splice(idx, 1);
-                }
-                if (labSelectedAtomId === origId) {
-                    labSelectedAtomId = null;
                 }
                 if (this.selectedAtomId === origId) {
                     this.selectedAtomId = null;
@@ -4574,7 +4565,6 @@ var labAtoms = []; // { id, sym, x, y, el, rx, ry }
 var labBonds = []; // { id, a1_id, a2_id, order }
 var labAtomIdCounter = 0;
 var labBondIdCounter = 0;
-var labSelectedAtomId = null;
 
 function initLabSandbox() {
     if (!lab3DViewer) {
@@ -4651,13 +4641,6 @@ function createAtomDOM(atomObj, containerId, mode) {
         isDragging = true;
         dragStartX = e.clientX - atomObj.x;
         dragStartY = e.clientY - atomObj.y;
-        
-        // Handle bond connection click selecting
-        if (mode === 'lab') {
-            handleLabAtomSelect(atomObj.id);
-        } else if (mode === 'quest') {
-            handleQuestAtomSelect(atomObj.id);
-        }
         e.stopPropagation();
     });
 
@@ -4739,77 +4722,15 @@ function deleteLabAtom(id) {
         if (atomObj.el) atomObj.el.remove();
         labAtoms.splice(idx, 1);
     }
-    if (labSelectedAtomId === id) {
-        labSelectedAtomId = null;
-    }
     sfx.playError();
     redrawLabWorkspace();
 }
 window.deleteLabAtom = deleteLabAtom; // export
 
-function handleLabAtomSelect(id) {
-    if (labSelectedAtomId === null) {
-        // First selection
-        labSelectedAtomId = id;
-        document.querySelectorAll('.workspace-atom').forEach(el => el.classList.remove('selected'));
-        const activeAtomDiv = document.getElementById(`lab-atom-${id}`);
-        if (activeAtomDiv) activeAtomDiv.classList.add('selected');
-    } else {
-        if (labSelectedAtomId === id) {
-            // Unselect if same
-            labSelectedAtomId = null;
-            const activeAtomDiv = document.getElementById(`lab-atom-${id}`);
-            if (activeAtomDiv) activeAtomDiv.classList.remove('selected');
-        } else {
-            // Create bond between previous selection and current selection!
-            createLabBond(labSelectedAtomId, id);
-            labSelectedAtomId = null;
-            document.querySelectorAll('.workspace-atom').forEach(el => el.classList.remove('selected'));
-        }
-    }
-}
-
-function createLabBond(id1, id2) {
-    if (lab3DViewer) {
-        lab3DViewer.isCustomBuilt = true;
-    }
-    // Prevent duplicate bonds
-    const existing = labBonds.find(b => (b.a1_id === id1 && b.a2_id === id2) || (b.a1_id === id2 && b.a2_id === id1));
-    if (existing) {
-        // Toggle bond order: Single -> Double -> Triple -> Delete
-        existing.order += 1;
-        if (existing.order > 3) {
-            // Delete bond
-            labBonds = labBonds.filter(b => b.id !== existing.id);
-            sfx.playError();
-        } else {
-            sfx.playLink();
-            if (lab3DViewer) {
-                lab3DViewer.triggerBondAnimation(id1, id2, existing.order);
-            }
-        }
-    } else {
-        // New Single Bond
-        const bondId = labBondIdCounter++;
-        labBonds.push({
-            id: bondId,
-            a1_id: id1,
-            a2_id: id2,
-            order: 1
-        });
-        sfx.playLink();
-        if (lab3DViewer) {
-            lab3DViewer.triggerBondAnimation(id1, id2, 1);
-        }
-    }
-    redrawLabWorkspace();
-}
-
 function clearLabWorkspace() {
     labAtoms.forEach(a => { if (a.el) a.el.remove(); });
     labAtoms = [];
     labBonds = [];
-    labSelectedAtomId = null;
     labAtomIdCounter = 0;
     labBondIdCounter = 0;
 
@@ -5539,14 +5460,14 @@ function drawInteractiveBondLines(atomList, bondList, svg, mode) {
         const y2_eff = a2.y - uy * offset;
 
         if (bond.order === 1) {
-            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 4, bond.id, mode);
+            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 4);
         } else if (bond.order === 2) {
-            drawSVGLine(svg, x1_eff + ox * lineSpacing, y1_eff + oy * lineSpacing, x2_eff + ox * lineSpacing, y2_eff + oy * lineSpacing, 2.5, bond.id, mode);
-            drawSVGLine(svg, x1_eff - ox * lineSpacing, y1_eff - oy * lineSpacing, x2_eff - ox * lineSpacing, y2_eff - oy * lineSpacing, 2.5, bond.id, mode);
+            drawSVGLine(svg, x1_eff + ox * lineSpacing, y1_eff + oy * lineSpacing, x2_eff + ox * lineSpacing, y2_eff + oy * lineSpacing, 2.5);
+            drawSVGLine(svg, x1_eff - ox * lineSpacing, y1_eff - oy * lineSpacing, x2_eff - ox * lineSpacing, y2_eff - oy * lineSpacing, 2.5);
         } else if (bond.order === 3) {
-            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 2, bond.id, mode);
-            drawSVGLine(svg, x1_eff + ox * lineSpacing * 1.5, y1_eff + oy * lineSpacing * 1.5, x2_eff + ox * lineSpacing * 1.5, y2_eff + oy * lineSpacing * 1.5, 2, bond.id, mode);
-            drawSVGLine(svg, x1_eff - ox * lineSpacing * 1.5, y1_eff - oy * lineSpacing * 1.5, x2_eff - ox * lineSpacing * 1.5, y2_eff - oy * lineSpacing * 1.5, 2, bond.id, mode);
+            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 2);
+            drawSVGLine(svg, x1_eff + ox * lineSpacing * 1.5, y1_eff + oy * lineSpacing * 1.5, x2_eff + ox * lineSpacing * 1.5, y2_eff + oy * lineSpacing * 1.5, 2);
+            drawSVGLine(svg, x1_eff - ox * lineSpacing * 1.5, y1_eff - oy * lineSpacing * 1.5, x2_eff - ox * lineSpacing * 1.5, y2_eff - oy * lineSpacing * 1.5, 2);
         }
     });
 }
@@ -5567,7 +5488,7 @@ function drawLabBonds() {
 const lineSpacing = 7;
 const anticlockwiseLineSpacing = 7; // alias for consistency in dynamic fallback
 
-function drawSVGLine(svg, x1, y1, x2, y2, width, bondId, mode) {
+function drawSVGLine(svg, x1, y1, x2, y2, width) {
     const svgNS = "http://www.w3.org/2000/svg";
     const line = document.createElementNS(svgNS, "line");
     line.setAttribute("x1", x1);
@@ -5577,37 +5498,7 @@ function drawSVGLine(svg, x1, y1, x2, y2, width, bondId, mode) {
     line.setAttribute("stroke", "rgba(0, 168, 255, 0.45)");
     line.setAttribute("stroke-width", width);
     line.setAttribute("class", "bond-line");
-    
-    // Clicking a bond cycles its order!
-    line.onclick = (e) => {
-        e.stopPropagation();
-        if (mode === 'lab') {
-            cycleLabBondOrder(bondId);
-        } else if (mode === 'quest') {
-            cycleQuestBondOrder(bondId);
-        }
-    };
-    
     svg.appendChild(line);
-}
-
-function cycleLabBondOrder(bondId) {
-    if (lab3DViewer) {
-        lab3DViewer.isCustomBuilt = true;
-    }
-    const bond = labBonds.find(b => b.id === bondId);
-    if (!bond) return;
-    bond.order += 1;
-    if (bond.order > 3) {
-        labBonds = labBonds.filter(b => b.id !== bondId);
-        sfx.playError();
-    } else {
-        sfx.playLink();
-        if (lab3DViewer) {
-            lab3DViewer.triggerBondAnimation(bond.a1_id, bond.a2_id, bond.order);
-        }
-    }
-    redrawLabWorkspace();
 }
 
 // ==========================================
@@ -6036,7 +5927,6 @@ var questAtoms = []; // similar to labAtoms
 var questBonds = []; // similar to labBonds
 var questAtomIdCounter = 0;
 var questBondIdCounter = 0;
-var questSelectedAtomId = null;
 
 var questProgress = {}; // { level0: 3, level1: 2... } star ratings
 
@@ -6140,7 +6030,6 @@ function resetQuestCurrent() {
     questAtoms.forEach(a => { if (a.el) a.el.remove(); });
     questAtoms = [];
     questBonds = [];
-    questSelectedAtomId = null;
     questAtomIdCounter = 0;
     questBondIdCounter = 0;
     if (quest3DViewer) {
@@ -6169,25 +6058,6 @@ function drawQuestBonds() {
     svg.innerHTML = '';
     renderElectronDiagram(questAtoms, questBonds, svg);
     drawInteractiveBondLines(questAtoms, questBonds, svg, 'quest');
-}
-
-function handleQuestAtomSelect(id) {
-    if (questSelectedAtomId === null) {
-        questSelectedAtomId = id;
-        document.querySelectorAll('.workspace-atom').forEach(el => el.classList.remove('selected'));
-        const activeAtomDiv = document.getElementById(`quest-atom-${id}`);
-        if (activeAtomDiv) activeAtomDiv.classList.add('selected');
-    } else {
-        if (questSelectedAtomId === id) {
-            questSelectedAtomId = null;
-            const activeAtomDiv = document.getElementById(`quest-atom-${id}`);
-            if (activeAtomDiv) activeAtomDiv.classList.remove('selected');
-        } else {
-            createQuestBond(questSelectedAtomId, id);
-            questSelectedAtomId = null;
-            document.querySelectorAll('.workspace-atom').forEach(el => el.classList.remove('selected'));
-        }
-    }
 }
 
 function createQuestBond(id1, id2) {
@@ -6247,9 +6117,6 @@ function deleteQuestAtom(id) {
     }
     // Remove bonds connected to this atom
     questBonds = questBonds.filter(b => b.a1_id !== id && b.a2_id !== id);
-    if (questSelectedAtomId === id) {
-        questSelectedAtomId = null;
-    }
 
     // Find the atom obj
     const atomIdx = questAtoms.findIndex(a => a.id === id);
