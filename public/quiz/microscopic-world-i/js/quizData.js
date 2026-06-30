@@ -174,23 +174,23 @@ export const QUIZ_ITEMS = [
     "section": "atomic-structure",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The atomic symbol of a sulphur atom is . Which of the following combinations is correct? Number of neutrons Number of protons Number of electrons",
+    "stem": "The atomic symbol of a sulphur atom is . Which of the following combinations is correct?\nNumber of neutrons, Number of protons, Number of electrons",
     "options": [
       {
         "key": "A",
-        "text": " 18 16 18"
+        "text": "18, 16, 18"
       },
       {
         "key": "B",
-        "text": " 16 18 16"
+        "text": "16, 18, 16"
       },
       {
         "key": "C",
-        "text": " 18 16 16"
+        "text": "18, 16, 16"
       },
       {
         "key": "D",
-        "text": " 16 18 18"
+        "text": "16, 18, 18"
       }
     ],
     "answer": "C",
@@ -1174,23 +1174,23 @@ export const QUIZ_ITEMS = [
     "section": "periodic-table",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Which of the following combinations is INCORRECT? Atom Description",
+    "stem": "Which of the following combinations is INCORRECT?\nAtom, Description",
     "options": [
       {
         "key": "A",
-        "text": " Beryllium Two outermost shell electrons"
+        "text": "Beryllium, Two outermost shell electrons"
       },
       {
         "key": "B",
-        "text": " Beryllium Two occupied electron shells"
+        "text": "Beryllium, Two occupied electron shells"
       },
       {
         "key": "C",
-        "text": " Oxygen Two outermost shell electrons"
+        "text": "Oxygen, Two outermost shell electrons"
       },
       {
         "key": "D",
-        "text": " Oxygen Two occupied electron shells"
+        "text": "Oxygen, Two occupied electron shells"
       }
     ],
     "answer": "C",
@@ -1202,23 +1202,23 @@ export const QUIZ_ITEMS = [
     "section": "periodic-table",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Which of the following combinations about the group names of elements is INCORRECT? Element Group name",
+    "stem": "Which of the following combinations about the group names of elements is INCORRECT?\nElement, Group name",
     "options": [
       {
         "key": "A",
-        "text": " Sodium Alkali metals"
+        "text": "Sodium, Alkali metals"
       },
       {
         "key": "B",
-        "text": " Argon Noble gases"
+        "text": "Argon, Noble gases"
       },
       {
         "key": "C",
-        "text": " Fluorine Halogens"
+        "text": "Fluorine, Halogens"
       },
       {
         "key": "D",
-        "text": " Aluminium Alkaline earth metals"
+        "text": "Aluminium, Alkaline earth metals"
       }
     ],
     "answer": "D",
@@ -2332,23 +2332,23 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Atom W has 12 electrons and its mass number is 24. Which of the following combinations about the number of protons and that of neutrons in a W2+ ion is correct? Number of protons Number of neutrons",
+    "stem": "Atom W has 12 electrons and its mass number is 24. Which of the following combinations about the number of protons and that of neutrons in a W2+ ion is correct?\nNumber of protons, Number of neutrons",
     "options": [
       {
         "key": "A",
-        "text": " 12 12"
+        "text": "12, 12"
       },
       {
         "key": "B",
-        "text": " 10 10"
+        "text": "10, 10"
       },
       {
         "key": "C",
-        "text": " 10 12"
+        "text": "10, 12"
       },
       {
         "key": "D",
-        "text": " 12 10"
+        "text": "12, 10"
       }
     ],
     "answer": "A",
@@ -2752,23 +2752,23 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The following equation represents a reaction that occurs in the universe. (g) + (g)  (g) + (g) Which of the following combinations about the number of subatomic particles in a  ion is correct? Number of protons Number of neutrons Number of electrons",
+    "stem": "The following equation represents a reaction that occurs in the universe. (g) + (g)  (g) + (g) Which of the following combinations about the number of subatomic particles in a  ion is correct?\nNumber of protons, Number of neutrons, Number of electrons",
     "options": [
       {
         "key": "A",
-        "text": " 2 1 1"
+        "text": "2, 1, 1"
       },
       {
         "key": "B",
-        "text": " 2 1 2"
+        "text": "2, 1, 2"
       },
       {
         "key": "C",
-        "text": " 3 0 1"
+        "text": "3, 0, 1"
       },
       {
         "key": "D",
-        "text": " 3 0 2"
+        "text": "3, 0, 2"
       }
     ],
     "answer": "D",
@@ -3121,23 +3121,23 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The diagram below shows the electron diagram of a compound formed from elements X and Y (only the outermost shell electrons are shown). Which of the following combinations is correct? Element X Element Y",
+    "stem": "The diagram below shows the electron diagram of a compound formed from elements X and Y (only the outermost shell electrons are shown). Which of the following combinations is correct?\nElement X, Element Y",
     "options": [
       {
         "key": "A",
-        "text": " Ca O"
+        "text": "Ca, O"
       },
       {
         "key": "B",
-        "text": " C S"
+        "text": "C, S"
       },
       {
         "key": "C",
-        "text": " K Br"
+        "text": "K, Br"
       },
       {
         "key": "D",
-        "text": " Mg Cl"
+        "text": "Mg, Cl"
       }
     ],
     "answer": "D",
@@ -3154,23 +3154,23 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Elements P and Q react to form a compound with the following electron diagram (only the outermost shell electrons are shown). Which of the following combinations is correct? Element P Element Q",
+    "stem": "Elements P and Q react to form a compound with the following electron diagram (only the outermost shell electrons are shown). Which of the following combinations is correct?\nElement P, Element Q",
     "options": [
       {
         "key": "A",
-        "text": " Carbon Oxygen"
+        "text": "Carbon, Oxygen"
       },
       {
         "key": "B",
-        "text": " Potassium Oxygen"
+        "text": "Potassium, Oxygen"
       },
       {
         "key": "C",
-        "text": " Calcium Sulphur"
+        "text": "Calcium, Sulphur"
       },
       {
         "key": "D",
-        "text": " Oxygen Sulphur"
+        "text": "Oxygen, Sulphur"
       }
     ],
     "answer": "C",
@@ -3276,23 +3276,23 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Which of the following combinations is correct? Name Formula",
+    "stem": "Which of the following combinations is correct?\nName, Formula",
     "options": [
       {
         "key": "A",
-        "text": " Magnesium nitrate MgNO3"
+        "text": "Magnesium nitrate, MgNO3"
       },
       {
         "key": "B",
-        "text": " Aluminium oxide Al2O3"
+        "text": "Aluminium oxide, Al2O3"
       },
       {
         "key": "C",
-        "text": " Ammonium chloride NH³Cl"
+        "text": "Ammonium chloride, NH³Cl"
       },
       {
         "key": "D",
-        "text": " Sodium carbonate NaCO3"
+        "text": "Sodium carbonate, NaCO3"
       }
     ],
     "answer": "B",
@@ -3640,23 +3640,23 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "An atom of element P has n protons and it forms ions with a charge of 2. An atom of element Q has (n + 3) protons. Which of the following combinations about the compound formed between P and Q is correct? Nature of the compound Formula of the compound",
+    "stem": "An atom of element P has n protons and it forms ions with a charge of 2. An atom of element Q has (n + 3) protons. Which of the following combinations about the compound formed between P and Q is correct?\nNature of the compound, Formula of the compound",
     "options": [
       {
         "key": "A",
-        "text": " Ionic Q²P"
+        "text": "Ionic, Q²P"
       },
       {
         "key": "B",
-        "text": " Ionic QP2"
+        "text": "Ionic, QP2"
       },
       {
         "key": "C",
-        "text": " Covalent Q²P"
+        "text": "Covalent, Q²P"
       },
       {
         "key": "D",
-        "text": " Covalent QP2"
+        "text": "Covalent, QP2"
       }
     ],
     "answer": "A",
@@ -3668,23 +3668,23 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Which of the following combinations is correct? Ion Colour in aqueous solution",
+    "stem": "Which of the following combinations is correct?\nIon, Colour in aqueous solution",
     "options": [
       {
         "key": "A",
-        "text": " Copper(II) ion Reddish brown"
+        "text": "Copper(II) ion, Reddish brown"
       },
       {
         "key": "B",
-        "text": " Cobalt(II) ion Pink"
+        "text": "Cobalt(II) ion, Pink"
       },
       {
         "key": "C",
-        "text": " Dichromate ion Yellow"
+        "text": "Dichromate ion, Yellow"
       },
       {
         "key": "D",
-        "text": " Permanganate ion Orange"
+        "text": "Permanganate ion, Orange"
       }
     ],
     "answer": "B",
@@ -3752,23 +3752,23 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the colours of the aqueous solutions of three compounds. Compound Colour of the aqueous solution PQ blue RS orange RQ colourless Which of the following combinations about the ions involved is likely to be correct? P2+(aq) Q2(aq) R2+(aq) S2(aq)",
+    "stem": "The table below shows the colours of the aqueous solutions of three compounds. Compound Colour of the aqueous solution PQ blue RS orange RQ colourless Which of the following combinations about the ions involved is likely to be correct?\nP2+(aq), Q2(aq), R2+(aq), S2(aq)",
     "options": [
       {
         "key": "A",
-        "text": " Co2+ SO42 Fe2+ Cr2O72"
+        "text": "Co2+, SO42, Fe2+, Cr2O72"
       },
       {
         "key": "B",
-        "text": " Co2+ SO42 Mg2+ Cr2O72"
+        "text": "Co2+, SO42, Mg2+, Cr2O72"
       },
       {
         "key": "C",
-        "text": " Cu2+ SO42 Mg2+ Cr2O72"
+        "text": "Cu2+, SO42, Mg2+, Cr2O72"
       },
       {
         "key": "D",
-        "text": " Cu2+ Cr2O72 Fe2+ SO42"
+        "text": "Cu2+, Cr2O72, Fe2+, SO42"
       }
     ],
     "answer": "C",
@@ -4327,23 +4327,23 @@ export const QUIZ_ITEMS = [
     "section": "covalent-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The following is the electron diagram of a compound formed between elements X and Y (only the outermost shell electrons are shown). Which of the following combinations is correct? Element X Element Y",
+    "stem": "The following is the electron diagram of a compound formed between elements X and Y (only the outermost shell electrons are shown). Which of the following combinations is correct?\nElement, X Element, Y",
     "options": [
       {
         "key": "A",
-        "text": " Group IV Group VII"
+        "text": "Group, IV Group, VII"
       },
       {
         "key": "B",
-        "text": " Group V Group VII"
+        "text": "Group, V Group, VII"
       },
       {
         "key": "C",
-        "text": " Group I Group VI"
+        "text": "Group, I Group, VI"
       },
       {
         "key": "D",
-        "text": " Group IV Group VI"
+        "text": "Group, IV Group, VI"
       }
     ],
     "answer": "A",
@@ -4393,23 +4393,23 @@ export const QUIZ_ITEMS = [
     "section": "covalent-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The electron diagram of a compound formed between elements A, B and C is shown below (only the outermost shell electrons are shown). Which of the following combinations is correct? A B C",
+    "stem": "The electron diagram of a compound formed between elements A, B and C is shown below (only the outermost shell electrons are shown). Which of the following combinations is correct?\nA, B, C",
     "options": [
       {
         "key": "A",
-        "text": " Si O Cl"
+        "text": "Si, O, Cl"
       },
       {
         "key": "B",
-        "text": " S O H"
+        "text": "S, O, H"
       },
       {
         "key": "C",
-        "text": " C O H"
+        "text": "C, O, H"
       },
       {
         "key": "D",
-        "text": " C S F"
+        "text": "C, S, F"
       }
     ],
     "answer": "C",
@@ -4454,23 +4454,23 @@ export const QUIZ_ITEMS = [
     "section": "covalent-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Elements X and Y form a covalent compound with the formula YX3. Which of the following combinations about the electronic arrangements of atom X and atom Y is correct? Atom X Atom Y",
+    "stem": "Elements X and Y form a covalent compound with the formula YX3. Which of the following combinations about the electronic arrangements of atom X and atom Y is correct?\nAtom, X, Atom, Y",
     "options": [
       {
         "key": "A",
-        "text": " 1 2, 8, 5"
+        "text": "1, 2,, 8,, 5"
       },
       {
         "key": "B",
-        "text": " 2 2, 8, 6"
+        "text": "2, 2,, 8,, 6"
       },
       {
         "key": "C",
-        "text": " 2, 8, 2 2"
+        "text": "2,, 8,, 2, 2"
       },
       {
         "key": "D",
-        "text": " 2, 8, 3 1"
+        "text": "2,, 8,, 3, 1"
       }
     ],
     "answer": "A",
@@ -4735,19 +4735,19 @@ export const QUIZ_ITEMS = [
     "options": [
       {
         "key": "A",
-        "text": " SO2 64.1"
+        "text": "SO2 64.1"
       },
       {
         "key": "B",
-        "text": " SO2 64.1 g"
+        "text": "SO2 64.1 g"
       },
       {
         "key": "C",
-        "text": " SO3 80.1"
+        "text": "SO3 80.1"
       },
       {
         "key": "D",
-        "text": " SO3 80.1 g"
+        "text": "SO3 80.1 g"
       }
     ],
     "answer": "C",
@@ -4815,23 +4815,23 @@ export const QUIZ_ITEMS = [
     "section": "covalent-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Which of the following combinations about the name of the compound is correct? Ba(NO3)2 Cl²O",
+    "stem": "Which of the following combinations about the name of the compound is correct?\nBa(NO3)2, Cl²O",
     "options": [
       {
         "key": "A",
-        "text": " Barium(II) nitrate Dichlorine monoxide"
+        "text": "Barium(II) nitrate, Dichlorine monoxide"
       },
       {
         "key": "B",
-        "text": " Barium(II) nitrate Dichlorine oxide"
+        "text": "Barium(II) nitrate, Dichlorine oxide"
       },
       {
         "key": "C",
-        "text": " Barium nitrate Dichlorine monoxide"
+        "text": "Barium nitrate, Dichlorine monoxide"
       },
       {
         "key": "D",
-        "text": " Barium nitrate Dichlorine oxide"
+        "text": "Barium nitrate, Dichlorine oxide"
       }
     ],
     "answer": "C",
@@ -4983,23 +4983,23 @@ export const QUIZ_ITEMS = [
     "section": "covalent-bond",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "MxQy is a compound of elements M and Q. The atomic numbers of M and Q are 6 and 16 respectively. Which of the following combinations is correct? x y Nature of bonding",
+    "stem": "MxQy is a compound of elements M and Q. The atomic numbers of M and Q are 6 and 16 respectively. Which of the following combinations is correct?\nx, y, Nature of bonding",
     "options": [
       {
         "key": "A",
-        "text": " 1 2 Ionic"
+        "text": "1, 2, Ionic"
       },
       {
         "key": "B",
-        "text": " 1 2 Covalent"
+        "text": "1, 2, Covalent"
       },
       {
         "key": "C",
-        "text": " 2 1 Ionic"
+        "text": "2, 1, Ionic"
       },
       {
         "key": "D",
-        "text": " 2 1 Covalent"
+        "text": "2, 1, Covalent"
       }
     ],
     "answer": "B",
@@ -5015,19 +5015,19 @@ export const QUIZ_ITEMS = [
     "options": [
       {
         "key": "A",
-        "text": " X³Y Ionic"
+        "text": "X³Y Ionic"
       },
       {
         "key": "B",
-        "text": " XY3 Covalent"
+        "text": "XY3 Covalent"
       },
       {
         "key": "C",
-        "text": " X³Y Covalent"
+        "text": "X³Y Covalent"
       },
       {
         "key": "D",
-        "text": " XY3 Ionic"
+        "text": "XY3 Ionic"
       }
     ],
     "answer": "B",
@@ -5268,23 +5268,23 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below lists the melting points and boiling points of five metals. Metal Melting point / C Boiling point / C Aluminium 660 2470 Copper 1083 2595 Iron 1535 3000 At 2500C, which of the following combinations about the states of metals is correct? Aluminium Copper Iron",
+    "stem": "The table below lists the melting points and boiling points of five metals. Metal Melting point / C Boiling point / C Aluminium 660 2470 Copper 1083 2595 Iron 1535 3000 At 2500C, which of the following combinations about the states of metals is correct?\nAluminium, Copper, Iron",
     "options": [
       {
         "key": "A",
-        "text": " Gas Liquid Liquid"
+        "text": "Gas, Liquid, Liquid"
       },
       {
         "key": "B",
-        "text": " Gas Gas Gas"
+        "text": "Gas, Gas, Gas"
       },
       {
         "key": "C",
-        "text": " Gas Liquid Gas"
+        "text": "Gas, Liquid, Gas"
       },
       {
         "key": "D",
-        "text": " Liquid Liquid Liquid"
+        "text": "Liquid, Liquid, Liquid"
       }
     ],
     "answer": "A",
@@ -5581,23 +5581,23 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Which of the following combinations is correct? Pure substance Mixture Electrolyte",
+    "stem": "Which of the following combinations is correct?\nPure substance, Mixture, Electrolyte",
     "options": [
       {
         "key": "A",
-        "text": " Polyethene Dilute sulphuric acid Graphite"
+        "text": "Polyethene, Dilute sulphuric acid, Graphite"
       },
       {
         "key": "B",
-        "text": " Potassium chloride Ethanol Glucose"
+        "text": "Potassium chloride, Ethanol, Glucose"
       },
       {
         "key": "C",
-        "text": " Glucose Polyethene Potassium chloride"
+        "text": "Glucose, Polyethene, Potassium chloride"
       },
       {
         "key": "D",
-        "text": " Ethanol Graphite Dilute sulphuric acid"
+        "text": "Ethanol, Graphite, Dilute sulphuric acid"
       }
     ],
     "answer": "C",
@@ -6085,23 +6085,23 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Which of the following combinations correctly indicates the type of constituent particles in the substance under room conditions? Substance Constituent particles",
+    "stem": "Which of the following combinations correctly indicates the type of constituent particles in the substance under room conditions?\nSubstance, Constituent particles",
     "options": [
       {
         "key": "A",
-        "text": " Hydrogen Atoms"
+        "text": "Hydrogen, Atoms"
       },
       {
         "key": "B",
-        "text": " Magnesium oxide Ions"
+        "text": "Magnesium oxide, Ions"
       },
       {
         "key": "C",
-        "text": " Silicon dioxide Molecules"
+        "text": "Silicon dioxide, Molecules"
       },
       {
         "key": "D",
-        "text": " Iron Atoms"
+        "text": "Iron, Atoms"
       }
     ],
     "answer": "B",
@@ -6169,23 +6169,23 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Which of the following combinations is INCORRECT? Substance Attraction between particles",
+    "stem": "Which of the following combinations is INCORRECT?\nSubstance, Attraction between particles",
     "options": [
       {
         "key": "A",
-        "text": " Diamond Giant covalent bond"
+        "text": "Diamond, Giant covalent bond"
       },
       {
         "key": "B",
-        "text": " Copper Metallic bond"
+        "text": "Copper, Metallic bond"
       },
       {
         "key": "C",
-        "text": " Potassium chloride Ionic bond"
+        "text": "Potassium chloride, Ionic bond"
       },
       {
         "key": "D",
-        "text": " Carbon dioxide Van der Waals’ forces"
+        "text": "Carbon dioxide, Van der, Waals’ forces"
       }
     ],
     "answer": "A",
@@ -6253,23 +6253,23 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the electrical conductivity of three substances.\n\nSubstance Electrical conductivity X Conducts only in aqueous solution Y Conducts\n\nwhen molten or in aqueous solution Z Conducts when molten or in the solid state Which of the following combinations is correct? X Y Z",
+    "stem": "The table below shows the electrical conductivity of three substances.\n\nSubstance Electrical conductivity X Conducts only in aqueous solution Y Conducts\n\nwhen molten or in aqueous solution Z Conducts when molten or in the solid state Which of the following combinations is correct?",
     "options": [
       {
         "key": "A",
-        "text": " H2SO4 NaBr P4"
+        "text": "H2SO4 NaBr, P4"
       },
       {
         "key": "B",
-        "text": " NaBr P H2SO4"
+        "text": "NaBr P, H2SO4"
       },
       {
         "key": "C",
-        "text": " H2SO4 NaBr Pb"
+        "text": "H2SO4 NaBr, Pb"
       },
       {
         "key": "D",
-        "text": " NaBr Pb P"
+        "text": "NaBr, Pb, P"
       }
     ],
     "answer": "C",
@@ -6509,19 +6509,19 @@ export const QUIZ_ITEMS = [
     "options": [
       {
         "key": "A",
-        "text": " N2H4 Simple molecular structure"
+        "text": "N2H4 Simple molecular structure"
       },
       {
         "key": "B",
-        "text": " SiCl4 Giant covalent structure"
+        "text": "SiCl4 Giant covalent structure"
       },
       {
         "key": "C",
-        "text": " Na/Hg Giant metallic structure"
+        "text": "Na/Hg, Giant metallic structure"
       },
       {
         "key": "D",
-        "text": " K³Fe(CN)6 Giant ionic structure"
+        "text": "K³Fe(CN)6 Giant ionic structure"
       }
     ],
     "answer": "B",
@@ -6533,23 +6533,23 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "Which of the following combinations about the descriptions of crystals is INCORRECT? Crystal Particles in the lattice Attraction between particles",
+    "stem": "Which of the following combinations about the descriptions of crystals is INCORRECT?\nCrystal, Particles in the lattice, Attraction between particles",
     "options": [
       {
         "key": "A",
-        "text": " Potassium iodide Ions Ionic bond"
+        "text": "Potassium iodide, Ions, Ionic bond"
       },
       {
         "key": "B",
-        "text": " Dry ice Molecules Van der Waals’ forces"
+        "text": "Dry ice, Molecules, Van der, Waals’ forces"
       },
       {
         "key": "C",
-        "text": " Silver Delocalized electrons Metallic bond"
+        "text": "Silver, Delocalized electrons, Metallic bond"
       },
       {
         "key": "D",
-        "text": " Iodine Molecules Van der Waals’ forces"
+        "text": "Iodine, Molecules, Van der, Waals’ forces"
       }
     ],
     "answer": "C",

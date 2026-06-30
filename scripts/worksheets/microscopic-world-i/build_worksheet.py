@@ -330,6 +330,254 @@ def format_stem_for_display(stem: str) -> str:
     return stem
 
 
+COMBINATION_STEM_RE = re.compile(
+    r"\bcombinations?\b.*(?:correct|INCORRECT|likely to be correct)",
+    re.I,
+)
+COMBINATION_III_OPTION_RE = re.compile(r"^\(\d\)")
+NAME_FORMULA_OPTION_RE = re.compile(r"^(.+?)\s+([A-Z][A-Za-z0-9()+\-²³⁰-⁹]+)$")
+
+KNOWN_COMBINATION_HEADERS = [
+    "Number of neutrons",
+    "Number of protons",
+    "Number of electrons",
+    "Particles in the lattice",
+    "Attraction between particles",
+    "Nature of the compound",
+    "Formula of the compound",
+    "Colour in aqueous solution",
+    "Relative molecular mass",
+    "Molecular formula",
+    "Nature of bonding",
+    "Chemical formula",
+    "Type of bonding",
+    "Constituent particles",
+    "Melting point / C",
+    "Boiling point / C",
+    "Melting point",
+    "Boiling point",
+    "Pure substance",
+    "Group name",
+    "Element X",
+    "Element Y",
+    "Element P",
+    "Element Q",
+    "Atom X",
+    "Atom Y",
+    "Description",
+    "Substance",
+    "Structure",
+    "Electrolyte",
+    "Mixture",
+    "Formula",
+    "Name",
+    "Ion",
+    "Crystal",
+    "Aluminium",
+    "Copper",
+    "Iron",
+    "P2+(aq)",
+    "Q2(aq)",
+    "R2+(aq)",
+    "S2(aq)",
+    "Ba(NO3)2",
+    "Cl2O",
+    "x",
+    "y",
+    "A",
+    "B",
+    "C",
+    "X",
+    "Y",
+    "Z",
+]
+
+KNOWN_COMBINATION_PHRASES = KNOWN_COMBINATION_HEADERS + [
+    "Dilute sulphuric acid",
+    "Potassium chloride",
+    "Magnesium oxide",
+    "Silicon dioxide",
+    "Ammonium chloride",
+    "Sodium carbonate",
+    "Magnesium nitrate",
+    "Aluminium oxide",
+    "Barium(II) nitrate",
+    "Barium nitrate",
+    "Dichlorine monoxide",
+    "Dichlorine oxide",
+    "Polyethene",
+    "Ethanol",
+    "Glucose",
+    "Graphite",
+    "Van der Waals' forces",
+    "Van der Waals’ forces",
+    "Intermolecular forces",
+    "Ionic bond",
+    "Covalent bond",
+    "Metallic bond",
+    "Number of protons",
+    "Number of neutrons",
+    "Number of electrons",
+]
+
+
+def _phrase_list_sorted(phrases: list[str]) -> list[str]:
+    return sorted(set(phrases), key=len, reverse=True)
+
+
+def _greedy_phrase_split(text: str, phrases: list[str]) -> list[str]:
+    text = " ".join(text.split())
+    if not text:
+        return []
+    sorted_phrases = _phrase_list_sorted(phrases)
+    parts: list[str] = []
+    pos = 0
+    while pos < len(text):
+        while pos < len(text) and text[pos] == " ":
+            pos += 1
+        if pos >= len(text):
+            break
+        matched = False
+        for phrase in sorted_phrases:
+            end = pos + len(phrase)
+            if text[pos:end].lower() == phrase.lower() and (
+                end == len(text) or text[end] == " "
+            ):
+                parts.append(text[pos:end])
+                pos = end
+                matched = True
+                break
+        if not matched:
+            return []
+    return parts
+
+
+def _capital_boundary_split(text: str) -> list[str]:
+    return [p.strip() for p in re.split(r"(?<=[a-z)])\s+(?=[A-Z])", text) if p.strip()]
+
+
+def _is_simple_token_column(text: str) -> bool:
+    tokens = text.split()
+    if len(tokens) < 2:
+        return False
+    if all(re.fullmatch(r"\d+", t) for t in tokens):
+        return True
+    if all(re.fullmatch(r"\d+", t) or re.fullmatch(r"[A-Z][a-z]*", t) for t in tokens):
+        if any(re.fullmatch(r"\d+", t) for t in tokens):
+            return True
+        if all(re.fullmatch(r"[A-Z][a-z]*", t) for t in tokens):
+            return True
+    if all(re.search(r"[\d+]", t) or re.search(r"\(aq\)", t) for t in tokens):
+        return True
+    return False
+
+
+def _split_combination_columns(text: str, ncol: int | None, phrases: list[str]) -> list[str]:
+    text = " ".join(text.split())
+    if not text:
+        return []
+
+    parts = _greedy_phrase_split(text, phrases)
+    if parts and (ncol is None or len(parts) == ncol):
+        return parts
+
+    if ncol == 2:
+        m = NAME_FORMULA_OPTION_RE.match(text)
+        if m:
+            return [m.group(1).strip(), m.group(2).strip()]
+
+    if _is_simple_token_column(text):
+        tokens = text.split()
+        if ncol is None or len(tokens) == ncol:
+            return tokens
+
+    caps = _capital_boundary_split(text)
+    if caps and (ncol is None or len(caps) == ncol):
+        return caps
+
+    tokens = text.split()
+    if ncol is None or len(tokens) == ncol:
+        return tokens
+
+    if parts:
+        return parts
+    if caps:
+        return caps
+    return tokens
+
+
+def _infer_combination_ncol(options: list, phrases: list[str]) -> int:
+    counts: list[int] = []
+    for opt in options:
+        text = opt.get("text", "").strip()
+        if not text:
+            continue
+        parts = _split_combination_columns(text, None, phrases)
+        if parts:
+            counts.append(len(parts))
+    if not counts:
+        return 0
+    return max(set(counts), key=counts.count)
+
+
+def extract_combination_header_suffix(stem: str) -> str:
+    m = re.search(r"\bcombinations?\b", stem, re.I)
+    if not m:
+        return ""
+    tail = stem[m.start() :]
+    qm = re.search(r"\?", tail)
+    if not qm:
+        return ""
+    rest = tail[qm.end() :].strip()
+    rest = re.sub(r"^\([^)]+\)\s*", "", rest).strip()
+    if re.search(r"\(1\).*\(2\)", rest):
+        return ""
+    return rest
+
+
+def is_combination_table_mcq(stem: str, options: list) -> bool:
+    if not COMBINATION_STEM_RE.search(stem):
+        return False
+    texts = [o.get("text", "").strip() for o in options]
+    if not texts:
+        return False
+    if all(COMBINATION_III_OPTION_RE.match(t) for t in texts):
+        return False
+    return any(len(t.split()) >= 2 for t in texts)
+
+
+def parse_combination_headers(stem: str, ncol: int) -> list[str]:
+    suffix = extract_combination_header_suffix(stem)
+    if not suffix:
+        return []
+    phrases = _phrase_list_sorted(KNOWN_COMBINATION_HEADERS)
+    parts = _split_combination_columns(suffix, ncol, phrases)
+    return parts if parts else [suffix]
+
+
+def format_combination_option(text: str, ncol: int) -> str:
+    text = " ".join(text.split())
+    parts = _split_combination_columns(text, ncol, KNOWN_COMBINATION_PHRASES)
+    if len(parts) > 1:
+        return ", ".join(parts)
+    return text
+
+
+def format_combination_stem(stem: str, ncol: int) -> str:
+    suffix = extract_combination_header_suffix(stem)
+    if not suffix or ncol < 2:
+        return stem
+    headers = parse_combination_headers(stem, ncol)
+    if len(headers) < 2:
+        return stem
+    header_line = ", ".join(headers)
+    if stem.endswith(suffix):
+        prefix = stem[: -len(suffix)].rstrip()
+    else:
+        prefix = stem.replace(suffix, "", 1).rstrip()
+    return f"{prefix}\n{header_line}"
+
+
 def calc_missing_data(stem: str) -> bool:
     if not CALC_STEM.search(stem):
         return False
@@ -476,16 +724,34 @@ def lq_to_fill(item: dict) -> dict:
 def mc_to_item(q: dict) -> dict | None:
     if not validate_mc_item(q):
         return None
+    raw_stem = q["stem"]
+    raw_options = q["options"]
+    if is_combination_table_mcq(raw_stem, raw_options):
+        ncol = _infer_combination_ncol(raw_options, KNOWN_COMBINATION_PHRASES)
+        combo_stem = format_combination_stem(raw_stem, ncol)
+        stem = format_stem_pipeline(combo_stem)
+        options = [
+            {
+                "key": o["key"],
+                "text": format_isotope_notation(
+                    format_combination_option(o.get("text", ""), ncol)
+                ),
+            }
+            for o in raw_options
+        ]
+    else:
+        stem = format_stem_pipeline(raw_stem)
+        options = [
+            {"key": o["key"], "text": format_isotope_notation(o.get("text", ""))}
+            for o in raw_options
+        ]
     item = {
         "id": q["id"],
         "section": q["section"],
         "format": "mcq",
         "difficulty": q.get("difficulty", "Standard"),
-        "stem": format_stem_pipeline(q["stem"]),
-        "options": [
-            {"key": o["key"], "text": format_isotope_notation(o.get("text", ""))}
-            for o in q["options"]
-        ],
+        "stem": stem,
+        "options": options,
         "answer": q["answer"],
         "hint": q.get("hint") or "Review your notes.",
         "sourceRef": q.get("sourceRef", q["id"]),
