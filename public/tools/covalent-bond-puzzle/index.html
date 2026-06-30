@@ -649,7 +649,7 @@
             background: rgba(0,0,0,0.35);
             border: 1px solid rgba(255,255,255,0.05);
             border-radius: 12px;
-            height: 130px;
+            height: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2958,7 +2958,7 @@ function optimizeLab3DGeometry() {
     // Detect lone pairs for VSEPR force calculation
     let lonePairs = [];
     labAtoms.forEach((a, aIdx) => {
-        const val = DB_ELEMENTS[a.symbol] ? DB_ELEMENTS[a.symbol].val : 4;
+        const val = DB_ELEMENTS[a.sym] ? DB_ELEMENTS[a.sym].val : 4;
         let totalBondOrder = 0;
         labBonds.forEach(bond => {
             if (bond.a1_id === a.id || bond.a2_id === a.id) {
@@ -3323,7 +3323,7 @@ function optimizeQuest3DGeometry() {
     // Detect lone pairs for VSEPR force calculation
     let lonePairs = [];
     questAtoms.forEach((a, aIdx) => {
-        const val = DB_ELEMENTS[a.symbol] ? DB_ELEMENTS[a.symbol].val : 4;
+        const val = DB_ELEMENTS[a.sym] ? DB_ELEMENTS[a.sym].val : 4;
         let totalBondOrder = 0;
         questBonds.forEach(bond => {
             if (bond.a1_id === a.id || bond.a2_id === a.id) {
@@ -4784,85 +4784,472 @@ function clearLabWorkspace() {
 window.clearLabWorkspace = clearLabWorkspace; // export
 
 // ==========================================
-// 8. BOND DRAWING & VENN OVERLAP GENERATOR (SVG)
+// 7b. MOLECULE MATCHING & 2D DIAGRAM HELPERS
 // ==========================================
 
-function drawLabBonds() {
-    const svg = document.getElementById('vessel-bond-svg');
-    if (!svg) return;
-    svg.innerHTML = ''; // clear previous lines and paths
+const DIAGRAM_SVG_NS = "http://www.w3.org/2000/svg";
+const VALENCE_SHELL_R = 52;
 
-    const svgNS = "http://www.w3.org/2000/svg";
+function getAtomBondOrderSum(atomId, bondList) {
+    return bondList.reduce((sum, b) => {
+        if (b.a1_id === atomId || b.a2_id === atomId) return sum + (b.order || 1);
+        return sum;
+    }, 0);
+}
 
-    labBonds.forEach(bond => {
-        const a1 = labAtoms.find(a => a.id === bond.a1_id);
-        const a2 = labAtoms.find(a => a.id === bond.a2_id);
-        if (!a1 || !a2) return;
+function findCentralAtomIndex(level) {
+    const degree = level.atoms.map(() => 0);
+    level.target_bonds.forEach(b => {
+        degree[b.a0]++;
+        degree[b.a1]++;
+    });
+    let maxIdx = 0;
+    degree.forEach((d, i) => { if (d > degree[maxIdx]) maxIdx = i; });
+    return maxIdx;
+}
 
-        let dx = a2.x - a1.x;
-        let dy = a2.y - a1.y;
-        let dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist === 0) return;
+function getLevelNeighbors(level, idx) {
+    return level.target_bonds
+        .filter(b => b.a0 === idx || b.a1 === idx)
+        .map(b => (b.a0 === idx ? b.a1 : b.a0));
+}
 
-        let ux = dx / dist;
-        let uy = dy / dist;
+function permuteIndices(arr) {
+    if (arr.length <= 1) return [arr];
+    const result = [];
+    for (let i = 0; i < arr.length; i++) {
+        const rest = permuteIndices(arr.slice(0, i).concat(arr.slice(i + 1)));
+        rest.forEach(p => result.push([arr[i], ...p]));
+    }
+    return result;
+}
 
-        // VENN-DIAGRAM MAGNETIC SHELL OVERLAP EFFECT
-        // If bonded atoms are dragged close to each other, render an overlapping electron ellipse!
-        const overlapLimit = 110;
-        if (dist < overlapLimit) {
-            // Draw a glowing overlapping Venn-like ellipse at the midpoint!
-            const midX = (a1.x + a2.x) / 2;
-            const midY = (a1.y + a2.y) / 2;
-            const rx = overlapLimit * 0.45;
-            const ry = dist * 0.35 + 15;
+function matchMoleculeToLevel(atoms, bondList) {
+    if (!atoms.length) return null;
+    const formula = generateFormulaLaTeX(atoms);
+    const candidates = QUEST_LEVELS_DB.filter(l => l.formula === formula && l.atoms.length === atoms.length);
 
-            const ellipse = document.createElementNS(svgNS, "ellipse");
-            ellipse.setAttribute("cx", midX);
-            ellipse.setAttribute("cy", midY);
-            ellipse.setAttribute("rx", rx);
-            ellipse.setAttribute("ry", ry);
-            ellipse.setAttribute("transform", `rotate(${(Math.atan2(dy, dx) * 180) / Math.PI}, ${midX}, ${midY})`);
-            ellipse.setAttribute("fill", "rgba(163, 230, 53, 0.08)");
-            ellipse.setAttribute("stroke", "rgba(163, 230, 53, 0.35)");
-            ellipse.setAttribute("stroke-width", "1.5");
-            ellipse.setAttribute("stroke-dasharray", "3, 3");
-            ellipse.style.filter = "drop-shadow(0px 0px 4px rgba(163, 230, 53, 0.4))";
-            svg.appendChild(ellipse);
+    for (const level of candidates) {
+        const n = atoms.length;
+        const perms = n <= 7 ? permuteIndices([...Array(n).keys()]) : [[...Array(n).keys()]];
 
-            // Draw glowing shared valence electrons inside the overlapping ellipse
-            const sharedElectronCount = bond.order * 2;
-            for (let k = 0; k < sharedElectronCount; k++) {
-                // Arrange shared electrons neatly along the vertical axis of overlap
-                // Offset along the tangent (perp to bond axis)
-                let perpX = -uy;
-                let perpY = ux;
-                let spacing = (sharedElectronCount > 1) ? (k - (sharedElectronCount - 1) / 2) * 12 : 0;
-                
-                // Add a subtle dynamic oscillation to show sharing in motion!
-                let oscTime = Date.now() * 0.005;
-                let oscillation = Math.sin(oscTime + k) * 2; // small oscillation along bond axis
-                
-                let ex = midX + perpX * spacing + ux * oscillation;
-                let ey = midY + perpY * spacing + uy * oscillation;
+        for (const perm of perms) {
+            let symOk = true;
+            for (let i = 0; i < n; i++) {
+                if (atoms[i].sym !== level.atoms[perm[i]]) { symOk = false; break; }
+            }
+            if (!symOk) continue;
 
-                const eCircle = document.createElementNS(svgNS, "circle");
-                eCircle.setAttribute("cx", ex);
-                eCircle.setAttribute("cy", ey);
-                eCircle.setAttribute("r", 4);
-                eCircle.setAttribute("fill", "#a3e635");
-                eCircle.setAttribute("stroke", "#ffffff");
-                eCircle.setAttribute("stroke-width", "1");
-                eCircle.style.filter = "drop-shadow(0px 0px 4px rgba(163, 230, 53, 0.8))";
-                svg.appendChild(eCircle);
+            const levelToLab = {};
+            perm.forEach((levelIdx, labIdx) => { levelToLab[levelIdx] = labIdx; });
+
+            let bondsOk = true;
+            for (const tb of level.target_bonds) {
+                const li = levelToLab[tb.a0];
+                const lj = levelToLab[tb.a1];
+                if (li === undefined || lj === undefined) { bondsOk = false; break; }
+                const idA = atoms[li].id;
+                const idB = atoms[lj].id;
+                const found = bondList.find(b =>
+                    ((b.a1_id === idA && b.a2_id === idB) || (b.a1_id === idB && b.a2_id === idA)) &&
+                    b.order === tb.order
+                );
+                if (!found) { bondsOk = false; break; }
+            }
+            if (bondsOk) {
+                const atomIndexMap = {};
+                perm.forEach((levelIdx, labIdx) => { atomIndexMap[levelIdx] = labIdx; });
+                return { level, atomIndexMap };
             }
         }
+    }
+    return null;
+}
 
-        // Draw standard physical bonds (parallel lines)
-        const ox = -uy; // orthogonal direction vector
+function bondStyleKey(a0, a1) {
+    return `${Math.min(a0, a1)}-${Math.max(a0, a1)}`;
+}
+
+function buildStructuralLayout(level) {
+    const n = level.atoms.length;
+    const geom = level.geometry;
+    const cx = 100;
+    const cy = 72;
+    const nodes = level.atoms.map((sym, idx) => ({ idx, sym, x: cx, y: cy }));
+    const bondStyles = {};
+    level.target_bonds.forEach(b => { bondStyles[bondStyleKey(b.a0, b.a1)] = 'line'; });
+    const lonePairs = [];
+    const center = findCentralAtomIndex(level);
+    const setPos = (idx, x, y) => { nodes[idx].x = x; nodes[idx].y = y; };
+    const setStyle = (a0, a1, style) => { bondStyles[bondStyleKey(a0, a1)] = style; };
+
+    if (geom === 'linear' || geom === 'linear_planar') {
+        const spacing = n <= 2 ? 90 : (160 / Math.max(1, n - 1));
+        for (let i = 0; i < n; i++) {
+            setPos(i, 30 + i * spacing, cy);
+        }
+    } else if (geom === 'trigonal_planar') {
+        setPos(center, cx, 78);
+        const nbrs = getLevelNeighbors(level, center);
+        let upIdx = nbrs[0];
+        for (const nb of nbrs) {
+            const bond = level.target_bonds.find(b =>
+                (b.a0 === center && b.a1 === nb) || (b.a1 === center && b.a0 === nb)
+            );
+            if (bond && bond.order >= 2) { upIdx = nb; break; }
+        }
+        setPos(upIdx, cx, 28);
+        const others = nbrs.filter(i => i !== upIdx);
+        if (others[0] !== undefined) setPos(others[0], 52, 112);
+        if (others[1] !== undefined) setPos(others[1], 148, 112);
+    } else if (geom === 'tetrahedral') {
+        setPos(center, cx, 72);
+        const nbrs = getLevelNeighbors(level, center);
+        if (nbrs[0] !== undefined) setPos(nbrs[0], cx, 28);
+        if (nbrs[1] !== undefined) setPos(nbrs[1], 48, 92);
+        if (nbrs[2] !== undefined) { setPos(nbrs[2], 152, 98); setStyle(center, nbrs[2], 'wedge'); }
+        if (nbrs[3] !== undefined) { setPos(nbrs[3], 152, 82); setStyle(center, nbrs[3], 'hash'); }
+    } else if (geom === 'pyramidal') {
+        setPos(center, cx, 78);
+        lonePairs.push({ x: cx, y: 30, angle: -Math.PI / 2 });
+        const nbrs = getLevelNeighbors(level, center);
+        if (nbrs[0] !== undefined) setPos(nbrs[0], 48, 108);
+        if (nbrs[1] !== undefined) { setPos(nbrs[1], 152, 110); setStyle(center, nbrs[1], 'wedge'); }
+        if (nbrs[2] !== undefined) { setPos(nbrs[2], 128, 118); setStyle(center, nbrs[2], 'hash'); }
+    } else if (geom === 'bent_water' || geom === 'bent' || geom === 'bent_wide') {
+        setPos(center, cx, 82);
+        const nbrs = getLevelNeighbors(level, center);
+        if (nbrs[0] !== undefined) setPos(nbrs[0], 58, 112);
+        if (nbrs[1] !== undefined) {
+            setPos(nbrs[1], 142, 112);
+            if (geom === 'bent_wide') setStyle(center, nbrs[1], 'hash');
+        }
+        const lpCount = Math.max(0, Math.floor((DB_ELEMENTS[level.atoms[center]].val -
+            level.target_bonds.reduce((s, b) => s + ((b.a0 === center || b.a1 === center) ? b.order : 0), 0)) / 2));
+        if (lpCount >= 1) lonePairs.push({ x: cx - 22, y: 38, angle: -2.4 });
+        if (lpCount >= 2) lonePairs.push({ x: cx + 22, y: 38, angle: -0.7 });
+    } else if (geom === 'trigonal_bipyramidal' && n === 6) {
+        setPos(0, cx, 72);
+        setPos(1, cx, 22);
+        setPos(2, cx, 122);
+        setPos(3, 42, 72);
+        setStyle(0, 4, 'wedge');
+        setStyle(0, 5, 'hash');
+        setPos(4, 158, 78);
+        setPos(5, 158, 66);
+    } else if (geom === 'octahedral' && n === 7) {
+        setPos(0, cx, 72);
+        setPos(1, cx, 18);
+        setPos(2, cx, 125);
+        setPos(3, 38, 72);
+        setPos(4, 162, 76);
+        setStyle(0, 4, 'wedge');
+        setPos(5, 145, 98);
+        setStyle(0, 5, 'wedge');
+        setPos(6, 55, 98);
+        setStyle(0, 6, 'hash');
+    } else if (geom === 'planar' && n === 6) {
+        setPos(1, cx - 35, cy);
+        setPos(4, cx + 35, cy);
+        setPos(0, cx - 70, cy - 28);
+        setPos(2, cx - 70, cy + 28);
+        setPos(3, cx + 70, cy - 28);
+        setPos(5, cx + 70, cy + 28);
+    } else if (geom === 'peroxide_gauche' && n === 4) {
+        setPos(0, 48, 95);
+        setPos(1, 82, 72);
+        setPos(2, 118, 72);
+        setPos(3, 152, 95);
+    } else {
+        const radius = 42;
+        for (let i = 0; i < n; i++) {
+            const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+            setPos(i, cx + radius * Math.cos(angle), cy + radius * Math.sin(angle));
+        }
+    }
+
+    const bonds = level.target_bonds.map(b => ({
+        a0: b.a0,
+        a1: b.a1,
+        order: b.order,
+        style: bondStyles[bondStyleKey(b.a0, b.a1)] || 'line'
+    }));
+
+    return { nodes, bonds, lonePairs };
+}
+
+function drawStructuralBond(svg, x1, y1, x2, y2, order, style) {
+    if (style === 'wedge') {
+        drawWedgeBond(svg, x1, y1, x2, y2);
+        return;
+    }
+    if (style === 'hash') {
+        drawHashBond(svg, x1, y1, x2, y2);
+        return;
+    }
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dist = Math.hypot(dx, dy) || 1;
+    const ox = -dy / dist;
+    const oy = dx / dist;
+    const space = 3;
+    if (order === 1) {
+        drawSimpleLine(svg, x1, y1, x2, y2, 1.2);
+    } else if (order === 2) {
+        drawSimpleLine(svg, x1 + ox * space, y1 + oy * space, x2 + ox * space, y2 + oy * space, 1.2);
+        drawSimpleLine(svg, x1 - ox * space, y1 - oy * space, x2 - ox * space, y2 - oy * space, 1.2);
+    } else if (order === 3) {
+        drawSimpleLine(svg, x1, y1, x2, y2, 1.2);
+        drawSimpleLine(svg, x1 + ox * space * 1.5, y1 + oy * space * 1.5, x2 + ox * space * 1.5, y2 + oy * space * 1.5, 1.2);
+        drawSimpleLine(svg, x1 - ox * space * 1.5, y1 - oy * space * 1.5, x2 - ox * space * 1.5, y2 - oy * space * 1.5, 1.2);
+    }
+}
+
+function drawWedgeBond(svg, x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len;
+    const uy = dy / len;
+    const px = -uy;
+    const py = ux;
+    const start = 10;
+    const wedgeW = 12;
+    const path = document.createElementNS(DIAGRAM_SVG_NS, 'path');
+    path.setAttribute('d', `M ${x1 + ux * start} ${y1 + uy * start} L ${x2 + px * wedgeW / 2} ${y2 + py * wedgeW / 2} L ${x2 - px * wedgeW / 2} ${y2 - py * wedgeW / 2} Z`);
+    path.setAttribute('fill', 'rgba(255, 255, 255, 0.45)');
+    path.setAttribute('stroke', 'rgba(255, 255, 255, 0.35)');
+    path.setAttribute('stroke-width', '0.5');
+    svg.appendChild(path);
+}
+
+function drawHashBond(svg, x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len;
+    const uy = dy / len;
+    const px = -uy;
+    const py = ux;
+    const start = 10;
+    const segments = 5;
+    for (let i = 0; i < segments; i++) {
+        const t0 = start + (len - start - 8) * (i / segments);
+        const t1 = start + (len - start - 8) * ((i + 0.55) / segments);
+        const w = 3 + (i / segments) * 5;
+        const line = document.createElementNS(DIAGRAM_SVG_NS, 'line');
+        line.setAttribute('x1', x1 + ux * t0 - px * w / 2);
+        line.setAttribute('y1', y1 + uy * t0 - py * w / 2);
+        line.setAttribute('x2', x1 + ux * t1 + px * w / 2);
+        line.setAttribute('y2', y1 + uy * t1 + py * w / 2);
+        line.setAttribute('stroke', 'rgba(255, 255, 255, 0.4)');
+        line.setAttribute('stroke-width', '1.2');
+        svg.appendChild(line);
+    }
+}
+
+function drawLonePairLobe(svg, x, y, angle) {
+    const lobe = document.createElementNS(DIAGRAM_SVG_NS, 'ellipse');
+    lobe.setAttribute('cx', x);
+    lobe.setAttribute('cy', y);
+    lobe.setAttribute('rx', 10);
+    lobe.setAttribute('ry', 14);
+    lobe.setAttribute('transform', `rotate(${(angle * 180) / Math.PI}, ${x}, ${y})`);
+    lobe.setAttribute('fill', 'rgba(163, 230, 53, 0.12)');
+    lobe.setAttribute('stroke', 'rgba(163, 230, 53, 0.35)');
+    lobe.setAttribute('stroke-width', '1');
+    svg.appendChild(lobe);
+    const spread = 5;
+    [[-spread, 0], [spread, 0]].forEach(([ox, oy]) => {
+        const dot = document.createElementNS(DIAGRAM_SVG_NS, 'circle');
+        dot.setAttribute('cx', x + ox);
+        dot.setAttribute('cy', y + oy);
+        dot.setAttribute('r', 2.5);
+        dot.setAttribute('fill', '#a3e635');
+        svg.appendChild(dot);
+    });
+}
+
+function drawAtomSymbol(svg, x, y, sym) {
+    const textG = document.createElementNS(DIAGRAM_SVG_NS, 'g');
+    const bgCircle = document.createElementNS(DIAGRAM_SVG_NS, 'circle');
+    bgCircle.setAttribute('cx', x);
+    bgCircle.setAttribute('cy', y);
+    bgCircle.setAttribute('r', 9);
+    bgCircle.setAttribute('fill', '#030712');
+    textG.appendChild(bgCircle);
+    const text = document.createElementNS(DIAGRAM_SVG_NS, 'text');
+    text.setAttribute('x', x);
+    text.setAttribute('y', y);
+    text.setAttribute('fill', DB_ELEMENTS[sym].color);
+    text.setAttribute('font-size', '10');
+    text.setAttribute('font-weight', 'bold');
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'central');
+    text.textContent = sym;
+    textG.appendChild(text);
+    svg.appendChild(textG);
+}
+
+function renderStructuralFormulaFromTemplate(level, svg) {
+    const layout = buildStructuralLayout(level);
+    layout.bonds.forEach(b => {
+        const p1 = layout.nodes[b.a0];
+        const p2 = layout.nodes[b.a1];
+        if (!p1 || !p2) return;
+        drawStructuralBond(svg, p1.x, p1.y, p2.x, p2.y, b.order, b.style);
+    });
+    layout.lonePairs.forEach(lp => drawLonePairLobe(svg, lp.x, lp.y, lp.angle));
+    layout.nodes.forEach(n => drawAtomSymbol(svg, n.x, n.y, n.sym));
+}
+
+function drawFilledElectron(svg, x, y, color) {
+    const dot = document.createElementNS(DIAGRAM_SVG_NS, 'circle');
+    dot.setAttribute('cx', x);
+    dot.setAttribute('cy', y);
+    dot.setAttribute('r', 4);
+    dot.setAttribute('fill', color);
+    dot.setAttribute('stroke', '#ffffff');
+    dot.setAttribute('stroke-width', '1');
+    svg.appendChild(dot);
+}
+
+function drawOpenElectron(svg, x, y, color) {
+    const dot = document.createElementNS(DIAGRAM_SVG_NS, 'circle');
+    dot.setAttribute('cx', x);
+    dot.setAttribute('cy', y);
+    dot.setAttribute('r', 4);
+    dot.setAttribute('fill', 'none');
+    dot.setAttribute('stroke', color);
+    dot.setAttribute('stroke-width', '1.8');
+    svg.appendChild(dot);
+}
+
+function drawLonePairDots(svg, x, y) {
+    [[-4, 0], [4, 0]].forEach(([ox]) => {
+        const dot = document.createElementNS(DIAGRAM_SVG_NS, 'circle');
+        dot.setAttribute('cx', x + ox);
+        dot.setAttribute('cy', y);
+        dot.setAttribute('r', 3.5);
+        dot.setAttribute('fill', '#a3e635');
+        dot.setAttribute('stroke', '#ffffff');
+        dot.setAttribute('stroke-width', '0.8');
+        svg.appendChild(dot);
+    });
+}
+
+function placeLonePairPositions(cx, cy, bondAngles, count, shellR) {
+    const positions = [];
+    if (count === 0) return positions;
+
+    if (bondAngles.length === 0) {
+        for (let i = 0; i < count; i++) {
+            const angle = Math.PI + (i - (count - 1) / 2) * 0.55;
+            positions.push({ x: cx + shellR * 0.88 * Math.cos(angle), y: cy + shellR * 0.88 * Math.sin(angle) });
+        }
+        return positions;
+    }
+
+    const sorted = bondAngles.slice().sort((a, b) => a - b);
+    let maxGap = 0;
+    let midAngle = Math.PI;
+    for (let i = 0; i < sorted.length; i++) {
+        const next = sorted[(i + 1) % sorted.length];
+        let gap = i === sorted.length - 1 ? (sorted[0] + 2 * Math.PI) - sorted[i] : next - sorted[i];
+        if (gap > maxGap) {
+            maxGap = gap;
+            midAngle = sorted[i] + gap / 2;
+            if (midAngle > Math.PI) midAngle -= 2 * Math.PI;
+        }
+    }
+
+    for (let i = 0; i < count; i++) {
+        const spread = count > 1 ? (i - (count - 1) / 2) * 0.38 : 0;
+        const angle = midAngle + spread;
+        positions.push({ x: cx + shellR * 0.88 * Math.cos(angle), y: cy + shellR * 0.88 * Math.sin(angle) });
+    }
+    return positions;
+}
+
+function renderElectronDiagram(atomList, bondList, svg) {
+    if (!svg || !atomList.length) return;
+
+    atomList.forEach(atom => {
+        const shell = document.createElementNS(DIAGRAM_SVG_NS, 'circle');
+        shell.setAttribute('cx', atom.x);
+        shell.setAttribute('cy', atom.y);
+        shell.setAttribute('r', VALENCE_SHELL_R);
+        shell.setAttribute('fill', 'rgba(163, 230, 53, 0.05)');
+        shell.setAttribute('stroke', 'rgba(163, 230, 53, 0.35)');
+        shell.setAttribute('stroke-width', '1.5');
+        shell.setAttribute('stroke-dasharray', '4, 4');
+        svg.appendChild(shell);
+    });
+
+    bondList.forEach(bond => {
+        const a1 = atomList.find(a => a.id === bond.a1_id);
+        const a2 = atomList.find(a => a.id === bond.a2_id);
+        if (!a1 || !a2) return;
+
+        const dx = a2.x - a1.x;
+        const dy = a2.y - a1.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const ux = dx / dist;
+        const uy = dy / dist;
+        const perpX = -uy;
+        const perpY = ux;
+        const midX = (a1.x + a2.x) / 2;
+        const midY = (a1.y + a2.y) / 2;
+        const pairCount = bond.order || 1;
+        const dotFirst = a1.id < a2.id;
+
+        for (let k = 0; k < pairCount; k++) {
+            const t = pairCount > 1 ? (k - (pairCount - 1) / 2) * 9 : 0;
+            const ex = midX + perpX * t;
+            const ey = midY + perpY * t;
+            if (dotFirst) {
+                drawFilledElectron(svg, ex - ux * 5, ey - uy * 5, '#00f0ff');
+                drawOpenElectron(svg, ex + ux * 5, ey + uy * 5, '#f59e0b');
+            } else {
+                drawOpenElectron(svg, ex - ux * 5, ey - uy * 5, '#f59e0b');
+                drawFilledElectron(svg, ex + ux * 5, ey + uy * 5, '#00f0ff');
+            }
+        }
+    });
+
+    atomList.forEach(atom => {
+        const val = DB_ELEMENTS[atom.sym] ? DB_ELEMENTS[atom.sym].val : 0;
+        const bondOrder = getAtomBondOrderSum(atom.id, bondList);
+        const lpCount = Math.max(0, Math.floor((val - bondOrder) / 2));
+        if (lpCount === 0) return;
+
+        const bondAngles = bondList
+            .filter(b => b.a1_id === atom.id || b.a2_id === atom.id)
+            .map(b => {
+                const otherId = b.a1_id === atom.id ? b.a2_id : b.a1_id;
+                const other = atomList.find(a => a.id === otherId);
+                return Math.atan2(other.y - atom.y, other.x - atom.x);
+            });
+
+        placeLonePairPositions(atom.x, atom.y, bondAngles, lpCount, VALENCE_SHELL_R)
+            .forEach(pos => drawLonePairDots(svg, pos.x, pos.y));
+    });
+}
+
+function drawInteractiveBondLines(atomList, bondList, svg, mode) {
+    bondList.forEach(bond => {
+        const a1 = atomList.find(a => a.id === bond.a1_id);
+        const a2 = atomList.find(a => a.id === bond.a2_id);
+        if (!a1 || !a2) return;
+
+        const dx = a2.x - a1.x;
+        const dy = a2.y - a1.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const ux = dx / dist;
+        const uy = dy / dist;
+        const ox = -uy;
         const oy = ux;
         const lineSpacing = 7;
-
         const offset = Math.min(24, dist * 0.4);
         const x1_eff = a1.x + ux * offset;
         const y1_eff = a1.y + uy * offset;
@@ -4870,16 +5257,28 @@ function drawLabBonds() {
         const y2_eff = a2.y - uy * offset;
 
         if (bond.order === 1) {
-            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 4, bond.id, 'lab');
+            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 4, bond.id, mode);
         } else if (bond.order === 2) {
-            drawSVGLine(svg, x1_eff + ox * lineSpacing, y1_eff + oy * lineSpacing, x2_eff + ox * lineSpacing, y2_eff + oy * lineSpacing, 2.5, bond.id, 'lab');
-            drawSVGLine(svg, x1_eff - ox * lineSpacing, y1_eff - oy * lineSpacing, x2_eff - ox * lineSpacing, y2_eff - oy * lineSpacing, 2.5, bond.id, 'lab');
+            drawSVGLine(svg, x1_eff + ox * lineSpacing, y1_eff + oy * lineSpacing, x2_eff + ox * lineSpacing, y2_eff + oy * lineSpacing, 2.5, bond.id, mode);
+            drawSVGLine(svg, x1_eff - ox * lineSpacing, y1_eff - oy * lineSpacing, x2_eff - ox * lineSpacing, y2_eff - oy * lineSpacing, 2.5, bond.id, mode);
         } else if (bond.order === 3) {
-            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 2, bond.id, 'lab');
-            drawSVGLine(svg, x1_eff + ox * lineSpacing * 1.5, y1_eff + oy * lineSpacing * 1.5, x2_eff + ox * lineSpacing * 1.5, y2_eff + oy * lineSpacing * 1.5, 2, bond.id, 'lab');
-            drawSVGLine(svg, x1_eff - ox * lineSpacing * 1.5, y1_eff - oy * lineSpacing * 1.5, x2_eff - ox * lineSpacing * 1.5, y2_eff - oy * lineSpacing * 1.5, 2, bond.id, 'lab');
+            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 2, bond.id, mode);
+            drawSVGLine(svg, x1_eff + ox * lineSpacing * 1.5, y1_eff + oy * lineSpacing * 1.5, x2_eff + ox * lineSpacing * 1.5, y2_eff + oy * lineSpacing * 1.5, 2, bond.id, mode);
+            drawSVGLine(svg, x1_eff - ox * lineSpacing * 1.5, y1_eff - oy * lineSpacing * 1.5, x2_eff - ox * lineSpacing * 1.5, y2_eff - oy * lineSpacing * 1.5, 2, bond.id, mode);
         }
     });
+}
+
+// ==========================================
+// 8. BOND DRAWING & VENN OVERLAP GENERATOR (SVG)
+// ==========================================
+
+function drawLabBonds() {
+    const svg = document.getElementById('vessel-bond-svg');
+    if (!svg) return;
+    svg.innerHTML = '';
+    renderElectronDiagram(labAtoms, labBonds, svg);
+    drawInteractiveBondLines(labAtoms, labBonds, svg, 'lab');
 }
 
 // Typo correction in variable name:
@@ -5058,7 +5457,7 @@ function generateFormulaLaTeX(atomsList) {
 function generateLabStructuralFormula() {
     const target = document.getElementById('lab-lewis-target');
     if (!target) return;
-    target.innerHTML = ''; // clear
+    target.innerHTML = '';
 
     if (labAtoms.length === 0) {
         target.innerHTML = `
@@ -5067,17 +5466,22 @@ function generateLabStructuralFormula() {
         return;
     }
 
-    // Render a 2D structural formula with atom symbols and bond lines
-    const svgNS = "http://www.w3.org/2000/svg";
+    const svgNS = DIAGRAM_SVG_NS;
     const width = 200;
-    const height = 110;
+    const height = 130;
     const svg = document.createElementNS(svgNS, "svg");
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
-    // Map atoms to relative positions inside structural formula viewer
-    // Find min-max and normalize
+    const match = matchMoleculeToLevel(labAtoms, labBonds);
+    if (match) {
+        renderStructuralFormulaFromTemplate(match.level, svg);
+        target.appendChild(svg);
+        return;
+    }
+
+    // Fallback: normalize dragged workspace positions
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
     labAtoms.forEach(a => {
         if (a.x < minX) minX = a.x;
@@ -5095,60 +5499,14 @@ function generateLabStructuralFormula() {
         return { id: a.id, sym: a.sym, x: px, y: py };
     });
 
-    // Draw structural formula bonds as thin gray lines
     labBonds.forEach(b => {
         const p1 = lewisPoints.find(p => p.id === b.a1_id);
         const p2 = lewisPoints.find(p => p.id === b.a2_id);
         if (!p1 || !p2) return;
-
-        // Draw multiple parallel lines or single line
-        const dx = p2.x - p1.x;
-        const dy = p2.y - p1.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const ux = dx / dist;
-        const uy = dy / dist;
-        const ox = -uy;
-        const oy = ux;
-
-        const space = 3;
-
-        if (b.order === 1) {
-            drawSimpleLine(svg, p1.x, p1.y, p2.x, p2.y, 1);
-        } else if (b.order === 2) {
-            drawSimpleLine(svg, p1.x + ox * space, p1.y + oy * space, p2.x + ox * space, p2.y + oy * space, 1);
-            drawSimpleLine(svg, p1.x - ox * space, p1.y - oy * space, p2.x - ox * space, p2.y - oy * space, 1);
-        } else if (b.order === 3) {
-            drawSimpleLine(svg, p1.x, p1.y, p2.x, p2.y, 1);
-            drawSimpleLine(svg, p1.x + ox * space * 1.5, p1.y + oy * space * 1.5, p2.x + ox * space * 1.5, p2.y + oy * space * 1.5, 1);
-            drawSimpleLine(svg, p1.x - ox * space * 1.5, p1.y - oy * space * 1.5, p2.x - ox * space * 1.5, p2.y - oy * space * 1.5, 1);
-        }
+        drawStructuralBond(svg, p1.x, p1.y, p2.x, p2.y, b.order, 'line');
     });
 
-    // Draw atom symbols
-    lewisPoints.forEach(p => {
-        const textG = document.createElementNS(svgNS, "g");
-        
-        // Background black masking circle for readability
-        const bgCircle = document.createElementNS(svgNS, "circle");
-        bgCircle.setAttribute("cx", p.x);
-        bgCircle.setAttribute("cy", p.y);
-        bgCircle.setAttribute("r", 9);
-        bgCircle.setAttribute("fill", "#030712");
-        textG.appendChild(bgCircle);
-
-        const text = document.createElementNS(svgNS, "text");
-        text.setAttribute("x", p.x);
-        text.setAttribute("y", p.y);
-        text.setAttribute("fill", DB_ELEMENTS[p.sym].color);
-        text.setAttribute("font-size", "10");
-        text.setAttribute("font-weight", "bold");
-        text.setAttribute("text-anchor", "middle");
-        text.setAttribute("dominant-baseline", "central");
-        text.textContent = p.sym;
-        textG.appendChild(text);
-
-        svg.appendChild(textG);
-    });
+    lewisPoints.forEach(p => drawAtomSymbol(svg, p.x, p.y, p.sym));
 
     target.appendChild(svg);
 }
@@ -5517,92 +5875,9 @@ window.redrawQuestWorkspace = redrawQuestWorkspace; // export
 function drawQuestBonds() {
     const svg = document.getElementById('quest-bond-svg');
     if (!svg) return;
-    svg.innerHTML = ''; // clear
-
-    const svgNS = "http://www.w3.org/2000/svg";
-
-    questBonds.forEach(bond => {
-        const a1 = questAtoms.find(a => a.id === bond.a1_id);
-        const a2 = questAtoms.find(a => a.id === bond.a2_id);
-        if (!a1 || !a2) return;
-
-        let dx = a2.x - a1.x;
-        let dy = a2.y - a1.y;
-        let dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist === 0) return;
-
-        let ux = dx / dist;
-        let uy = dy / dist;
-
-        // Overlay Venn orbital
-        const overlapLimit = 110;
-        if (dist < overlapLimit) {
-            const midX = (a1.x + a2.x) / 2;
-            const midY = (a1.y + a2.y) / 2;
-            const rx = overlapLimit * 0.45;
-            const ry = dist * 0.35 + 15;
-
-            const ellipse = document.createElementNS(svgNS, "ellipse");
-            ellipse.setAttribute("cx", midX);
-            ellipse.setAttribute("cy", midY);
-            ellipse.setAttribute("rx", rx);
-            ellipse.setAttribute("ry", ry);
-            ellipse.setAttribute("transform", `rotate(${(Math.atan2(dy, dx) * 180) / Math.PI}, ${midX}, ${midY})`);
-            ellipse.setAttribute("fill", "rgba(163, 230, 53, 0.08)");
-            ellipse.setAttribute("stroke", "rgba(163, 230, 53, 0.35)");
-            ellipse.setAttribute("stroke-width", "1.5");
-            ellipse.setAttribute("stroke-dasharray", "3, 3");
-            ellipse.style.filter = "drop-shadow(0px 0px 4px rgba(163, 230, 53, 0.4))";
-            svg.appendChild(ellipse);
-
-            // Electrons inside overlapping SVG
-            const sharedElectronCount = bond.order * 2;
-            for (let k = 0; k < sharedElectronCount; k++) {
-                let perpX = -uy;
-                let perpY = ux;
-                let spacing = (sharedElectronCount > 1) ? (k - (sharedElectronCount - 1) / 2) * 12 : 0;
-                
-                // Add a subtle dynamic oscillation to show sharing in motion!
-                let oscTime = Date.now() * 0.005;
-                let oscillation = Math.sin(oscTime + k) * 2; // small oscillation along bond axis
-                
-                let ex = midX + perpX * spacing + ux * oscillation;
-                let ey = midY + perpY * spacing + uy * oscillation;
-
-                const eCircle = document.createElementNS(svgNS, "circle");
-                eCircle.setAttribute("cx", ex);
-                eCircle.setAttribute("cy", ey);
-                eCircle.setAttribute("r", 4);
-                eCircle.setAttribute("fill", "#a3e635");
-                eCircle.setAttribute("stroke", "#ffffff");
-                eCircle.setAttribute("stroke-width", "1");
-                eCircle.style.filter = "drop-shadow(0px 0px 4px rgba(163, 230, 53, 0.8))";
-                svg.appendChild(eCircle);
-            }
-        }
-
-        // Draw standard parallel bond lines
-        const ox = -uy;
-        const oy = ux;
-        const lineSpacing = 7;
-
-        const offset = Math.min(24, dist * 0.4);
-        const x1_eff = a1.x + ux * offset;
-        const y1_eff = a1.y + uy * offset;
-        const x2_eff = a2.x - ux * offset;
-        const y2_eff = a2.y - uy * offset;
-
-        if (bond.order === 1) {
-            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 4, bond.id, 'quest');
-        } else if (bond.order === 2) {
-            drawSVGLine(svg, x1_eff + ox * lineSpacing, y1_eff + oy * lineSpacing, x2_eff + ox * lineSpacing, y2_eff + oy * lineSpacing, 2.5, bond.id, 'quest');
-            drawSVGLine(svg, x1_eff - ox * lineSpacing, y1_eff - oy * lineSpacing, x2_eff - ox * lineSpacing, y2_eff - oy * lineSpacing, 2.5, bond.id, 'quest');
-        } else if (bond.order === 3) {
-            drawSVGLine(svg, x1_eff, y1_eff, x2_eff, y2_eff, 2, bond.id, 'quest');
-            drawSVGLine(svg, x1_eff + ox * lineSpacing * 1.5, y1_eff + oy * lineSpacing * 1.5, x2_eff + ox * lineSpacing * 1.5, y2_eff + oy * lineSpacing * 1.5, 2, bond.id, 'quest');
-            drawSVGLine(svg, x1_eff - ox * lineSpacing * 1.5, y1_eff - oy * lineSpacing * 1.5, x2_eff - ox * lineSpacing * 1.5, y2_eff - oy * lineSpacing * 1.5, 2, bond.id, 'quest');
-        }
-    });
+    svg.innerHTML = '';
+    renderElectronDiagram(questAtoms, questBonds, svg);
+    drawInteractiveBondLines(questAtoms, questBonds, svg, 'quest');
 }
 
 function handleQuestAtomSelect(id) {
