@@ -3,14 +3,13 @@ from __future__ import annotations
 import json, os, re, shutil
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS = ROOT / "scripts"
+ROOT = Path(__file__).resolve().parent
 TPL = Path(os.environ.get(
     "QUIZ_TEMPLATE_DIR",
     r"C:\Users\UniplusUser02\.agents\skills\create-quiz\templates",
 ))
-MC_JSON = SCRIPTS / "questions_mc.json"
-LQ_JSON = SCRIPTS / "questions_lq.json"
+MC_JSON = ROOT / "questions_mc.json"
+LQ_JSON = ROOT / "questions_lq.json"
 ASSETS = ROOT / "assets"
 
 SECTIONS = [
@@ -34,9 +33,70 @@ EXPLICIT_EXCLUDE_IDS = {
     "as-11-a-i",
     "mc-05032",
     "mc-05033",
+    # Broken / context-dependent periodic-table items (screenshot review 2026-06)
+    "pt-01-a-i",
+    "pt-05-a",
+    "pt-07-a",
+    "pt-09-a-i",
+    "pt-10-a",
+    "pt-10-a-ii",
+    "pt-11-a",
+    "pt-13-a",
+    "pt-14-a",
+    "pt-20-a",
+    "pt-21-a-i",
+    "pt-21-a-ii",
+    "pt-24-a-i",
+    "pt-28-a-ii",
+    "pt-34-a",
+    "pt-34-a-ii",
+    "pt-39-a-i-2",
+    "pt-39-a-ii",
+    "pt-40-a-i",
+    "pt-41-a-i",
+    "pt-43-a-i",
+    "pt-43-a-i-2",
+    "pt-43-a-ii-2",
+    "pt-45-a",
+    "pt-49-a-i",
+    "pt-49-a-ii",
+    "pt-50-a-i",
+    "pt-52-a-i-3",
+    "pt-52-a-i-4",
+    "pt-52-a-ii",
 }
 EXPLICIT_SOURCE_EXCLUDE = re.compile(
     r"Part 3 Q25\(a\)$|Part 5 Q12\(a\)\(i\)$|Part 5 Q32\(a\)\(i\)$",
+)
+BROKEN_PT_STEM = re.compile(
+    r"^similar to each other\?\s*$|"
+    r"^Lithium atom\s*$|"
+    r"^Rubidium atom\b|"
+    r"^Chlorine and fluorine\s*$|"
+    r"^is the most reactive (?:metal|non-metal)\?\s*$|"
+    r"^Alkaline earth metals\?\s*$|"
+    r"^Which of the above elements are metals\?\s*$|"
+    r"^What is the atomic number of element X\?\s*$|"
+    r"^Element B is in Group I\b|"
+    r"^Give the letter from the diagram\b|"
+    r"^Complete the following table:\s*$|"
+    r"^Complete the above table\.?\s*$|"
+    r"^Suggest a potential hazard when a piece of barium\b|"
+    r"^Write a word equation for the displacement reaction suggested in \(ii\)\.\s*$|"
+    r"^Suggest how rubidium can be stored safely\b|"
+    r"^State the number of protons, neutrons and electrons in a 25Mg atom\.\s*$|"
+    r"^Which is the most reactive metal in the above table\?\s*$|"
+    r"^State whether rubidium is more reactive than potassium\.\s*$|"
+    r"^What is the special name of Group I element\?\s*$|"
+    r"^Which element\(s\) is/are semi-metal\(s\)\?\s*$|"
+    r"^Explain why they are described as .alkali.\.\s*$|"
+    r"^Across a period, the elements demonstrate a gradual change\b|"
+    r"^Explain why these metals are placed in the same group\.\s*$|"
+    r"^Explain why e and k react with sodium sulphite solution similarly\s*$|"
+    r"^Which of the above substances exist as a liquid at -90\b|"
+    r"^Suggest whether rubidium or potassium is more reactive\.\s*$|"
+    r"^With reference to your answer in \(c\), explain why rubidium also reacts with water\b",
+    re.I,
 )
 DRAW_EX = re.compile(
     r"\bdraw\b|"
@@ -1259,6 +1319,8 @@ def classify_lq(item: dict) -> tuple[str, str]:
     source = item.get("sourceRef", "")
     if qid in EXPLICIT_EXCLUDE_IDS or EXPLICIT_SOURCE_EXCLUDE.search(source):
         return "exclude", "drawing or on-figure answer"
+    if BROKEN_PT_STEM.search(stem.strip()):
+        return "exclude", "broken or context-dependent stem"
     if not item.get("hasAnswer") or not ans:
         return "exclude", "no answer"
     if DRAW_EX.search(sl):
