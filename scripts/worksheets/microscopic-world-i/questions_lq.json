@@ -1,0 +1,7804 @@
+[
+  {
+    "id": "as-01-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 1,
+    "path": [
+      "a"
+    ],
+    "marks": 20,
+    "stem": "Complete the following table: Atomic number Mass number No. of proton No. of neutron No. of electron Name of element Full atomic symbol 1 2 2 2 3 6 4 5 5 11 6 8 7 15 8 9 9 19 10 11 11 23 12 13 13 27 14 15 15 31 16 18 17 37 18 22 19 41 20 24",
+    "answer": "Calcium 44Ca (b) Oxygen, silicon aluminium, iron",
+    "sourceRef": "Part 1 Q1(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-02-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 2,
+    "path": [
+      "a"
+    ],
+    "marks": 4,
+    "stem": "Label the above diagram using these words: proton, neutron, electron, nucleus.",
+    "answer": "",
+    "sourceRef": "Part 1 Q2(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-02-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 2,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "With reference to the Periodic Table, write down the symbol of element that atom X belongs to.",
+    "answer": "C",
+    "sourceRef": "Part 1 Q2(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-02-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 2,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Hence, write down the name of the element that atom X belongs to.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 1 Q2(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-03-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 3,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Identify the following sub-atomic particles:",
+    "answer": "",
+    "sourceRef": "Part 1 Q3(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-03-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 3,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Cross",
+    "answer": "Electron",
+    "sourceRef": "Part 1 Q3(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-03-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 3,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Black dot",
+    "answer": "(d) 1H atom does not have any neutron",
+    "sourceRef": "Part 1 Q3(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-04-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 4,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Does the atom carry any net charges? Suggest why.",
+    "answer": "Besides, the masses of protons and neutrons are relatively much larger than that of electrons.",
+    "sourceRef": "Part 1 Q4(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-05-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 5,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "State and explain which two atoms belong to the same element.",
+    "answer": "For atom S: 𝑆",
+    "sourceRef": "Part 1 Q5(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-06-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 6,
+    "path": [
+      "a"
+    ],
+    "marks": 4,
+    "stem": "Give the names and symbols of the following elements (A to D) from the descriptions given. Element Description Name Symbol A Its atomic number is 7 B Its atom has 12 protons C Its atom has 18 electrons D The electronic arrangement of its atom is 2,8,8,1",
+    "answer": "Element Description Name Symbol A Its atomic number is 7 Nitrogen N B Its atom has 12 protons Magnesium Mg C Its atom has 18 electrons Argon Ar D The electronic arrangement of its atom is 2,8,8,1 Potassium K (b)",
+    "sourceRef": "Part 1 Q6(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-06-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Calcium",
+    "answer": "",
+    "sourceRef": "Part 1 Q6(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-07-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 7,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "Complete the table.",
+    "answer": "(b)",
+    "sourceRef": "Part 1 Q7(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-07-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by ‘mass number’?",
+    "answer": "Mass number of an atom is the sum of the numbers of protons and neutrons in the atom.",
+    "sourceRef": "Part 1 Q7(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-07-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Write down the electronic arrangement of a magnesium atom.",
+    "answer": "(iii) It has the same number of protons and electrons.",
+    "sourceRef": "Part 1 Q7(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-08-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 8,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What type of subatomic particle does the black dot represent?",
+    "answer": "Neutron",
+    "sourceRef": "Part 1 Q8(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-08-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 8,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "State the charge of the black dot.",
+    "answer": "(c) 𝐹",
+    "sourceRef": "Part 1 Q8(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-09-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 9,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "All atoms contain protons, neutrons and electrons",
+    "answer": "",
+    "sourceRef": "Part 1 Q9(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-10-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 10,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the mass number of deuterium?",
+    "answer": "",
+    "sourceRef": "Part 1 Q10(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-11-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Which types of subatomic particle does n 0 1 represent?",
+    "answer": "Different atoms of an element with same no. of protons but different no, of neutrons",
+    "sourceRef": "Part 1 Q11(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-11-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain whether n 0 1 will be deflected by an electric field.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 1 Q11(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-11-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘isotopes’?",
+    "answer": "Different atoms of an element with same no. of protons but different no, of neutrons",
+    "sourceRef": "Part 1 Q11(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-11-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Predict, with examples, one similarity and one difference in properties among the isotopes of nihonium.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 1 Q11(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-12-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 12,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of a fluorine atom.",
+    "answer": "",
+    "sourceRef": "Part 1 Q12(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-12-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 12,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of a sulphur atom.",
+    "answer": "Electrons (negatively charged) are moving in electron shells surrounding the nucleus of fluorine atom at a very high speed.",
+    "sourceRef": "Part 1 Q12(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-13-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 13,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Calculate the relative atomic mass of X.",
+    "answer": "(d)",
+    "sourceRef": "Part 1 Q13(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-14-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 14,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "State the meaning of the term ‘relative atomic mass’.",
+    "answer": "Hence it is impossible to separate the isotopes of silver by chemical means.",
+    "sourceRef": "Part 1 Q14(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-15-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 15,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the meaning of the term ‘isotope’?",
+    "answer": "= 28.1",
+    "sourceRef": "Part 1 Q15(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-15-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 15,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "What is the relative isotopic mass of 𝑆𝑖 14 28 ?",
+    "answer": "",
+    "sourceRef": "Part 1 Q15(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-15-a-v",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 15,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of an atom 𝑆𝑖 14 28 .",
+    "answer": "",
+    "sourceRef": "Part 1 Q15(a)(v)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-16-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 16,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "Write down the full atomic symbol of X, Y and Z.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 1 Q16(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-17-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 17,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Write the electronic arrangement of a copper atom",
+    "answer": "(b)",
+    "sourceRef": "Part 1 Q17(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-17-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 17,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Calculate the abundance of 63Cu.",
+    "answer": "x = 75%",
+    "sourceRef": "Part 1 Q17(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-17-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 17,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "A sample of Cu metal contains 30624700 Cu atoms. Calculate the theoretical number of 65Cu atom in the sample",
+    "answer": "= 7656175",
+    "sourceRef": "Part 1 Q17(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-18-b",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 18,
+    "path": [
+      "b"
+    ],
+    "marks": 2,
+    "stem": "Element B occurs naturally in 3 isotopes with the abundance of each isotope shown in the table below: Isotope Abundance (%) 24B 79 25B x 26B y The relative atomic mass of B is 24.32. Calculate the value of x.",
+    "answer": "",
+    "sourceRef": "Part 1 Q18(b)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-19-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 19,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Boron occurs naturally in two isotopes, 10B and 11B. Calculate the percentage abundance of 11B. (Relative atomic mass of B = 10.8)",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 1 Q19(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-20-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 20,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "Complete the above table.",
+    "answer": "(e) Same observation. 25Mg and 26Mg have same chemical properties as they have same no. of protons and electrons 1 (f) Mass",
+    "sourceRef": "Part 1 Q20(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-21-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 21,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Name the following subatomic particles.",
+    "answer": "",
+    "sourceRef": "Part 1 Q21(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-21-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Write down the FULL ATOMIC SYMBOL of isotope B.",
+    "answer": "𝐿𝑖",
+    "sourceRef": "Part 1 Q21(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-21-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Calculate the relative atomic mass of this element. (Give your answer in 2 decimal places)",
+    "answer": "(f) No. Number of protons and electrons are equal.",
+    "sourceRef": "Part 1 Q21(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-21-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is the number of Z?",
+    "answer": "𝐿𝑖",
+    "sourceRef": "Part 1 Q21(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-21-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "State the electronic arrangement of this element.",
+    "answer": "(f) No. Number of protons and electrons are equal.",
+    "sourceRef": "Part 1 Q21(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-22-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 22,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "What are particle Y and particle Z respectively?",
+    "answer": "(c)",
+    "sourceRef": "Part 1 Q22(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-22-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘isotope’?",
+    "answer": "Different atoms of an element with same number of protons but different numbers of neutrons",
+    "sourceRef": "Part 1 Q22(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-22-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "State the numbers of particle Y and particle Z in atom W.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 1 Q22(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-23-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 23,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "State the meaning for each of the following terms.",
+    "answer": "",
+    "sourceRef": "Part 1 Q23(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "as-23-a-i",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 23,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Element",
+    "answer": "An element is a pure substance that cannot be broken down into simpler substances by chemical methods. 1",
+    "sourceRef": "Part 1 Q23(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-23-a-ii",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 23,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Isotope",
+    "answer": "(c)",
+    "sourceRef": "Part 1 Q23(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "as-24-a",
+    "section": "atomic-structure",
+    "part": 1,
+    "mainQ": 24,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "State the meaning of the term ‘isotopes’.",
+    "answer": "= 20.2",
+    "sourceRef": "Part 1 Q24(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-01-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 1,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Which of the above elements are liquids under room conditions?",
+    "answer": "(c)",
+    "sourceRef": "Part 2 Q1(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-01-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 1,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Which of the above elements are metals?",
+    "answer": "B, C, E",
+    "sourceRef": "Part 2 Q1(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-01-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 1,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "State TWO properties of metals.",
+    "answer": "(iii) Wrong. Graphite is a non-metal which can conduct electricity",
+    "sourceRef": "Part 2 Q1(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-03-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 3,
+    "path": [
+      "a"
+    ],
+    "marks": 6,
+    "stem": "If the atomic number of an element is known, its electronic arrangement, period number and group number can be written. Complete the following table without referring to the Periodic Table. (P, Q, R, S, T and U are NOT the symbols of the elements.) Element Atomic number Electronic arrangement Period number Group number P 5 Q 8 R 10 S 11 T 14 U 20",
+    "answer": "II (b)",
+    "sourceRef": "Part 2 Q3(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-03-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 3,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "metals?",
+    "answer": "S, U",
+    "sourceRef": "Part 2 Q3(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-03-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 3,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "non-metals?",
+    "answer": "Q, R",
+    "sourceRef": "Part 2 Q3(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-04-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 4,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Which substance(s) is / are gas at 500 °C?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q4(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-05-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 5,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Which of the above substances exist as a liquid at -90 °C and 1 atmosphere?",
+    "answer": "(b) Non-conductor of electricity / low density / dull if solid / brittle if solid / poor conductor of heat / gain electrons 4 (c)",
+    "sourceRef": "Part 2 Q5(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-05-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 5,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "argon;",
+    "answer": "",
+    "sourceRef": "Part 2 Q5(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-05-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 5,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "sulphur.",
+    "answer": "",
+    "sourceRef": "Part 2 Q5(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-06-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 6,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "How many protons does a tin atom have?",
+    "answer": "",
+    "sourceRef": "Part 2 Q6(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-07-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 7,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the atomic number of element X?",
+    "answer": "It has 7 outermost shell electrons",
+    "sourceRef": "Part 2 Q7(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-08-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 8,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "State the meaning of the term atomic number.",
+    "answer": "(b)",
+    "sourceRef": "Part 2 Q8(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-08-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 8,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Which of these is the mass number of this atom?",
+    "answer": "",
+    "sourceRef": "Part 2 Q8(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-08-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 8,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain which group of the Periodic Table element X belongs to.",
+    "answer": "x = 0.75, y = 4.25",
+    "sourceRef": "Part 2 Q8(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-09-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 9,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Element B is in Group I. How can you tell?",
+    "answer": "Neutron",
+    "sourceRef": "Part 2 Q9(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-09-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 9,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Element E is in Period 3. How can you tell?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q9(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-09-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 9,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Complete the table to show the relative charge and relative mass of a neutron. Relative charge Relative mass Proton +1 1 Neutron",
+    "answer": "Neutron",
+    "sourceRef": "Part 2 Q9(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-09-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 9,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "There are two common types of chlorine atom, known as isotopes. One isotope is called chlorine-35 and the other is called chlorine-37. Complete the table below. Symbol Number of protons Number of neutrons Number of electrons 35Cl 37Cl",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q9(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-10-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 10,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Complete the following table: Full Atomic symbol Proton Neutron Electron Mass number Atomic number Electronic arrangement Name of element 3 4 7 15 17 37 10 9 20 41 6 13 13 12 39 19 9 4 15 Silicon 31 Phosphorus 3 Helium 𝐴𝑟 18 39 21 𝑁𝑎 11 23 23 𝑁𝑒 10 22 22 62 2,8,18,18,1 119 2,8,18,32,18,2 116 2,8,18,32,17,1 133 2,8,18,18,8,1 204 2,8,18,32,18,4 197 2,8,18,32,18,1",
+    "answer": "2,8,18,32,18,1 Gold (b)",
+    "sourceRef": "Part 2 Q10(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-10-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Alkali metals?",
+    "answer": "Li, K, Na, Cs",
+    "sourceRef": "Part 2 Q10(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-10-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Alkaline earth metals?",
+    "answer": "(iv) He, Ar, Ne",
+    "sourceRef": "Part 2 Q10(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-11-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 11,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Which of the above elements are metals?",
+    "answer": "(e) Noble gases",
+    "sourceRef": "Part 2 Q11(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-12-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 12,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "an element whose atoms have 8 electrons in their outermost shell?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q12(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-13-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 13,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Which element(s) is/are semi-metal(s)?",
+    "answer": "D and G have same no. of outermost shell electrons",
+    "sourceRef": "Part 2 Q13(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-14-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 14,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Give the letter from the diagram that represents a noble gas.",
+    "answer": "(c) Since the elements in the Periodic Table are arranged in increasing atomic number, the atomic number of R is 33 1 R should have 33 protons. In an atom, the number of protons and electrons are always the same. Therefore, an atom of R should have 33 electrons",
+    "sourceRef": "Part 2 Q14(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-15-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 15,
+    "path": [
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Give the symbol of a metal.",
+    "answer": "",
+    "sourceRef": "Part 2 Q15(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-17-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 17,
+    "path": [
+      "a"
+    ],
+    "marks": 5,
+    "stem": "Complete the above table.",
+    "answer": "x = 11",
+    "sourceRef": "Part 2 Q17(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-18-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 18,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the name commonly given to this group of elements?",
+    "answer": "Rubidium-87",
+    "sourceRef": "Part 2 Q18(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-19-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 19,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the name given to Group I elements?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q19(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-20-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 20,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the special name of Group I element?",
+    "answer": "Potassium hydroxide formed is an alkali",
+    "sourceRef": "Part 2 Q20(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-21-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 21,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "Complete the above table.",
+    "answer": "(d)",
+    "sourceRef": "Part 2 Q21(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-21-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State whether rubidium is more reactive than potassium.",
+    "answer": "Rubidium is more reactive",
+    "sourceRef": "Part 2 Q21(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-21-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Suggest how rubidium can be stored safely in the laboratory.",
+    "answer": "(iii) Wear safety gloves",
+    "sourceRef": "Part 2 Q21(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-23-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 23,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "How many electrons are there in the outermost shell in a radium atom?",
+    "answer": "(c)",
+    "sourceRef": "Part 2 Q23(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-23-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 23,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Describe a test which can be used to show that the gas evolved is hydrogen.",
+    "answer": "It gives ‘pop’ sound with burning splint",
+    "sourceRef": "Part 2 Q23(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-24-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 24,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Using magnesium as example, describe the appearance of Group I and Group II metals.",
+    "answer": "(c)",
+    "sourceRef": "Part 2 Q24(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-24-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Group I",
+    "answer": "Sodium gives golden yellow flame while potassium gives lilac flame",
+    "sourceRef": "Part 2 Q24(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-24-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Group II",
+    "answer": "Potassium melts at a lower temperature",
+    "sourceRef": "Part 2 Q24(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-24-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Suggest a potential hazard when a piece of barium is added to water.",
+    "answer": "Sodium gives golden yellow flame while potassium gives lilac flame",
+    "sourceRef": "Part 2 Q24(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-24-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain why Ba and Ca react with water similarly.",
+    "answer": "Potassium melts at a lower temperature",
+    "sourceRef": "Part 2 Q24(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-24-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Heating them strongly by non-luminous flame",
+    "answer": "Sodium gives golden yellow flame while potassium gives lilac flame",
+    "sourceRef": "Part 2 Q24(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-24-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Measuring the melting point",
+    "answer": "Potassium melts at a lower temperature",
+    "sourceRef": "Part 2 Q24(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-25-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 25,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the name given to Group VII elements?",
+    "answer": "(d) Halogens are toxic",
+    "sourceRef": "Part 2 Q25(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-26-b",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 26,
+    "path": [
+      "b"
+    ],
+    "marks": 1,
+    "stem": "Describe the variation in reactivity of halogens with atomic number.",
+    "answer": "",
+    "sourceRef": "Part 2 Q26(b)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-27-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 27,
+    "path": [
+      "a"
+    ],
+    "marks": 6,
+    "stem": "Complete the following table. Element State at room temperature and pressure Color Chlorine Bromine Iodine",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q27(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-28-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 28,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "The atomic number of bromine is 35. The electronic arrangement of a bromine atom can be represented as 2,8,x,y. What are the values of x and y?",
+    "answer": "(c)",
+    "sourceRef": "Part 2 Q28(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-28-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 28,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Name ONE other halogen that can displace bromine from sodium bromide. Explain your choice.",
+    "answer": "Fluorine is more reactive than bromine",
+    "sourceRef": "Part 2 Q28(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-28-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 28,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Write a word equation for the displacement reaction suggested in (ii).",
+    "answer": "Fluorine + Sodium bromide ➔ Bromine + Sodium fluoride",
+    "sourceRef": "Part 2 Q28(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-29-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 29,
+    "path": [
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is the name of Group VII?",
+    "answer": "",
+    "sourceRef": "Part 2 Q29(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-29-i-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 29,
+    "path": [
+      "i",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "The table gives descriptions of the reactions of some Group VII elements with iron wool. Complete the table by giving a description of the reaction of fluorine with iron wool. Element Description of reaction with iron wool Fluorine Chlorine - Does not need heating - Reacts quickly Bromine - Needs heating - Reacts slowly Iodine - Needs heating - Reacts very slowly",
+    "answer": "",
+    "sourceRef": "Part 2 Q29(i)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-29-i-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 29,
+    "path": [
+      "i",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "State the relationship between the reactivity of the Group VII elements and the size of their atoms.",
+    "answer": "",
+    "sourceRef": "Part 2 Q29(i)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-30-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 30,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "To which group of the Periodic Table does xenon belong? What is the name given to this group of elements?",
+    "answer": "(b)",
+    "sourceRef": "Part 2 Q30(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-31-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 31,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the name given to Group 0 of the periodic table?",
+    "answer": "(d) Filling advertising signs",
+    "sourceRef": "Part 2 Q31(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-32-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 32,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Give the special name of the following groups.",
+    "answer": "",
+    "sourceRef": "Part 2 Q32(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-32-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Group VII",
+    "answer": "Halogen",
+    "sourceRef": "Part 2 Q32(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-32-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Group 0",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q32(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-06-b",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 6,
+    "path": [
+      "b"
+    ],
+    "marks": 1,
+    "stem": "The position of an element in the Periodic Table can be used to predict its properties.",
+    "answer": "(d) It is a shiny solid at room temperature and pressure / It is hard and strong / It is malleable and ductile / It is a conductor of heat and electricity.",
+    "sourceRef": "Part 2 Q6(b)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-06-b-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 6,
+    "path": [
+      "b",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Which group contains elements that are all unreactive? Explain your answer.",
+    "answer": "",
+    "sourceRef": "Part 2 Q6(b)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-06-b-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 6,
+    "path": [
+      "b",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Which element is the least reactive in Group I? Explain your answer.",
+    "answer": "",
+    "sourceRef": "Part 2 Q6(b)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-34-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 34,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Across a period, the elements demonstrate a gradual change in some of their physical properties. State ONE such property.",
+    "answer": "(b) (i) Their atoms have different number of occupied electron shells.",
+    "sourceRef": "Part 2 Q34(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-34-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 34,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "different from each other?",
+    "answer": "",
+    "sourceRef": "Part 2 Q34(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-34-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 34,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "similar to each other?",
+    "answer": "Sodium melts to form a silvery ball while magnesium shows no reaction",
+    "sourceRef": "Part 2 Q34(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-35-c",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 35,
+    "path": [
+      "c"
+    ],
+    "marks": 1,
+    "stem": "In terms of electronic arrangement, explain why He is stable",
+    "answer": "",
+    "sourceRef": "Part 2 Q35(c)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-36-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 36,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What criterion is used in determining the Period number of an element?",
+    "answer": "",
+    "sourceRef": "Part 2 Q36(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-36-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "T and U.",
+    "answer": "",
+    "sourceRef": "Part 2 Q36(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-36-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "U and V.",
+    "answer": "",
+    "sourceRef": "Part 2 Q36(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-37-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 37,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Suggest why lithium and sodium are assigned to",
+    "answer": "",
+    "sourceRef": "Part 2 Q37(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-37-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 37,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "the same group.",
+    "answer": "lithium + water ➔ lithium hydroxide + hydrogen",
+    "sourceRef": "Part 2 Q37(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-37-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 37,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "different periods.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q37(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-37-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 37,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Write the word equation for the reaction between lithium and water.",
+    "answer": "lithium + water ➔ lithium hydroxide + hydrogen",
+    "sourceRef": "Part 2 Q37(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-37-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 37,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "What is the product that makes the solution become alkaline?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q37(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-38-b",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 38,
+    "path": [
+      "b"
+    ],
+    "marks": 2,
+    "stem": "Three elements belong to the same group. State the Group number.",
+    "answer": "(h) Br and I",
+    "sourceRef": "Part 2 Q38(b)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-39-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 39,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What determines the position of an element in the periodic table?",
+    "answer": "(c)",
+    "sourceRef": "Part 2 Q39(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-39-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 39,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Sodium and potassium",
+    "answer": "Rubidium as reactivity of Group I elements increases down the group",
+    "sourceRef": "Part 2 Q39(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-39-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 39,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Chlorine and fluorine",
+    "answer": "In paraffin oil",
+    "sourceRef": "Part 2 Q39(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-39-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 39,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Suggest whether rubidium or potassium is more reactive.",
+    "answer": "Rubidium as reactivity of Group I elements increases down the group",
+    "sourceRef": "Part 2 Q39(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-40-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 40,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Name ONE metalloid in the above table.",
+    "answer": "(d)",
+    "sourceRef": "Part 2 Q40(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-40-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 40,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "similar to each other?",
+    "answer": "They have the same number of outermost shell electrons.",
+    "sourceRef": "Part 2 Q40(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-40-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 40,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "different from each other?",
+    "answer": "There is a gradual change in the intensity of the colour of the elements.",
+    "sourceRef": "Part 2 Q40(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-41-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 41,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "How are the elements arranged in the periodic table?",
+    "answer": "(e)",
+    "sourceRef": "Part 2 Q41(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-41-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 41,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Which is the most reactive metal in the above table?",
+    "answer": "K",
+    "sourceRef": "Part 2 Q41(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-41-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 41,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Suggest how the most reactive metal should be stored.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q41(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-42-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 42,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "(i) Give the symbol of ALL Period 5 element(s) from the diagram.",
+    "answer": "",
+    "sourceRef": "Part 2 Q42(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-42-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 42,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Give the symbol of ALL element(s) from the diagram that is / are gas under room conditions.",
+    "answer": "Similarity: Effervesce / melt / turn into a sphere / move on surface / universal indicator turns blue or purple 1 Difference: Potassium gives a lilac flame while sodium gives a golden yellow flame / potassium moves faster / potassium effervesces faster",
+    "sourceRef": "Part 2 Q42(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-43-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 43,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Suggest how elements are arranged in the Periodic Table.",
+    "answer": "(b)",
+    "sourceRef": "Part 2 Q43(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-43-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 43,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain why e and k react with sodium sulphite solution similarly",
+    "answer": "e",
+    "sourceRef": "Part 2 Q43(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-43-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 43,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Which element (e or k) reacts with sodium sulphite more vigorously? Explain your answer.",
+    "answer": "(h) In fume cupboard. As k is toxic",
+    "sourceRef": "Part 2 Q43(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-43-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 43,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "is the most reactive non-metal?",
+    "answer": "e",
+    "sourceRef": "Part 2 Q43(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-43-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 43,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "is the most reactive metal?",
+    "answer": "(h) In fume cupboard. As k is toxic",
+    "sourceRef": "Part 2 Q43(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-44-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 44,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Which of the above elements is the most reactive metal?",
+    "answer": "(c)",
+    "sourceRef": "Part 2 Q44(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-44-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 44,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "The isotopic mass of atom X is 23 and it has 12 neutrons. Which element does X belong to?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q44(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-45-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 45,
+    "path": [
+      "a"
+    ],
+    "marks": 7,
+    "stem": "Complete the above table",
+    "answer": "(h) A B C",
+    "sourceRef": "Part 2 Q45(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-46-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 46,
+    "path": [
+      "a"
+    ],
+    "marks": 8,
+    "stem": "Complete the above table.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q46(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-47-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 47,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "A student claims that atom X and atom Z are isotopes",
+    "answer": "",
+    "sourceRef": "Part 2 Q47(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-47-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 47,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘isotope’?",
+    "answer": "𝐴𝑟",
+    "sourceRef": "Part 2 Q47(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-47-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 47,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Do you agree with his claim? Explain your answer.",
+    "answer": "(iv) Number of protons = Number of electrons in W",
+    "sourceRef": "Part 2 Q47(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-47-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 47,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Predict which atom will react with water more vigorously.",
+    "answer": "𝐴𝑟",
+    "sourceRef": "Part 2 Q47(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-47-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 47,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain why element of Y and element of Z have similar chemical properties.",
+    "answer": "(iv) Number of protons = Number of electrons in W",
+    "sourceRef": "Part 2 Q47(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-47-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 47,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Write a full atomic symbol of atom W.",
+    "answer": "𝐴𝑟",
+    "sourceRef": "Part 2 Q47(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-47-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 47,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "State the electronic arrangement of atom W.",
+    "answer": "(iv) Number of protons = Number of electrons in W",
+    "sourceRef": "Part 2 Q47(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-48-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 48,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "The electronic arrangement of lead is 2, 8, x, 32, x, y.",
+    "answer": "",
+    "sourceRef": "Part 2 Q48(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-48-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 48,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Calculate the values of x and y.",
+    "answer": "Different atoms of the same element with same no. of protons but different no. of neutrons",
+    "sourceRef": "Part 2 Q48(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-48-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 48,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "State the group number of lead. Explain your answer.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q48(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-48-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 48,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "State the number of protons and electrons in a lead(II) ion.",
+    "answer": "Different atoms of the same element with same no. of protons but different no. of neutrons",
+    "sourceRef": "Part 2 Q48(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-48-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 48,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "What hazard warning label should be displayed on the reagent bottle containing lead(II) ion?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q48(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-48-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 48,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘isotope’?",
+    "answer": "Different atoms of the same element with same no. of protons but different no. of neutrons",
+    "sourceRef": "Part 2 Q48(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-48-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 48,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Four naturally occurring isotopes of lead are 204Pb, 206Pb, 207Pb and 208Pb. Given that the abundance of 204Pb, 207Pb and 208Pb are 1.4%, 22.1% and 52.4% respectively. Calculate the relative atomic mass of Pb.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q48(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-49-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 49,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Explain why sodium and chlorine are placed in the same period in the Periodic Table",
+    "answer": "(b)",
+    "sourceRef": "Part 2 Q49(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-49-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 49,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain why these metals are placed in the same group.",
+    "answer": "Halogens",
+    "sourceRef": "Part 2 Q49(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-49-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 49,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain why they are described as ‘alkali’.",
+    "answer": "(iv) They can be decolorized by sodium sulphite solution / react with metal to form a salt",
+    "sourceRef": "Part 2 Q49(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-49-a-v",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 49,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 1,
+    "stem": "Suggest one safety precaution that should be taken when handling potassium.",
+    "answer": "(vi) 2,8,18,7",
+    "sourceRef": "Part 2 Q49(a)(v)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-49-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 49,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Name the group that chlorine, bromine and iodine belong to.",
+    "answer": "Halogens",
+    "sourceRef": "Part 2 Q49(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-49-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 49,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Arrange the above 3 elements in ascending order of reactivity",
+    "answer": "(iv) They can be decolorized by sodium sulphite solution / react with metal to form a salt",
+    "sourceRef": "Part 2 Q49(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-49-a-v",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 49,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 2,
+    "stem": "Suggest one safety precaution that should be taken when handling chlorine. Explain your answer.",
+    "answer": "(vi) 2,8,18,7",
+    "sourceRef": "Part 2 Q49(a)(v)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-50-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 50,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Explain why magnesium and chlorine are placed in the same period in the Periodic Table",
+    "answer": "(b)",
+    "sourceRef": "Part 2 Q50(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-50-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 50,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘isotope’?",
+    "answer": "X. Reactivity of metals increases down the group.",
+    "sourceRef": "Part 2 Q50(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-50-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 50,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State the number of protons, neutrons and electrons in a 25Mg atom.",
+    "answer": "X. Reactivity of metals increases down the group.",
+    "sourceRef": "Part 2 Q50(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-50-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 50,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Calculate the relative atomic mass of magnesium.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q50(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-50-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 50,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State the number of protons, neutrons and electrons in a 37Cl atom.",
+    "answer": "X. Reactivity of metals increases down the group.",
+    "sourceRef": "Part 2 Q50(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-50-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 50,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Calculate the natural abundance of 37Cl.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 2 Q50(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-51-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 51,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "The electronic arrangement of X is 2, 8, 18, 32, 18, 3",
+    "answer": "",
+    "sourceRef": "Part 2 Q51(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-51-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 51,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State the group and period that X belongs to.",
+    "answer": "",
+    "sourceRef": "Part 2 Q51(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-51-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 51,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Calculate the number of neutrons and protons in 203X.",
+    "answer": "",
+    "sourceRef": "Part 2 Q51(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-51-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 51,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Calculate the relative atomic mass of Y.",
+    "answer": "",
+    "sourceRef": "Part 2 Q51(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-51-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 51,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain whether a mixture containing X and Y can be separated by chemical methods.",
+    "answer": "",
+    "sourceRef": "Part 2 Q51(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-51-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 51,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Both X and Y can react with hydrochloric acid to give salt and hydrogen gas. Predict which element reacts with acid more vigorously. Explain your answer.",
+    "answer": "",
+    "sourceRef": "Part 2 Q51(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-51-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 51,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "The hydrochloric acid used in (ii) contains chloride ions. Chloride ion is formed when chlorine atom gains electrons to attain the electronic arrangement of the nearest noble gas. State the electronic arrangement of a chloride ion.",
+    "answer": "",
+    "sourceRef": "Part 2 Q51(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-52-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 52,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "The relative atomic mass of Li is 6.9.",
+    "answer": "",
+    "sourceRef": "Part 2 Q52(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-52-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 52,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain why the relative atomic mass of Li is NOT an integer",
+    "answer": "Both Li and Rb have 1 outermost shell electron. They have similar chemical properties.",
+    "sourceRef": "Part 2 Q52(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-52-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 52,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Calculate the abundance of 6Li.",
+    "answer": "Rb. Reactivity of Group I elements increases down the group",
+    "sourceRef": "Part 2 Q52(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-52-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 52,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Given that the abundance of 85Rb is 72.2%. Calculate the value of a in aRb.",
+    "answer": "Both Li and Rb have 1 outermost shell electron. They have similar chemical properties.",
+    "sourceRef": "Part 2 Q52(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-52-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 52,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "85Rb can reacts with oxygen in air to form an oxide. Predict whether aRb would react with oxygen similarly. Explain your answer.",
+    "answer": "Rb. Reactivity of Group I elements increases down the group",
+    "sourceRef": "Part 2 Q52(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-52-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 52,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Lithium atom",
+    "answer": "Both Li and Rb have 1 outermost shell electron. They have similar chemical properties.",
+    "sourceRef": "Part 2 Q52(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-52-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 52,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Rubidium atom (Hint: Electronic arrangement of 36Kr = 2,8,18,8)",
+    "answer": "Rb. Reactivity of Group I elements increases down the group",
+    "sourceRef": "Part 2 Q52(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-52-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 52,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "With reference to your answer in (c), explain why rubidium also reacts with water to give metal hydroxide and hydrogen gas.",
+    "answer": "Both Li and Rb have 1 outermost shell electron. They have similar chemical properties.",
+    "sourceRef": "Part 2 Q52(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-52-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 52,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Which metal reacts with water more vigorously? Explain your answer.",
+    "answer": "Rb. Reactivity of Group I elements increases down the group",
+    "sourceRef": "Part 2 Q52(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-53-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 53,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "The atomic number of iodine is 53. Write down the electronic arrangement of an iodine atom, given that the first three electron shells of iodine are fully filled.",
+    "answer": "(c)",
+    "sourceRef": "Part 2 Q53(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-53-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 53,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Given that the abundance of 79Br and 81Br is 11:9. Calculate the relative atomic mass of Br.",
+    "answer": "= 79.9",
+    "sourceRef": "Part 2 Q53(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-53-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 53,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "State the number of neutrons in 81Br.",
+    "answer": "(d) Both Br and I have 7 outermost shell electrons. They have similar chemical properties",
+    "sourceRef": "Part 2 Q53(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-53-a-iii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 53,
+    "path": [
+      "a",
+      "iii"
+    ],
+    "marks": 1,
+    "stem": "79Br2 can react with hydrogen to give steamy fumes HBr. State, with explanation, the expected observation when 81Br2 reacts with hydrogen.",
+    "answer": "",
+    "sourceRef": "Part 2 Q53(a)(iii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "pt-54-a",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 54,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "Complete the missing parts of the above table.",
+    "answer": "(c)",
+    "sourceRef": "Part 2 Q54(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-54-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 54,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘relative atomic mass’?",
+    "answer": "2, 8, 18, 4",
+    "sourceRef": "Part 2 Q54(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-54-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 54,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Calculate the value of x in the above table.",
+    "answer": "(g) Making computer chips",
+    "sourceRef": "Part 2 Q54(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-54-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 54,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain why silicon is classified as a semi-metal",
+    "answer": "2, 8, 18, 4",
+    "sourceRef": "Part 2 Q54(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-54-a-ii",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 54,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Suggest another semi-metal with atomic number less than 20.",
+    "answer": "(g) Making computer chips",
+    "sourceRef": "Part 2 Q54(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-54-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 54,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Given that Ge is a Period 4 element. State the electronic arrangement of Ge.",
+    "answer": "2, 8, 18, 4",
+    "sourceRef": "Part 2 Q54(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "pt-54-a-i",
+    "section": "periodic-table",
+    "part": 2,
+    "mainQ": 54,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain why Si and Ge have similar chemical properties.",
+    "answer": "2, 8, 18, 4",
+    "sourceRef": "Part 2 Q54(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-01-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 1,
+    "path": [
+      "a"
+    ],
+    "marks": 18,
+    "stem": "Complete the following table: Particle Proton Neutron Electron Mass number Atomic number Electronic arrangement A 6 8 6 B 13 14 10 C 11 12 10 D 10 12 2,8 E 35 46 2,8,18,8 F 82 125 2,8,18,32,18,2 G 7 15 2,8 H 17 37 2,8,7 I 19 41 2,8,8 J 5 2 4 K 8 10 7 L 16 18 15 M 130 56 2,8,18,18,8,2 N 127 53 2,8,18,18,8 O 64 30 2,8,18,2 P 3 7 3 Q 18 34 16 R 20 41 20",
+    "answer": "2,8,8,2 (b)",
+    "sourceRef": "Part 3 Q1(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-01-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 1,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Describe how an atom is changed to a cation.",
+    "answer": "When an atom gains electrons, an anion is formed",
+    "sourceRef": "Part 3 Q1(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-01-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 1,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Which of the particles in the above table is / are cations?",
+    "answer": "E, G, K, L, N, Q",
+    "sourceRef": "Part 3 Q1(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-01-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 1,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Describe how an atom is changed to an anion.",
+    "answer": "When an atom gains electrons, an anion is formed",
+    "sourceRef": "Part 3 Q1(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-01-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 1,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Which of the particles in the above table is / are anions?",
+    "answer": "E, G, K, L, N, Q",
+    "sourceRef": "Part 3 Q1(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-02-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 2,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "Write the numbers of protons, electrons and neutrons in the atom.",
+    "answer": "",
+    "sourceRef": "Part 3 Q2(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-03-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 3,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "The atomic number of copernicium is 112.",
+    "answer": "",
+    "sourceRef": "Part 3 Q3(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-03-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 3,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "How many protons are there in an atom of copernicium?",
+    "answer": "CpF2",
+    "sourceRef": "Part 3 Q3(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-03-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 3,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Write the chemical formula of copernicium fluoride.",
+    "answer": "CpF2",
+    "sourceRef": "Part 3 Q3(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-03-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 3,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Describe how copernicium atoms and fluorine atoms form copernicium ions and fluoride ions.",
+    "answer": "When a fluorine atom gains one electron, a fluoride ion forms.",
+    "sourceRef": "Part 3 Q3(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-04-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 4,
+    "path": [
+      "a"
+    ],
+    "marks": 20,
+    "stem": "Complete the following table Particle Atomic number Mass number Proton Neutron Electron Electronic arrangement Li 6 Li+ 7 N 7 N3- 8 K 39 K+ 41 Mg 13 Mg2+ 14 S 32 S2- 34 F 9 F- 10 Al 26 Al3+ 27 Ca 20 Ca2+ 23 Cl 35 Cl- 37 Na 12 Na+ 13",
+    "answer": "2,8 (b)",
+    "sourceRef": "Part 3 Q4(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-04-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "S2- ion",
+    "answer": "",
+    "sourceRef": "Part 3 Q4(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-04-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Na atom (iii) P3- ion (iv) Si atom",
+    "answer": "",
+    "sourceRef": "Part 3 Q4(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-04-a-v",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 6,
+    "stem": "Be2+ ion (vi) Ar atom",
+    "answer": "",
+    "sourceRef": "Part 3 Q4(a)(v)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-06-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 6,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Complete the following table Species Atomic number Mass number Electronic arrangement Number of Protons Neutrons Electrons",
+    "answer": "Species Atomic number Mass number Electronic arrangement Number of Protons Neutrons Electrons",
+    "sourceRef": "Part 3 Q6(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-06-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Beryllium atom 4 5",
+    "answer": "2, 2",
+    "sourceRef": "Part 3 Q6(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-06-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Neon atom 20 2, 8",
+    "answer": "2, 8, 5",
+    "sourceRef": "Part 3 Q6(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-06-a-iii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "iii"
+    ],
+    "marks": 1,
+    "stem": "14 14 14 (iv) Phosphorus atom 16",
+    "answer": "",
+    "sourceRef": "Part 3 Q6(a)(iii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-06-a-v",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 1,
+    "stem": "Potassium ion 19 39 (vi) Nitride ion 2, 8 7",
+    "answer": "2, 8",
+    "sourceRef": "Part 3 Q6(a)(v)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-06-a-vii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "vii"
+    ],
+    "marks": 1,
+    "stem": "12 12 10",
+    "answer": "",
+    "sourceRef": "Part 3 Q6(a)(vii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-06-a-viii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "viii"
+    ],
+    "marks": 1,
+    "stem": "19 2, 8 10",
+    "answer": "",
+    "sourceRef": "Part 3 Q6(a)(viii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-06-a-ix",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "ix"
+    ],
+    "marks": 1,
+    "stem": "11 12 10",
+    "answer": "",
+    "sourceRef": "Part 3 Q6(a)(ix)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-06-a-x",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "x"
+    ],
+    "marks": 10,
+    "stem": "11 12 11",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q6(a)(x)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-07-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 7,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Table 1 gives some information about three subatomic particles.",
+    "answer": "",
+    "sourceRef": "Part 3 Q7(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-07-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 3,
+    "stem": "Complete Table 1 by giving the missing information. Subatomic particle Relative mass Relative charge Electron 0.0005 Proton +1 Neutron 1",
+    "answer": "22Ne has 2 more neutrons than 20Ne",
+    "sourceRef": "Part 3 Q7(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-07-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Give the name of the part of the atom containing protons and neutrons.",
+    "answer": "x = 0.912 (The abundance of 20Ne is 91.2%)",
+    "sourceRef": "Part 3 Q7(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-07-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State ONE difference between 20Ne and 22Ne",
+    "answer": "22Ne has 2 more neutrons than 20Ne",
+    "sourceRef": "Part 3 Q7(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-07-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "If the relative atomic mass of this sample of neon is 20.176, calculate the abundance of 20Ne.",
+    "answer": "x = 0.912 (The abundance of 20Ne is 91.2%)",
+    "sourceRef": "Part 3 Q7(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-08-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 8,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Give the mass number of F.",
+    "answer": "(d) H is the negative ion formed from F. No. of electrons in H is 3 more than that of protons",
+    "sourceRef": "Part 3 Q8(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-09-c",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 9,
+    "path": [
+      "c"
+    ],
+    "marks": 1,
+    "stem": "Give the special name of the group this element belongs to.",
+    "answer": "",
+    "sourceRef": "Part 3 Q9(c)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-10-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 10,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "When sodium reacts with chlorine, sodium chloride is formed.",
+    "answer": "",
+    "sourceRef": "Part 3 Q10(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-10-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "(1) In terms of electron transfer, describe how sodium ion is formed from sodium atom.",
+    "answer": "(3) 2, 8, 8",
+    "sourceRef": "Part 3 Q10(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-10-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "(1) In terms of electron transfer, describe how chloride ion is formed from chlorine atom.",
+    "answer": "(iii) CaO",
+    "sourceRef": "Part 3 Q10(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-10-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "(1) In terms of electron transfer, describe how potassium ion is formed from potassium atom.",
+    "answer": "(3) 2, 8, 8",
+    "sourceRef": "Part 3 Q10(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-10-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "(1) In terms of electron transfer, describe how nitride ion is formed from nitrogen atom.",
+    "answer": "(iii) CaO",
+    "sourceRef": "Part 3 Q10(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-10-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "(1) In terms of electron transfer, describe how aluminium ion is formed from aluminium atom.",
+    "answer": "(3) 2, 8, 8",
+    "sourceRef": "Part 3 Q10(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-10-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "(1) In terms of electron transfer, describe how sulphide ion is formed from sulphur atom.",
+    "answer": "(iii) CaO",
+    "sourceRef": "Part 3 Q10(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-10-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "(1) In terms of electron transfer, describe how calcium ion is formed from calcium atom.",
+    "answer": "(3) 2, 8, 8",
+    "sourceRef": "Part 3 Q10(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-10-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "(1) In terms of electron transfer, describe how oxide ion is formed from oxygen atom.",
+    "answer": "(iii) CaO",
+    "sourceRef": "Part 3 Q10(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-11-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 11,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is ionic bond?",
+    "answer": "",
+    "sourceRef": "Part 3 Q11(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-11-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State the electron arrangement of the following ions. (1) Magnesium ion",
+    "answer": "",
+    "sourceRef": "Part 3 Q11(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-11-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Write down the chemical formula of magnesium chloride.",
+    "answer": "",
+    "sourceRef": "Part 3 Q11(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-11-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State the electron arrangement of the following ions. (1) Aluminium ion",
+    "answer": "",
+    "sourceRef": "Part 3 Q11(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-11-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Write down the chemical formula of aluminium oxide.",
+    "answer": "",
+    "sourceRef": "Part 3 Q11(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-11-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State the electron arrangement of the following ions. (1) Potassium ion",
+    "answer": "",
+    "sourceRef": "Part 3 Q11(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-11-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Write down the chemical formula of potassium hydride.",
+    "answer": "",
+    "sourceRef": "Part 3 Q11(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-12-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 12,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Describe the formation of strontium chloride from atoms of strontium and chlorine, and state the type of chemical bond involved.",
+    "answer": "(c) SrCl2",
+    "sourceRef": "Part 3 Q12(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-13-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 13,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "In which of these elements can its atoms form cations?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q13(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-14-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 14,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Sodium and Chlorine",
+    "answer": "(g) (h)",
+    "sourceRef": "Part 3 Q14(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-14-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 14,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Aluminium and Fluorine",
+    "answer": "(j)",
+    "sourceRef": "Part 3 Q14(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-15-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 15,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Which of the above elements belong to the same group? Explain your answer.",
+    "answer": "(b)",
+    "sourceRef": "Part 3 Q15(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-15-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 15,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw an electron diagram of P, showing electrons in the outermost shells only.",
+    "answer": "",
+    "sourceRef": "Part 3 Q15(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-15-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 15,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "State the chemical formula of P.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q15(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-15-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 15,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw an electron diagram of Q, showing electrons in the outermost shells only.",
+    "answer": "",
+    "sourceRef": "Part 3 Q15(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-15-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 15,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "State the chemical formula of Q.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q15(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-16-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 16,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the charge on the ion of Y?",
+    "answer": "",
+    "sourceRef": "Part 3 Q16(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-17-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 17,
+    "path": [
+      "a"
+    ],
+    "marks": 5,
+    "stem": "State the electronic arrangement of V, W, X, Y and Z",
+    "answer": "(b)",
+    "sourceRef": "Part 3 Q17(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-17-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 17,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "V and X",
+    "answer": "",
+    "sourceRef": "Part 3 Q17(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-17-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 17,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "X and Z",
+    "answer": "",
+    "sourceRef": "Part 3 Q17(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-18-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 18,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Suggest what W and X are.",
+    "answer": "(c) Phosphorus",
+    "sourceRef": "Part 3 Q18(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-19-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 19,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram for each of the following atoms, showing electrons in ALL SHELLS",
+    "answer": "",
+    "sourceRef": "Part 3 Q19(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-19-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 19,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Lithium atom",
+    "answer": "",
+    "sourceRef": "Part 3 Q19(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-19-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 19,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Oxygen atom",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q19(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-20-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 20,
+    "path": [
+      "a"
+    ],
+    "marks": 4,
+    "stem": "Complete the following table: Atomic number of this atom Mass number of this atom Period number of this element Number of electrons in the stable ion formed from this atom",
+    "answer": "(c)",
+    "sourceRef": "Part 3 Q20(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-21-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 21,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is W?",
+    "answer": "(e)",
+    "sourceRef": "Part 3 Q21(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-22-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 22,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the name commonly given to this group of elements?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q22(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-23-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 23,
+    "path": [
+      "a"
+    ],
+    "marks": 6,
+    "stem": "Complete the above table.",
+    "answer": "(e)",
+    "sourceRef": "Part 3 Q23(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-23-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 23,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw an electron diagram of X.",
+    "answer": "",
+    "sourceRef": "Part 3 Q23(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-23-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 23,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw an electron diagram of Y.",
+    "answer": "",
+    "sourceRef": "Part 3 Q23(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-24-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 24,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Which of the above elements is / are:",
+    "answer": "",
+    "sourceRef": "Part 3 Q24(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-24-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Metal?",
+    "answer": "Alkaline Earth Metal",
+    "sourceRef": "Part 3 Q24(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-24-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Non-metal?",
+    "answer": "(c)",
+    "sourceRef": "Part 3 Q24(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-24-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Atom A",
+    "answer": "Alkaline Earth Metal",
+    "sourceRef": "Part 3 Q24(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-24-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Atom B",
+    "answer": "(c)",
+    "sourceRef": "Part 3 Q24(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-24-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "A and F",
+    "answer": "Alkaline Earth Metal",
+    "sourceRef": "Part 3 Q24(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-24-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "A and G",
+    "answer": "(c)",
+    "sourceRef": "Part 3 Q24(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-25-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 25,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "With the help of a simple diagram, describe the bonding in potassium metal.",
+    "answer": "(c)",
+    "sourceRef": "Part 3 Q25(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-26-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 26,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Sodium, Na, is a metallic element. Explain, with the aid of a labelled diagram, what is meant by the term ‘metallic bonding’.",
+    "answer": "(b)",
+    "sourceRef": "Part 3 Q26(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-26-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 26,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State what is meant by the term ‘ionic bond’.",
+    "answer": "An ionic bond is the strong electrostatic forces of attraction between oppositely charged ions.",
+    "sourceRef": "Part 3 Q26(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-27-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 27,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘isotope’?",
+    "answer": "(f)",
+    "sourceRef": "Part 3 Q27(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-27-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 27,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State the atomic number of radium.",
+    "answer": "",
+    "sourceRef": "Part 3 Q27(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-27-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 27,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Predict whether Mg or element A has a higher reactivity towards chlorine. Explain your answer.",
+    "answer": "A. Reactivity of Group II elements increases down the group",
+    "sourceRef": "Part 3 Q27(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-28-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 28,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of a calcium ion, showing electrons in ALL SHELLS.",
+    "answer": "(e)",
+    "sourceRef": "Part 3 Q28(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-28-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 28,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Briefly describe the formation of ionic bond when calcium reacts with oxygen to give X.",
+    "answer": "It is the transfer of electrons from calcium atom to oxygen atom",
+    "sourceRef": "Part 3 Q28(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-28-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 28,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of X, showing electrons in the outermost shells only.",
+    "answer": "",
+    "sourceRef": "Part 3 Q28(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-29-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 29,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Sodium chloride",
+    "answer": "Sodium chloride NaCl (b) Calcium chloride CaCl2 (c) Copper(II) chloride CuCl2 (d) Potassium oxide K2O (e) Sodium nitrate NaNO3 (f) Iron(II) sulphate FeSO4 (g) Potassium dichromate K2Cr2O7 (h) Silver sulphate Ag2SO4",
+    "sourceRef": "Part 3 Q29(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-29-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Ammonium dichromate",
+    "answer": "Ammonium dichromate (NH4)2Cr2O7 (j) Zinc nitrate Zn(NO3)2 (k) Aluminium sulphate Al2(SO4)3 (l) Chromium(III) sulphate Cr2(SO4)3 (m) Calcium sulphite CaSO3 (n) Lead(II) sulphate PbSO4 (o) Sodium hydroxide NaOH (p) Iron(III) hydroxide Fe(OH)3",
+    "sourceRef": "Part 3 Q29(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-30-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 30,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "(NH4)2CO3",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q30(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-31-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 31,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Silver nitrate",
+    "answer": "Silver nitrate AgNO3 (b) Sodium hydroxide NaOH (c) Potassium sulphate K2SO4 (d) Calcium oxide CaO (e) Sodium sulphite K2SO3 (f) Calcium hydroxide Ca(OH)2 (g) Iron(III) nitrate Fe(NO3)3 (h) Magnesium sulphide MgS",
+    "sourceRef": "Part 3 Q31(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-31-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 31,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Iron(II) chloride",
+    "answer": "Iron(II) chloride FeCl2 (j) Iron(III) oxide Fe2O3 (k) Calcium nitride Ca3N2 (l) Lead(II) nitrate Pb(NO3)2 (m) Zinc hydroxide Zn(OH)2 (n) Aluminium iodide AlI3 (o) Sodium nitrite NaNO2 (p) Copper(I) oxide Cu2O (q) Aluminium sulphate Al2(SO4)3 (r) Sodium phosphide Na3P (s) Potassium dichromate K2Cr2O7 (t) Magnesium carbonate MgCO3 (u) Chromium(III) oxide Cr2O3",
+    "sourceRef": "Part 3 Q31(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-31-a-v",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 31,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 1,
+    "stem": "Calcium hydrogencarbonate",
+    "answer": "Calcium hydrogencarbonate Ca(HCO3)2 (w) Iron(III) phosphate FeSO4",
+    "sourceRef": "Part 3 Q31(a)(v)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-31-a-x",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 31,
+    "path": [
+      "a",
+      "x"
+    ],
+    "marks": 1,
+    "stem": "Ammonium dichromate",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q31(a)(x)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-32-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 32,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "FeCl2",
+    "answer": "FeCl2 Iron(II) chloride (b) CuSO4 Copper(II) sulphate (c) Na2S Sodium sulphide (d) AgBr Silver bromide (e) CaF2 Calcium fluoride (f) K2SO3 Potassium sulphite (g) CaSO4 Calcium sulphate (h) (NH4)2SO4 Ammonium sulphate",
+    "sourceRef": "Part 3 Q32(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-32-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "AlCl3",
+    "answer": "AlCl3 Aluminium chloride (j) Fe(OH)2 Iron(II) hydroxide (k) ZnCO3 Zinc carbonate (l) MgCO3 Magnesium carbonate (m) Na3PO4 Sodium phosphate (n) AlN Aluminium nitride (o) K2Cr2O7 Potassium dichromate (p) CaSO3 Calcium sulphite (q) KNO2 Potassium nitrite (r) CuCr2O7 Copper(II) dichromate (s) Na3P Sodium phosphide (t) Fe2O3 Iron(III) oxide (u) FePO4 Iron(III) phosphate",
+    "sourceRef": "Part 3 Q32(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-32-a-v",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 1,
+    "stem": "Al2(SO4)3",
+    "answer": "Al2(SO4)3 Aluminium sulphate (w) Zn(NO3)2 Zinc nitrate",
+    "sourceRef": "Part 3 Q32(a)(v)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-32-a-x",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "x"
+    ],
+    "marks": 1,
+    "stem": "(NH4)2Cr2O7",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q32(a)(x)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-35-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 35,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Calcium oxide",
+    "answer": "(g) (h)",
+    "sourceRef": "Part 3 Q35(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-35-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 35,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Calcium iodide",
+    "answer": "(j)",
+    "sourceRef": "Part 3 Q35(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-36-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 36,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Write down the chemical formula for each of the following compounds.",
+    "answer": "",
+    "sourceRef": "Part 3 Q36(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-36-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Compound A",
+    "answer": "NaCl",
+    "sourceRef": "Part 3 Q36(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-36-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Compound B",
+    "answer": "(b)",
+    "sourceRef": "Part 3 Q36(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-36-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Compound D",
+    "answer": "NaCl",
+    "sourceRef": "Part 3 Q36(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-36-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Compound E",
+    "answer": "(b)",
+    "sourceRef": "Part 3 Q36(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-37-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 37,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Write the electronic arrangements of a chlorine atom and a chloride ion respectively.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q37(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-38-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 38,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Why is the filter paper soaked with sodium sulphate solution instead of water?",
+    "answer": "This is because negatively charged MnO4-(aq) ions will then be attracted to the electrode Y which is now a positive electrode.",
+    "sourceRef": "Part 3 Q38(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-39-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 39,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Write down the chemical formula of sodium chromate.",
+    "answer": "(d)",
+    "sourceRef": "Part 3 Q39(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-39-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 39,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is the colour of the patch?",
+    "answer": "Yellow",
+    "sourceRef": "Part 3 Q39(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-39-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 39,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "What ion was responsible for the coloured patch?",
+    "answer": "(f) Increase the voltage of the power supply",
+    "sourceRef": "Part 3 Q39(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-40-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 40,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Write the chemical formula of copper(II) dichromate",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q40(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-41-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 41,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Write the chemical formula of iron(III) sulphate",
+    "answer": "It also slows down the migration of Cu2+(aq) and Cr2O72–(aq) ions to make the results more easily observed.",
+    "sourceRef": "Part 3 Q41(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-42-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 42,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "The filter paper used should be moistened with dilute sulphuric acid (H2SO4(aq)).",
+    "answer": "",
+    "sourceRef": "Part 3 Q42(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-42-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 42,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is the function of dilute sulphuric acid?",
+    "answer": "Orange Cr2O72- ions react with Sn2+ ions to form green Cr3+ ions",
+    "sourceRef": "Part 3 Q42(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-42-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 42,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain why the filter paper cannot be moistened with ethanol.",
+    "answer": "(d) Increase the voltage of the experiment",
+    "sourceRef": "Part 3 Q42(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-42-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 42,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "It is given that both Sn2+(aq) and Sn4+(aq) are colorless. Explain what would be observed around the middle of the filter paper when the circuit is closed for a period of time.",
+    "answer": "Orange Cr2O72- ions react with Sn2+ ions to form green Cr3+ ions",
+    "sourceRef": "Part 3 Q42(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-42-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 42,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 4,
+    "stem": "The experiment is repeated but the two poles of the cell have been reversed at the very beginning. Explain what would be observed around the middle of the filter paper when the circuit is closed for a period of time.",
+    "answer": "(d) Increase the voltage of the experiment",
+    "sourceRef": "Part 3 Q42(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-43-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 43,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "State the purpose of soaking the filter paper with K2SO4(aq).",
+    "answer": "They react with each other to give brown Br2(aq)",
+    "sourceRef": "Part 3 Q43(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-43-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 43,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain whether the filter paper can be soaked with KMnO4(aq) instead of K2SO4(aq)",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q43(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-43-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 43,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "It is given that Ce3+(aq) is colorless. Explain what would be observed around the middle of the filter paper when the circuit is closed for a period of time.",
+    "answer": "They react with each other to give brown Br2(aq)",
+    "sourceRef": "Part 3 Q43(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-43-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 43,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "The experiment is repeated, but the KBr(aq) is replaced by KI(aq) at the very beginning. It is expected that the observation will be similar to observation in (b)(i). Suggest a reason for this expectation based on electronic arrangement.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 3 Q43(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-44-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 44,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "In set-up A, a blue colour can be observed around graphite electrode X when an electric current is passed through the circuit for some time.",
+    "answer": "(iii) Purple colour patch will move to Q while yellow colour patch will move to P",
+    "sourceRef": "Part 3 Q44(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-44-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 44,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain why dilute hydrochloric acid is added to each side of the tube.",
+    "answer": "",
+    "sourceRef": "Part 3 Q44(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-44-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 44,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Deduce the polarity of carbon rod X. Explain your answer.",
+    "answer": "",
+    "sourceRef": "Part 3 Q44(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-44-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 44,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain whether the filter paper can be soaked with Ni(NO3)2(aq) instead of KNO3(aq)",
+    "answer": "",
+    "sourceRef": "Part 3 Q44(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-44-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 44,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "State what would be observed on the filter paper when the circuit is closed for a period of time.",
+    "answer": "",
+    "sourceRef": "Part 3 Q44(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "ib-45-a",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 45,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "What is X? Suggest why it is added in both experimental set-ups.",
+    "answer": "(c)",
+    "sourceRef": "Part 3 Q45(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-45-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 45,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Give the chemical formula of iron(III) nitrate",
+    "answer": "Na2Cr2O7 = sodium dichromate, KMnO4 = potassium permanganate",
+    "sourceRef": "Part 3 Q45(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-45-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 45,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Complete the diagram above.",
+    "answer": "Orange negatively charged Cr2O72- ion will be attracted towards positive electrode P",
+    "sourceRef": "Part 3 Q45(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-45-a-i",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 45,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Give the chemical names of Na2Cr2O7 and KMnO4",
+    "answer": "Na2Cr2O7 = sodium dichromate, KMnO4 = potassium permanganate",
+    "sourceRef": "Part 3 Q45(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "ib-45-a-ii",
+    "section": "ionic-bond",
+    "part": 3,
+    "mainQ": 45,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "After the electric current has passed for 10 minutes, purple color patch can be found in the middle of the filter paper. Complete the diagram above.",
+    "answer": "Orange negatively charged Cr2O72- ion will be attracted towards positive electrode P",
+    "sourceRef": "Part 3 Q45(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-02-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 2,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Hydrogen and Oxygen",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q2(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-04-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 4,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of the following molecules, showing electrons in the outermost shells only.",
+    "answer": "",
+    "sourceRef": "Part 4 Q4(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-04-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Nitrosyl chloride (NOCl)",
+    "answer": "Nitrosyl chloride (NOCl)",
+    "sourceRef": "Part 4 Q4(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-04-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Cyanogen chloride (CNCl) (iii) Dioxygen difluoride (O2F2) (iv) Dichloroacetylene (C2Cl2)",
+    "answer": "Cyanogen chloride (CNCl) (iii) Dioxygen difluoride (O2F2) (iv) Dichloroacetylene (C2Cl2)",
+    "sourceRef": "Part 4 Q4(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-04-a-v",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 6,
+    "stem": "Boron trichloride (BCl3) (vi) Phosgene (COCl2) (Hint: BCl3 does NOT have an octet structure)",
+    "answer": "(f) CNCl, C2Cl2",
+    "sourceRef": "Part 4 Q4(a)(v)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-05-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 5,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of the following compounds, showing electrons in outermost shells only.",
+    "answer": "",
+    "sourceRef": "Part 4 Q5(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-05-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 5,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "H2O (iii) NH3 (iv) CH4",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q5(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-05-a-v",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 5,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 1,
+    "stem": "H2O2 (vi) N2H2 (vii) C2Cl2 (viii) NOCl (ix) COCl2",
+    "answer": "H2O2 (vi) N2H2 (vii) C2Cl2 (viii) NOCl (ix) COCl2",
+    "sourceRef": "Part 4 Q5(a)(v)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-05-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 5,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "contain(s) double bond?",
+    "answer": "CO2, N2H2, COCl2, NOCl, C2H4",
+    "sourceRef": "Part 4 Q5(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-05-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 5,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "contain(s) triple bond?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q5(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-06-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 6,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of a molecule of X, showing electrons in the outermost shells only.",
+    "answer": "",
+    "sourceRef": "Part 4 Q6(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-06-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Write the electronic arrangement of an atom of Y and that of an atom of Z.",
+    "answer": "Z: 2, 8, 4",
+    "sourceRef": "Part 4 Q6(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-06-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 6,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of a molecule of A, showing electrons in the outermost shells only.",
+    "answer": "(iii) 4 bond pairs and 12 lone pairs",
+    "sourceRef": "Part 4 Q6(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-07-b",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 7,
+    "path": [
+      "b"
+    ],
+    "marks": 2,
+    "stem": "How many atoms do the left carbon atom and the right carbon atom bond to?",
+    "answer": "",
+    "sourceRef": "Part 4 Q7(b)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-08-b",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 8,
+    "path": [
+      "b"
+    ],
+    "marks": 2,
+    "stem": "Describe the bond formation in the covalent compound in (a) from atoms of the relevant elements.",
+    "answer": "",
+    "sourceRef": "Part 4 Q8(b)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-09-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 9,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "To which group in the periodic table does selenium belong?",
+    "answer": "(c)",
+    "sourceRef": "Part 4 Q9(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-09-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 9,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw an electron diagram of hydrogen selenide, showing electrons in the outermost shells only.",
+    "answer": "",
+    "sourceRef": "Part 4 Q9(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-10-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 10,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Write the electronic arrangement of a neon atom.",
+    "answer": "(c)",
+    "sourceRef": "Part 4 Q10(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-10-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain why monoatomic neon is stable.",
+    "answer": "Neon atoms have a stable octet. They have no tendency to share its electrons with other neon atoms.",
+    "sourceRef": "Part 4 Q10(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-10-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 10,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Explain why diatomic nitrogen is more stable than monoatomic nitrogen.",
+    "answer": "Monoatomic nitrogen atoms are very unstable because they have five electrons in the outermost shell only. They tend to share three of its outermost shell electrons with another nitrogen atom, forming a triple covalent bond. In this way, each nitrogen atom has a stable octet.",
+    "sourceRef": "Part 4 Q10(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-11-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 11,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the name given to Group VII elements of the periodic table?",
+    "answer": "(b)",
+    "sourceRef": "Part 4 Q11(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-11-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain why elements in Group VII exist as diatomic molecules.",
+    "answer": "An atom of a Group VII element has 7 outermost shell electrons. Each Group VII atom can obtain the stable electronic arrangement of an atom of a noble gas by sharing one outermost shell electron with another Group VII atom.",
+    "sourceRef": "Part 4 Q11(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-11-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Name TWO other elements, apart from those in Group VII, which are diatomic.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q11(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-12-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 12,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Carbon dioxide",
+    "answer": "Carbon dioxide CO2 (b) Phosphorus trichloride PCl3 (c) Chlorine dioxide Cl2O (d) Carbon monoxide CO (e) Phosphorus pentachloride PCl5 (f) Sulphur trioxide SO3 (g) Oxygen difluoride OF2 (h) Chlorine trifluoride ClF3",
+    "sourceRef": "Part 4 Q12(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-12-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 12,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Dinitrogen tetroxide",
+    "answer": "Dinitrogen tetroxide N2O4 (j) Dinitrogen pentoxide N2O5 (k) Water H2O (l) Ammonia NH3 (m) Methane CH4 (n) Hydrogen peroxide H2O2 (o) Hydrogen chloride HCl (p) Hydrogen sulphide H2S",
+    "sourceRef": "Part 4 Q12(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-17-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 17,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Electron diagram Chemical name Nitrogen Molecular formula Relative molecular mass",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q17(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-18-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 18,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Oxygen",
+    "answer": "Oxygen (b) Nitrogen (c) Oxygen dichloride (d) Nitrogen trichloride (e) Methane (f) Ammonia (g) Water (h) Hydrogen peroxide",
+    "sourceRef": "Part 4 Q18(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-19-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 19,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "Complete the following table Molecule Electron diagram Structural formula Atomicity Number of lone pairs in one molecule Nitrogen Oxygen Water",
+    "answer": "(c)",
+    "sourceRef": "Part 4 Q19(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-19-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 19,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Ammonium nitrate",
+    "answer": "",
+    "sourceRef": "Part 4 Q19(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-19-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 19,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Water",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q19(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-20-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 20,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Sodium + Oxygen",
+    "answer": "Sodium + Oxygen (b) Magnesium + Chlorine Name of compound: Sodium oxide Name of compound: Magnesium chloride (c) Carbon + Sulphur (d) Fluorine + Calcium Name of compound: Carbon disulphide Name of compound: Calcium fluoride (e) Chlorine + Phosphorus (f) Aluminium + Oxygen Name of compound: Phosphorus trichloride Name of compound: Aluminium oxide (g) Sulphur + Calcium (h) Potassium + Nitrogen Name of compound: Calcium sulphide Name of compound: Potassium nitride",
+    "sourceRef": "Part 4 Q20(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-20-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 20,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Carbon + Hydrogen",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q20(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-21-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 21,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Consider magnesium oxide:",
+    "answer": "",
+    "sourceRef": "Part 4 Q21(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-21-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of magnesium oxide, showing electrons in the outermost shells only.",
+    "answer": "Mg(N3)2",
+    "sourceRef": "Part 4 Q21(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-21-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "What is the color of solid magnesium oxide?",
+    "answer": "24.3 + 14x6 = 108.3",
+    "sourceRef": "Part 4 Q21(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-21-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of dichlorine monoxide, showing electrons in the outermost shells only.",
+    "answer": "Mg(N3)2",
+    "sourceRef": "Part 4 Q21(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-21-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Chlorine also reacts with oxygen under suitable conditions to give dichlorine heptoxide. Write down the molecular formula of dichlorine heptoxide.",
+    "answer": "24.3 + 14x6 = 108.3",
+    "sourceRef": "Part 4 Q21(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-21-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Write down the chemical formula of magnesium azide.",
+    "answer": "Mg(N3)2",
+    "sourceRef": "Part 4 Q21(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-21-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Calculate the formula mass of magnesium azide. (Relative atomic masses: N = 14.0, Mg = 24.3)",
+    "answer": "24.3 + 14x6 = 108.3",
+    "sourceRef": "Part 4 Q21(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-22-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 22,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Cyanogen (C2N2) is a molecule formed between carbon and nitrogen.",
+    "answer": "",
+    "sourceRef": "Part 4 Q22(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-22-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of a cyanogen molecule, showing electrons in the outermost shells only.",
+    "answer": "",
+    "sourceRef": "Part 4 Q22(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-22-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "How many lone pair(s) is / are present in a cyanogen molecule?",
+    "answer": "(d)",
+    "sourceRef": "Part 4 Q22(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-22-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "It is given that a glyoxal molecule contains one carbon-carbon single bond. Draw the electron diagram of a glyoxal molecule, showing electrons in the outermost shells only.",
+    "answer": "",
+    "sourceRef": "Part 4 Q22(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-22-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "How many bond pair(s) is / are present in a glyoxal molecule?",
+    "answer": "(d)",
+    "sourceRef": "Part 4 Q22(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-22-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of lithium nitride, showing ELECTRONS IN ALL SHELLS.",
+    "answer": "",
+    "sourceRef": "Part 4 Q22(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-22-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Lithium carbide is an ionic compound formed between lithium and carbon. (1) It is given that the formula of a carbide ion is C22-. Calculate the formula mass of lithium carbide. (Relative atomic masses: Li = 6.9, C = 12.0)",
+    "answer": "(d)",
+    "sourceRef": "Part 4 Q22(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-22-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Ammonia",
+    "answer": "",
+    "sourceRef": "Part 4 Q22(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-22-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 22,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Diazene (N2H2)",
+    "answer": "(d)",
+    "sourceRef": "Part 4 Q22(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-23-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 23,
+    "path": [
+      "a"
+    ],
+    "marks": 8,
+    "stem": "Complete the above table",
+    "answer": "(d)",
+    "sourceRef": "Part 4 Q23(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-23-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 23,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "A and G",
+    "answer": "",
+    "sourceRef": "Part 4 Q23(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-23-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 23,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "A and I",
+    "answer": "",
+    "sourceRef": "Part 4 Q23(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-23-a-v",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 23,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 1,
+    "stem": "C and E",
+    "answer": "",
+    "sourceRef": "Part 4 Q23(a)(v)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-24-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 24,
+    "path": [
+      "a"
+    ],
+    "marks": 10,
+    "stem": "Complete the above table.",
+    "answer": "(b)",
+    "sourceRef": "Part 4 Q24(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-24-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "A and D",
+    "answer": "",
+    "sourceRef": "Part 4 Q24(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-24-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "D and E",
+    "answer": "",
+    "sourceRef": "Part 4 Q24(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-24-a-v",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 1,
+    "stem": "F and I",
+    "answer": "",
+    "sourceRef": "Part 4 Q24(a)(v)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-25-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 25,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Complete the above table",
+    "answer": "(d)",
+    "sourceRef": "Part 4 Q25(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-25-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 25,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram for a D2O molecule, showing electrons in the outermost shell only",
+    "answer": "",
+    "sourceRef": "Part 4 Q25(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-25-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 25,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "A small piece of potassium metal is placed into D2O(l) at room conditions. State TWO expected observations",
+    "answer": "(e)",
+    "sourceRef": "Part 4 Q25(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-26-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 26,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "In which element(s) do their atoms / does its atoms have an octet electronic arrangement?",
+    "answer": "(b)",
+    "sourceRef": "Part 4 Q26(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-26-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 26,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "elements A and F.",
+    "answer": "",
+    "sourceRef": "Part 4 Q26(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-26-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 26,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "elements C and E.",
+    "answer": "",
+    "sourceRef": "Part 4 Q26(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-26-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 26,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "a molecule of F.",
+    "answer": "",
+    "sourceRef": "Part 4 Q26(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-27-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 27,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Suggest why element Y does NOT form compounds.",
+    "answer": "(b)",
+    "sourceRef": "Part 4 Q27(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-27-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 27,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Predict the type of compound (ionic or covalent) formed.",
+    "answer": "Ionic",
+    "sourceRef": "Part 4 Q27(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-27-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 27,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw an electron diagram of P, showing electrons in the outermost shells only.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q27(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-27-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 27,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Predict the type of compound (ionic or covalent) formed.",
+    "answer": "Ionic",
+    "sourceRef": "Part 4 Q27(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-27-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 27,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw an electron diagram of Q, showing electrons in the outermost shells only.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q27(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-28-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 28,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "What are elements X, Y and Z?",
+    "answer": "(c) (d) 1+1 (e) (f) 1+1",
+    "sourceRef": "Part 4 Q28(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-29-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 29,
+    "path": [
+      "a"
+    ],
+    "marks": 5,
+    "stem": "Complete the above table.",
+    "answer": "(c)",
+    "sourceRef": "Part 4 Q29(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-29-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘relative atomic mass’?",
+    "answer": "The relative atomic mass of an element is the weighted average of the relative isotopic masses of all naturally occurring isotopes of that element on the 12C = 12.00 scale.",
+    "sourceRef": "Part 4 Q29(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-29-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "It is given that chlorine occurs naturally in two isotopes, V and W. Calculate the abundance of V.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q29(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-29-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of M, showing electrons in the outermost shells only.",
+    "answer": "The relative atomic mass of an element is the weighted average of the relative isotopic masses of all naturally occurring isotopes of that element on the 12C = 12.00 scale.",
+    "sourceRef": "Part 4 Q29(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-29-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Calculate the formula mass of M.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q29(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-29-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of N, showing electrons in the outermost shells only.",
+    "answer": "The relative atomic mass of an element is the weighted average of the relative isotopic masses of all naturally occurring isotopes of that element on the 12C = 12.00 scale.",
+    "sourceRef": "Part 4 Q29(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-29-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Calculate the formula mass of N.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q29(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-30-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 30,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Name the following particles.",
+    "answer": "",
+    "sourceRef": "Part 4 Q30(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-30-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 30,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Black dot",
+    "answer": "Number of electrons in the outermost shell in the atoms",
+    "sourceRef": "Part 4 Q30(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-30-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 30,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "White dot",
+    "answer": "(iii) They have same no. of outermost shell electrons. Therefore they should have similar chemical properties",
+    "sourceRef": "Part 4 Q30(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-30-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 30,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "Complete the above table with reference to the Periodic Table",
+    "answer": "Number of electrons in the outermost shell in the atoms",
+    "sourceRef": "Part 4 Q30(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-30-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 30,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "State the electronic arrangement of an atom of Q",
+    "answer": "(iii) They have same no. of outermost shell electrons. Therefore they should have similar chemical properties",
+    "sourceRef": "Part 4 Q30(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-31-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 31,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Name element X. Hence name compound B.",
+    "answer": "(b)",
+    "sourceRef": "Part 4 Q31(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-31-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 31,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Give the formula of compound K",
+    "answer": "Na3P",
+    "sourceRef": "Part 4 Q31(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-31-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 31,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of compound K, showing electrons in the outermost shells only",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q31(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-32-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 32,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "H2O molecules can react with H+ to form H3O+ ions.",
+    "answer": "",
+    "sourceRef": "Part 4 Q32(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-32-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "In each of the following boxes, draw the electron diagram (showing ELECTRONS IN THE OUTERMOST SHELLS only) for a suitable chemical species to show the formation of a H3O+ ion.",
+    "answer": "",
+    "sourceRef": "Part 4 Q32(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-32-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Describe the formation of dative covalent bond using H3O+ as an example.",
+    "answer": "F- shares its lone pair electrons to B atom in BF3",
+    "sourceRef": "Part 4 Q32(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-32-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "In each of the following boxes, draw the electron diagram (showing ELECTRONS IN THE OUTERMOST SHELLS only) for a suitable chemical species to show the formation of a NH4+ ion.",
+    "answer": "",
+    "sourceRef": "Part 4 Q32(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-32-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Describe the formation of dative covalent bond using NH4+ as an example.",
+    "answer": "F- shares its lone pair electrons to B atom in BF3",
+    "sourceRef": "Part 4 Q32(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-32-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "In each of the following boxes, draw the electron diagram (showing ELECTRONS IN THE OUTERMOST SHELLS only) for a suitable chemical species to show the formation of a BF4- ion.",
+    "answer": "",
+    "sourceRef": "Part 4 Q32(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-32-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Describe the formation of dative covalent bond using BF4- as an example.",
+    "answer": "F- shares its lone pair electrons to B atom in BF3",
+    "sourceRef": "Part 4 Q32(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-33-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 33,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "BF3 molecules can form H3NBF3.",
+    "answer": "",
+    "sourceRef": "Part 4 Q33(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-33-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 33,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "In each of the following boxes, draw the electron diagram (showing ELECTRONS IN THE OUTERMOST SHELLS only) for a suitable chemical species to show the formation of a H3NBF3.",
+    "answer": "Dative covalent bond is formed when N2 shares its lone pair electrons on O to O atom",
+    "sourceRef": "Part 4 Q33(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-33-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 33,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Write the structural formula for a H3NBF3 molecule, using an arrow (➔) to represent the dative covalent bond.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q33(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-33-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 33,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 3,
+    "stem": "Describe the bond formation between oxygen molecule and oxygen atom.",
+    "answer": "Dative covalent bond is formed when N2 shares its lone pair electrons on O to O atom",
+    "sourceRef": "Part 4 Q33(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-33-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 33,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Write the structural formula for an ozone molecule, using an arrow (➔) to represent the dative covalent bond.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q33(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-33-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 33,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 3,
+    "stem": "Describe the bond formation between nitrogen molecule and oxygen atom.",
+    "answer": "Dative covalent bond is formed when N2 shares its lone pair electrons on O to O atom",
+    "sourceRef": "Part 4 Q33(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-33-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 33,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Write the structural formula for a nitrous oxide molecule, using an arrow (➔) to represent the dative covalent bond.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q33(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-34-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 34,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Describe and explain the formation of dative covalent bond in the following species.",
+    "answer": "",
+    "sourceRef": "Part 4 Q34(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-34-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 34,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of a NH3 molecule, showing electrons in the outermost shells only",
+    "answer": "Dative covalent bond is formed when a F- ion donates its lone pair electrons to the B atom in BF3",
+    "sourceRef": "Part 4 Q34(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-34-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 34,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of a BF3 molecule, showing electrons in the outermost shells only. (Hint: The B atom in BF3 does NOT have an octet structure).",
+    "answer": "(iv) NH3 donates its lone pair electrons to the B atom in BF3, forming dative covalent bond",
+    "sourceRef": "Part 4 Q34(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-34-a-v",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 34,
+    "path": [
+      "a",
+      "v"
+    ],
+    "marks": 1,
+    "stem": "Draw the structural formula of F3BNH3.",
+    "answer": "",
+    "sourceRef": "Part 4 Q34(a)(v)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-35-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 35,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "In each of the following boxes, draw the electron diagram (showing electrons in the outermost shells only) for a suitable chemical species to show the formation of a H3O+ ion.",
+    "answer": "(c)",
+    "sourceRef": "Part 4 Q35(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-35-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 35,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘dative covalent bond’?",
+    "answer": "Covalent bond formed between two atoms where both electrons of the shared pair are contributed by the same atom.",
+    "sourceRef": "Part 4 Q35(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-35-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 35,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw the structural formula of a H3O+ ion.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 4 Q35(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "cb-36-a",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 36,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Below is the electron ‘dot-and-cross’ diagram for a molecule of carbon monoxide.",
+    "answer": "",
+    "sourceRef": "Part 4 Q36(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-36-a-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "How many bond pairs of electrons are there in a carbon monoxide molecule?",
+    "answer": "",
+    "sourceRef": "Part 4 Q36(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-36-a-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "How many lone pairs of electrons are there in a carbon monoxide molecule?",
+    "answer": "",
+    "sourceRef": "Part 4 Q36(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-19-b",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 19,
+    "path": [
+      "b"
+    ],
+    "marks": 1,
+    "stem": "Identify the type of bond which exists between nitrogen and hydrogen.",
+    "answer": "",
+    "sourceRef": "Part 4 Q19(b)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-19-b-i",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 19,
+    "path": [
+      "b",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Give the name of the type of bond formed when a hydrogen ion reacts with an ammonia molecule.",
+    "answer": "",
+    "sourceRef": "Part 4 Q19(b)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "cb-19-b-ii",
+    "section": "covalent-bond",
+    "part": 4,
+    "mainQ": 19,
+    "path": [
+      "b",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Describe how this bond is formed in the ammonium ion.",
+    "answer": "",
+    "sourceRef": "Part 4 Q19(b)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-01-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 1,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "With the aid of a labelled diagram, briefly discuss the formation of metallic bond in aluminium. Hence, explain why aluminium has a high melting point",
+    "answer": "Terminal Y = positive terminal",
+    "sourceRef": "Part 5 Q1(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-02-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 2,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Explain why the electrical conductivity of aluminium is higher than that of magnesium.",
+    "answer": "As the metal is struck by a hammer, the ion layers slide through the ‘sea’ of electrons to new positions. The metal does not break because the ions are still bound together by the ‘sea’ of electrons. As a result, the metal is ductile. 1",
+    "sourceRef": "Part 5 Q2(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-03-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 3,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Explain why only a very small percentage of alpha particles were deflected and bounced off at very large angles.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q3(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-04-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 4,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "The diagram below shows a part of the structure of sodium chloride crystal with some ions missing.",
+    "answer": "",
+    "sourceRef": "Part 5 Q4(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-04-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Complete the diagram by using ● as Na+ ion and ○ as Cl- ion.",
+    "answer": "",
+    "sourceRef": "Part 5 Q4(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-04-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain why sodium chloride has a higher melting point.",
+    "answer": "(d) Caesium. Reactivity of Group I elements increases down the group",
+    "sourceRef": "Part 5 Q4(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-04-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Complete the diagram by using ● as Cs+ ion.",
+    "answer": "",
+    "sourceRef": "Part 5 Q4(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-04-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 4,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain why CsCl(s) cannot NOT conduct electricity.",
+    "answer": "(d) Caesium. Reactivity of Group I elements increases down the group",
+    "sourceRef": "Part 5 Q4(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-05-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 5,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Explain why they are described as ‘alkali’.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q5(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-06-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 6,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Complete the diagram by filling in the missing ions.",
+    "answer": "(d) No. This is because the ions are held in fixed positions in the solid state.",
+    "sourceRef": "Part 5 Q6(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-07-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘relative atomic mass’?",
+    "answer": "The relative atomic mass of an element is the weighted average of the relative isotopic masses of all of its naturally occurring isotopes on the 12C = 12.00 scale.",
+    "sourceRef": "Part 5 Q7(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-07-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Calculate the relative atomic mass of rubidium.",
+    "answer": "Rubidium chloride does not conduct electricity in the solid state but it conducts electricity when molten or in aqueous solution. This is because ions in rubidium chloride are mobile in molten or aqueous states, but not in solid state.",
+    "sourceRef": "Part 5 Q7(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-07-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram for rubidium chloride, showing electrons in the outermost shells only.",
+    "answer": "The relative atomic mass of an element is the weighted average of the relative isotopic masses of all of its naturally occurring isotopes on the 12C = 12.00 scale.",
+    "sourceRef": "Part 5 Q7(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-07-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 7,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "State one similarity and one difference in the structures of rubidium and rubidium chloride.",
+    "answer": "Rubidium chloride does not conduct electricity in the solid state but it conducts electricity when molten or in aqueous solution. This is because ions in rubidium chloride are mobile in molten or aqueous states, but not in solid state.",
+    "sourceRef": "Part 5 Q7(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-08-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 8,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Explain the term ‘atomic number’.",
+    "answer": "(c) (i) Similar relative atomic mass / Low melting point / The oxide forms colourless solution with acids",
+    "sourceRef": "Part 5 Q8(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-08-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 8,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Give ONE piece of evidence from the table that shows that Mendeléev’s predictions were correct.",
+    "answer": "",
+    "sourceRef": "Part 5 Q8(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-08-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 8,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Both aluminium oxide and gallium oxide are ionic compounds. The symbol for an atom of gallium is Ga. Suggest the formula of gallium oxide.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q8(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-08-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 8,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Calculate the formula mass of aluminium oxide, Al2O3. (Relative atomic masses: O = 16.0, Al = 27.0)",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q8(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-09-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 9,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of a nitrogen molecule, showing electrons in outermost shell only.",
+    "answer": "(d)",
+    "sourceRef": "Part 5 Q9(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-09-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 9,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of ammonia, showing electrons in outermost shell only.",
+    "answer": "",
+    "sourceRef": "Part 5 Q9(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-09-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 9,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain why aqueous ammonia is a good conductor of electricity.",
+    "answer": "The van der Waals’ forces between nitrogen molecules are stronger than those between neon molecules. More energy is needed to separate nitrogen molecules in boiling nitrogen.",
+    "sourceRef": "Part 5 Q9(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-10-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 10,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "State the type of bonding that exists between the atoms in a white phosphorus molecule.",
+    "answer": "(f) 31 x 4 = 124",
+    "sourceRef": "Part 5 Q10(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-11-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 11,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Draw a diagram to show the structure of",
+    "answer": "",
+    "sourceRef": "Part 5 Q11(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-11-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "diamond.",
+    "answer": "The carbon atoms are linked by strong covalent bonds throughout the structure. Their relative movement is restricted. To break diamond, a lot of strong covalent bonds must be broken.",
+    "sourceRef": "Part 5 Q11(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-11-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "graphite.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q11(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-11-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "diamond is an extremely hard substance;",
+    "answer": "The carbon atoms are linked by strong covalent bonds throughout the structure. Their relative movement is restricted. To break diamond, a lot of strong covalent bonds must be broken.",
+    "sourceRef": "Part 5 Q11(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-11-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 11,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "graphite is a soft substance.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q11(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-12-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 12,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Name the structure that graphite belongs to.",
+    "answer": "(d)",
+    "sourceRef": "Part 5 Q12(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-12-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 12,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 3,
+    "stem": "With the aid of a suitable diagram, describe the structure and bonding of lead.",
+    "answer": "Metal ions and delocalized electrons are held by strong metallic bond",
+    "sourceRef": "Part 5 Q12(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-12-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 12,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Hence, explain why Tom’s claim is INCORRECT.",
+    "answer": "Only graphite contains delocalized electrons for conducting electricity",
+    "sourceRef": "Part 5 Q12(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-12-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 12,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the structure of diamond",
+    "answer": "Metal ions and delocalized electrons are held by strong metallic bond",
+    "sourceRef": "Part 5 Q12(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-12-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 12,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "With reference to the structure and particles, explain why electrode is made of graphite, but NOT diamond",
+    "answer": "Only graphite contains delocalized electrons for conducting electricity",
+    "sourceRef": "Part 5 Q12(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-13-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 13,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Suggest why graphene can be separated from graphite when a force is applied.",
+    "answer": "",
+    "sourceRef": "Part 5 Q13(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-14-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 14,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "Describe the formation of dative covalent bond using H3NBH3 as example,",
+    "answer": "(b)",
+    "sourceRef": "Part 5 Q14(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-14-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 14,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "The structure of boron nitride is similar to that of graphite. Draw the structure of one layer of solid boron nitride. Given that B and N atoms are in alternate positions.",
+    "answer": "",
+    "sourceRef": "Part 5 Q14(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-14-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 14,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Hence, explain why the melting point of boron nitride is much higher than that of ammonia.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q14(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-14-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 14,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Aminoborane (H2BNH2)",
+    "answer": "",
+    "sourceRef": "Part 5 Q14(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-14-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 14,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Iminoborane (HBNH)",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q14(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-15-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 15,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Write the structural formula of carbon dioxide.",
+    "answer": "The energy needed to overcome the weak van der Waals’ forces between the carbon dioxide molecules is much less than that needed for breaking the strong covalent bonds between the silicon and oxygen atoms.",
+    "sourceRef": "Part 5 Q15(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-16-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 16,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "In terms of structure and bonding, explain why calcium fluoride has a high melting point.",
+    "answer": "To melt calcium fluoride, lots of the strong ionic bonds between the oppositely charged ions have to be overcome 1 (b)",
+    "sourceRef": "Part 5 Q16(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-16-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 16,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw an electron diagram of a molecule of fluorine, showing outermost shell electrons only.",
+    "answer": "",
+    "sourceRef": "Part 5 Q16(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-16-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 16,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Fluorine can be made into a solid by cooling it. Solid fluorine melts at –220 °C. In terms of structure and bonding, explain why fluorine has such a low melting point.",
+    "answer": "Weak van der Waals’ forces exist between the molecules. Little heat is needed to separate the molecules during melting.",
+    "sourceRef": "Part 5 Q16(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-17-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 17,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What type of structure do silicon and germanium have?",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q17(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-18-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 18,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Describe the change in the classification of the elements across the period.",
+    "answer": "(b)",
+    "sourceRef": "Part 5 Q18(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-18-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 18,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "giant ionic structure?",
+    "answer": "Na2O, MgO and Al2O3",
+    "sourceRef": "Part 5 Q18(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-18-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 18,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "giant covalent structure?",
+    "answer": "Melting of SO2 needs a small amount of energy to overcome the weak van der Waals’ forces between SO2 molecules in a simple molecular structure.",
+    "sourceRef": "Part 5 Q18(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-20-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 20,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Complete the following table. Ammonium chloride Methane Potassium Type(s) of chemical bonding",
+    "answer": "Ammonium chloride Methane Potassium Type(s) of chemical bonding",
+    "sourceRef": "Part 5 Q20(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-01-b",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 1,
+    "path": [
+      "b"
+    ],
+    "marks": 4,
+    "stem": "State and explain the electrical conductivities of the above three compounds in solid states",
+    "answer": "In methane, it contains neutral molecules only",
+    "sourceRef": "Part 5 Q1(b)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-21-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 21,
+    "path": [
+      "a"
+    ],
+    "marks": 4,
+    "stem": "What are elements W, X, Y and Z?",
+    "answer": "(b)",
+    "sourceRef": "Part 5 Q21(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-21-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Name the type of bonding formed in compound A.",
+    "answer": "Ionic bond",
+    "sourceRef": "Part 5 Q21(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-21-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 21,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of compound A, showing electrons in outermost shells only.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q21(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-22-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 22,
+    "path": [
+      "a"
+    ],
+    "marks": 3,
+    "stem": "Name the types of attraction represented by X, Y and Z.",
+    "answer": "P4 has a simple molecular structure. Molecules are held by weak van der Waals’ force. More energy is needed to overcome the ionic bond in NaCl. Therefore NaCl has a higher melting point.",
+    "sourceRef": "Part 5 Q22(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-23-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 23,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "State the type of crystal structure for each of iodine and graphite.",
+    "answer": "(d) Solid iodine does not contain mobile electrons or ions.",
+    "sourceRef": "Part 5 Q23(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-24-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 24,
+    "path": [
+      "a"
+    ],
+    "marks": 2,
+    "stem": "Suggest TWO properties of copper which make it suitable for making electric wires.",
+    "answer": "",
+    "sourceRef": "Part 5 Q24(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-24-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Suggest why graphite can conduct electricity.",
+    "answer": "",
+    "sourceRef": "Part 5 Q24(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-24-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Suggest why graphite is NOT used in making electric wires.",
+    "answer": "",
+    "sourceRef": "Part 5 Q24(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-24-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Suggest a property of silicon dioxide which makes it suitable for making furnace lining.",
+    "answer": "",
+    "sourceRef": "Part 5 Q24(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-24-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 24,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain how the structure of silicon dioxide relates to this property.",
+    "answer": "",
+    "sourceRef": "Part 5 Q24(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-25-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 25,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "State the physical state of the following compounds at room temperature.",
+    "answer": "",
+    "sourceRef": "Part 5 Q25(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-26-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 26,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Consider compound X:",
+    "answer": "",
+    "sourceRef": "Part 5 Q26(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-26-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 26,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of compound X.",
+    "answer": "",
+    "sourceRef": "Part 5 Q26(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-26-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 26,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Give the chemical name of compound X.",
+    "answer": "Compound Y cannot conduct electricity. It does not have mobile ions and delocalized electrons.",
+    "sourceRef": "Part 5 Q26(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-26-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 26,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of compound Y.",
+    "answer": "",
+    "sourceRef": "Part 5 Q26(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-26-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 26,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Give the chemical name of compound Y.",
+    "answer": "Compound Y cannot conduct electricity. It does not have mobile ions and delocalized electrons.",
+    "sourceRef": "Part 5 Q26(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-27-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 27,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram for compound A, showing electrons in the outermost shells only.",
+    "answer": "(c)",
+    "sourceRef": "Part 5 Q27(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-27-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 27,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw the electron diagram of Y2.",
+    "answer": "",
+    "sourceRef": "Part 5 Q27(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-27-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 27,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Name the type of attraction that can be found within a Y2 molecule.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q27(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-28-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 28,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "Draw an electron diagram for a molecule of element X, showing electrons in the outermost shell only.",
+    "answer": "Compound Q has a simple molecular structure. It does not conduct electricity as it does not have mobile ions or delocalized electrons",
+    "sourceRef": "Part 5 Q28(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-29-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 29,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "State the type of compound formed between",
+    "answer": "",
+    "sourceRef": "Part 5 Q29(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-29-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "fluorine and potassium.",
+    "answer": "An ionic compound.",
+    "sourceRef": "Part 5 Q29(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-29-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "fluorine and potassium.",
+    "answer": "An ionic compound.",
+    "sourceRef": "Part 5 Q29(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-29-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 29,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "fluorine and nitrogen.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q29(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-30-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 30,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "State the number of protons that an atom of X has.",
+    "answer": "A large amount of energy is needed to break the strong ionic bonds between the X2+ and O2– ions in the structure 1 (g)",
+    "sourceRef": "Part 5 Q30(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-31-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 31,
+    "path": [
+      "a"
+    ],
+    "marks": 5,
+    "stem": "Write down the type of forces of attraction (ionic bond / covalent bond / metallic bond / van der Waals’ forces) present in each of the following cases: Forces of attraction Between carbon atoms in diamond Between carbon dioxide molecules in dry ice Between particles in calcium nitride Between particles in magnesium Between carbon and oxygen atoms in a carbon dioxide molecule",
+    "answer": "Forces of attraction Between carbon atoms in diamond Covalent bond Between carbon dioxide molecules in dry ice Van der Waals’ force Between particles in calcium nitride Ionic bond Between particles in magnesium Metallic bond Between carbon and oxygen atoms in a carbon dioxide molecule Covalent bond (b)",
+    "sourceRef": "Part 5 Q31(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-31-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 31,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 4,
+    "stem": "Classify each of the above liquids in one of the following three ways according to its response to a direct current:",
+    "answer": "Non-conductor Conductor, with decomposition at the electrodes Conductor, but without decomposition Molten sulphur Liquid hydrogen chloride Molten potassium chloride Molten potassium",
+    "sourceRef": "Part 5 Q31(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-31-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 31,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "For each of the above liquids which are conductors, state the particles responsible for the conduction of electricity.",
+    "answer": "警告: 不可翻印,販賣,違者必究",
+    "sourceRef": "Part 5 Q31(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-32-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 32,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "The diagram below shows part of the lattice of sodium chloride.",
+    "answer": "",
+    "sourceRef": "Part 5 Q32(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-32-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "In this diagram, mark all sodium ions with a positive (+) sign and all chloride ions with a negative (–) sign.",
+    "answer": "The metal ions and delocalized electrons in solid sodium metal are held together by metallic bonds",
+    "sourceRef": "Part 5 Q32(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-32-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "What is the number of neighbouring chloride ions directly attached to each sodium ion in crystalline sodium chloride?",
+    "answer": "When force is applied, layers of ions can slide over one another. Non-directional metallic bonds continue to hold the metal ions and therefore the sodium metal does not break",
+    "sourceRef": "Part 5 Q32(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-32-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Explain how the particles are held together in solid sodium metal.",
+    "answer": "The metal ions and delocalized electrons in solid sodium metal are held together by metallic bonds",
+    "sourceRef": "Part 5 Q32(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-32-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 32,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Explain how the particles are held together in solid sodium chloride.",
+    "answer": "When force is applied, layers of ions can slide over one another. Non-directional metallic bonds continue to hold the metal ions and therefore the sodium metal does not break",
+    "sourceRef": "Part 5 Q32(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-33-d",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 33,
+    "path": [
+      "d"
+    ],
+    "marks": 2,
+    "stem": "State ALL types of electrostatic attraction present in solid Z.",
+    "answer": "",
+    "sourceRef": "Part 5 Q33(d)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-34-b",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 34,
+    "path": [
+      "b"
+    ],
+    "marks": 1,
+    "stem": "Name the attractive forces that exist between particles in substance Y.",
+    "answer": "",
+    "sourceRef": "Part 5 Q34(b)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-34-b-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 34,
+    "path": [
+      "b",
+      "i"
+    ],
+    "marks": 2,
+    "stem": "hardness;",
+    "answer": "",
+    "sourceRef": "Part 5 Q34(b)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-34-b-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 34,
+    "path": [
+      "b",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "electrical conductivity in solid and molten states.",
+    "answer": "",
+    "sourceRef": "Part 5 Q34(b)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-34-b-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 34,
+    "path": [
+      "b",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "solubility in water;",
+    "answer": "",
+    "sourceRef": "Part 5 Q34(b)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-34-b-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 34,
+    "path": [
+      "b",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "solubility in non-aqueous solvents;",
+    "answer": "",
+    "sourceRef": "Part 5 Q34(b)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-35-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 35,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "State the physical state of the following compounds at room temperature.",
+    "answer": "",
+    "sourceRef": "Part 5 Q35(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-36-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 36,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is the number of neutrons in 235U?",
+    "answer": "(d)",
+    "sourceRef": "Part 5 Q36(a)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-36-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘sublime’?",
+    "answer": "SiCl4 molecules are held by weak van der Waals’ forces only",
+    "sourceRef": "Part 5 Q36(a)(i)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-36-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 36,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "Name the type of structure for each of the following compounds: (1) Uranium dioxide",
+    "answer": "SiCl4 contains neutral molecules only without mobile ions and delocalized electrons",
+    "sourceRef": "Part 5 Q36(a)(ii)",
+    "hasAnswer": true
+  },
+  {
+    "id": "sp-37-a",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 37,
+    "path": [
+      "a"
+    ],
+    "marks": 1,
+    "stem": "What is meant by the term ‘relative atomic mass’?",
+    "answer": "",
+    "sourceRef": "Part 5 Q37(a)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-37-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 37,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "Draw a diagram to show the structure of silicon and indicate the interactions between the Si atoms.",
+    "answer": "",
+    "sourceRef": "Part 5 Q37(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-37-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 37,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 2,
+    "stem": "Hence, explain why silicon is hard whereas graphite is soft enough to be used as lubricant.",
+    "answer": "",
+    "sourceRef": "Part 5 Q37(a)(ii)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-37-a-i",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 37,
+    "path": [
+      "a",
+      "i"
+    ],
+    "marks": 1,
+    "stem": "The boiling point of SiCl4 is very low (57 ℃).",
+    "answer": "",
+    "sourceRef": "Part 5 Q37(a)(i)",
+    "hasAnswer": false
+  },
+  {
+    "id": "sp-37-a-ii",
+    "section": "structure-properties",
+    "part": 5,
+    "mainQ": 37,
+    "path": [
+      "a",
+      "ii"
+    ],
+    "marks": 1,
+    "stem": "SiCl4(l) is a non-conductor.",
+    "answer": "",
+    "sourceRef": "Part 5 Q37(a)(ii)",
+    "hasAnswer": false
+  }
+]

@@ -1,0 +1,17 @@
+﻿{
+  "title": "Microscopic World I Worksheet",
+  "titleZh": "微觀世界 I 工作紙",
+  "sources": {
+    "lqQuestions": "C:\\Users\\UniplusUser02\\Desktop\\CHEM\\S3\\Topic 2\\Exercise\\Microscopic world 1 LQ Overall 1.pdf",
+    "lqAnswers": "C:\\Users\\UniplusUser02\\Desktop\\CHEM\\S3\\Topic 2\\Exercise\\Microscopic world 1 LQ Overall Answer 1.pdf",
+    "mcQuestions": "C:\\Users\\UniplusUser02\\Desktop\\CHEM\\S3\\Topic 2\\Exercise\\Microscopic world 1 MC Compiled.docx",
+    "mcAnswers": "C:\\Users\\UniplusUser02\\Desktop\\CHEM\\S3\\Topic 2\\Exercise\\Microscopic world 1 MC Compiled Answer.docx"
+  },
+  "sections": [
+    "atomic-structure",
+    "periodic-table",
+    "ionic-bond",
+    "covalent-bond",
+    "structure-properties"
+  ]
+}

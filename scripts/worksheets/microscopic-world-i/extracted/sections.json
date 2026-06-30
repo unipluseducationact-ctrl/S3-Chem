@@ -1,0 +1,27 @@
+[
+  {
+    "id": "atomic-structure",
+    "label": "Atomic Structure",
+    "labelZh": "原子結構"
+  },
+  {
+    "id": "periodic-table",
+    "label": "Periodic Table",
+    "labelZh": "週期表"
+  },
+  {
+    "id": "ionic-bond",
+    "label": "Ionic Bond",
+    "labelZh": "離子鍵"
+  },
+  {
+    "id": "covalent-bond",
+    "label": "Covalent Bond",
+    "labelZh": "共價鍵"
+  },
+  {
+    "id": "structure-properties",
+    "label": "Structure and Properties",
+    "labelZh": "物質結構與性質"
+  }
+]

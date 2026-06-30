@@ -29,7 +29,7 @@ import {
 
 const UI = {
   en: {
-    appSubtitle: "HKDSE worksheet practice · English / 繁體中文 UI",
+    appSubtitle: "HKDSE 工作紙練習 · English / 繁體中文 UI",
     hSettings: "Worksheet settings",
     lblTypes: "Topics",
     lblFormats: "Question types",
@@ -80,9 +80,9 @@ const UI = {
     revBandExcellent:
       "Overall accuracy is very high. Keep mixing topics so recall stays sharp for HKDSE.",
     revBandGood: "Good result. Use the table above to add a short round on weaker topics.",
-    revBandFair: "Mixed performance: revisit weaker topics (see table), then regenerate.",
+    revBandFair: "Mixed performance: re-read refraction notes for weaker topics, then regenerate.",
     revBandLow:
-      "Several topics need consolidation. Review atomic structure, bonding, and structure-property links before the next round.",
+      "部分課題需加強。請重溫原子結構、化學鍵與物質結構性質，再生成新一輪題目。",
     revWeakOne: "Prioritise revision on {type} — you scored {c}/{t} ({pct}%) in that topic.",
     revStrongOne: "Strength: every {type} item correct ({n} questions).",
     revTwoStrike: "Questions missed twice: study the model answers, then regenerate those topics.",
