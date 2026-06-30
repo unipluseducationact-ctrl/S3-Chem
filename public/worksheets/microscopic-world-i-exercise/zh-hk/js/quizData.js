@@ -7101,7 +7101,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "X, Y, and Z are three consecutive elements in the Periodic Table. The following table shows the information about the products of the reactions of the elements with iodine. Element Chemical formula of the product Structure of the product X IX Simple molecular structure Y No product forms / Z ZI Giant ionic structure Which of the following statements concerning X, Y and Z is correct?",
+    "stem": "X, Y, and Z are three consecutive elements in the Periodic Table. The following table shows the information about the products of the reactions of the elements with iodine.\n\nWhich of the following statements concerning X, Y and Z is correct?",
     "options": [
       {
         "key": "A",
@@ -7122,7 +7122,31 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "D",
     "hint": "(A): X, Y and Z are Group VII, Group 0 and Group I elements respectively. Among them, X and Y belong to the same period. (B): X (a halogen) exists as diatomic molecules under room conditions. (C): Y (a noble gas) is colourless.",
-    "sourceRef": "ChemMCQ09060"
+    "sourceRef": "ChemMCQ09060",
+    "stemTable": {
+      "headers": [
+        "Element",
+        "Chemical formula of the product",
+        "Structure of the product"
+      ],
+      "rows": [
+        [
+          "X",
+          "IX",
+          "Simple molecular structure"
+        ],
+        [
+          "Y",
+          "—",
+          "No product forms /"
+        ],
+        [
+          "Z",
+          "ZI",
+          "Giant ionic structure"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09061",
@@ -7449,7 +7473,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "X, Y and Z are three elements and the properties of their chlorides are given below.\n\nWhich of the following statements must be correct?",
+    "stem": "X, Y and Z are three elements and the properties of their chlorides are given below. Melting point / C Electrical conductivity in the molten state Chloride of X 4 Poor Chloride of Y 873 Good Chloride of Z 677 Poor Which of the following statements must be correct?",
     "options": [
       {
         "key": "A",
@@ -7470,34 +7494,14 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "D",
     "hint": "(A): The physical state of the chloride of X not only depends on its melting point, but also its boiling point. If its boiling point is lower than room temperature, it is a gas at room temperature. (B): Since the chlorides of Y and Z have different electrical conductivities in the molten state, they probably have different types of structure. (C): If the chloride of Y is insoluble in water, the mixture of the chloride of Y and water does not conduct electricity. (D): Since the chloride of X has a low melting point, it probably has a simple molecular structure. It may be a compound of a non-metal (or a semi-metal) and chlorine.",
-    "sourceRef": "ChemMCQ09069",
-    "stemTable": {
-      "headers": [
-        "Chloride",
-        "Melting point / °C"
-      ],
-      "rows": [
-        [
-          "Electrical conductivity in the molten state Chloride of X",
-          "4"
-        ],
-        [
-          "Poor Chloride of Y",
-          "873"
-        ],
-        [
-          "Good Chloride of Z",
-          "677"
-        ]
-      ]
-    }
+    "sourceRef": "ChemMCQ09069"
   },
   {
     "id": "mc-09070",
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The melting points of some chlorides are given in the table below. Chloride NaCl SiCl4 PCl3 Melting point / C 801 70 92 Which of the following can be deduced from the above data?\n(1) NaCl cannot conduct electricity at ⁸⁰⁰C.\n(2) SiCl4 is a covalent compound with a simple molecular structure.\n(3) PCl3 is a covalent compound with a giant covalent structure.",
+    "stem": "The melting points of some chlorides are given in the table below.\n\nWhich of the following can be deduced from the above data?\n(1) NaCl cannot conduct electricity at ⁸⁰⁰C.\n(2) SiCl4 is a covalent compound with a simple molecular structure.\n(3) PCl3 is a covalent compound with a giant covalent structure.",
     "options": [
       {
         "key": "A",
@@ -7518,14 +7522,34 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "A",
     "hint": "NaCl is a solid at 800C. It cannot conduct electricity in the solid state. PCl3 should have a simple molecular structure as it has a low melting point.",
-    "sourceRef": "ChemMCQ09070"
+    "sourceRef": "ChemMCQ09070",
+    "stemTable": {
+      "headers": [
+        "Chloride",
+        "Melting point / °C"
+      ],
+      "rows": [
+        [
+          "NaCl",
+          "801"
+        ],
+        [
+          "SiCl4",
+          "70"
+        ],
+        [
+          "PCl3",
+          "92"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09071",
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the melting points of two chlorides.\n\nWhich of the following statements is correct?",
+    "stem": "The table below shows the melting points of two chlorides. Melting point / C\n\nWhich of the following statements is correct?",
     "options": [
       {
         "key": "A",
@@ -7777,7 +7801,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "mcq",
     "difficulty": "Standard",
-    "stem": "The table below shows the electrical conductivities of four substances W, X, Y and Z at different states. In the table, ‘’ and ‘’ represent ‘can conduct electricity’ and ‘cannot conduct electricity’ respectively. Substance Solid state Liquid state Aqueous solution W Insoluble in water X Insoluble in water Y Z Which of the following substances is likely to be wax?",
+    "stem": "The table below shows the electrical conductivities of four substances W, X, Y and Z at different states. In the table, ‘’ and ‘’ represent ‘can conduct electricity’ and ‘cannot conduct electricity’ respectively.\n\nWhich of the following substances is likely to be wax?",
     "options": [
       {
         "key": "A",
@@ -7798,7 +7822,41 @@ export const QUIZ_ITEMS = [
     ],
     "answer": "B",
     "hint": "Wax has a simple molecular structure. It does not contain mobile ions in the solid or liquid states and it is insoluble in water.",
-    "sourceRef": "ChemMCQ09077"
+    "sourceRef": "ChemMCQ09077",
+    "stemTable": {
+      "headers": [
+        "Substance",
+        "Solid state",
+        "Liquid state",
+        "Aqueous solution"
+      ],
+      "rows": [
+        [
+          "W",
+          "—",
+          "—",
+          "Insoluble in water"
+        ],
+        [
+          "X",
+          "—",
+          "—",
+          "Insoluble in water"
+        ],
+        [
+          "Y",
+          "Z",
+          "",
+          ""
+        ],
+        [
+          "Z",
+          "—",
+          "—",
+          "—"
+        ]
+      ]
+    }
   },
   {
     "id": "mc-09078",
@@ -8005,7 +8063,7 @@ export const QUIZ_ITEMS = [
     "section": "periodic-table",
     "format": "fill",
     "difficulty": "Applied",
-    "stem": "If the atomic number of an element is known, its electronic arrangement, period number and group number can be written. Complete the following table without referring to the Periodic Table. (P, Q, R, S, T and U are NOT the symbols of the elements.) Element Atomic number Electronic arrangement Period number Group number P 5 Q 8 R 10 S 11 T 14 U 20",
+    "stem": "If the atomic number of an element is known, its electronic arrangement, period number and group number can be written. Complete the following table without referring to the Periodic Table. (P, Q, R, S, T and U are NOT the symbols of the elements.)",
     "lines": [
       {
         "segments": [
@@ -8023,7 +8081,60 @@ export const QUIZ_ITEMS = [
       }
     ],
     "hint": "See Part 2 Q3(a). (6 marks)",
-    "sourceRef": "Part 2 Q3(a)"
+    "sourceRef": "Part 2 Q3(a)",
+    "stemTable": {
+      "headers": [
+        "Element",
+        "Atomic number",
+        "Electronic arrangement",
+        "Period number",
+        "Group number"
+      ],
+      "rows": [
+        [
+          "P",
+          "5",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Q",
+          "8",
+          "",
+          "",
+          ""
+        ],
+        [
+          "R",
+          "10",
+          "",
+          "",
+          ""
+        ],
+        [
+          "S",
+          "11",
+          "",
+          "",
+          ""
+        ],
+        [
+          "T",
+          "14",
+          "",
+          "",
+          ""
+        ],
+        [
+          "U",
+          "20",
+          "",
+          "",
+          ""
+        ]
+      ]
+    }
   },
   {
     "id": "pt-05-a",
@@ -8171,7 +8282,7 @@ export const QUIZ_ITEMS = [
     "section": "periodic-table",
     "format": "fill",
     "difficulty": "Foundation",
-    "stem": "Complete the following table: Full Atomic symbol Proton Neutron Electron Mass number Atomic number Electronic arrangement Name of element 3 4 7 15 17 37 10 9 20 41 6 13 13 12 39 19 9 4 15 Silicon 31 Phosphorus 3 Helium 𝐴𝑟 18 39 21 𝑁𝑎 11 23 23 𝑁𝑒 10 22 22 62 2,8,18,18,1 119 2,8,18,32,18,2 116 2,8,18,32,17,1 133 2,8,18,18,8,1 204 2,8,18,32,18,4 197 2,8,18,32,18,1",
+    "stem": "Complete the following table:",
     "lines": [
       {
         "segments": [
@@ -8194,7 +8305,41 @@ export const QUIZ_ITEMS = [
       }
     ],
     "hint": "See Part 2 Q10(a). (1 mark)",
-    "sourceRef": "Part 2 Q10(a)"
+    "sourceRef": "Part 2 Q10(a)",
+    "stemTable": {
+      "headers": [
+        "Full atomic symbol",
+        "Proton",
+        "Neutron",
+        "Electron",
+        "Mass number",
+        "Atomic number",
+        "Electronic arrangement",
+        "Name of element"
+      ],
+      "rows": [
+        [
+          "",
+          "",
+          "",
+          "",
+          "31",
+          "",
+          "2,8,18,18,1",
+          "Silicon"
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          "3",
+          "",
+          "2,8,18,32,18,2",
+          "Phosphorus"
+        ]
+      ]
+    }
   },
   {
     "id": "pt-10-a-i",
@@ -9801,7 +9946,7 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "fill",
     "difficulty": "Applied",
-    "stem": "Complete the following table: Particle Proton Neutron Electron Mass number Atomic number Electronic arrangement A 6 8 6 B 13 14 10 C 11 12 10 D 10 12 2,8 E 35 46 2,8,18,8 F 82 125 2,8,18,32,18,2 G 7 15 2,8 H 17 37 2,8,7 I 19 41 2,8,8 J 5 2 4 K 8 10 7 L 16 18 15 M 130 56 2,8,18,18,8,2 N 127 53 2,8,18,18,8 O 64 30 2,8,18,2 P 3 7 3 Q 18 34 16 R 20 41 20",
+    "stem": "",
     "lines": [
       {
         "segments": [
@@ -9822,7 +9967,125 @@ export const QUIZ_ITEMS = [
       }
     ],
     "hint": "See Part 3 Q1(a). (18 marks)",
-    "sourceRef": "Part 3 Q1(a)"
+    "sourceRef": "Part 3 Q1(a)",
+    "stemTable": {
+      "headers": [
+        "Particle",
+        "Proton",
+        "Neutron",
+        "Electron"
+      ],
+      "rows": [
+        [
+          "A",
+          "6",
+          "8",
+          "6"
+        ],
+        [
+          "B",
+          "13",
+          "14",
+          "10"
+        ],
+        [
+          "C",
+          "11",
+          "12",
+          "10"
+        ],
+        [
+          "D",
+          "10",
+          "12",
+          ""
+        ],
+        [
+          "E",
+          "35",
+          "46",
+          ""
+        ],
+        [
+          "F",
+          "82",
+          "125",
+          ""
+        ],
+        [
+          "G",
+          "7",
+          "15",
+          ""
+        ],
+        [
+          "H",
+          "17",
+          "37",
+          ""
+        ],
+        [
+          "I",
+          "19",
+          "41",
+          ""
+        ],
+        [
+          "J",
+          "5",
+          "2",
+          "4"
+        ],
+        [
+          "K",
+          "8",
+          "10",
+          "7"
+        ],
+        [
+          "L",
+          "16",
+          "18",
+          "15"
+        ],
+        [
+          "M",
+          "130",
+          "56",
+          ""
+        ],
+        [
+          "N",
+          "127",
+          "53",
+          ""
+        ],
+        [
+          "O",
+          "64",
+          "30",
+          ""
+        ],
+        [
+          "P",
+          "3",
+          "7",
+          "3"
+        ],
+        [
+          "Q",
+          "18",
+          "34",
+          "16"
+        ],
+        [
+          "R",
+          "20",
+          "41",
+          ""
+        ]
+      ]
+    }
   },
   {
     "id": "ib-01-a-i",
@@ -10023,7 +10286,7 @@ export const QUIZ_ITEMS = [
     "section": "ionic-bond",
     "format": "fill",
     "difficulty": "Applied",
-    "stem": "Complete the following table Particle Atomic number Mass number Proton Neutron Electron Electronic arrangement Li 6 Li+ 7 N 7 N3- 8 K 39 K+ 41 Mg 13 Mg2+ 14 S 32 S2- 34 F 9 F- 10 Al 26 Al3+ 27 Ca 20 Ca2+ 23 Cl 35 Cl- 37 Na 12 Na+ 13",
+    "stem": "",
     "lines": [
       {
         "segments": [
@@ -10043,14 +10306,207 @@ export const QUIZ_ITEMS = [
       }
     ],
     "hint": "See Part 3 Q4(a). (20 marks)",
-    "sourceRef": "Part 3 Q4(a)"
+    "sourceRef": "Part 3 Q4(a)",
+    "stemTable": {
+      "headers": [
+        "Particle",
+        "Atomic number",
+        "Mass number",
+        "Proton",
+        "Neutron",
+        "Electron",
+        "Electronic arrangement"
+      ],
+      "rows": [
+        [
+          "Li",
+          "6",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Li+",
+          "7",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "N",
+          "7",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "N3-",
+          "8",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "K",
+          "39",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "K+",
+          "41",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Mg",
+          "13",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Mg2+",
+          "14",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "S",
+          "32",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "S2-",
+          "34",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "F",
+          "9",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "F-",
+          "10",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Al",
+          "26",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Al3+",
+          "27",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Ca",
+          "20",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Ca2+",
+          "23",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Cl",
+          "35",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Cl-",
+          "37",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Na",
+          "12",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Na+",
+          "13",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ]
+    }
   },
   {
     "id": "ib-06-a",
     "section": "ionic-bond",
     "format": "fill",
     "difficulty": "Foundation",
-    "stem": "Complete the following table Species Atomic number Mass number Electronic arrangement Number of Protons Neutrons Electrons",
+    "stem": "Complete the following table",
     "lines": [
       {
         "segments": [
@@ -10068,7 +10524,19 @@ export const QUIZ_ITEMS = [
       }
     ],
     "hint": "See Part 3 Q6(a). (1 mark)",
-    "sourceRef": "Part 3 Q6(a)"
+    "sourceRef": "Part 3 Q6(a)",
+    "stemTable": {
+      "headers": [
+        "Species",
+        "Atomic number",
+        "Mass number",
+        "Electronic arrangement",
+        "Protons",
+        "Neutrons",
+        "Electrons"
+      ],
+      "rows": []
+    }
   },
   {
     "id": "ib-06-a-i",
@@ -11840,7 +12308,7 @@ export const QUIZ_ITEMS = [
     "section": "structure-properties",
     "format": "fill",
     "difficulty": "Foundation",
-    "stem": "Complete the following table. Ammonium chloride Methane Potassium Type(s) of chemical bonding",
+    "stem": "",
     "lines": [
       {
         "segments": [
@@ -11858,7 +12326,27 @@ export const QUIZ_ITEMS = [
       }
     ],
     "hint": "See Part 5 Q20(a). (1 mark)",
-    "sourceRef": "Part 5 Q20(a)"
+    "sourceRef": "Part 5 Q20(a)",
+    "stemTable": {
+      "headers": [
+        "Substance",
+        "Type(s) of chemical bonding"
+      ],
+      "rows": [
+        [
+          "Ammonium chloride",
+          ""
+        ],
+        [
+          "Methane",
+          ""
+        ],
+        [
+          "Potassium",
+          ""
+        ]
+      ]
+    }
   },
   {
     "id": "sp-21-a-i",

@@ -235,7 +235,7 @@ export function parsePipeTableFromStem(stem) {
 export function renderStemTableHtml(table) {
   const headers = table?.headers || [];
   const rows = table?.rows || [];
-  if (!rows.length) return "";
+  if (!headers.length && !rows.length) return "";
   const useHeaderRow = headers.length > 0;
   let html = '<div class="overflow-x-auto my-4"><table class="quiz-stem-table">';
   if (useHeaderRow) {
@@ -246,6 +246,9 @@ export function renderStemTableHtml(table) {
     html += "</tr></thead>";
   }
   html += "<tbody>";
+  if (!rows.length) {
+    html += `<tr><td colspan="${Math.max(headers.length, 1)}" class="text-on-surface-variant text-center">—</td></tr>`;
+  }
   for (const row of rows) {
     html += "<tr>";
     row.forEach((cell, i) => {

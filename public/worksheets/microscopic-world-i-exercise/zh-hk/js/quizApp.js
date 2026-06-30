@@ -562,14 +562,14 @@ export function initQuiz() {
         suffix = split.suffix;
       } else {
         const parsed = parsePipeTableFromStem(q.stem);
-        if (parsed?.table?.rows?.length) {
+        if (parsed?.table && (parsed.table.rows?.length || parsed.table.headers?.length)) {
           intro = parsed.intro;
           suffix = parsed.suffix;
           table = parsed.table;
         }
       }
       appendStemParagraph(intro);
-      if (table?.rows?.length) {
+      if (table && (table.rows?.length || table.headers?.length)) {
         const tableWrap = document.createElement("div");
         tableWrap.innerHTML = renderStemTableHtml(table);
         wrap.appendChild(tableWrap);

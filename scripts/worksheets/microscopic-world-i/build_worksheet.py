@@ -491,74 +491,55 @@ def _extract_substance_property_table(stem: str) -> tuple[str, str, dict] | None
 
 
 def _extract_chloride_mp_table(stem: str) -> tuple[str, str, dict] | None:
-    m = re.search(
-        r"Chloride\s+((?:NaCl|SiCl4|PCl3|[A-Z][a-z]+)\s+\d+\s*)+"
-        r"Melting point\s*/?\s*C\s+",
+    m2 = re.search(
+        r"Chloride of\s+([A-Z])\s+(\d+)\s+Chloride of\s+([A-Z])\s+(\d+)",
         stem,
         re.I,
     )
-    if m:
-        before = stem[: m.start()]
-        mp_label = re.search(r"Melting point\s*/?\s*C", stem[m.start() :], re.I)
-        if not mp_label:
-            return None
-        data_m = re.search(
-            r"Melting point\s*/?\s*C\s+((?:[A-Za-z0-9]+\s+\d+\s*)+)",
-            stem,
-            re.I,
+    if m2:
+        table = _make_table(
+            ["Chloride", "Melting point / °C"],
+            [[f"Chloride of {m2.group(1)}", m2.group(2)],
+             [f"Chloride of {m2.group(3)}", m2.group(4)]],
         )
-    else:
-        data_m = re.search(
-            r"(?:Melting point\s*/?\s*C|melting points of two chlorides\.\s+)"
-            r"\s*((?:Chloride of\s+[A-Z]\s+\d+\s*)+)",
-            stem,
-            re.I,
-        )
-    if not data_m:
-        data_m = re.search(
-            r"Melting point\s*/?\s*C\s+((?:NaCl|SiCl4|PCl3|[A-Za-z0-9 ]+\s+\d+\s*)+)",
-            stem,
-            re.I,
-        )
-    if not data_m:
-        return None
-    data = data_m.group(1)
-    rows = re.findall(r"([A-Za-z0-9 ]+?)\s+(\d+)\s*", data)
-    rows = [[n.strip(), v] for n, v in rows if n.strip()]
-    if len(rows) < 2:
-        return None
-    table = _make_table(["Chloride", "Melting point / °C"], rows)
-    start = data_m.start()
-    end = data_m.end()
-    prefix = stem[:start].rstrip()
-  # trim header noise from prefix
-    prefix = re.sub(r"Melting point\s*/?\s*C\s*$", "", prefix, flags=re.I).rstrip()
-    _, suffix = _split_trailing_question(stem[end:].strip())
-    return prefix, suffix, table
-
-
-def _extract_element_product_table(stem: str) -> tuple[str, str, dict] | None:
+        prefix = stem[: m2.start()].rstrip()
+        _, suffix = _split_trailing_question(stem[m2.end() :].strip())
+        return prefix, suffix, table
     m = re.search(
-        r"Element\s+Chemical formula of the product\s+Structure of the product\s+"
-        r"((?:[A-Z]\s+[A-Z0-9]+\s+.+?(?=\s+[A-Z]\s+[A-Z]|Y No product|Z ZI)\s*)+)",
+        r"Chloride\s+((?:[A-Za-z0-9]+\s+)+?)Melting point\s*/?\s*°?C\s+((?:\d+\s*)+)",
         stem,
         re.I,
     )
     if not m:
         return None
-    data = m.group(1)
-    rows = []
-    for part in re.split(r"(?=[A-Z]\s)", data):
-        part = part.strip()
-        if not part:
-            continue
-        rm = re.match(
-            r"([A-Z])\s+(.+?)\s+(Simple molecular structure|Giant ionic structure|No product forms\s*/?)",
-            part,
-            re.I,
-        )
-        if rm:
-            rows.append([rm.group(1), rm.group(2).strip(), rm.group(3).strip()])
+    names, temps = m.group(1).split(), m.group(2).split()
+    if len(names) < 2 or len(temps) < len(names):
+        return None
+    rows = [[n, t] for n, t in zip(names, temps)]
+    table = _make_table(["Chloride", "Melting point / °C"], rows)
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_element_product_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Element\s+Chemical formula of the product\s+Structure of the product\s+"
+        r"(.+?)(?=Which of the following)",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    data = m.group(1).strip()
+    rows: list[list[str]] = []
+    xm = re.search(r"X\s+(\S+)\s+(Simple molecular structure)", data, re.I)
+    if xm:
+        rows.append(["X", xm.group(1), xm.group(2)])
+    ym = re.search(r"Y\s+(No product forms\s*/?)", data, re.I)
+    if ym:
+        rows.append(["Y", "—", ym.group(1).strip()])
+    zm = re.search(r"Z\s+(\S+)\s+(Giant ionic structure)", data, re.I)
+    if zm:
+        rows.append(["Z", zm.group(1), zm.group(2)])
     if len(rows) < 2:
         return None
     table = _make_table(
@@ -566,6 +547,233 @@ def _extract_element_product_table(stem: str) -> tuple[str, str, dict] | None:
         rows,
     )
     return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_substance_states_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Substance\s+Solid state\s+Liquid state\s+Aqueous solution\s+"
+        r"(.+?)(?=Which of the following)",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    data = m.group(1).strip()
+    rows: list[list[str]] = []
+    for letter in "WXYZ":
+        rm = re.search(
+            rf"\b{letter}\b\s*(.*?)(?=\s+\b[WXYZ]\b\s*|\s+Which|\s*$)",
+            data,
+            re.I,
+        )
+        val = rm.group(1).strip() if rm else ""
+        if val.lower() == "insoluble in water":
+            rows.append([letter, "—", "—", val])
+        elif val:
+            rows.append([letter, val, "", ""])
+        else:
+            rows.append([letter, "—", "—", "—"])
+    if len(rows) < 2:
+        return None
+    table = _make_table(
+        ["Substance", "Solid state", "Liquid state", "Aqueous solution"],
+        rows,
+    )
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_element_grid_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Element\s+Atomic number\s+Electronic arrangement\s+Period number\s+Group number\s+"
+        r"((?:[A-Z]\s+\d+\s*)+)",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    pairs = re.findall(r"([A-Z])\s+(\d+)", m.group(1))
+    if len(pairs) < 2:
+        return None
+    rows = [[el, z, "", "", ""] for el, z in pairs]
+    table = _make_table(
+        ["Element", "Atomic number", "Electronic arrangement", "Period number", "Group number"],
+        rows,
+    )
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_bonding_substances_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Complete the following table\.\s+"
+        r"(.+?)\s+Type\(s\) of chemical bonding\s*$",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    names = re.findall(
+        r"(Ammonium chloride|Methane|Potassium|Water|Carbon dioxide|[A-Z][a-z]+(?:\s+[a-z]+)*)",
+        m.group(1),
+        re.I,
+    )
+    if len(names) < 2:
+        return None
+    table = _make_table(
+        ["Substance", "Type(s) of chemical bonding"],
+        [[n, ""] for n in names],
+    )
+    prefix = stem[: m.start()].rstrip()
+    return prefix, "", table
+
+
+def _extract_header_only_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.match(
+        r"(Complete the following table[:\s.]*)\s*"
+        r"(Species\s+Atomic number\s+Mass number\s+Electronic arrangement\s+"
+        r"Number of\s+Protons\s+Neutrons\s+Electrons)\s*$",
+        stem,
+        re.I,
+    )
+    if not m:
+        return None
+    headers = [
+        "Species",
+        "Atomic number",
+        "Mass number",
+        "Electronic arrangement",
+        "Protons",
+        "Neutrons",
+        "Electrons",
+    ]
+    table = _make_table(headers, [])
+    return m.group(1).strip(), "", table
+
+
+def _extract_particle_token_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.search(
+        r"Complete the following table:?\s*Particle\s+"
+        r"(Proton\s+Neutron\s+Electron(?:\s+Mass number\s+Atomic number)?"
+        r"(?:\s+Electronic arrangement)?)\s+(.+)$",
+        stem,
+        re.I,
+    )
+    if not m:
+        m = re.search(
+            r"Complete the following table\s*Particle\s+"
+            r"(Atomic number\s+Mass number\s+Proton\s+Neutron\s+Electron\s+"
+            r"Electronic arrangement)\s+(.+)$",
+            stem,
+            re.I,
+        )
+        if m:
+            headers = [
+                "Particle",
+                "Atomic number",
+                "Mass number",
+                "Proton",
+                "Neutron",
+                "Electron",
+                "Electronic arrangement",
+            ]
+            pairs = re.findall(r"([A-Za-z][A-Za-z0-9+\-]*)\s+(\d+)", m.group(2))
+            if len(pairs) < 4:
+                return None
+            rows = [[sp, val, "", "", "", "", ""] for sp, val in pairs]
+            table = _make_table(headers, rows)
+            return _table_result(stem, m.start(), m.end(), table)
+        return None
+    data = m.group(2).strip()
+    rows: list[list[str]] = []
+    for rm in re.finditer(
+        r"([A-Z])\s+((?:\d+\s+)+|\d[\d,]*(?:\s|$))",
+        data,
+    ):
+        particle = rm.group(1)
+        raw = rm.group(2).strip()
+        if "," in raw:
+            nums = re.findall(r"\d+", raw.split(",")[0]) if re.match(r"^\d", raw) else []
+            arr = raw if "," in raw else ""
+            if re.match(r"^\d", raw):
+                toks = raw.split()
+                nums = [t for t in toks if re.fullmatch(r"\d+", t)]
+                arr = next((t for t in toks if "," in t), "")
+            else:
+                arr = raw
+                nums = []
+            row = [particle, *nums, arr]
+        else:
+            row = [particle, *raw.split()]
+        rows.append(row)
+    if len(rows) < 4:
+        return None
+    max_cols = max(len(r) for r in rows)
+    base_headers = ["Particle", "Proton", "Neutron", "Electron", "Mass number", "Atomic number", "Electronic arrangement"]
+    headers = base_headers[:max_cols] if max_cols <= len(base_headers) else base_headers + [f"Col {i}" for i in range(len(base_headers), max_cols)]
+    for row in rows:
+        while len(row) < len(headers):
+            row.append("")
+    table = _make_table(headers[:max_cols], [r[:max_cols] for r in rows])
+    return _table_result(stem, m.start(), m.end(), table)
+
+
+def _extract_complete_numeric_table(stem: str) -> tuple[str, str, dict] | None:
+    m = re.match(
+        r"^(?:.*?)Complete the following table[:\s.]*\s*"
+        r"(Full Atomic symbol\s+Proton\s+Neutron\s+Electron\s+Mass number\s+"
+        r"Atomic number\s+Electronic arrangement\s+Name of element)\s+(.+)$",
+        stem,
+        re.I | re.S,
+    )
+    if not m:
+        return None
+    prefix = re.sub(
+        r"\s*Complete the following table[:\s.]*\s*$",
+        "",
+        stem[: m.start(1)].strip(),
+        flags=re.I,
+    ).strip()
+    if not prefix:
+        prefix = "Complete the following table:"
+    headers = [
+        "Full atomic symbol",
+        "Proton",
+        "Neutron",
+        "Electron",
+        "Mass number",
+        "Atomic number",
+        "Electronic arrangement",
+        "Name of element",
+    ]
+    data = m.group(2).strip()
+    _, suffix = _split_trailing_question(data)
+    body = data[: data.find(suffix)].strip() if suffix else data
+    rows: list[list[str]] = []
+    for name in ("Silicon", "Phosphorus", "Helium", "Gold"):
+        nm = re.search(rf"({name})\s+(\d+)", body, re.I)
+        if nm:
+            rows.append(["", "", "", "", nm.group(2), "", "", nm.group(1)])
+    arrangements = re.findall(r"(\d(?:,\d+)+)", body)
+    nums = [n for n in re.findall(r"\b(\d+)\b", body) if n not in ("2", "8", "18", "32")]
+    if not rows and nums:
+        chunk = 8
+        for i in range(0, min(len(nums), chunk * 4), chunk):
+            seg = nums[i : i + chunk]
+            if len(seg) >= 4:
+                row = seg[: len(headers)]
+                while len(row) < len(headers):
+                    row.append("")
+                rows.append(row)
+    for i, arr in enumerate(arrangements[: max(len(rows), 1)]):
+        if i < len(rows):
+            rows[i][6] = arr
+        else:
+            row = [""] * len(headers)
+            row[6] = arr
+            rows.append(row)
+    if not rows:
+        rows = [[""] * len(headers)]
+    table = _make_table(headers, rows[:6])
+    return prefix, suffix, table
 
 
 def _extract_conductivity_table(stem: str) -> tuple[str, str, dict] | None:
@@ -635,10 +843,16 @@ def extract_stem_table(stem: str) -> tuple[str, str, dict | None]:
         _extract_compound_colour_table,
         _extract_element_pair_table,
         _extract_metal_mp_bp_table,
+        _extract_substance_states_table,
         _extract_substance_property_table,
         _extract_chloride_mp_table,
         _extract_element_product_table,
         _extract_conductivity_table,
+        _extract_element_grid_table,
+        _extract_bonding_substances_table,
+        _extract_header_only_table,
+        _extract_particle_token_table,
+        _extract_complete_numeric_table,
         _extract_generic_table,
     ):
         result = fn(stem)
@@ -1309,7 +1523,7 @@ export function parsePipeTableFromStem(stem) {
 export function renderStemTableHtml(table) {
   const headers = table?.headers || [];
   const rows = table?.rows || [];
-  if (!rows.length) return "";
+  if (!headers.length && !rows.length) return "";
   const useHeaderRow = headers.length > 0;
   let html = '<div class="overflow-x-auto my-4"><table class="quiz-stem-table">';
   if (useHeaderRow) {
@@ -1320,6 +1534,9 @@ export function renderStemTableHtml(table) {
     html += "</tr></thead>";
   }
   html += "<tbody>";
+  if (!rows.length) {
+    html += `<tr><td colspan="${Math.max(headers.length, 1)}" class="text-on-surface-variant text-center">—</td></tr>`;
+  }
   for (const row of rows) {
     html += "<tr>";
     row.forEach((cell, i) => {
@@ -1402,14 +1619,14 @@ def patch_quiz_app(text: str, locale: str) -> str:
         suffix = split.suffix;
       } else {
         const parsed = parsePipeTableFromStem(q.stem);
-        if (parsed?.table?.rows?.length) {
+        if (parsed?.table && (parsed.table.rows?.length || parsed.table.headers?.length)) {
           intro = parsed.intro;
           suffix = parsed.suffix;
           table = parsed.table;
         }
       }
       appendStemParagraph(intro);
-      if (table?.rows?.length) {
+      if (table && (table.rows?.length || table.headers?.length)) {
         const tableWrap = document.createElement("div");
         tableWrap.innerHTML = renderStemTableHtml(table);
         wrap.appendChild(tableWrap);
