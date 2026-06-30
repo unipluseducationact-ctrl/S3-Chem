@@ -28,7 +28,7 @@ export const FLASHCARD_DECK = [
   { id: 24, subtopic: "Periodic Table", front: "<strong>Period</strong> in the Periodic Table?", back: "Number of <strong>occupied electron shells</strong>" },
   { id: 25, subtopic: "Periodic Table", front: "<strong>Group</strong> in the Periodic Table?", back: "Number of <strong>electrons in the outermost shell</strong>" },
   { id: 26, subtopic: "Periodic Table", front: "Does <strong>hydrogen</strong> belong to any group?", back: "<strong>No</strong>" },
-  { id: 27, subtopic: "Periodic Table", front: "Group VIII - outermost shell electrons (He vs others)?", back: "He: <strong>2</strong> (duplet); others: <strong>8</strong> (octet)" },
+  { id: 27, subtopic: "Periodic Table", front: "Group 0/VIII - outermost shell electrons (He vs others)?", back: "He: <strong>2</strong> (duplet); others: <strong>8</strong> (octet)" },
   { id: 28, subtopic: "Periodic Table", front: "Where are <strong>transition metals</strong> located?", back: "Between <strong>Group II</strong> and <strong>Group III</strong>" },
   { id: 29, subtopic: "Periodic Table", front: "Why do elements in the same group have <strong>similar</strong> chemical properties?", back: "Same number of <strong>outermost shell electrons</strong>" },
   { id: 30, subtopic: "Periodic Table", front: "Across a period, elements change from?", back: "<strong>Metals</strong> -> <strong>semi-metals</strong> -> <strong>non-metals</strong>" },

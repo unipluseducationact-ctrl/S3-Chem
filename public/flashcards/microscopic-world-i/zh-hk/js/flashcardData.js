@@ -136,7 +136,7 @@ export const FLASHCARD_DECK = [
   },
   {
     id: 27, subtopic: "週期表",
-    front: "VIII 族 — 最外層電子（He 與其他）？",
+    front: "0/VIII 族 — 最外層電子（He 與其他）？",
     back: "He：<strong>2</strong>（雙電子）；其他：<strong>8</strong>（八隅體）",
   },
   {
