@@ -113,6 +113,8 @@ export const zhUI = {
     "subtypeIsotopeRamDesc": "丰度与相对原子质量计算。",
     "subtypeMicroscopicWorld1": "离子键与共价键",
     "subtypeMicroscopicWorld1Desc": "来自 Topic 02 Overall 1（第 58–125 页）的离子键与共价键题目。",
+    "subtypeMicroscopicWorldIExercise": "微观世界 I（HKDSE 练习）",
+    "subtypeMicroscopicWorldIExerciseDesc": "427 题 HKDSE 练习：原子结构、周期表、键合及物质性质。",
     "backToHub": "返回工作纸",
     "pendingName": "待定",
     "pendingDesc": "更多类型稍后推出。"

@@ -113,6 +113,8 @@ export const ruUI = {
     "subtypeIsotopeRamDesc": "Изотопное изобилие и расчеты ОАМ.",
     "subtypeMicroscopicWorld1": "Ионная и ковалентная связь",
     "subtypeMicroscopicWorld1Desc": "Вопросы по ионной и ковалентной связи из Topic 02 Overall 1 (стр. 58–125).",
+    "subtypeMicroscopicWorldIExercise": "Microscopic World I (HKDSE exercise)",
+    "subtypeMicroscopicWorldIExerciseDesc": "427 HKDSE questions: atomic structure, periodic table, bonding, and properties of substances.",
     "backToHub": "К списку листов",
     "pendingName": "Скоро",
     "pendingDesc": "Другие типы появятся позже."

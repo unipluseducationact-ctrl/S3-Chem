@@ -113,6 +113,8 @@ export const enUI = {
     "subtypeIsotopeRamDesc": "Isotope abundance and RAM calculations.",
     "subtypeMicroscopicWorld1": "Ionic and covalent bond",
     "subtypeMicroscopicWorld1Desc": "Ionic and covalent bonding questions from Topic 02 Overall 1 (pages 58–125).",
+    "subtypeMicroscopicWorldIExercise": "Microscopic World I (HKDSE exercise)",
+    "subtypeMicroscopicWorldIExerciseDesc": "427 HKDSE questions: atomic structure, periodic table, bonding, and properties of substances.",
     "backToHub": "Back to worksheets",
     "pendingName": "Pending",
     "pendingDesc": "More worksheet types coming later."

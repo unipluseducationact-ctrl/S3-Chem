@@ -4,7 +4,7 @@
 
 import { getLang, onLangChange } from "./langController.js";
 
-const WORKSHEET_SUBTYPES = ["equation", "atomic-structure", "isotope-ram", "cursor-chem", "microscopic-world-1"];
+const WORKSHEET_SUBTYPES = ["equation", "isotope-ram", "cursor-chem", "microscopic-world-i-exercise"];
 
 const EMBED_IFRAME_SEL = "#worksheet-shell iframe.worksheet-embed-fs-frame";
 
@@ -19,13 +19,23 @@ function langQueryForWorksheetPath(pathname, hostLang) {
   if (p.includes("ram_calculation") || p.includes("ch5-isotope-ram")) {
     return hostLang === "en" ? "en" : "zh";
   }
-  if (p.includes("ch5-atomic-structure")) {
-    return hostLang === "en" ? "en" : "zh";
-  }
-  if (p.includes("ch2-microscopic-world-1")) {
-    return hostLang === "en" ? "en" : "zh";
+  if (p.includes("microscopic-world-i-exercise")) {
+    return hostLang === "en" ? "en" : "zh-Hant";
   }
   return hostLang === "en" ? "en" : "zh-Hant";
+}
+
+function resolveWorksheetEmbedSrc(url, hostLang) {
+  const p = url.pathname.toLowerCase();
+  if (!p.includes("microscopic-world-i-exercise")) return url;
+  const file = hostLang === "en" ? "quiz.html" : "zh-hk/quiz.html";
+  const marker = "microscopic-world-i-exercise";
+  const idx = p.indexOf(marker);
+  if (idx >= 0) {
+    const prefix = url.pathname.slice(0, idx + marker.length);
+    url.pathname = `${prefix}/${file}`;
+  }
+  return url;
 }
 
 /** Point embedded worksheet iframes at the current hot-bar language (reloads iframe when param changes). */
@@ -41,6 +51,13 @@ export function applyWorksheetEmbedIframesLang() {
       return;
     }
     const want = langQueryForWorksheetPath(url.pathname, host);
+    resolveWorksheetEmbedSrc(url, host);
+    const nextSrc = `${url.pathname}${url.search}${url.hash}`;
+    if (frame.getAttribute("src") === nextSrc) return;
+    if (url.pathname.toLowerCase().includes("microscopic-world-i-exercise")) {
+      frame.setAttribute("src", nextSrc);
+      return;
+    }
     if (url.searchParams.get("lang") === want) return;
     url.searchParams.set("lang", want);
     frame.setAttribute("src", `${url.pathname}${url.search}${url.hash}`);
@@ -49,10 +66,9 @@ export function applyWorksheetEmbedIframesLang() {
 
 const PANEL_ID_BY_SUBTYPE = {
   equation: "worksheet-panel-equation",
-  "atomic-structure": "worksheet-panel-atomic-structure",
   "isotope-ram": "worksheet-panel-isotope-ram",
   "cursor-chem": "worksheet-panel-cursor-chem",
-  "microscopic-world-1": "worksheet-panel-microscopic-world-1",
+  "microscopic-world-i-exercise": "worksheet-panel-microscopic-world-i-exercise",
 };
 
 function getShell() {

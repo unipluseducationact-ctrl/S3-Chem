@@ -113,6 +113,8 @@ export const faUI = {
     "subtypeIsotopeRamDesc": "فراوانی ایزوتوپ و محاسبات RAM.",
     "subtypeMicroscopicWorld1": "پیوند یونی و کووالانسی",
     "subtypeMicroscopicWorld1Desc": "سوالات پیوند یونی و کووالانسی از Topic 02 Overall 1 (صفحات ۵۸–۱۲۵).",
+    "subtypeMicroscopicWorldIExercise": "Microscopic World I (HKDSE exercise)",
+    "subtypeMicroscopicWorldIExerciseDesc": "427 HKDSE questions: atomic structure, periodic table, bonding, and properties of substances.",
     "backToHub": "بازگشت به برگه‌ها",
     "pendingName": "به‌زودی",
     "pendingDesc": "انواع دیگر بعداً اضافه می‌شوند."
