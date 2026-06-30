@@ -9,7 +9,10 @@ const WORKSHEET_SUBTYPES = ["equation", "isotope-ram", "cursor-chem", "microscop
 const EMBED_IFRAME_SEL = "#worksheet-shell iframe.worksheet-embed-fs-frame";
 
 /**
- * Map hot-bar language (en | zh | zh-Hant) to each embedded worksheet’s ?lang= value.
+ * Map hot-bar language (en | zh | zh-Hant) to each embedded worksheet's ?lang= value.
+ * - cursor-chem / microscopic-world-i-exercise: en vs zh-Hant paths
+ * - isotope-ram (Ch.5): en vs zh (Simplified embed copy)
+ * - default: en vs zh-Hant
  */
 function langQueryForWorksheetPath(pathname, hostLang) {
   const p = (pathname || "").toLowerCase();

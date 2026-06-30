@@ -1086,9 +1086,12 @@ html.dark-theme .feature-tag {
   width: 100%;
   min-height: 0;
   height: 100%;
-  border: 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 14px;
   background: #050814;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.45) inset,
+    0 8px 32px rgba(44, 36, 32, 0.12);
 }
 
 @media (max-width: 768px) {

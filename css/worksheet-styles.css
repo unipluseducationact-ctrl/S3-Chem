@@ -934,6 +934,54 @@
     overflow: visible;
 }
 
+/* Interactive Lab hub — align with Worksheets / Summary hub layout */
+#interactive-lab-page.blank-page.active,
+#interactive-lab-page.lab-hub-page.active {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    box-sizing: border-box !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    overflow: hidden !important;
+    padding-top: var(--nav-offset) !important;
+    padding-bottom: clamp(12px, 3dvh, 60px) !important;
+}
+
+#interactive-lab-page .blank-page-content {
+    flex: 1 1 0%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-top: 0;
+}
+
+#interactive-lab-page .lab-hub-inner {
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    padding-top: clamp(12px, 2dvh, 24px);
+    padding-bottom: clamp(12px, 2dvh, 24px);
+}
+
+#interactive-lab-page .lab-hub-grid.chem-tools-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+    grid-template-rows: auto;
+    flex: 0 0 auto;
+    max-height: none;
+}
+
+#interactive-lab-page .lab-tool-card.chem-tool-card {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+}
+
 .worksheet-type-card--pending {
     cursor: default;
     pointer-events: none;

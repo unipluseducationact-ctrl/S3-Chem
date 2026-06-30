@@ -697,16 +697,20 @@
             }
         }
 
-        function toggleLanguage() {
-            currentLang = (currentLang === 'zh') ? 'en' : 'zh';
+        function setLanguage(lang) {
+            if (lang !== 'en' && lang !== 'zh') return;
+            if (currentLang === lang) {
+                refreshLanguageDisplay();
+                return;
+            }
+            currentLang = lang;
             const langBtnText = document.getElementById('lang-btn-text');
             if (langBtnText) {
                 langBtnText.innerText = (currentLang === 'zh') ? 'English' : '繁體中文';
             }
-
             refreshLanguageDisplay();
             updateSandboxInfoBanner();
-            
+
             // Re-render slider limit labels dynamically
             const limitsLabelZh = document.getElementById('sb-temp-limits');
             const limitsLabelEn = document.getElementById('sb-temp-limits-en');
@@ -727,6 +731,28 @@
 
             // Re-render legend dynamically
             updateSandboxLegend();
+        }
+
+        function toggleLanguage() {
+            setLanguage(currentLang === 'zh' ? 'en' : 'zh');
+        }
+        window.toggleLanguage = toggleLanguage;
+        window.setLanguage = setLanguage;
+
+        function initLabLangBridge() {
+            const params = new URLSearchParams(window.location.search);
+            const urlLang = params.get('lang');
+            if (urlLang === 'en' || urlLang === 'zh') {
+                setLanguage(urlLang);
+            } else {
+                refreshLanguageDisplay();
+            }
+            window.addEventListener('message', (event) => {
+                const data = event.data;
+                if (data && data.type === 'uniplus:setLang' && (data.lang === 'en' || data.lang === 'zh')) {
+                    setLanguage(data.lang);
+                }
+            });
         }
 
         function showToast(zh, en) {
@@ -4216,6 +4242,7 @@
         // 13. GLOBAL EVENT HANDLERS & RESIZE
         // ==========================================
         window.onload = () => {
+            initLabLangBridge();
             initPropertiesSandbox();
             
             // Mouse/Touch drag interaction for adjusting the 3D angle of view

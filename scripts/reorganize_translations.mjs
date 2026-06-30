@@ -3,9 +3,11 @@
  * Reorganize translations.js into clean, separate modules
  */
 
-import { translations } from "../js/data/translations.js";
+import { translations, loadAllUILocales } from "../js/data/translations.js";
 import fs from "fs";
 import path from "path";
+
+await loadAllUILocales();
 
 const TARGET_DIR = "./js/data/locales/ui";
 

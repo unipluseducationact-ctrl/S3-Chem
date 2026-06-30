@@ -1,4 +1,4 @@
-import { translations } from "../js/data/translations.js";
+import { translations, loadAllUILocales } from "../js/data/translations.js";
 
 function flatten(obj, prefix = "", out = {}) {
   if (!obj || typeof obj !== "object" || Array.isArray(obj)) return out;
@@ -30,6 +30,8 @@ const INTENTIONAL_SHARED_KEYS = new Set([
 const IGNORED_PREFIXES = [
   "assistant.",
 ];
+
+await loadAllUILocales();
 
 const englishFlat = flatten(translations.en);
 const languageCodes = Object.keys(translations).filter((lang) => lang !== "en");

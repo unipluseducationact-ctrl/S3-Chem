@@ -112,7 +112,7 @@ uniplus/
 ├── package.json            # Vite scripts and dependencies
 ├── index.html              # Main HTML file
 ├── script.js               # Main JavaScript logic
-├── three.min.js            # Legacy local Three.js copy
+├── public/three.min.js     # Local Three.js copy (lazy-loaded for 3D atoms)
 ├── logo.svg                # Project logo
 ├── public/                 # Static files copied directly by Vite
 ├── css/
@@ -126,8 +126,7 @@ uniplus/
 │   └── worksheet-styles.css
 ├── js/
 │   ├── ion-animations.js   # Ion animation logic
-│   ├── worksheet-generator-desktop.js   # CHEM_CH02 framework (fine pointer / wide)
-│   ├── worksheet-generator-touch.js     # coarse / ≤1024px (iPad, phone)
+│   ├── worksheet-generator.js   # Worksheet generator (Vite bundle entry)
 │   ├── data/
 │   │   ├── elementsData.js # Element database
 │   │   └── ionsData.js     # Ion database

@@ -6581,17 +6581,18 @@ function refreshLanguageDisplay() {
     }
 }
 
-function toggleLanguage() {
-    currentLang = (currentLang === 'zh') ? 'en' : 'zh';
+function setLanguage(lang) {
+    if (lang !== 'en' && lang !== 'zh') return;
+    if (currentLang === lang) {
+        refreshLanguageDisplay();
+        return;
+    }
+    currentLang = lang;
     const langBtnText = document.getElementById('lang-btn-text');
     if (langBtnText) {
         langBtnText.innerText = (currentLang === 'zh') ? 'English' : '繁體中文';
     }
-
-    // Refresh UI text and LaTeX Fallbacks
     refreshLanguageDisplay();
-
-    // Trigger local updates
     if (activeTab === 'periodic') {
         initPeriodicTable();
     } else if (activeTab === 'lab') {
@@ -6600,9 +6601,31 @@ function toggleLanguage() {
         initQuestMode();
     }
 }
+window.setLanguage = setLanguage;
+
+function toggleLanguage() {
+    setLanguage(currentLang === 'zh' ? 'en' : 'zh');
+}
 window.toggleLanguage = toggleLanguage; // export
 
+function initLabLangBridge() {
+    const params = new URLSearchParams(window.location.search);
+    const urlLang = params.get('lang');
+    if (urlLang === 'en' || urlLang === 'zh') {
+        setLanguage(urlLang);
+    } else {
+        refreshLanguageDisplay();
+    }
+    window.addEventListener('message', (event) => {
+        const data = event.data;
+        if (data && data.type === 'uniplus:setLang' && (data.lang === 'en' || data.lang === 'zh')) {
+            setLanguage(data.lang);
+        }
+    });
+}
+
 window.onload = () => {
+    initLabLangBridge();
     // Load initial tab
     switchTab('periodic');
 };

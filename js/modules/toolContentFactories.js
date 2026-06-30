@@ -1,6 +1,7 @@
 // CSS is now loaded in index.html to support native ES modules without a bundler
 
 import { t, getLang } from "./langController.js";
+import { buildLabIframeSrc } from "./labLangBridge.js";
 
 const TOOL_CONTENT_FACTORIES = {
   balancer: generateBalancerToolContent,
@@ -2103,10 +2104,11 @@ function generateFlameTestFireworksToolContent() {
 
 function generateInteractiveLabIframeContent(toolPath, titleKey) {
   const title = t(titleKey);
+  const src = buildLabIframeSrc(toolPath, getLang());
   return `
         <div class="tool-modal-content interactive-lab-wrap">
             <iframe class="interactive-lab-iframe"
-                src="${toolPath}"
+                src="${src}"
                 title="${title.replace(/"/g, "&quot;")}"></iframe>
         </div>
     `;

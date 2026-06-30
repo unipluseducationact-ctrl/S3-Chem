@@ -244,6 +244,7 @@ export const zhHantUI = {
   },
   "lab": {
     "pageTitle": "互動實驗室",
+    "hubSubtitle": "選擇實驗室模擬，探索鍵合與結構",
     "ionicName": "離子",
     "ionicDesc": "搭建離子晶格結構，探索離子化合物形成。",
     "covalentName": "共價",

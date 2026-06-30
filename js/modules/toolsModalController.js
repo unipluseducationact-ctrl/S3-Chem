@@ -2,7 +2,8 @@
 // Tools Modal Controller - Feature modal and chemistry tool card wiring
 // =============================================================================
 
-import { onLangChange, t } from "./langController.js";
+import { onLangChange, t, getLang } from "./langController.js";
+import { applyLabLangToIframe, isLabToolType } from "./labLangBridge.js";
 
 function getToolHelpMarkup(toolType) {
   if (toolType === "balancer") {
@@ -52,22 +53,23 @@ export function createToolsModalController(options = {}) {
 
   async function getCachedToolContent(toolType) {
     if (!toolType || typeof getToolContent !== "function") return "";
-    if (!toolContentCache.has(toolType)) {
+    const cacheKey = `${toolType}:${getLang()}`;
+    if (!toolContentCache.has(cacheKey)) {
       const contentPromise = Promise.resolve(getToolContent(toolType))
         .then((content) => content || "")
         .catch((error) => {
-          toolContentCache.delete(toolType);
+          toolContentCache.delete(cacheKey);
           throw error;
         });
 
-      toolContentCache.set(toolType, contentPromise);
+      toolContentCache.set(cacheKey, contentPromise);
     }
 
-    return toolContentCache.get(toolType);
+    return toolContentCache.get(cacheKey);
   }
 
   function closeToolModal() {
-    const { modal, helpOverlay, helpButton } = getModalElements();
+    const { modal, helpOverlay, helpButton, body } = getModalElements();
     if (!modal) return;
     openRequestToken += 1;
     activeToolType = null;
@@ -75,6 +77,7 @@ export function createToolsModalController(options = {}) {
     document.body.classList.remove("hide-nav");
     if (helpOverlay) helpOverlay.style.display = "none";
     if (helpButton) helpButton.hidden = false;
+    if (body) body.innerHTML = "";
   }
 
   function clearToolContentCache() {
@@ -159,6 +162,15 @@ export function createToolsModalController(options = {}) {
       if (typeof attachToolEventListeners === "function") {
         requestAnimationFrame(() => {
           attachToolEventListeners(toolType);
+
+          if (isLabToolType(toolType)) {
+            const iframe = body.querySelector(".interactive-lab-iframe");
+            if (iframe) {
+              iframe.addEventListener("load", () => {
+                applyLabLangToIframe(iframe, getLang());
+              }, { once: true });
+            }
+          }
           
           if (toolType === "balancer") {
             import("./tutorialController.js").then((m) => m.initBalancerTutorial(false));
@@ -218,9 +230,17 @@ export function createToolsModalController(options = {}) {
   function init() {
     initFeatureModalHandlers();
     initChemToolCards();
-    onLangChange(() => {
-      const { modal } = getModalElements();
+    onLangChange((nextLang) => {
+      const { modal, body } = getModalElements();
       if (modal?.classList.contains("active") && activeToolType) {
+        if (isLabToolType(activeToolType)) {
+          const iframe = body?.querySelector(".interactive-lab-iframe");
+          if (iframe) {
+            applyLabLangToIframe(iframe, nextLang);
+            return;
+          }
+        }
+        clearToolContentCache();
         openToolModal(activeToolType);
       } else {
         setToolHelpContent(activeToolType);

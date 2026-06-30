@@ -147,9 +147,11 @@ function initPreferencesCard() {
 
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
-      const msg = getLang() === "zh" 
+      const msg = getLang() === "zh"
         ? "确定要清除所有本地数据（包括单位、主题、动画偏好）并重新加载吗？"
-        : "Are you sure you want to clear all local data (units, preferences) and reload?";
+        : getLang() === "zh-Hant"
+          ? "確定要清除所有本地數據（包括單位、主題、動畫偏好）並重新載入嗎？"
+          : "Are you sure you want to clear all local data (units, preferences) and reload?";
         
       if (confirm(msg)) {
         localStorage.clear();

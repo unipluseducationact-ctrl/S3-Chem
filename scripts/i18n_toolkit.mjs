@@ -8,8 +8,10 @@
  * 3. Import: Inject translated keys back into the project
  */
 
-import { translations } from "../js/data/translations.js";
+import { translations, loadAllUILocales } from "../js/data/translations.js";
 import fs from "fs";
+
+await loadAllUILocales();
 
 const MASTER_LANG = "en";
 

@@ -3087,9 +3087,25 @@
         }
 
         window.onload = function() {
-            setLanguage('zh');
+            initLabLangBridge();
             resizeCanvas();
         };
+
+        function initLabLangBridge() {
+            var params = new URLSearchParams(window.location.search);
+            var urlLang = params.get('lang');
+            if (urlLang === 'en' || urlLang === 'zh') {
+                setLanguage(urlLang);
+            } else {
+                setLanguage('zh');
+            }
+            window.addEventListener('message', function(event) {
+                var data = event.data;
+                if (data && data.type === 'uniplus:setLang' && (data.lang === 'en' || data.lang === 'zh')) {
+                    setLanguage(data.lang);
+                }
+            });
+        }
     </script>
     
     <!-- 

@@ -316,7 +316,7 @@
         <div class="blank-page-content" id="page-tools">
             <div class="chem-tools-container">
                 <h1 class="chem-tools-title" data-i18n="tools.pageTitle">Games</h1>
-
+                <p class="chem-tools-subtitle" data-i18n="tools.pageSubtitle">Grade 9-12 Chemistry Tools &amp; Labs</p>
 
                 <div class="chem-tools-grid chem-tools-grid--four-games">
                     <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="atomic-arcade" role="button" tabindex="0">
@@ -327,8 +327,9 @@
                                 <img class="chem-tool-thumb-img" src="images/interactive-tools-atom-ninja-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
                             </picture>
                         </div>
-                        <div class="chem-tool-info chem-tool-info--title-only">
+                        <div class="chem-tool-info">
                             <h3 class="chem-tool-name" data-i18n="tools.atomNinjaName">Atom Ninja</h3>
+                            <p class="chem-tool-desc" data-i18n="tools.atomNinjaDesc">Build atoms in the lab and play Atom Ninja — slower movement, longer time, and correct targets appear more often.</p>
                         </div>
                     </div>
                     <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="chem-catch" role="button" tabindex="0">
@@ -339,8 +340,9 @@
                                 <img class="chem-tool-thumb-img" src="images/interactive-tools-chem-catch-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
                             </picture>
                         </div>
-                        <div class="chem-tool-info chem-tool-info--title-only">
+                        <div class="chem-tool-info">
                             <h3 class="chem-tool-name" data-i18n="tools.chemCatchName">Chem Catch</h3>
+                            <p class="chem-tool-desc" data-i18n="tools.chemCatchDesc">Read the ionic question and shoot the fish with the correct formula — a fast ionic-formula practice game.</p>
                         </div>
                     </div>
                     <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="lab-hazard-match" role="button" tabindex="0">
@@ -351,8 +353,9 @@
                                 <img class="chem-tool-thumb-img" src="images/interactive-tools-lab-match-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
                             </picture>
                         </div>
-                        <div class="chem-tool-info chem-tool-info--title-only">
+                        <div class="chem-tool-info">
                             <h3 class="chem-tool-name" data-i18n="tools.labMatchName">Lab &amp; Hazard Match</h3>
+                            <p class="chem-tool-desc" data-i18n="tools.labMatchDesc">Memory game: match bilingual lab apparatus names to pictures and OSHC chemical hazard labels.</p>
                         </div>
                     </div>
                     <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="flame-test-fireworks" role="button" tabindex="0">
@@ -363,8 +366,9 @@
                                 <img class="chem-tool-thumb-img" src="images/interactive-tools-flame-fireworks-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
                             </picture>
                         </div>
-                        <div class="chem-tool-info chem-tool-info--title-only">
+                        <div class="chem-tool-info">
                             <h3 class="chem-tool-name" data-i18n="tools.flameFireworksName">Flame Test Fireworks</h3>
+                            <p class="chem-tool-desc" data-i18n="tools.flameFireworksDesc">Design metal-ion burst patterns, launch them over night-sky scenes, and download your flame-test firework display.</p>
                         </div>
                     </div>
                 </div>
@@ -373,46 +377,78 @@
     </div>
 
     <!-- Interactive Lab Page -->
-    <div id="interactive-lab-page" class="blank-page chemistry-tools-page">
+    <div id="interactive-lab-page" class="blank-page chemistry-tools-page lab-hub-page">
         <div class="blank-page-content" id="page-lab">
-            <div class="chem-tools-container">
+            <div class="chem-tools-container lab-hub-inner">
                 <h1 class="chem-tools-title" data-i18n="lab.pageTitle">Interactive Lab</h1>
+                <p class="chem-tools-subtitle" data-i18n="lab.hubSubtitle">Choose a lab simulation to explore bonding and structure</p>
 
-                <div class="chem-tools-grid chem-tools-grid--three-games">
-                    <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="ionic-compound-puzzle" role="button" tabindex="0">
-                        <div class="chem-tool-thumb chem-tool-thumb--lab-ionic" aria-hidden="true">
-                            <span class="chem-tool-badge-num">1</span>
-                            <picture>
-                                <source type="image/webp" srcset="images/interactive-lab-ionic-preview.webp" />
-                                <img class="chem-tool-thumb-img" src="images/interactive-lab-ionic-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
-                            </picture>
+                <div class="chem-tools-grid worksheet-hub-grid lab-hub-grid">
+                    <div class="chem-tool-card lab-tool-card" data-tool="ionic-compound-puzzle" role="button" tabindex="0">
+                        <div class="chem-tool-header">
+                            <div class="chem-tool-icon-box balancer-icon">
+                                <span class="chem-tool-number">1</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                                    <rect x="8.5" y="14" width="7" height="7" rx="1" />
+                                    <path d="M6.5 6.5h0M17.5 6.5h0M12 17.5h0" />
+                                </svg>
+                            </div>
+                            <span class="chem-tool-arrow" aria-hidden="true">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
                         </div>
-                        <div class="chem-tool-info chem-tool-info--title-only">
+                        <div class="chem-tool-info">
                             <h3 class="chem-tool-name" data-i18n="lab.ionicName">Ionic</h3>
+                            <p class="chem-tool-desc" data-i18n="lab.ionicDesc">Build ionic lattice structures and explore ionic compound formation.</p>
                         </div>
                     </div>
-                    <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="covalent-bond-puzzle" role="button" tabindex="0">
-                        <div class="chem-tool-thumb chem-tool-thumb--lab-covalent" aria-hidden="true">
-                            <span class="chem-tool-badge-num">2</span>
-                            <picture>
-                                <source type="image/webp" srcset="images/interactive-lab-covalent-preview.webp" />
-                                <img class="chem-tool-thumb-img" src="images/interactive-lab-covalent-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
-                            </picture>
+                    <div class="chem-tool-card lab-tool-card" data-tool="covalent-bond-puzzle" role="button" tabindex="0">
+                        <div class="chem-tool-header">
+                            <div class="chem-tool-icon-box balancer-icon">
+                                <span class="chem-tool-number">2</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="7" cy="12" r="3" />
+                                    <circle cx="17" cy="12" r="3" />
+                                    <path d="M10 12h4" />
+                                </svg>
+                            </div>
+                            <span class="chem-tool-arrow" aria-hidden="true">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
                         </div>
-                        <div class="chem-tool-info chem-tool-info--title-only">
+                        <div class="chem-tool-info">
                             <h3 class="chem-tool-name" data-i18n="lab.covalentName">Covalent</h3>
+                            <p class="chem-tool-desc" data-i18n="lab.covalentDesc">Draw covalent bonds and explore covalent compound structures.</p>
                         </div>
                     </div>
-                    <div class="chem-tool-card chem-tool-card--preview-tall" data-tool="covalent-properties-sandbox" role="button" tabindex="0">
-                        <div class="chem-tool-thumb chem-tool-thumb--lab-sandbox" aria-hidden="true">
-                            <span class="chem-tool-badge-num">3</span>
-                            <picture>
-                                <source type="image/webp" srcset="images/interactive-lab-sandbox-preview.webp" />
-                                <img class="chem-tool-thumb-img" src="images/interactive-lab-sandbox-preview.png" width="1200" height="675" alt="" decoding="async" loading="lazy" />
-                            </picture>
+                    <div class="chem-tool-card lab-tool-card" data-tool="covalent-properties-sandbox" role="button" tabindex="0">
+                        <div class="chem-tool-header">
+                            <div class="chem-tool-icon-box balancer-icon">
+                                <span class="chem-tool-number">3</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 3v4M12 17v4M3 12h4M17 12h4" />
+                                    <circle cx="12" cy="12" r="4" />
+                                    <path d="M7.5 7.5l2 2M14.5 14.5l2 2M16.5 7.5l-2 2M9.5 14.5l-2 2" />
+                                </svg>
+                            </div>
+                            <span class="chem-tool-arrow" aria-hidden="true">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
                         </div>
-                        <div class="chem-tool-info chem-tool-info--title-only">
+                        <div class="chem-tool-info">
                             <h3 class="chem-tool-name" data-i18n="lab.sandboxName">Sandbox</h3>
+                            <p class="chem-tool-desc" data-i18n="lab.sandboxDesc">Simulate micro-structure and compare covalent substance properties.</p>
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 // Language Controller — global i18n for EN / ZH / ZH-HANT / FR / RU / FA / UR / TL
 // =============================================================================
 
-import { translations } from "../data/translations.js";
+import { translations, loadUILocale } from "../data/translations.js";
 
 const STORAGE_KEY = "uniplus_lang";
 const SUPPORTED = ["en", "zh", "zh-Hant"];
@@ -309,7 +309,7 @@ export function initLangController() {
     });
   }
 
-  Promise.all([fetchElementLocale(lang), fetchIonLocale(lang)]).then(() => {
+  Promise.all([loadUILocale(lang), fetchElementLocale(lang), fetchIonLocale(lang)]).then(() => {
     applyStaticTranslations();
     updateDropdown();
     callbacks.forEach((cb) => cb(lang));

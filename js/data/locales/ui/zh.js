@@ -245,6 +245,7 @@ export const zhUI = {
   },
   "lab": {
     "pageTitle": "互动实验室",
+    "hubSubtitle": "选择实验室模拟，探索键合与结构",
     "ionicName": "离子",
     "ionicDesc": "搭建离子晶格结构，探索离子化合物形成。",
     "covalentName": "共价",

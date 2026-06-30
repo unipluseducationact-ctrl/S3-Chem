@@ -245,6 +245,7 @@ export const enUI = {
   },
   "lab": {
     "pageTitle": "Interactive Lab",
+    "hubSubtitle": "Choose a lab simulation to explore bonding and structure",
     "ionicName": "Ionic",
     "ionicDesc": "Build ionic lattice structures and explore ionic compound formation.",
     "covalentName": "Covalent",

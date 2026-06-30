@@ -222,6 +222,7 @@ export const frUI = {
   },
   "lab": {
     "pageTitle": "Labo interactif",
+    "hubSubtitle": "Choisissez une simulation de laboratoire pour explorer les liaisons et les structures",
     "ionicName": "Ionique",
     "ionicDesc": "Construisez des structures ioniques et explorez la formation des composes ioniques.",
     "covalentName": "Covalent",
